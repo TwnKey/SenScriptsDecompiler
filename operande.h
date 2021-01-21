@@ -4,6 +4,7 @@
 class operande{
 
 public:
+    operande(){}
     operande(bool pointer, int position, QString type, QByteArray value){
         IsAPointer = pointer;
         Position = position;
