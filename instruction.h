@@ -7,6 +7,7 @@
 class Instruction{
     public:
         Instruction(int OP);
+        ~Instruction();
         virtual void WriteXLSX();
         virtual void WriteDat();
         void AddOperande(operande op);

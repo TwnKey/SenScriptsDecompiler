@@ -4,6 +4,9 @@ Instruction::Instruction(int OP)
 {
             OPCode = OP;
 }
+Instruction::~Instruction(){
+
+}
 void Instruction::WriteDat()
 {
             qDebug() << "WriteDat test";

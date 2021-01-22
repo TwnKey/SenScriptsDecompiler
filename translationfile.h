@@ -7,10 +7,9 @@ class TranslationFile
 {
 public:
     TranslationFile();
-    std::unique_ptr<Instruction> CreateInstructionFromXLSX(int row);
-    std::unique_ptr<Instruction> CreateInstructionFromDAT(int addr);
-private:
-    std::vector<std::unique_ptr<Instruction>> InstructionsInFile;
+    void AddInstruction(std::shared_ptr<Instruction> instr);
+protected:
+    std::vector<std::shared_ptr<Instruction>> InstructionsInFile;
 };
 
 #endif // TRANSLATIONFILE_H

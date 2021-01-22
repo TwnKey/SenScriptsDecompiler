@@ -20,7 +20,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     CS3InstructionsSet.h \
+    InstructionBuilder.h \
     instruction.h \
     operande.h \
     reader.h \
-    translationfile.h
+    translationfile.h \
+    utilities.h
