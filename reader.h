@@ -1,7 +1,8 @@
 #ifndef READER_H
 #define READER_H
-#include "translationfile.h"
 #include "CS3InstructionsSet.h"
+#include "translationfile.h"
+
 #include <QFile>
 #include <QFileInfo>
 #include <QString>
@@ -19,7 +20,7 @@ public:
 
 private:
     TranslationFile CurrentTF;
-    InstructionBuilder *IB;
+    Builder *IB;
 };
 
 #endif // READER_H

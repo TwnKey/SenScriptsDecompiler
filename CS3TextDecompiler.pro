@@ -11,7 +11,8 @@ SOURCES += \
         instruction.cpp \
         main.cpp \
         reader.cpp \
-        translationfile.cpp
+        translationfile.cpp \
+        utitilies.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -19,8 +20,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Builder.h \
     CS3InstructionsSet.h \
-    InstructionBuilder.h \
+    functions.h \
     instruction.h \
     operande.h \
     reader.h \
