@@ -9,15 +9,25 @@ Reader::Reader(QString Game){
     else display_text("FAILURE: Unrecognized game specified.");
 
 }
-void Reader::AddInstructionToCurrentFile(std::shared_ptr<Instruction> instr){
-    CurrentTF.AddInstruction(instr);
-}
+
 bool Reader::ReadXLSX(QFile &File){
 //File is a XLSX document
     return true;
 }
+bool Reader::UpdateCurrentTF(){
+    CurrentTF.setName(IB->SceneName);
+    for (int idx_fun = 0; idx_fun < IB->FunctionsParsed.size(); idx_fun++) CurrentTF.addFunction(IB->FunctionsParsed[idx_fun]);
+
+    return true;
+}
 bool Reader::ReadDAT(QFile &File){
 
+    if (!File.open(QIODevice::ReadOnly)) return false;
+    QByteArray content = File.readAll();
+
+    IB->CreateHeaderFromDAT(content);
+    IB->ReadFunctions(content);
+    UpdateCurrentTF();
     return true;
 }
 bool Reader::ReadFile(QString filepath){

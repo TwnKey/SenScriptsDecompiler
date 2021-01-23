@@ -14,8 +14,7 @@ public:
     bool ReadXLSX(QFile &File);
     bool ReadDAT(QFile &File);
     bool ReadFile(QString filepath);
-
-    void AddInstructionToCurrentFile(std::shared_ptr<Instruction> instr);
+    bool UpdateCurrentTF();
     TranslationFile GetTF();
 
 private:

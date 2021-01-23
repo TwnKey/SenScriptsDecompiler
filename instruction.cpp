@@ -1,8 +1,14 @@
 #include "instruction.h"
 
-Instruction::Instruction(int OP)
+Instruction::Instruction(int OP, Builder *Maker)
 {
             OPCode = OP;
+            this->Maker = Maker;
+}
+Instruction::Instruction(QString name, int OP, Builder *Maker){
+     OPCode = OP;
+     this->name = name;
+     this->Maker = Maker;
 }
 Instruction::~Instruction(){
 
@@ -17,4 +23,11 @@ void Instruction::WriteXLSX()
 }
 void Instruction::AddOperande(operande op){
     operandes.push_back(op);
+}
+int Instruction::get_length_in_bytes(){
+    return length_in_bytes;
+}
+
+int Instruction::get_OP(){
+    return OPCode;
 }
