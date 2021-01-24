@@ -15,6 +15,7 @@ class Instruction{
         void AddOperande(operande op);
         int get_length_in_bytes();
         int get_OP();
+        QByteArray getBytes();
 
     private:
         int OPCode;

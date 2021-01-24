@@ -33,3 +33,11 @@ int Instruction::get_length_in_bytes(){
 int Instruction::get_OP(){
     return OPCode;
 }
+QByteArray Instruction::getBytes(){
+    QByteArray bytes;
+    for (std::vector<operande>::iterator it = operandes.begin(); it!=operandes.end();it++) {
+        QByteArray op_bytes = it->getValue();
+        for (int i = 0; i < op_bytes.size(); i++) bytes.push_back(op_bytes[i]);
+    }
+    return bytes;
+}

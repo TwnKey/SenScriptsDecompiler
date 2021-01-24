@@ -97,7 +97,7 @@ class OPCode2 : public Instruction
 {
     public:
     OPCode2():Instruction(2,nullptr){}
-    OPCode2(Builder *Maker):Instruction("Call",1,Maker){}
+    OPCode2(Builder *Maker):Instruction("Call",2,Maker){}
     OPCode2(int &addr, QByteArray &content, Builder *Maker):Instruction("Call", 2,Maker){
             addr++;
 
@@ -113,7 +113,7 @@ class OPCode2 : public Instruction
                     std::vector<function>::iterator it = find_function_by_name(Maker->FunctionsToParse,ConvertBytesToString(function_name));
                     Maker->ReadIndividualFunction(*it,content);
                     Maker->FunctionsParsed.push_back(*it);
-                    Maker->FunctionsToParse.erase(it);
+                    //Maker->FunctionsToParse.erase(it);
                     break;
             }
 
@@ -121,6 +121,112 @@ class OPCode2 : public Instruction
     }
 
 
+};
+class OPCode5 : public Instruction //This one might actually be exactly the same than CS1
+{
+    public:
+    OPCode5():Instruction(5,nullptr){}
+    OPCode5(Builder *Maker):Instruction("???",5,Maker){}
+    OPCode5(int &addr, QByteArray &content, Builder *Maker):Instruction("???", 5,Maker){
+            addr++;
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            qDebug() << "OP CODE 5 ";
+            while ((int)control_byte[0]!=0x1){
+
+                    switch ((int)control_byte[0])  {
+                        case 0x0:
+                            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+                            break;
+
+                        case 0x1c:{
+                            //the next byte is the OP code for a new instruction
+                            QByteArray OPCode_byte = ReadSubByteArray(content, addr, 1);
+                            this->AddOperande(operande(addr,"byte", OPCode_byte));
+                            std::shared_ptr<Instruction> instr = Maker->CreateInstructionFromDAT(addr, content);
+                            this->AddOperande(operande(addr,"bytearray", instr->getBytes()));
+                            break;
+                        }
+
+
+                        case 0x1e:
+                            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                            break;
+                        case 0x1f:
+                        case 0x20:
+                        case 0x23:
+
+                            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+                            break;
+                        case 0x21:
+                            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                            break;
+                        default:
+                            ;
+                    }
+
+                    control_byte = ReadSubByteArray(content, addr, 1);
+                    this->AddOperande(operande(addr,"byte", control_byte));
+
+                }
+    }
+};
+class OPCode38 : public Instruction //This one is similar to 5C
+{
+    public:
+    OPCode38():Instruction(0x38,nullptr){}
+    OPCode38(Builder *Maker):Instruction("???",0x38,Maker){}
+    OPCode38(int &addr, QByteArray &content, Builder *Maker):Instruction("???", 0x38,Maker){
+            addr++;
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+    }
+};
+class OPCode5C : public Instruction //This one seems strange?
+{
+    public:
+    OPCode5C():Instruction(0x5C,nullptr){}
+    OPCode5C(Builder *Maker):Instruction("???",0x5C,Maker){}
+    OPCode5C(int &addr, QByteArray &content, Builder *Maker):Instruction("???", 0x5C,Maker){
+            addr++;
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+    }
+};
+class OPCodeAC : public Instruction
+{
+    public:
+    OPCodeAC():Instruction(0xAC,nullptr){}
+    OPCodeAC(Builder *Maker):Instruction("0xAC",0xAC,Maker){}
+    OPCodeAC(int &addr, QByteArray &content, Builder *Maker):Instruction("0xAC", 0xAC,Maker){
+            addr++;
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            switch((int)control_byte[0]){
+                case 0x0:
+                    this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+                    break;
+                case 0x2:
+                case 0x1:
+                    //here we're calling a function that was defined at the beginning
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    break;
+                case 0x5:
+                case '\a':
+                case '\t':
+                    //here we're calling a function that was defined at the beginning
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    break;
+            }
+
+    }
 };
 class CS3TranslationFile : public TranslationFile
 {
@@ -138,16 +244,19 @@ class CS3Builder : public Builder
         return std::make_shared<OPCode0>();
     }
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content){
-        int OP = dat_content[addr];
+        qDebug() << hex << addr;
+        int OP = (dat_content[addr]&0xFF);
         switch(OP){
             case 0: return std::make_shared<OPCode0>(addr,dat_content,this);
             case 1: return std::make_shared<OPCode1>(addr,dat_content,this);
             case 2: return std::make_shared<OPCode2>(addr,dat_content,this);
-
+            case 5: return std::make_shared<OPCode5>(addr,dat_content,this);
+            case 0x5C: return std::make_shared<OPCode5C>(addr,dat_content,this);
+            case 0xAC: return std::make_shared<OPCodeAC>(addr,dat_content,this);
             case 256: return std::make_shared<CreateMonsters>(addr,dat_content,this);
             default:
             std::stringstream stream;
-            stream << "L'OP code " << std::hex << (OP&0xFF) << " n'est pas défini !!";
+            stream << "L'OP code " << std::hex << OP << " n'est pas défini !!";
             std::string result( stream.str() );
 
             qFatal(result.c_str());
@@ -157,7 +266,6 @@ class CS3Builder : public Builder
 
     }
     bool CreateHeaderFromDAT(QByteArray &dat_content){
-
         //Header structure:
         //The first 0x20 I'd say is probably the position of the name of the file; which shouldn't change
         //The second 0x20 probably doesn't change too.
