@@ -12,20 +12,26 @@ void Builder::ReadFunctions(QByteArray &dat_content){
     //it is using OP Codes, and its instructions can identify the functions we need to skip that are not using OP Codes.
     //Each time we completely parsed a function, we should make sure we never parse it twice.
 
-
+    qDebug() << "we're going to swap the order of the functions";
+    qDebug() << "current_order:";
+    for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name;
     std::vector<function>::iterator InitIt = find_function_by_name(FunctionsToParse, "Init");
+    qDebug() << "Init found!";
     if (InitIt != FunctionsToParse.end()){
         std::iter_swap(InitIt, FunctionsToParse.begin());
+        qDebug() << "Swapped Init!";
         std::vector<function>::iterator PreInitIt = find_function_by_name(FunctionsToParse, "PreInit");
         if (PreInitIt != FunctionsToParse.end()){
-            std::iter_swap(PreInitIt, InitIt);
+            qDebug() << "PreInit found!";
+            std::iter_swap(PreInitIt, FunctionsToParse.begin());
+            std::iter_swap(PreInitIt, ++FunctionsToParse.begin());
         }
     }
+    for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name;
     //here the PreInit should be the first function to be parsed and the Init should follow.
-    int nb_functions = FunctionsToParse.size();
 
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
-        int last_pos = ReadIndividualFunction(*it,dat_content);
+        ReadIndividualFunction(*it,dat_content);
         //once a function is read, it should be removed from the FunctionsToParse vector and added to the FunctionsParsed
         FunctionsParsed.push_back(*it);
         FunctionsToParse.erase(it);
@@ -41,8 +47,9 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     std::shared_ptr<Instruction> instr;
     do{
         instr = CreateInstructionFromDAT(current_position, dat_content);
+
         fun.AddInstruction(instr);
-        current_position = current_position + instr->get_length_in_bytes();
+
     }
     while(instr->get_OP()!=1);
     return current_position;

@@ -28,6 +28,12 @@ public:
         if ((Dest.FunctionID == -1) || (Dest.InstructionID == -1)) return false;
         else return true;
     }
+    QByteArray getValue(){
+        return Value;
+    }
+    int getLength(){
+        return Value.size();
+    }
 private:
     Destination Dest = Destination(-1,-1);
     int Position;

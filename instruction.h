@@ -19,7 +19,7 @@ class Instruction{
     private:
         int OPCode;
         QString name;
-        QVector<operande> operandes;
+        std::vector<operande> operandes;
         int length_in_bytes;
         Builder *Maker;
 };

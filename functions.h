@@ -17,6 +17,6 @@ public:
     int ID;
     friend bool operator< (const function &f1, const function &f2);
 };
-std::vector<function>::iterator find_function_by_name(std::vector<function> v, QString name);
+std::vector<function>::iterator find_function_by_name(std::vector<function> &v, QString name);
 
 #endif // FUNCTIONS_H

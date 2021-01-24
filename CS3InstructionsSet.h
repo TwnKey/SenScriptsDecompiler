@@ -93,6 +93,35 @@ class OPCode1 : public Instruction
 
 
 };
+class OPCode2 : public Instruction
+{
+    public:
+    OPCode2():Instruction(2,nullptr){}
+    OPCode2(Builder *Maker):Instruction("Call",1,Maker){}
+    OPCode2(int &addr, QByteArray &content, Builder *Maker):Instruction("Call", 2,Maker){
+            addr++;
+
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            QByteArray function_name = ReadStringSubByteArray(content, addr);
+            this->AddOperande(operande(addr,"string", function_name));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+            qDebug() << control_byte.size();
+            switch((int)control_byte[0]){
+                case 0xB:
+                    //here we're calling a function that was defined at the beginning
+                    std::vector<function>::iterator it = find_function_by_name(Maker->FunctionsToParse,ConvertBytesToString(function_name));
+                    Maker->ReadIndividualFunction(*it,content);
+                    Maker->FunctionsParsed.push_back(*it);
+                    Maker->FunctionsToParse.erase(it);
+                    break;
+            }
+
+
+    }
+
+
+};
 class CS3TranslationFile : public TranslationFile
 {
     public:
@@ -108,16 +137,20 @@ class CS3Builder : public Builder
     std::shared_ptr<Instruction> CreateInstructionFromXLSX(int row){
         return std::make_shared<OPCode0>();
     }
-    std::shared_ptr<Instruction> CreateInstructionFromDAT(int addr, QByteArray &dat_content){
+    std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content){
         int OP = dat_content[addr];
         switch(OP){
             case 0: return std::make_shared<OPCode0>(addr,dat_content,this);
             case 1: return std::make_shared<OPCode1>(addr,dat_content,this);
+            case 2: return std::make_shared<OPCode2>(addr,dat_content,this);
 
             case 256: return std::make_shared<CreateMonsters>(addr,dat_content,this);
             default:
-            std::string error_msg = std::to_string(OP) + "n'est pas défini!!";
-            qFatal(error_msg.c_str());
+            std::stringstream stream;
+            stream << "L'OP code " << std::hex << (OP&0xFF) << " n'est pas défini !!";
+            std::string result( stream.str() );
+
+            qFatal(result.c_str());
 
             return std::shared_ptr<Instruction>();
         }

@@ -25,6 +25,8 @@ void Instruction::AddOperande(operande op){
     operandes.push_back(op);
 }
 int Instruction::get_length_in_bytes(){
+    int length_in_bytes = 0;
+    for (std::vector<operande>::iterator it = operandes.begin(); it!=operandes.end();it++) length_in_bytes = length_in_bytes+it->getLength();
     return length_in_bytes;
 }
 
