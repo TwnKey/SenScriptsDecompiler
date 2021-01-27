@@ -47,10 +47,11 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
 
     std::shared_ptr<Instruction> instr;
     do{
+        qDebug() << "POS: " << hex << current_position;
         instr = CreateInstructionFromDAT(current_position, dat_content);
-
+        qDebug() << "OP CODE: " << hex << instr->get_OP();
         fun.AddInstruction(instr);
-        qDebug() << hex << instr->get_OP();
+
     }
     while(instr->get_OP()!=1);
     return current_position;
