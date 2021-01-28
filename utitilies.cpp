@@ -5,7 +5,7 @@ void display_text(QString text){
     out << text << endl;
 }
 QString ConvertBytesToString(QByteArray Bytes){
-    QString DataAsString = QTextCodec::codecForMib(1015)->toUnicode(Bytes);
+    QString DataAsString = QString::fromStdString(Bytes.toStdString());
     return DataAsString;
 }
 QString ReadStringFromByteArray(int start_pos, QByteArray &content){
@@ -24,7 +24,7 @@ QByteArray ReadStringSubByteArray(QByteArray &content, int &addr){
         result.push_back(content.at(addr));
         addr++;
     }
-    result.push_back(content.at(addr));
+    //result.push_back(content.at(addr));
     addr++;
     return result;
 }

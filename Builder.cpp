@@ -27,14 +27,17 @@ void Builder::ReadFunctions(QByteArray &dat_content){
             std::iter_swap(PreInitIt, ++FunctionsToParse.begin());
         }
     }
-    for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name;
+    for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name << " addr: "<< hex << it->actual_addr;
     //here the PreInit should be the first function to be parsed and the Init should follow.
 
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
-        qDebug() << "Trying to decompile function named " << it->name << " located at " << hex << it->actual_addr;
-        ReadIndividualFunction(*it,dat_content);
+        if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
+            qDebug() << "Trying to decompile function named " << it->name << " located at " << hex << it->actual_addr;
+
+            ReadIndividualFunction(*it,dat_content);
         //once a function is read, it should be removed from the FunctionsToParse vector and added to the FunctionsParsed
-        FunctionsParsed.push_back(*it);
+            FunctionsParsed.push_back(*it);
+        }
         //FunctionsToParse.erase(it);
 
     }

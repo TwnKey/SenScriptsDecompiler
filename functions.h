@@ -16,7 +16,8 @@ public:
     bool isUsingOPCodes;
     int ID;
     friend bool operator< (const function &f1, const function &f2);
+    friend bool operator== (const function &f1, const function &f2);
 };
 std::vector<function>::iterator find_function_by_name(std::vector<function> &v, QString name);
-
+std::vector<function>::iterator find_function_by_ID(std::vector<function> &v, int ID);
 #endif // FUNCTIONS_H

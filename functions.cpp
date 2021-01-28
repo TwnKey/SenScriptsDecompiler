@@ -18,6 +18,13 @@ bool operator< (const function &f1, const function &f2)
 {
     return f1.ID < f2.ID;
 }
+bool operator== (const function &f1, const function &f2)
+{
+    return f1.ID == f2.ID;
+}
 std::vector<function>::iterator find_function_by_name(std::vector<function> &v, QString name){
     return find_if(v.begin(), v.end(), [&name](const function& obj) {return obj.name == name;});
+}
+std::vector<function>::iterator find_function_by_ID(std::vector<function> &v, int ID){
+    return find_if(v.begin(), v.end(), [&ID](const function& obj) {return obj.ID == ID;});
 }
