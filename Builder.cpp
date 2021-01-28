@@ -27,6 +27,19 @@ void Builder::ReadFunctions(QByteArray &dat_content){
             std::iter_swap(PreInitIt, ++FunctionsToParse.begin());
         }
     }
+    int actual_index = 0;
+    for (int i = 0; i<FunctionsToParse.size(); i++){
+
+        if (FunctionsToParse[actual_index].name == ""){
+            function blank = FunctionsToParse[actual_index];
+            FunctionsToParse.erase(FunctionsToParse.begin()+actual_index);
+
+            FunctionsToParse.push_back(blank);
+
+        }
+        else actual_index++;
+    }
+
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name << " addr: "<< hex << it->actual_addr;
     //here the PreInit should be the first function to be parsed and the Init should follow.
 

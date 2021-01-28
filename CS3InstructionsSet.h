@@ -110,8 +110,54 @@ class OPCode2 : public Instruction
             this->AddOperande(operande(addr,"byte", control_byte));
             QByteArray function_name = ReadStringSubByteArray(content, addr);
             this->AddOperande(operande(addr,"string", function_name));
-            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
-            qDebug() << control_byte.size();
+            QByteArray control_byte2_arr = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte2_arr));
+
+            int control_byte2 = (int)control_byte2_arr[0];
+
+            if (control_byte2!=0){
+                QByteArray control_byte3_arr = ReadSubByteArray(content, addr, 1);
+                this->AddOperande(operande(addr,"byte", control_byte3_arr));
+                unsigned char control_byte3 = (unsigned char)control_byte3_arr[0];
+                qDebug() << "allo" << hex << control_byte3;
+                if (control_byte3 == '\x11'){
+                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+
+                }
+                else if (control_byte3 != '3'){
+
+                    if (control_byte3 == '\"'){
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+
+                    }
+                    else if (control_byte3 != 0x44){
+
+                        if (control_byte3 == 0xDD){
+                            qDebug() << "reading string starting at " << hex << addr;
+                            //there is a XOR,XOR EDI which causes a jump that ignores the strcpy
+                            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                        }
+                        else if (control_byte3 == 0xFF){
+                            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                        }
+                        else{
+                            if (control_byte3 == 0xEE){
+
+                            }
+                            else{
+                            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));}
+                        }
+
+
+                    }
+
+                }
+
+            }
             switch((int)control_byte[0]){
                 case 0xB:
 
@@ -126,6 +172,7 @@ class OPCode2 : public Instruction
                     //Maker->FunctionsToParse.erase(it);
                     break;
             }
+
 
 
     }
@@ -257,6 +304,20 @@ class OPCode1D : public Instruction //This one might actually be exactly the sam
 
     }
 };
+class OPCode1E : public Instruction //This one might actually be exactly the same than CS1
+{
+    public:
+    OPCode1E():Instruction(0x1E,nullptr){}
+    OPCode1E(Builder *Maker):Instruction("???",0x1E,Maker){}
+    OPCode1E(int &addr, QByteArray &content, Builder *Maker):Instruction("???", 0x1E,Maker){
+            addr++;
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+
+    }
+};
 class OPCode38 : public Instruction //This one is similar to 5C
 {
     public:
@@ -337,6 +398,7 @@ class OPCode47 : public Instruction //This one is similar to 5C
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
     }
 };
+
 class OPCode50 : public Instruction
 {
     public:
@@ -821,6 +883,7 @@ class CS3Builder : public Builder
             case 0xC: return std::make_shared<OPCodeC>(addr,dat_content,this);
             case 0x10: return std::make_shared<OPCode10>(addr,dat_content,this);
             case 0x1D: return std::make_shared<OPCode1D>(addr,dat_content,this);
+            case 0x1E: return std::make_shared<OPCode1E>(addr,dat_content,this);
             case 0x38: return std::make_shared<OPCode38>(addr,dat_content,this);
             case 0x3A: return std::make_shared<OPCode3A>(addr,dat_content,this);
             case 0x47: return std::make_shared<OPCode47>(addr,dat_content,this);
