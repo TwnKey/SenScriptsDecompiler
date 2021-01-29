@@ -1,6 +1,6 @@
 #ifndef READER_H
 #define READER_H
-#include "CS3InstructionsSet.h"
+
 #include "translationfile.h"
 
 #include <QFile>
