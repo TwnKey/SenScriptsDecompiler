@@ -16,13 +16,13 @@ class Instruction{
         int get_length_in_bytes();
         int get_OP();
         QByteArray getBytes();
-
+        Builder *Maker;
     private:
         int OPCode;
         QString name;
         std::vector<operande> operandes;
         int length_in_bytes;
-        Builder *Maker;
+
 };
 
 
