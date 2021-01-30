@@ -18,6 +18,99 @@ int add_operandes(int &addr, QByteArray &content, Instruction * instr, int size)
 
 
 }
+void fun_140498b70(int &addr, QByteArray &content, Instruction * instr){
+    //related to text/text formating
+    QByteArray current_op_value;
+    int addr_ = addr;
+    bool start = false;
+    bool start_text = false;
+    int cnt = 0;
+    do{
+        unsigned char current_byte = content[addr];
+        qDebug() << "current byte: " << hex << current_byte << " at addr: " << addr;
+        if (current_byte<0x20){
+            if (current_byte == 0){
+                current_op_value.clear();
+                current_op_value[0] = 0;
+                instr->AddOperande(operande(addr,"byte", current_op_value));
+                addr++;
+                return;
+            }
+            else if (current_byte == 0x10){
+                instr->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            }
+            else if ((current_byte > 0x10)&&(current_byte < 0x13)){
+                instr->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+            }
+            else if (current_byte > 0x2){
+                start_text = false;
+                instr->AddOperande(operande(addr_,"string", current_op_value));
+                current_op_value.clear();
+                current_op_value.push_back(current_byte);
+                instr->AddOperande(operande(addr,"byte", current_op_value));
+                addr++;
+
+
+            }
+            else{
+                current_op_value.clear();
+                current_op_value.push_back(current_byte);
+                instr->AddOperande(operande(addr,"byte", current_op_value));
+                addr++;
+            }
+
+        }
+        else{
+            if (current_byte == 0x23){
+                addr_ = addr;//beginning of some format stuff
+                current_op_value.push_back(0x23);
+                addr++;
+                current_byte = content[addr];
+                if (start) start = false;
+                else {
+                    int scnd_cnt = 0;
+                    do{
+                        if ((current_byte == 0x00)||(current_byte == 0x46)||(current_byte == 0x6b)||(current_byte == 0x4b)) {
+                            addr++;
+                            current_op_value.push_back(current_byte);
+                            instr->AddOperande(operande(addr_,"bytearray", current_op_value));
+                            current_op_value.clear();
+                            break;
+                        }
+                        if (current_byte == 0x52) start = true;
+
+
+                        current_op_value.push_back(current_byte);
+                        addr++;
+                        current_byte = content[addr];
+                        scnd_cnt++;
+
+
+                    }
+                    while (scnd_cnt <2);
+
+                }
+                current_op_value.push_back(current_byte);
+                instr->AddOperande(operande(addr_,"bytearray", current_op_value));
+                current_op_value.clear();
+            }
+            else{
+                //here, should be actual text (I think)
+                if (!start_text) {
+                    start_text = true;
+                    addr_ = addr;
+                }
+                current_op_value.push_back(current_byte);
+                addr++;
+
+            }
+
+        }
+        cnt++;
+    }
+    while(cnt<9999);
+
+}
 void fun_1403c90e0(int &addr, QByteArray &content, Instruction * instr, int param){
     QByteArray control_byte3_arr = ReadSubByteArray(content, addr, 1);
     instr->AddOperande(operande(addr,"byte", control_byte3_arr));
@@ -358,6 +451,21 @@ class OPCode1E : public Instruction //This one might actually be exactly the sam
 
     }
 };
+class OPCode24 : public Instruction
+{
+    public:
+    OPCode24():Instruction(0x24,nullptr){}
+    OPCode24(Builder *Maker):Instruction("???",0x24,Maker){}
+    OPCode24(int &addr, QByteArray &content, Builder *Maker):Instruction("???", 0x24,Maker){
+            addr++;
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+            fun_140498b70(addr, content, this);
+
+    }
+
+
+};
 class OPCode2F : public Instruction
 {
     public:
@@ -426,6 +534,7 @@ qDebug() << "HUIT!!!!!!!"<< hex << control_byte[0];
 
 
 };
+
 class OPCode32 : public Instruction
 {
     public:
@@ -1808,6 +1917,7 @@ class CS3Builder : public Builder
             case 0x16: return std::make_shared<OPCode16>(addr,dat_content,this);
             case 0x1D: return std::make_shared<OPCode1D>(addr,dat_content,this);
             case 0x1E: return std::make_shared<OPCode1E>(addr,dat_content,this);
+            case 0x24: return std::make_shared<OPCode24>(addr,dat_content,this);
             case 0x2F: return std::make_shared<OPCode2F>(addr,dat_content,this);
             case 0x32: return std::make_shared<OPCode32>(addr,dat_content,this);
             case 0x35: return std::make_shared<OPCode35>(addr,dat_content,this);
