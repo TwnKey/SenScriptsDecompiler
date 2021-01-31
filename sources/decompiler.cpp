@@ -107,7 +107,7 @@ bool Decompiler::WriteXLSX(){
         excelScenarioSheet.write(excel_row,2,fun.name);
         excel_row++;
         for (int idx_instr=0; idx_instr<fun.InstructionsInFunction.size(); idx_instr++){
-            fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet,excel_row);
+            fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet,CurrentTF.FunctionsInFile, excel_row);
             excel_row+=2;
         }
     }

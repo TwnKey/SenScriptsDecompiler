@@ -1931,13 +1931,14 @@ class OPCode54 : public Instruction
                     break;
                 case 0xB:
 
-                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,1)));
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     break;
                 case 0xD:
 
                     this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                     this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     break;
                 case 0x14:
 

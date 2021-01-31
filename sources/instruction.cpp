@@ -1,5 +1,5 @@
 #include "headers/instruction.h"
-
+#include "headers/functions.h"
 Instruction::Instruction(int addr, int OP, Builder *Maker)
 {
             OPCode = OP;
@@ -29,7 +29,7 @@ void Instruction::WriteDat()
 {
             qDebug() << "WriteDat test";
 }
-void Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, int row)
+void Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<function> funs, int row)
 {
     excelScenarioSheet.write(row, 1, "Location");
     excelScenarioSheet.write(row+1, 1, addr_instr);
@@ -56,6 +56,11 @@ void Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, int row)
             excelScenarioSheet.write(row+1, 3+col_cnt, ReadShortFromByteArray(0,Value));
             col_cnt++;
         }
+        else if (type == "byte"){
+            excelScenarioSheet.write(row, 3+col_cnt, type);
+            excelScenarioSheet.write(row+1, 3+col_cnt, (int)Value[0]);
+            col_cnt++;
+        }
         else if (type == "bytearray"){
 
             for (int idx_byte = 0; idx_byte<Value.size(); idx_byte++){
@@ -76,7 +81,26 @@ void Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, int row)
             col_cnt++;
         }
         else if (type == "pointer"){
-            excelScenarioSheet.write(row, 3+col_cnt, type);
+            int ID = funs[0].ID;
+            int nb_row = 3;
+            int idx_fun = 0;
+            while (ID != operandes[idx_op].getDestination().FunctionID){
+
+                nb_row = nb_row + 1; //row with function name
+                nb_row = nb_row + 2 * funs[idx_fun].InstructionsInFunction.size();
+                idx_fun++;
+                ID = funs[idx_fun].ID;
+            }
+            nb_row = nb_row + 1; //row with function name
+            nb_row = nb_row + 2 * (operandes[idx_op].getDestination().InstructionID+1);
+            QString ptrExcel = "=A"+QString::number((nb_row));
+
+            QXlsx::Format format;
+            format.setFontBold(true);
+            QColor FontColor = QColor(qRgb(255,0,0));
+            format.setFontColor(FontColor);
+
+            excelScenarioSheet.write(row+1, 3+col_cnt, ptrExcel,format);
             col_cnt++;
         }
 

@@ -49,6 +49,9 @@ public:
     void setDestination(int ID_fun, int ID_instr, int ID_operande){
         Dest = Destination(ID_fun,ID_instr, ID_operande);
     }
+    Destination getDestination(){
+        return Dest;
+    }
 private:
     Destination Dest = Destination(-1,-1,-1);
     int Position;
