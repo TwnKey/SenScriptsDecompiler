@@ -1,17 +1,29 @@
 #include "instruction.h"
 
-Instruction::Instruction(int OP, Builder *Maker)
+Instruction::Instruction(int addr, int OP, Builder *Maker)
 {
             OPCode = OP;
             this->Maker = Maker;
+            this->addr_instr = addr;
 }
-Instruction::Instruction(QString name, int OP, Builder *Maker){
+Instruction::Instruction(int addr, QString name, int OP, Builder *Maker){
+     this->addr_instr = addr;
      OPCode = OP;
      this->name = name;
      this->Maker = Maker;
 }
 Instruction::~Instruction(){
 
+}
+int Instruction::get_Nb_operandes(){
+    return operandes.size();
+}
+operande Instruction::get_operande(int i){
+    return operandes[i];
+}
+
+int Instruction::get_addr_instr(){
+    return this->addr_instr;
 }
 void Instruction::WriteDat()
 {
@@ -22,7 +34,9 @@ void Instruction::WriteXLSX()
             qDebug() << "WriteXLSX test";
 }
 void Instruction::AddOperande(operande op){
+
     operandes.push_back(op);
+    if (op.getType() == "pointer") Maker->pointers.push_back(&*(operandes.end()-1));
 }
 int Instruction::get_length_in_bytes(){
     int length_in_bytes = 0;

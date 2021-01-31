@@ -16,7 +16,7 @@ void function::UsingOPCodes(bool is){
 }
 bool operator< (const function &f1, const function &f2)
 {
-    return f1.ID < f2.ID;
+    return f1.actual_addr < f2.actual_addr;
 }
 bool operator== (const function &f1, const function &f2)
 {

@@ -1,13 +1,16 @@
 #ifndef OPERANDE_H
 #define OPERANDE_H
 #include <QString>
+#include "utilities.h"
 struct Destination{
-    Destination(int FID, int IID){
+    Destination(int FID, int IID, int OID){
         FunctionID = FID;
         InstructionID = IID;
+        OperandeID = OID;
     }
     int FunctionID;
     int InstructionID;
+    int OperandeID;
 };
 class operande{
 
@@ -31,11 +34,23 @@ public:
     QByteArray getValue(){
         return Value;
     }
+    int getIntegerValue(){
+        return ReadIntegerFromByteArray(0, Value);
+    }
     int getLength(){
         return Value.size();
     }
+    int getAddr(){
+        return Position;
+    }
+    QString getType(){
+        return Type;
+    }
+    void setDestination(int ID_fun, int ID_instr, int ID_operande){
+        Dest = Destination(ID_fun,ID_instr, ID_operande);
+    }
 private:
-    Destination Dest = Destination(-1,-1);
+    Destination Dest = Destination(-1,-1,-1);
     int Position;
     QString Type;
     QByteArray Value;
