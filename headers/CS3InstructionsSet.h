@@ -599,7 +599,7 @@ class OPCode1D : public Instruction
             this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
             this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
             QByteArray IDFun_bytearray = ReadSubByteArray(content, addr,4);
-            int IDfun = ReadIntegerFromByteArray(0, IDFun_bytearray);
+            /*int IDfun = ReadIntegerFromByteArray(0, IDFun_bytearray);
             if (IDfun!=-1){
                 std::vector<function>::iterator it = find_function_by_ID(Maker->FunctionsToParse,IDfun);
                 if (!std::count(Maker->FunctionsParsed.begin(), Maker->FunctionsParsed.end(), *it)){
@@ -607,7 +607,7 @@ class OPCode1D : public Instruction
                     it->AddInstruction(std::make_shared<CreateMonsters>(it->actual_addr,content,Maker));
                     Maker->FunctionsParsed.push_back(*it);
                 }
-            }
+            }*/
             this->AddOperande(operande(addr,"int", IDFun_bytearray));
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
@@ -3257,8 +3257,8 @@ class CS3Builder : public Builder
     }
     bool CreateHeaderFromDAT(QByteArray &dat_content){
         //Header structure:
-        //The first 0x20 I'd say is probably the position of the name of the file; which shouldn't change
-        //The second 0x20 probably doesn't change too.
+        //The first 0x20 is something used to check if the file is a valid file: it will always be that value
+        //The second 0x20 is the offset for the file name (shouldn't change too)
         //The next integer is the position of the first pointer
         //The 4th: probably the length in bytes of the pointer section
         //The fifth: probably the position of the "names positions" section (right after the pointer section)
@@ -3283,7 +3283,7 @@ class CS3Builder : public Builder
             short name_pos = ReadShortFromByteArray(position, dat_content);
             int name_pos_int = name_pos;
             QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
-            FunctionsToParse.push_back(function(idx_fun,function_name,name_pos,addr));
+            FunctionsToParse.push_back(function(idx_fun,function_name,name_pos,addr,-1));
         }
         return true;
     }

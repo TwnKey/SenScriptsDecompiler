@@ -16,6 +16,7 @@ public:
     bool ReadFile(QString filepath);
     bool UpdateCurrentTF();
     bool WriteXLSX();
+    bool WriteDAT();
     TranslationFile GetTF();
 
 

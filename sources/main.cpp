@@ -5,9 +5,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QString filepath = "C:/Users/Antoine/Desktop/m3040.dat";
-    Decompiler Dc();
+    Decompiler Dc;
     Dc.SetupGame("CS3");
     Dc.ReadFile(filepath);
-    Dc.WriteXLSX();
+    Dc.WriteDAT();
+    //Dc.WriteXLSX();
     return a.exec();
 }

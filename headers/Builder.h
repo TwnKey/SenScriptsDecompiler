@@ -10,7 +10,7 @@ class Instruction;
 class Builder{
 public:
     Builder();
-    virtual std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content);
+    virtual std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content)=0;
     virtual std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type)=0;
     virtual bool CreateHeaderFromDAT(QByteArray &dat_content)=0; //Header will probably be game specific
     virtual bool CreateHeaderFromXLSX(QXlsx::Document &xls_content)=0;
@@ -23,7 +23,8 @@ public:
     std::vector<function> FunctionsParsed;
     QString SceneName;
     int ReadIndividualFunction(function &fun,QByteArray &dat_content);
-    bool UpdatePointers();
+    bool UpdatePointersXLSX();
+    bool UpdatePointersDAT();
     std::vector<operande *> pointers;
 };
 #endif // INSTRUCTIONBUILDER_H

@@ -18,35 +18,57 @@ Instruction::~Instruction(){
 Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenarioSheet, QString name, int OP,Builder *Maker){
 
         addr_instr = addr;
+        addr++;
         int idx_operande = 3;
         QString type = excelScenarioSheet.read(idx_row, idx_operande).toString();
         while(!type.isEmpty()){
+            QByteArray Value;
             if (type == "int"){
                 int Operande = excelScenarioSheet.read(idx_row+1, idx_operande).toInt();
-                QByteArray Value = GetBytesFromInt(Operande);
+                Value = GetBytesFromInt(Operande);
                 this->AddOperande(operande(addr,"int", Value));
             }
             else if (type == "float"){
                 int Operande = excelScenarioSheet.read(idx_row+1, idx_operande).toFloat();
-                QByteArray Value = GetBytesFromFloat(Operande);
+                Value = GetBytesFromFloat(Operande);
                 this->AddOperande(operande(addr,"float", Value));
             }
             else if (type == "short"){
-
+                short Operande = excelScenarioSheet.read(idx_row+1, idx_operande).toInt();
+                Value = GetBytesFromShort(Operande);
+                this->AddOperande(operande(addr,"short", Value));
             }
             else if (type == "byte"){
-
+                unsigned char Operande = ((excelScenarioSheet.read(idx_row+1, idx_operande).toInt())& 0x000000FF);
+                Value;
+                Value.push_back(Operande);
+                this->AddOperande(operande(addr,"byte", Value));
             }
             else if (type == "bytearray"){
 
+                while(type == "bytearray"){
+                    unsigned char Operande = ((excelScenarioSheet.read(idx_row+1, idx_operande).toInt())& 0x000000FF);
+                    Value.push_back(Operande);
+                    idx_operande++;
+                    type = excelScenarioSheet.read(idx_row, idx_operande).toString();
+                }
+                this->AddOperande(operande(addr,"bytearray", Value));
+                idx_operande--;
             }
             else if (type == "string"){
-
+                QString Operande = (excelScenarioSheet.read(idx_row+1, idx_operande).toString());
+                Value = Operande.toUtf8();
+                this->AddOperande(operande(addr,"string", Value));
             }
             else if (type == "pointer"){
-
+                QString Operande = (excelScenarioSheet.read(idx_row+1, idx_operande).toString());
+                QString RowPointedStr = Operande.right(Operande.length()-2);
+                int actual_row = RowPointedStr.toInt();
+                Value = GetBytesFromInt(actual_row);
+                this->AddOperande(operande(addr,"pointer", Value));
             }
             idx_operande++;
+            addr = addr + Value.size();
             type = excelScenarioSheet.read(idx_row, idx_operande).toString();
         }
 
@@ -150,7 +172,8 @@ void Instruction::AddOperande(operande op){
     if (op.getType() == "pointer") Maker->pointers.push_back(&*(operandes.end()-1));
 }
 int Instruction::get_length_in_bytes(){
-    int length_in_bytes = 0;
+    int length_in_bytes = 1;
+    if (OPCode>0xFF) length_in_bytes = 0;
     for (std::vector<operande>::iterator it = operandes.begin(); it!=operandes.end();it++) length_in_bytes = length_in_bytes+it->getLength();
     return length_in_bytes;
 }

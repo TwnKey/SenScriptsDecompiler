@@ -34,6 +34,9 @@ public:
     QByteArray getValue(){
         return Value;
     }
+    void setValue(QByteArray v){
+        Value = v;
+    }
     int getIntegerValue(){
         return ReadIntegerFromByteArray(0, Value);
     }

@@ -50,6 +50,13 @@ QByteArray GetBytesFromInt(int i){
 
     return q_b;
 }
+QByteArray GetBytesFromShort(short i){
+    QByteArray q_b;
+    q_b.push_back(i & 0x00ff);
+    q_b.push_back((i & 0xff00) >> 8);
+
+    return q_b;
+}
 float QByteArrayToFloat(QByteArray arr) //thanks to jabk https://stackoverflow.com/questions/36859447/qbytearray-to-float
 {
     static_assert(std::numeric_limits<float>::is_iec559, "Only supports IEC 559 (IEEE 754) float");

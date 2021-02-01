@@ -17,4 +17,5 @@ QString ConvertBytesToString(QByteArray Bytes);
 float ReadFloatFromByteArray(int start_pos, QByteArray &content);
 QByteArray GetBytesFromInt(int i);
 QByteArray GetBytesFromFloat(float f);
+QByteArray GetBytesFromShort(short i);
 #endif // UTILITIES_H

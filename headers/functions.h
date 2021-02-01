@@ -6,18 +6,21 @@
 class function{
 public:
     function(){}
-    function(int ID, QString n,int declr_pos,int addr);
+    function(int ID, QString n,int declr_pos,int addr, int row_index);
     void AddInstruction(std::shared_ptr<Instruction> instr);
     void UsingOPCodes(bool is);
     std::vector<std::shared_ptr<Instruction>> InstructionsInFunction;
     QString name;
     int declr_position; //covers the list of offsets at the beginning
     int actual_addr; //covers the pointers before that
+    int XLSX_row_index;
     bool isUsingOPCodes;
     int ID;
     friend bool operator< (const function &f1, const function &f2);
     friend bool operator== (const function &f1, const function &f2);
+    int length_in_bytes;
 };
 std::vector<function>::iterator find_function_by_name(std::vector<function> &v, QString name);
 std::vector<function>::iterator find_function_by_ID(std::vector<function> &v, int ID);
+std::vector<function>::iterator find_function_by_XLSX_row_index(std::vector<function> &v, int row_index);
 #endif // FUNCTIONS_H
