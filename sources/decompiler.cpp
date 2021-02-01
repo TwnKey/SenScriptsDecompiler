@@ -17,15 +17,30 @@ Decompiler::Decompiler()
 {
 
 }
-Decompiler::Decompiler(QString Game){
-    this->Game = Game;
+
+bool Decompiler::SetupGame(QString Game){
     if (Game == "CS3") IB = new CS3Builder();
-    else display_text("FAILURE: Unrecognized game specified.");
-
+    else {
+        display_text("FAILURE: Unrecognized game specified.");
+        return false;
+    }
 }
-
 bool Decompiler::ReadXLSX(QFile &File){
-//File is a XLSX document
+    QFileInfo info(File);
+    if (!File.open(QIODevice::ReadOnly)) return false;
+
+    IB->FunctionsParsed.clear();
+    IB->FunctionsToParse.clear();
+
+    TranslationFile ParsedFile = TranslationFile();
+    Document doc(info.absoluteFilePath());
+    Game = doc.read(1, 1).toString();
+    ParsedFile.setName(doc.read(2, 1).toString());
+
+    IB->ReadFunctionsXLSX(doc);
+    IB->CreateHeaderFromXLSX(doc);
+
+    UpdateCurrentTF();
     return true;
 }
 
@@ -41,7 +56,7 @@ bool Decompiler::ReadDAT(QFile &File){
     QByteArray content = File.readAll();
 
     IB->CreateHeaderFromDAT(content);
-    IB->ReadFunctions(content);
+    IB->ReadFunctionsDAT(content);
     UpdateCurrentTF();
     return true;
 }

@@ -248,6 +248,7 @@ class CreateMonsters : public Instruction
 {
     public:
     CreateMonsters():Instruction(-1,256,nullptr){}
+	CreateMonsters(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"CreateMonsters", 256,Maker){}
     CreateMonsters(int addr, Builder *Maker):Instruction(addr,"CreateMonsters", 256, Maker){}
     CreateMonsters(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"CreateMonsters", 256,Maker){
         int initial_addr = addr;
@@ -318,6 +319,7 @@ class EffectsInstr : public Instruction
 {
     public:
     EffectsInstr():Instruction(-1,257,nullptr){}
+    EffectsInstr(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"EffectsInstr", 257,Maker){}
     EffectsInstr(int addr, Builder *Maker):Instruction(addr,"EffectsInstr", 257, Maker){}
     EffectsInstr(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"EffectsInstr", 257,Maker){
         unsigned char current_byte = content[addr];
@@ -342,6 +344,7 @@ class OPCode0 : public Instruction
 {
     public:
     OPCode0():Instruction(-1,0,nullptr){}
+    OPCode0(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"Instruction 0", 0,Maker){}
     OPCode0(int addr, Builder *Maker):Instruction(addr,"Instruction 0", 0, Maker){}
     OPCode0(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"Instruction 0", 0,Maker){
         addr++;
@@ -356,6 +359,7 @@ class OPCode1 : public Instruction
 {
     public:
     OPCode1():Instruction(-1,1,nullptr){}
+    OPCode1(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"Return", 1,Maker){}
     OPCode1(int addr, Builder *Maker):Instruction(addr,"Return",1,Maker){}
     OPCode1(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"Return", 1,Maker){
 
@@ -367,6 +371,7 @@ class OPCode2 : public Instruction
 {
     public:
     OPCode2():Instruction(-1,2,nullptr){}
+    OPCode2(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"Call", 2,Maker){}
     OPCode2(int addr, Builder *Maker):Instruction(addr,"Call",2,Maker){}
     OPCode2(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"Call", 2,Maker){
             addr++;
@@ -411,6 +416,7 @@ class OPCode3 : public Instruction
 {
     public:
     OPCode3():Instruction(-1,3,nullptr){}
+    OPCode3(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 3,Maker){}
     OPCode3(int addr, Builder *Maker):Instruction(addr,"???",3,Maker){}
     OPCode3(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 3,Maker){
         addr++;
@@ -423,6 +429,7 @@ class OPCode4 : public Instruction
 {
     public:
     OPCode4():Instruction(-1,4,nullptr){}
+    OPCode4(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 4,Maker){}
     OPCode4(int addr, Builder *Maker):Instruction(addr,"???",4,Maker){}
     OPCode4(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 4,Maker){
             addr++;
@@ -436,6 +443,7 @@ class OPCode5 : public Instruction
 {
     public:
     OPCode5():Instruction(-1,5,nullptr){}
+    OPCode5(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 5,Maker){}
     OPCode5(int addr, Builder *Maker):Instruction(addr,"???",5,Maker){}
     OPCode5(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 5,Maker){
             addr++;
@@ -447,6 +455,7 @@ class OPCode7 : public Instruction
 {
     public:
     OPCode7():Instruction(-1,0x7,nullptr){}
+    OPCode7(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 7,Maker){}
     OPCode7(int addr, Builder *Maker):Instruction(addr,"???",0x7,Maker){}
     OPCode7(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x7,Maker){
             addr++;
@@ -473,6 +482,7 @@ class OPCode8 : public Instruction
 {
     public:
     OPCode8():Instruction(-1,8,nullptr){}
+    OPCode8(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 8,Maker){}
     OPCode8(int addr, Builder *Maker):Instruction(addr,"???",8,Maker){}
     OPCode8(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 8,Maker){
             addr++;
@@ -484,6 +494,7 @@ class OPCodeC : public Instruction
 {
     public:
     OPCodeC():Instruction(-1,0xC,nullptr){}
+    OPCodeC(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0xC,Maker){}
     OPCodeC(int addr, Builder *Maker):Instruction(addr,"???",0xC,Maker){}
     OPCodeC(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0xC,Maker){
             addr++;
@@ -495,6 +506,7 @@ class OPCode10 : public Instruction
 {
     public:
     OPCode10():Instruction(-1,0x10,nullptr){}
+    OPCode10(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x10,Maker){}
     OPCode10(int addr, Builder *Maker):Instruction(addr,"???",0x10,Maker){}
     OPCode10(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x10,Maker){
             addr++;
@@ -506,6 +518,7 @@ class OPCode11 : public Instruction
 {
     public:
     OPCode11():Instruction(-1,0x11,nullptr){}
+    OPCode11(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x11,Maker){}
     OPCode11(int addr, Builder *Maker):Instruction(addr,"???",0x11,Maker){}
     OPCode11(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x11,Maker){
             addr++;
@@ -517,6 +530,7 @@ class OPCode13 : public Instruction
 {
     public:
     OPCode13():Instruction(-1,0x13,nullptr){}
+    OPCode13(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x13,Maker){}
     OPCode13(int addr, Builder *Maker):Instruction(addr,"???",0x13,Maker){}
     OPCode13(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x13,Maker){
             addr++;
@@ -528,6 +542,7 @@ class OPCode14 : public Instruction
 {
     public:
     OPCode14():Instruction(-1,0x14,nullptr){}
+    OPCode14(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x14,Maker){}
     OPCode14(int addr, Builder *Maker):Instruction(addr,"???",0x14,Maker){}
     OPCode14(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x14,Maker){
             addr++;
@@ -539,6 +554,7 @@ class OPCode16 : public Instruction
 {
     public:
     OPCode16():Instruction(-1,0x16,nullptr){}
+    OPCode16(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x16,Maker){}
     OPCode16(int addr, Builder *Maker):Instruction(addr,"???",0x16,Maker){}
     OPCode16(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x16,Maker){
             addr++;
@@ -550,6 +566,7 @@ class OPCode18 : public Instruction
 {
     public:
     OPCode18():Instruction(-1,0x18,nullptr){}
+    OPCode18(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x18,Maker){}
     OPCode18(int addr, Builder *Maker):Instruction(addr,"???",0x18,Maker){}
     OPCode18(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x18,Maker){
             addr++;
@@ -561,6 +578,7 @@ class OPCode1D : public Instruction
 {
     public:
     OPCode1D():Instruction(-1,0x1D,nullptr){}
+    OPCode1D(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x1D,Maker){}
     OPCode1D(int addr, Builder *Maker):Instruction(addr,"???",0x1D,Maker){}
     OPCode1D(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x1D,Maker){
             addr++;
@@ -602,6 +620,7 @@ class OPCode1E : public Instruction
 {
     public:
     OPCode1E():Instruction(-1,0x1E,nullptr){}
+    OPCode1E(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x1E,Maker){}
     OPCode1E(int addr, Builder *Maker):Instruction(addr,"???",0x1E,Maker){}
     OPCode1E(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x1E,Maker){
             addr++;
@@ -617,6 +636,7 @@ class OPCode1F : public Instruction
 {
     public:
     OPCode1F():Instruction(-1,0x1F,nullptr){}
+    OPCode1F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x1F,Maker){}
     OPCode1F(int addr, Builder *Maker):Instruction(addr,"???",0x1F,Maker){}
     OPCode1F(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x1F,Maker){
             addr++;
@@ -631,6 +651,7 @@ class OPCode20 : public Instruction
 {
     public:
     OPCode20():Instruction(-1,0x20,nullptr){}
+    OPCode20(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x20,Maker){}
     OPCode20(int addr, Builder *Maker):Instruction(addr,"???",0x20,Maker){}
     OPCode20(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x20,Maker){
             addr++;
@@ -647,6 +668,7 @@ class OPCode21 : public Instruction
 {
     public:
     OPCode21():Instruction(-1,0x21,nullptr){}
+    OPCode21(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x21,Maker){}
     OPCode21(int addr, Builder *Maker):Instruction(addr,"???",0x21,Maker){}
     OPCode21(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x21,Maker){
             addr++;
@@ -659,6 +681,7 @@ class OPCode22 : public Instruction
 {
     public:
     OPCode22():Instruction(-1,0x22,nullptr){}
+    OPCode22(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x22,Maker){}
     OPCode22(int addr, Builder *Maker):Instruction(addr,"???",0x22,Maker){}
     OPCode22(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x22,Maker){
             addr++;
@@ -672,6 +695,7 @@ class OPCode23 : public Instruction
 {
     public:
     OPCode23():Instruction(-1,0x23,nullptr){}
+    OPCode23(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x23,Maker){}
     OPCode23(int addr, Builder *Maker):Instruction(addr,"???",0x23,Maker){}
     OPCode23(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x23,Maker){
             addr++;
@@ -707,6 +731,7 @@ class OPCode24 : public Instruction
 {
     public:
     OPCode24():Instruction(-1,0x24,nullptr){}
+    OPCode24(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x24,Maker){}
     OPCode24(int addr, Builder *Maker):Instruction(addr,"???",0x24,Maker){}
     OPCode24(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x24,Maker){
             addr++;
@@ -722,6 +747,7 @@ class OPCode25 : public Instruction
 {
     public:
     OPCode25():Instruction(-1,0x25,nullptr){}
+    OPCode25(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x25,Maker){}
     OPCode25(int addr, Builder *Maker):Instruction(addr,"???",0x25,Maker){}
     OPCode25(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x25,Maker){
             addr++;
@@ -734,6 +760,7 @@ class OPCode26 : public Instruction
 {
     public:
     OPCode26():Instruction(-1,0x26,nullptr){}
+    OPCode26(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x26,Maker){}
     OPCode26(int addr, Builder *Maker):Instruction(addr,"???",0x26,Maker){}
     OPCode26(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x26,Maker){
             addr++;
@@ -745,6 +772,7 @@ class OPCode27 : public Instruction
 {
     public:
     OPCode27():Instruction(-1,0x27,nullptr){}
+    OPCode27(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x27,Maker){}
     OPCode27(int addr, Builder *Maker):Instruction(addr,"???",0x27,Maker){}
     OPCode27(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x27,Maker){
             addr++;
@@ -758,6 +786,7 @@ class OPCode2B : public Instruction
 {
     public:
     OPCode2B():Instruction(-1,0x2B,nullptr){}
+    OPCode2B(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x2B,Maker){}
     OPCode2B(int addr, Builder *Maker):Instruction(addr,"???",0x2B,Maker){}
     OPCode2B(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x2B,Maker){
             addr++;
@@ -789,6 +818,7 @@ class OPCode2F : public Instruction
 {
     public:
     OPCode2F():Instruction(-1,0x2F,nullptr){}
+    OPCode2F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x2F,Maker){}
     OPCode2F(int addr, Builder *Maker):Instruction(addr,"???",0x2F,Maker){}
     OPCode2F(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x2F,Maker){
             addr++;
@@ -857,6 +887,7 @@ class OPCode32 : public Instruction
 {
     public:
     OPCode32():Instruction(-1,0x32,nullptr){}
+    OPCode32(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x32,Maker){}
     OPCode32(int addr, Builder *Maker):Instruction(addr,"???",0x32,Maker){}
     OPCode32(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x32,Maker){
             addr++;
@@ -983,6 +1014,7 @@ class OPCode35 : public Instruction
 {
     public:
     OPCode35():Instruction(-1,0x35,nullptr){}
+    OPCode35(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x35,Maker){}
     OPCode35(int addr, Builder *Maker):Instruction(addr,"???",0x35,Maker){}
     OPCode35(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x35,Maker){
             addr++;
@@ -997,6 +1029,7 @@ class OPCode36 : public Instruction
 {
     public:
     OPCode36():Instruction(-1,0x36,nullptr){}
+    OPCode36(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x36,Maker){}
     OPCode36(int addr, Builder *Maker):Instruction(addr,"???",0x36,Maker){}
     OPCode36(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x36,Maker){
             addr++;
@@ -1186,6 +1219,7 @@ class OPCode37 : public Instruction
 {
     public:
     OPCode37():Instruction(-1,0x37,nullptr){}
+    OPCode37(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x37,Maker){}
     OPCode37(int addr, Builder *Maker):Instruction(addr,"???",0x37,Maker){}
     OPCode37(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x37,Maker){
             addr++;
@@ -1200,6 +1234,7 @@ class OPCode38 : public Instruction
 {
     public:
     OPCode38():Instruction(-1,0x38,nullptr){}
+    OPCode38(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x38,Maker){}
     OPCode38(int addr, Builder *Maker):Instruction(addr,"???",0x38,Maker){}
     OPCode38(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x38,Maker){
             addr++;
@@ -1214,6 +1249,7 @@ class OPCode39 : public Instruction
 {
     public:
     OPCode39():Instruction(-1,0x39,nullptr){}
+    OPCode39(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x39,Maker){}
     OPCode39(int addr, Builder *Maker):Instruction(addr,"???",0x39,Maker){}
     OPCode39(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x39,Maker){
             addr++;
@@ -1230,6 +1266,7 @@ class OPCode3A : public Instruction
 {
     public:
     OPCode3A():Instruction(-1,0x3A,nullptr){}
+    OPCode3A(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x3A,Maker){}
     OPCode3A(int addr, Builder *Maker):Instruction(addr,"???",0x3A,Maker){}
     OPCode3A(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x3A,Maker){
             addr++;
@@ -1283,6 +1320,7 @@ class OPCode3B : public Instruction
 {
     public:
     OPCode3B():Instruction(-1,0x3B,nullptr){}
+    OPCode3B(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x3B,Maker){}
     OPCode3B(int addr, Builder *Maker):Instruction(addr,"???",0x3B,Maker){}
     OPCode3B(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x3B,Maker){
             addr++;
@@ -1547,6 +1585,7 @@ class OPCode3C : public Instruction
 {
     public:
     OPCode3C():Instruction(-1,0x3C,nullptr){}
+    OPCode3C(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x3C,Maker){}
     OPCode3C(int addr, Builder *Maker):Instruction(addr,"???",0x3C,Maker){}
     OPCode3C(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x3C,Maker){
             addr++;
@@ -1578,6 +1617,7 @@ class OPCode3D : public Instruction
 {
     public:
     OPCode3D():Instruction(-1,0x3D,nullptr){}
+    OPCode3D(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x3D,Maker){}
     OPCode3D(int addr, Builder *Maker):Instruction(addr,"???",0x3D,Maker){}
     OPCode3D(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x3D,Maker){
             addr++;
@@ -1593,6 +1633,7 @@ class OPCode3E : public Instruction
 {
     public:
     OPCode3E():Instruction(-1,0x3E,nullptr){}
+    OPCode3E(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x3E,Maker){}
     OPCode3E(int addr, Builder *Maker):Instruction(addr,"???",0x3E,Maker){}
     OPCode3E(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x3E,Maker){
             addr++;
@@ -1606,6 +1647,7 @@ class OPCode3F : public Instruction
 {
     public:
     OPCode3F():Instruction(-1,0x3F,nullptr){}
+    OPCode3F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x3F,Maker){}
     OPCode3F(int addr, Builder *Maker):Instruction(addr,"???",0x3F,Maker){}
     OPCode3F(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x3F,Maker){
             addr++;
@@ -1616,6 +1658,7 @@ class OPCode40 : public Instruction
 {
     public:
     OPCode40():Instruction(-1,0x40,nullptr){}
+    OPCode40(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x40,Maker){}
     OPCode40(int addr, Builder *Maker):Instruction(addr,"???",0x40,Maker){}
     OPCode40(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x40,Maker){
             addr++;
@@ -1651,6 +1694,7 @@ class OPCode41 : public Instruction
 {
     public:
     OPCode41():Instruction(-1,0x41,nullptr){}
+    OPCode41(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x41", 0x41,Maker){}
     OPCode41(int addr, Builder *Maker):Instruction(addr,"0x41",0x41,Maker){}
     OPCode41(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x41", 0x41,Maker){
             addr++;
@@ -1663,6 +1707,7 @@ class OPCode42 : public Instruction
 {
     public:
     OPCode42():Instruction(-1,0x42,nullptr){}
+    OPCode42(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x42,Maker){}
     OPCode42(int addr, Builder *Maker):Instruction(addr,"???",0x42,Maker){}
     OPCode42(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x42,Maker){
             addr++;
@@ -1683,6 +1728,7 @@ class OPCode43 : public Instruction
 {
     public:
     OPCode43():Instruction(-1,0x43,nullptr){}
+    OPCode43(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x43,Maker){}
     OPCode43(int addr, Builder *Maker):Instruction(addr,"???",0x43,Maker){}
     OPCode43(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x43,Maker){
             addr++;
@@ -1718,6 +1764,7 @@ class OPCode44 : public Instruction
 {
     public:
     OPCode44():Instruction(-1,0x44,nullptr){}
+    OPCode44(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x44", 0x44,Maker){}
     OPCode44(int addr, Builder *Maker):Instruction(addr,"0x44",0x44,Maker){}
     OPCode44(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x44", 0x44,Maker){
             addr++;
@@ -1732,6 +1779,7 @@ class OPCode45 : public Instruction
 {
     public:
     OPCode45():Instruction(-1,0x45,nullptr){}
+    OPCode45(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x45", 0x45,Maker){}
     OPCode45(int addr, Builder *Maker):Instruction(addr,"0x45",0x45,Maker){}
     OPCode45(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x45", 0x45,Maker){
             addr++;
@@ -1747,6 +1795,7 @@ class OPCode46 : public Instruction
 {
     public:
     OPCode46():Instruction(-1,0x46,nullptr){}
+    OPCode46(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x46", 0x46,Maker){}
     OPCode46(int addr, Builder *Maker):Instruction(addr,"0x46",0x46,Maker){}
     OPCode46(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x46", 0x46,Maker){
 
@@ -1773,6 +1822,7 @@ class OPCode47 : public Instruction
 {
     public:
     OPCode47():Instruction(-1,0x47,nullptr){}
+    OPCode47(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x47,Maker){}
     OPCode47(int addr, Builder *Maker):Instruction(addr,"???",0x47,Maker){}
     OPCode47(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x47,Maker){
             addr++;
@@ -1785,6 +1835,7 @@ class OPCode48 : public Instruction
 {
     public:
     OPCode48():Instruction(-1,0x48,nullptr){}
+    OPCode48(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x48,Maker){}
     OPCode48(int addr, Builder *Maker):Instruction(addr,"???",0x48,Maker){}
     OPCode48(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x48,Maker){
             addr++;
@@ -1798,6 +1849,7 @@ class OPCode49 : public Instruction
 {
     public:
     OPCode49():Instruction(-1,0x49,nullptr){}
+    OPCode49(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x49", 0x49,Maker){}
     OPCode49(int addr, Builder *Maker):Instruction(addr,"0x49",0x49,Maker){}
     OPCode49(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x49", 0x49,Maker){
 
@@ -1846,6 +1898,7 @@ class OPCode4B : public Instruction
 {
     public:
     OPCode4B():Instruction(-1,0x4B,nullptr){}
+    OPCode4B(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x4B", 0x4B,Maker){}
     OPCode4B(int addr, Builder *Maker):Instruction(addr,"0x4B",0x4B,Maker){}
     OPCode4B(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x4B", 0x4B,Maker){
 
@@ -1874,6 +1927,7 @@ class OPCode4E : public Instruction
 {
     public:
     OPCode4E():Instruction(-1,0x4E,nullptr){}
+    OPCode4E(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x4E", 0x4E,Maker){}
     OPCode4E(int addr, Builder *Maker):Instruction(addr,"0x4E",0x4E,Maker){}
     OPCode4E(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x4E", 0x4E,Maker){
             addr++;
@@ -1886,6 +1940,7 @@ class OPCode50 : public Instruction
 {
     public:
     OPCode50():Instruction(-1,0x50,nullptr){}
+    OPCode50(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x50", 0x50,Maker){}
     OPCode50(int addr, Builder *Maker):Instruction(addr,"0x50",0x50,Maker){}
     OPCode50(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x50", 0x50,Maker){
             addr++;
@@ -1897,6 +1952,7 @@ class OPCode53 : public Instruction
 {
     public:
     OPCode53():Instruction(-1,0x53,nullptr){}
+    OPCode53(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x53", 0x53,Maker){}
     OPCode53(int addr, Builder *Maker):Instruction(addr,"0x53",0x53,Maker){}
     OPCode53(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x53", 0x53,Maker){
             addr++;
@@ -1911,6 +1967,7 @@ class OPCode54 : public Instruction
 {
     public:
     OPCode54():Instruction(-1,0x54,nullptr){}
+    OPCode54(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x54,Maker){}
     OPCode54(int addr, Builder *Maker):Instruction(addr,"???",0x54,Maker){}
     OPCode54(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x54,Maker){
             addr++;
@@ -2183,6 +2240,7 @@ class OPCode55 : public Instruction
 {
     public:
     OPCode55():Instruction(-1,0x55,nullptr){}
+    OPCode55(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x55", 0x55,Maker){}
     OPCode55(int addr, Builder *Maker):Instruction(addr,"0x55",0x55,Maker){}
     OPCode55(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x55", 0x55,Maker){
             addr++;
@@ -2213,6 +2271,7 @@ class OPCode56 : public Instruction
 {
     public:
     OPCode56():Instruction(-1,0x56,nullptr){}
+    OPCode56(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x56", 0x56,Maker){}
     OPCode56(int addr, Builder *Maker):Instruction(addr,"0x56",0x56,Maker){}
     OPCode56(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x56", 0x56,Maker){
             addr++;
@@ -2231,6 +2290,7 @@ class OPCode57 : public Instruction
 {
     public:
     OPCode57():Instruction(-1,0x57,nullptr){}
+    OPCode57(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x57", 0x57,Maker){}
     OPCode57(int addr, Builder *Maker):Instruction(addr,"0x57",0x57,Maker){}
     OPCode57(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x57", 0x57,Maker){
             addr++;
@@ -2243,6 +2303,7 @@ class OPCode58 : public Instruction
 {
     public:
     OPCode58():Instruction(-1,0x58,nullptr){}
+    OPCode58(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x58", 0x58,Maker){}
     OPCode58(int addr, Builder *Maker):Instruction(addr,"0x58",0x58,Maker){}
     OPCode58(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x58", 0x58,Maker){
             addr++;
@@ -2254,6 +2315,7 @@ class OPCode5C : public Instruction
 {
     public:
     OPCode5C():Instruction(-1,0x5C,nullptr){}
+    OPCode5C(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x5C,Maker){}
     OPCode5C(int addr, Builder *Maker):Instruction(addr,"???",0x5C,Maker){}
     OPCode5C(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x5C,Maker){
             addr++;
@@ -2268,6 +2330,7 @@ class OPCode5E : public Instruction
 {
     public:
     OPCode5E():Instruction(-1,0x5E,nullptr){}
+    OPCode5E(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x5E,Maker){}
     OPCode5E(int addr, Builder *Maker):Instruction(addr,"???",0x5E,Maker){}
     OPCode5E(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x5E,Maker){
             addr++;
@@ -2294,6 +2357,7 @@ class OPCode62 : public Instruction
 {
     public:
     OPCode62():Instruction(-1,0x62,nullptr){}
+    OPCode62(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x62,Maker){}
     OPCode62(int addr, Builder *Maker):Instruction(addr,"???",0x62,Maker){}
     OPCode62(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x62,Maker){
             addr++;
@@ -2303,6 +2367,7 @@ class OPCode63 : public Instruction
 {
     public:
     OPCode63():Instruction(-1,0x63,nullptr){}
+    OPCode63(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x63,Maker){}
     OPCode63(int addr, Builder *Maker):Instruction(addr,"???",0x63,Maker){}
     OPCode63(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x63,Maker){
             addr++;
@@ -2318,6 +2383,7 @@ class OPCode66 : public Instruction
 {
     public:
     OPCode66():Instruction(-1,0x66,nullptr){}
+    OPCode66(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x66,Maker){}
     OPCode66(int addr, Builder *Maker):Instruction(addr,"???",0x66,Maker){}
     OPCode66(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x66,Maker){
             addr++;
@@ -2347,6 +2413,7 @@ class OPCode68 : public Instruction
 {
     public:
     OPCode68():Instruction(-1,0x68,nullptr){}
+    OPCode68(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x68,Maker){}
     OPCode68(int addr, Builder *Maker):Instruction(addr,"???",0x68,Maker){}
     OPCode68(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x68,Maker){
             addr++;
@@ -2399,6 +2466,7 @@ class OPCode69 : public Instruction
 {
     public:
     OPCode69():Instruction(-1,0x69,nullptr){}
+    OPCode69(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x69,Maker){}
     OPCode69(int addr, Builder *Maker):Instruction(addr,"???",0x69,Maker){}
     OPCode69(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x69,Maker){
             addr++;
@@ -2447,6 +2515,7 @@ class OPCode6A : public Instruction
 {
     public:
     OPCode6A():Instruction(-1,0x6A,nullptr){}
+    OPCode6A(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x6A,Maker){}
     OPCode6A(int addr, Builder *Maker):Instruction(addr,"???",0x6A,Maker){}
     OPCode6A(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x6A,Maker){
             addr++;
@@ -2493,6 +2562,7 @@ class OPCode6C : public Instruction
 {
     public:
     OPCode6C():Instruction(-1,0x6C,nullptr){}
+    OPCode6C(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x6C,Maker){}
     OPCode6C(int addr, Builder *Maker):Instruction(addr,"???",0x6C,Maker){}
     OPCode6C(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x6C,Maker){
             addr++;
@@ -2505,6 +2575,7 @@ class OPCode6E : public Instruction
 {
     public:
     OPCode6E():Instruction(-1,0x6E,nullptr){}
+    OPCode6E(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x6E,Maker){}
     OPCode6E(int addr, Builder *Maker):Instruction(addr,"???",0x6E,Maker){}
     OPCode6E(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x6E,Maker){
             addr++;
@@ -2521,6 +2592,7 @@ class OPCode6F : public Instruction
 {
     public:
     OPCode6F():Instruction(-1,0x6F,nullptr){}
+    OPCode6F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x6F", 0x6F,Maker){}
     OPCode6F(int addr, Builder *Maker):Instruction(addr,"0x6F",0x6F,Maker){}
     OPCode6F(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x6F", 0x6F,Maker){
             addr++;
@@ -2535,6 +2607,7 @@ class OPCode70 : public Instruction
 {
     public:
     OPCode70():Instruction(-1,0x70,nullptr){}
+    OPCode70(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x70,Maker){}
     OPCode70(int addr, Builder *Maker):Instruction(addr,"???",0x70,Maker){}
     OPCode70(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x70,Maker){
             addr++;
@@ -2595,6 +2668,7 @@ class OPCode72 : public Instruction // not sure at all
 {
     public:
     OPCode72():Instruction(-1,0x72,nullptr){}
+    OPCode72(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x72,Maker){}
     OPCode72(int addr, Builder *Maker):Instruction(addr,"???",0x72,Maker){}
     OPCode72(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x72,Maker){
             addr++;
@@ -2630,6 +2704,7 @@ class OPCode74 : public Instruction
 {
     public:
     OPCode74():Instruction(-1,0x74,nullptr){}
+    OPCode74(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x74,Maker){}
     OPCode74(int addr, Builder *Maker):Instruction(addr,"???",0x74,Maker){}
     OPCode74(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x74,Maker){
             addr++;
@@ -2664,6 +2739,7 @@ class OPCode77 : public Instruction
 {
     public:
     OPCode77():Instruction(-1,0x77,nullptr){}
+    OPCode77(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x77,Maker){}
     OPCode77(int addr, Builder *Maker):Instruction(addr,"???",0x77,Maker){}
     OPCode77(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x77,Maker){
             addr++;
@@ -2675,6 +2751,7 @@ class OPCode7B : public Instruction
 {
     public:
     OPCode7B():Instruction(-1,0x7B,nullptr){}
+    OPCode7B(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x7B,Maker){}
     OPCode7B(int addr, Builder *Maker):Instruction(addr,"???",0x7B,Maker){}
     OPCode7B(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x7B,Maker){
             addr++;
@@ -2695,6 +2772,7 @@ class OPCode7E : public Instruction
 {
     public:
     OPCode7E():Instruction(-1,0x7E,nullptr){}
+    OPCode7E(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x7E,Maker){}
     OPCode7E(int addr, Builder *Maker):Instruction(addr,"???",0x7E,Maker){}
     OPCode7E(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x7E,Maker){
             addr++;
@@ -2729,6 +2807,7 @@ class OPCode86 : public Instruction
 {
     public:
     OPCode86():Instruction(-1,0x86,nullptr){}
+    OPCode86(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x86", 0x86,Maker){}
     OPCode86(int addr, Builder *Maker):Instruction(addr,"0x86",0x86,Maker){}
     OPCode86(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x86", 0x86,Maker){
             addr++;
@@ -2751,6 +2830,7 @@ class OPCode8A : public Instruction
 {
     public:
     OPCode8A():Instruction(-1,0x8A,nullptr){}
+    OPCode8A(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x8A", 0x8A,Maker){}
     OPCode8A(int addr, Builder *Maker):Instruction(addr,"0x8A",0x8A,Maker){}
     OPCode8A(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x8A", 0x8A,Maker){
             addr++;
@@ -2813,6 +2893,7 @@ class OPCode98 : public Instruction
 {
     public:
     OPCode98():Instruction(-1,0x98,nullptr){}
+    OPCode98(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x98", 0x98,Maker){}
     OPCode98(int addr, Builder *Maker):Instruction(addr,"0x98",0x98,Maker){}
     OPCode98(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x98", 0x98,Maker){
             addr++;
@@ -2851,6 +2932,7 @@ class OPCode90 : public Instruction
 {
     public:
     OPCode90():Instruction(-1,0x90,nullptr){}
+    OPCode90(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x90", 0x90,Maker){}
     OPCode90(int addr, Builder *Maker):Instruction(addr,"0x90",0x90,Maker){}
     OPCode90(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x90", 0x90,Maker){
             addr++;
@@ -2863,6 +2945,7 @@ class OPCode93 : public Instruction
 {
     public:
     OPCode93():Instruction(-1,0x93,nullptr){}
+    OPCode93(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x93", 0x93,Maker){}
     OPCode93(int addr, Builder *Maker):Instruction(addr,"0x93",0x93,Maker){}
     OPCode93(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x93", 0x93, Maker){
             addr++;
@@ -2880,6 +2963,7 @@ class OPCode99 : public Instruction
 {
     public:
     OPCode99():Instruction(-1,0x99,nullptr){}
+    OPCode99(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x99", 0x99,Maker){}
     OPCode99(int addr, Builder *Maker):Instruction(addr,"0x99",0x99,Maker){}
     OPCode99(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x99", 0x99, Maker){
             addr++;
@@ -2891,6 +2975,7 @@ class OPCodeAC : public Instruction
 {
     public:
     OPCodeAC():Instruction(-1,0xAC,nullptr){}
+    OPCodeAC(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xAC", 0xAC,Maker){}
     OPCodeAC(int addr, Builder *Maker):Instruction(addr,"0xAC",0xAC,Maker){}
     OPCodeAC(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xAC", 0xAC,Maker){
             addr++;
@@ -2919,6 +3004,7 @@ class OPCodeAF : public Instruction
 {
     public:
     OPCodeAF():Instruction(-1,0xAF,nullptr){}
+    OPCodeAF(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xAF", 0xAF,Maker){}
     OPCodeAF(int addr, Builder *Maker):Instruction(addr,"0xAF",0xAF,Maker){}
     OPCodeAF(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xAF", 0xAF,Maker){
             addr++;
@@ -2930,6 +3016,7 @@ class OPCodeB1 : public Instruction
 {
     public:
     OPCodeB1():Instruction(-1,0xB1,nullptr){}
+    OPCodeB1(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xB1", 0xB1,Maker){}
     OPCodeB1(int addr, Builder *Maker):Instruction(addr,"0xB1",0xB1,Maker){}
     OPCodeB1(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xB1", 0xB1,Maker){
             addr++;
@@ -2944,6 +3031,7 @@ class OPCodeC0 : public Instruction
 {
     public:
     OPCodeC0():Instruction(-1,0xC0,nullptr){}
+    OPCodeC0(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xC0", 0xC0,Maker){}
     OPCodeC0(int addr, Builder *Maker):Instruction(addr,"0xC0",0xC0,Maker){}
     OPCodeC0(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xC0", 0xC0,Maker){
             addr++;
@@ -2980,6 +3068,7 @@ class OPCodeC4 : public Instruction
 {
     public:
     OPCodeC4():Instruction(-1,0xC4,nullptr){}
+    OPCodeC4(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xC4", 0xC4,Maker){}
     OPCodeC4(int addr, Builder *Maker):Instruction(addr,"0xC4",0xC4,Maker){}
     OPCodeC4(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xC4", 0xC4,Maker){
             addr++;
@@ -3023,6 +3112,7 @@ class OPCodeCA : public Instruction
 {
     public:
     OPCodeCA():Instruction(-1,0xCA,nullptr){}
+    OPCodeCA(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xCA", 0xCA,Maker){}
     OPCodeCA(int addr, Builder *Maker):Instruction(addr,"0xCA",0xCA,Maker){}
     OPCodeCA(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xCA", 0xCA,Maker){
             addr++;
@@ -3197,7 +3287,111 @@ class CS3Builder : public Builder
         }
         return true;
     }
-    bool CreateHeaderFromXLSX(){
+    std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content){
+        int OP = xls_content.read(row, 2).toInt();
+        switch(OP){
+            case 0x00: return std::make_shared<OPCode0>(addr, row, xls_content,this);
+            case 0x01: return std::make_shared<OPCode1>(addr, row, xls_content,this);
+            case 0x02: return std::make_shared<OPCode2>(addr, row, xls_content,this);
+            case 0x03: return std::make_shared<OPCode3>(addr, row, xls_content,this);
+            case 0x04: return std::make_shared<OPCode4>(addr, row, xls_content,this);
+            case 0x05: return std::make_shared<OPCode5>(addr, row, xls_content,this);
+            case 0x07: return std::make_shared<OPCode7>(addr, row, xls_content,this);
+            case 0x08: return std::make_shared<OPCode8>(addr, row, xls_content,this);
+            case 0x0C: return std::make_shared<OPCodeC>(addr, row, xls_content,this);
+            case 0x10: return std::make_shared<OPCode10>(addr, row, xls_content,this);
+            case 0x11: return std::make_shared<OPCode11>(addr, row, xls_content,this);
+            case 0x13: return std::make_shared<OPCode13>(addr, row, xls_content,this);
+            case 0x14: return std::make_shared<OPCode14>(addr, row, xls_content,this);
+            case 0x16: return std::make_shared<OPCode16>(addr, row, xls_content,this);
+            case 0x18: return std::make_shared<OPCode18>(addr, row, xls_content,this);
+            case 0x1D: return std::make_shared<OPCode1D>(addr, row, xls_content,this);
+            case 0x1E: return std::make_shared<OPCode1E>(addr, row, xls_content,this);
+            case 0x1F: return std::make_shared<OPCode1F>(addr, row, xls_content,this);
+            case 0x20: return std::make_shared<OPCode20>(addr, row, xls_content,this);
+            case 0x21: return std::make_shared<OPCode21>(addr, row, xls_content,this);
+            case 0x22: return std::make_shared<OPCode22>(addr, row, xls_content,this);
+            case 0x23: return std::make_shared<OPCode23>(addr, row, xls_content,this);
+            case 0x24: return std::make_shared<OPCode24>(addr, row, xls_content,this);
+            case 0x25: return std::make_shared<OPCode25>(addr, row, xls_content,this);
+            case 0x26: return std::make_shared<OPCode26>(addr, row, xls_content,this);
+            case 0x27: return std::make_shared<OPCode27>(addr, row, xls_content,this);
+            case 0x2B: return std::make_shared<OPCode2B>(addr, row, xls_content,this);
+            case 0x2F: return std::make_shared<OPCode2F>(addr, row, xls_content,this);
+            case 0x32: return std::make_shared<OPCode32>(addr, row, xls_content,this);
+            case 0x35: return std::make_shared<OPCode35>(addr, row, xls_content,this);
+            case 0x36: return std::make_shared<OPCode36>(addr, row, xls_content,this);
+            case 0x37: return std::make_shared<OPCode37>(addr, row, xls_content,this);
+            case 0x38: return std::make_shared<OPCode38>(addr, row, xls_content,this);
+            case 0x39: return std::make_shared<OPCode39>(addr, row, xls_content,this);
+            case 0x3A: return std::make_shared<OPCode3A>(addr, row, xls_content,this);
+            case 0x3B: return std::make_shared<OPCode3B>(addr, row, xls_content,this);
+            case 0x3C: return std::make_shared<OPCode3C>(addr, row, xls_content,this);
+            case 0x3D: return std::make_shared<OPCode3D>(addr, row, xls_content,this);
+            case 0x3E: return std::make_shared<OPCode3E>(addr, row, xls_content,this);
+            case 0x3F: return std::make_shared<OPCode3F>(addr, row, xls_content,this);
+            case 0x40: return std::make_shared<OPCode40>(addr, row, xls_content,this);
+            case 0x41: return std::make_shared<OPCode41>(addr, row, xls_content,this);
+            case 0x42: return std::make_shared<OPCode42>(addr, row, xls_content,this);
+            case 0x43: return std::make_shared<OPCode43>(addr, row, xls_content,this);
+            case 0x44: return std::make_shared<OPCode44>(addr, row, xls_content,this);
+            case 0x45: return std::make_shared<OPCode45>(addr, row, xls_content,this);
+            case 0x46: return std::make_shared<OPCode46>(addr, row, xls_content,this);
+            case 0x47: return std::make_shared<OPCode47>(addr, row, xls_content,this);
+            case 0x48: return std::make_shared<OPCode48>(addr, row, xls_content,this);
+            case 0x49: return std::make_shared<OPCode49>(addr, row, xls_content,this);
+            case 0x4B: return std::make_shared<OPCode4B>(addr, row, xls_content,this);
+            case 0x4E: return std::make_shared<OPCode4E>(addr, row, xls_content,this);
+            case 0x50: return std::make_shared<OPCode50>(addr, row, xls_content,this);
+            case 0x53: return std::make_shared<OPCode53>(addr, row, xls_content,this);
+            case 0x54: return std::make_shared<OPCode54>(addr, row, xls_content,this);
+            case 0x55: return std::make_shared<OPCode55>(addr, row, xls_content,this);
+            case 0x56: return std::make_shared<OPCode56>(addr, row, xls_content,this);
+            case 0x57: return std::make_shared<OPCode57>(addr, row, xls_content,this);
+            case 0x58: return std::make_shared<OPCode58>(addr, row, xls_content,this);
+            case 0x5C: return std::make_shared<OPCode5C>(addr, row, xls_content,this);
+            case 0x5E: return std::make_shared<OPCode5E>(addr, row, xls_content,this);
+            case 0x62: return std::make_shared<OPCode62>(addr, row, xls_content,this);
+            case 0x63: return std::make_shared<OPCode63>(addr, row, xls_content,this);
+            case 0x66: return std::make_shared<OPCode66>(addr, row, xls_content,this);
+            case 0x68: return std::make_shared<OPCode68>(addr, row, xls_content,this);
+            case 0x69: return std::make_shared<OPCode69>(addr, row, xls_content,this);
+            case 0x6A: return std::make_shared<OPCode6A>(addr, row, xls_content,this);
+            case 0x6C: return std::make_shared<OPCode6C>(addr, row, xls_content,this);
+            case 0x6E: return std::make_shared<OPCode6E>(addr, row, xls_content,this);
+            case 0x6F: return std::make_shared<OPCode6F>(addr, row, xls_content,this);
+            case 0x70: return std::make_shared<OPCode70>(addr, row, xls_content,this);
+            case 0x72: return std::make_shared<OPCode72>(addr, row, xls_content,this);
+            case 0x74: return std::make_shared<OPCode74>(addr, row, xls_content,this);
+            case 0x77: return std::make_shared<OPCode77>(addr, row, xls_content,this);
+            case 0x7B: return std::make_shared<OPCode7B>(addr, row, xls_content,this);
+            case 0x7E: return std::make_shared<OPCode7E>(addr, row, xls_content,this);
+            case 0x86: return std::make_shared<OPCode86>(addr, row, xls_content,this);
+            case 0x8A: return std::make_shared<OPCode8A>(addr, row, xls_content,this);
+            case 0x90: return std::make_shared<OPCode90>(addr, row, xls_content,this);
+            case 0x93: return std::make_shared<OPCode93>(addr, row, xls_content,this);
+            case 0x98: return std::make_shared<OPCode98>(addr, row, xls_content,this);
+            case 0x99: return std::make_shared<OPCode99>(addr, row, xls_content,this);
+            case 0xAC: return std::make_shared<OPCodeAC>(addr, row, xls_content,this);
+            case 0xAF: return std::make_shared<OPCodeAF>(addr, row, xls_content,this);
+            case 0xB1: return std::make_shared<OPCodeB1>(addr, row, xls_content,this);
+            case 0xC0: return std::make_shared<OPCodeC0>(addr, row, xls_content,this);
+            case 0xC4: return std::make_shared<OPCodeC4>(addr, row, xls_content,this);
+            case 0xCA: return std::make_shared<OPCodeCA>(addr, row, xls_content,this);
+            default:
+                std::stringstream stream;
+                stream << "L'OP code " << std::hex << OP << " n'est pas défini !!";
+                std::string result( stream.str() );
+
+                qFatal(result.c_str());
+
+                return std::shared_ptr<Instruction>();
+        }
+    }
+
+
+    bool CreateHeaderFromXLSX(QXlsx::Document &doc){
+
         return true;
     }
 };

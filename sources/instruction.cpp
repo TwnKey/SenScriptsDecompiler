@@ -15,6 +15,42 @@ Instruction::Instruction(int addr, QString name, int OP, Builder *Maker){
 Instruction::~Instruction(){
 
 }
+Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenarioSheet, QString name, int OP,Builder *Maker){
+
+        addr_instr = addr;
+        int idx_operande = 3;
+        QString type = excelScenarioSheet.read(idx_row, idx_operande).toString();
+        while(!type.isEmpty()){
+            if (type == "int"){
+                int Operande = excelScenarioSheet.read(idx_row+1, idx_operande).toInt();
+                QByteArray Value = GetBytesFromInt(Operande);
+                this->AddOperande(operande(addr,"int", Value));
+            }
+            else if (type == "float"){
+                int Operande = excelScenarioSheet.read(idx_row+1, idx_operande).toFloat();
+                QByteArray Value = GetBytesFromFloat(Operande);
+                this->AddOperande(operande(addr,"float", Value));
+            }
+            else if (type == "short"){
+
+            }
+            else if (type == "byte"){
+
+            }
+            else if (type == "bytearray"){
+
+            }
+            else if (type == "string"){
+
+            }
+            else if (type == "pointer"){
+
+            }
+            idx_operande++;
+            type = excelScenarioSheet.read(idx_row, idx_operande).toString();
+        }
+
+}
 int Instruction::get_Nb_operandes(){
     return operandes.size();
 }

@@ -16,6 +16,7 @@ class Instruction{
     public:
         Instruction(int addr, int OP, Builder *Maker);
         Instruction(int addr, QString name, int OP,Builder *Maker);
+        Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenarioSheet, QString name, int OP,Builder *Maker);
         ~Instruction();
         virtual void WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<function> funs, int row);
         virtual void WriteDat();

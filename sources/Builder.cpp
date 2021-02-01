@@ -4,7 +4,33 @@ Builder::Builder()
 {
 
 }
-void Builder::ReadFunctions(QByteArray &dat_content){
+void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
+int first_row = 4;
+int last_row = doc.dimension().lastRow();
+int addr = 0;
+int ID_fun = 0;
+function current_fun;
+for (int idx_row = first_row; idx_row < last_row; idx_row++){
+    QString content_first_cell = doc.read(idx_row, 1).toString();
+    if (content_first_cell == "FUNCTION"){ //We start a new function
+        if (ID_fun!=0) FunctionsParsed.push_back(current_fun);
+        current_fun.name  = doc.read(idx_row, 2).toString();
+        current_fun.ID = ID_fun;
+        current_fun.actual_addr = addr;
+        current_fun.declr_position = 0;
+
+        ID_fun++;
+    }
+    else{
+            std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr, idx_row, doc);
+            current_fun.AddInstruction(instr);
+            idx_row++;
+    }
+    FunctionsParsed.push_back(current_fun);
+}
+}
+
+void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     //From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
     //The game first calls the Init and PreInit functions of the script file if they exist.
     //One of them should call essential functions that can pinpoint which functions are using OP Codes.

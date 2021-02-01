@@ -10,7 +10,7 @@ class Decompiler
 {
 public:
     Decompiler();
-    Decompiler(QString Game);
+    bool SetupGame(QString Game);
     bool ReadXLSX(QFile &File);
     bool ReadDAT(QFile &File);
     bool ReadFile(QString filepath);

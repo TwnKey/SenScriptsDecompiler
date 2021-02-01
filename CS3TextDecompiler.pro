@@ -20,7 +20,7 @@ SOURCES += \
         sources/main.cpp \
         sources/decompiler.cpp \
         sources/translationfile.cpp \
-        sources/utitilies.cpp
+        sources/utilities.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
