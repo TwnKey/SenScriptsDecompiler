@@ -65,6 +65,7 @@ bool Decompiler::ReadDAT(QFile &File){
     if (!File.open(QIODevice::ReadOnly)) {
         return false;
     }
+    qDebug() << "erreur : " << File.errorString();
     QByteArray content = File.readAll();
     QFileInfo info(File);
 

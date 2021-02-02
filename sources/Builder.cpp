@@ -99,6 +99,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
 
 
     }
+
     std::sort(FunctionsParsed.begin(), FunctionsParsed.end());
 
     UpdatePointersDAT();
@@ -137,7 +138,9 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
 bool Builder::UpdatePointersDAT(){
     int nb_pointers = pointers.size();
     for (int idx_ptr = 0; idx_ptr < nb_pointers; idx_ptr++){
+
         int addr_ptr = pointers[idx_ptr]->getIntegerValue();
+        qDebug() << hex << addr_ptr;
         function fun = find_function(addr_ptr);
         int id_instr = find_instruction(addr_ptr,fun);
         int id_op = find_operande(addr_ptr,*fun.InstructionsInFunction[id_instr]);
@@ -185,17 +188,22 @@ bool Builder::UpdatePointersXLSX(){
 function Builder::find_function(int addr){
     function result = FunctionsParsed[0];
     bool success = false;
-    for (int idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
-        int fun_addr = FunctionsParsed[idx_fun].actual_addr;
+    int fun_addr = FunctionsParsed[0].actual_addr;
+    int idx_fun = 0;
+    for (; idx_fun < FunctionsParsed.size(); idx_fun++){
+        fun_addr = FunctionsParsed[idx_fun].actual_addr;
+
         if (addr<fun_addr) {
 
-            result = FunctionsParsed[idx_fun-1];
+
             success = true;
             break;
         }
 
     }
-    if (!success) qDebug() << "Couldn't find a function! ";
+    result = FunctionsParsed[idx_fun-1];
+
+
     return result;
 }
 int Builder::find_instruction(int addr, function fun){
