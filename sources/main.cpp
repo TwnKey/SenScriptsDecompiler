@@ -17,13 +17,13 @@ int main(int argc, char *argv[])
         Dc.ReadFile("C:/Games/TLoH - Trails of Cold Steel 3/data/scripts/scena/dat_en/"+filename);
         Dc.WriteXLSX();
     }*/
-    QString filename = "c2800.dat";
+    QString filename = "c2800";
     Dc.SetupGame("CS3");
-    Dc.ReadFile("C:/Users/Antoine/Desktop/"+filename);
+    Dc.ReadFile("C:/Users/Antoine/Desktop/"+filename+".dat");
     Dc.WriteXLSX();
 
-    /*Dc.ReadFile(filepath_xlsx);
-    Dc.WriteDAT();*/
+    Dc.ReadFile("C:/Users/Antoine/Documents/build-CS3TextDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Debug/"+filename+".xlsx");
+    Dc.WriteDAT();
 
     return a.exec();
 }
