@@ -26,6 +26,7 @@ void fun_140498b70(int &addr, QByteArray &content, Instruction * instr){
     bool start = false;
     bool start_text = false;
     int cnt = 0;
+
     do{
         unsigned char current_byte = content[addr];
 
@@ -52,11 +53,12 @@ void fun_140498b70(int &addr, QByteArray &content, Instruction * instr){
                 current_op_value.clear();
                 addr++;
                 instr->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+
             }
             else if (current_byte == 0x2){
-                qDebug() << " done text";
+
                 start_text = false;
-                instr->AddOperande(operande(addr_,"string", current_op_value));
+                instr->AddOperande(operande(addr_,"dialog", current_op_value));
                 current_op_value.clear();
                 current_op_value.push_back(current_byte);
                 instr->AddOperande(operande(addr,"byte", current_op_value));
@@ -123,7 +125,7 @@ void fun_140498b70(int &addr, QByteArray &content, Instruction * instr){
                            }
                         else if(((current_byte + 0xb7 & 0xdf) == 0)||(current_byte == 0x50)||(current_byte == 0x54)||(current_byte == 0x57)||
                                  (current_byte == 0x53)||(current_byte == 0x73)||(current_byte == 0x43)||(current_byte == 99)||(current_byte == 0x78)||
-                                 (current_byte == 0x79)||(current_byte == 0x47)||(current_byte == 0x44)) {
+                                 (current_byte == 0x79)||(current_byte == 0x47)||(current_byte == 0x44)||(current_byte == 0x55)) {
                                  current_op_value.push_back(current_byte);
                                  addr++;
                                  current_byte = content[addr];
@@ -131,7 +133,7 @@ void fun_140498b70(int &addr, QByteArray &content, Instruction * instr){
 
                         }
                         else{
-                            qDebug() << hex << (int) current_byte << "  " << hex << addr;
+
                             current_op_value.push_back(current_byte);
                             addr++;
                             current_byte = content[addr];
@@ -143,12 +145,13 @@ void fun_140498b70(int &addr, QByteArray &content, Instruction * instr){
                 else{
                     //here, should be actual text (I think)
                     if (!start_text) {
-                        qDebug() << " starting text!";
-                        instr->AddOperande(operande(addr_,"string", current_op_value));
-                        current_op_value.clear();
+
+                        //instr->AddOperande(operande(addr_,"string", current_op_value));
+                        //current_op_value.clear();
                         start_text = true;
                         addr_ = addr;
                     }
+
                     current_op_value.push_back(current_byte);
                     addr++;
 
@@ -217,9 +220,9 @@ void sub05(int &addr, QByteArray &content, Instruction * instr){
 
                 case 0x1c:{
                     //the next byte is the OP code for a new instruction
-                    QByteArray OPCode_byte = ReadSubByteArray(content, addr, 1);
-                    instr->AddOperande(operande(addr,"byte", OPCode_byte));
+
                     std::shared_ptr<Instruction> instr2 = instr->Maker->CreateInstructionFromDAT(addr, content,0);
+                    qDebug() << "INSTR!!!! " << instr2->getBytes() << " at " << hex << addr;
                     instr->AddOperande(operande(addr,"bytearray", instr2->getBytes()));
                     break;
                 }
@@ -335,7 +338,6 @@ class EffectsInstr : public Instruction
 
             current_byte = content[addr];
         }
-        qDebug() << "done";
     }
 
 
@@ -362,7 +364,16 @@ class OPCode1 : public Instruction
     OPCode1(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"Return", 1,Maker){}
     OPCode1(int addr, Builder *Maker):Instruction(addr,"Return",1,Maker){}
     OPCode1(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"Return", 1,Maker){
+        addr++;
+        int nb_byte_to_add = (((int) ceil((float)addr/4)))*4 - addr;
 
+        QByteArray remaining;
+
+        for (int i = 0; i < nb_byte_to_add;i++) {
+            addr++;
+            remaining.push_back('\x0');
+        }
+        this->AddOperande(operande(addr,"bytearray", remaining));
     }
 
 
@@ -627,7 +638,7 @@ class OPCode1E : public Instruction
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr,"byte", control_byte));
-            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,2)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
             this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
     }
@@ -2747,6 +2758,19 @@ class OPCode77 : public Instruction
 
     }
 };
+class OPCode78 : public Instruction
+{
+    public:
+    OPCode78():Instruction(-1,0x78,nullptr){}
+    OPCode78(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x78,Maker){}
+    OPCode78(int addr, Builder *Maker):Instruction(addr,"???",0x78,Maker){}
+    OPCode78(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x78,Maker){
+            addr++;
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+
+    }
+};
 class OPCode7B : public Instruction
 {
     public:
@@ -3139,9 +3163,7 @@ class CS3Builder : public Builder
     CS3Builder(){
 
     }
-    std::shared_ptr<Instruction> CreateInstructionFromXLSX(int row){
-        return std::make_shared<OPCode0>();
-    }
+
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type){
         int OP = (dat_content[addr]&0xFF);
 
@@ -3223,6 +3245,7 @@ class CS3Builder : public Builder
                 case 0x72: return std::make_shared<OPCode72>(addr,dat_content,this);
                 case 0x74: return std::make_shared<OPCode74>(addr,dat_content,this);
                 case 0x77: return std::make_shared<OPCode77>(addr,dat_content,this);
+                case 0x78: return std::make_shared<OPCode78>(addr,dat_content,this);
                 case 0x7B: return std::make_shared<OPCode7B>(addr,dat_content,this);
                 case 0x7E: return std::make_shared<OPCode7E>(addr,dat_content,this);
                 case 0x86: return std::make_shared<OPCode86>(addr,dat_content,this);
@@ -3288,7 +3311,8 @@ class CS3Builder : public Builder
         return true;
     }
     std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content){
-        int OP = xls_content.read(row, 2).toInt();
+
+        int OP = xls_content.read(row+1, 2).toInt();
         switch(OP){
             case 0x00: return std::make_shared<OPCode0>(addr, row, xls_content,this);
             case 0x01: return std::make_shared<OPCode1>(addr, row, xls_content,this);
@@ -3364,6 +3388,7 @@ class CS3Builder : public Builder
             case 0x72: return std::make_shared<OPCode72>(addr, row, xls_content,this);
             case 0x74: return std::make_shared<OPCode74>(addr, row, xls_content,this);
             case 0x77: return std::make_shared<OPCode77>(addr, row, xls_content,this);
+            case 0x78: return std::make_shared<OPCode78>(addr, row, xls_content,this);
             case 0x7B: return std::make_shared<OPCode7B>(addr, row, xls_content,this);
             case 0x7E: return std::make_shared<OPCode7E>(addr, row, xls_content,this);
             case 0x86: return std::make_shared<OPCode86>(addr, row, xls_content,this);
@@ -3378,6 +3403,8 @@ class CS3Builder : public Builder
             case 0xC0: return std::make_shared<OPCodeC0>(addr, row, xls_content,this);
             case 0xC4: return std::make_shared<OPCodeC4>(addr, row, xls_content,this);
             case 0xCA: return std::make_shared<OPCodeCA>(addr, row, xls_content,this);
+            case 256: return std::make_shared<CreateMonsters>(addr, row, xls_content,this);
+            case 257: return std::make_shared<EffectsInstr>(addr, row, xls_content,this);
             default:
                 std::stringstream stream;
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !!";
@@ -3390,10 +3417,40 @@ class CS3Builder : public Builder
     }
 
 
-    bool CreateHeaderFromXLSX(QXlsx::Document &doc){
+    QByteArray CreateHeaderBytes(){
+        QByteArray header;
 
-        return true;
+        QByteArray scene_name_bytes = SceneName.toUtf8();
+        scene_name_bytes.append('\x0');
+        int size_of_scene_name = scene_name_bytes.length();
+        header.append(GetBytesFromInt(0x20));
+        header.append(GetBytesFromInt(0x20));
+        header.append(GetBytesFromInt(0x20+size_of_scene_name));
+        header.append(GetBytesFromInt(FunctionsParsed.size()*4));
+        header.append(GetBytesFromInt(0x20+size_of_scene_name + FunctionsParsed.size()*4));
+        header.append(GetBytesFromInt(FunctionsParsed.size()));
+        int length_of_names_section = 0;
+        for (int idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) length_of_names_section = length_of_names_section + FunctionsParsed[idx_fun].name.toUtf8().length() + 1;
+        header.append(GetBytesFromInt(0x20+size_of_scene_name + FunctionsParsed.size()*4 + FunctionsParsed.size()*2 + length_of_names_section));
+        header.append(GetBytesFromInt(0xABCDEF00));
+        header.append(scene_name_bytes);
+        QByteArray position_names;
+        QByteArray actual_names;
+        int offset_names = 0;
+        for (int idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) {
+            header.append(GetBytesFromInt(FunctionsParsed[idx_fun].actual_addr));
+            QByteArray name = FunctionsParsed[idx_fun].name.toUtf8();
+            name.append('\x0');
+            position_names.append(GetBytesFromShort(0x20+size_of_scene_name + FunctionsParsed.size()*4 + FunctionsParsed.size()*2 + offset_names));
+            actual_names.append(name);
+            offset_names = offset_names + name.size();
+        }
+        header.append(position_names);
+        header.append(actual_names);
+        header.append('\x0');
+        return header;
     }
+
 };
 
 

@@ -26,6 +26,7 @@ class Instruction{
         operande get_operande(int i);
         int get_OP();
         int get_addr_instr();
+        void set_addr_instr(int i);
         QByteArray getBytes();
         Builder *Maker;
     private:

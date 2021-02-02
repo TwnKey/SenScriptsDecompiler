@@ -5,46 +5,60 @@ Builder::Builder()
 
 }
 void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
+    SceneName = doc.read(2, 1).toString();
     int first_row = 4;
     int last_row = doc.dimension().lastRow();
+
     int addr = 0;
     int ID_fun = 0;
     function current_fun;
     for (int idx_row = first_row; idx_row < last_row; idx_row++){
+
         QString content_first_cell = doc.read(idx_row, 1).toString();
         if (content_first_cell == "FUNCTION"){ //We start a new function
 
-            if (ID_fun!=0) FunctionsParsed.push_back(current_fun);
+            if (ID_fun!=0){
+                qDebug() << "Adding function " << current_fun.name << " " << hex << current_fun.ID << " nb instructions " << current_fun.InstructionsInFunction.size();
+                FunctionsParsed.push_back(current_fun);
+            }
             current_fun.name  = doc.read(idx_row, 2).toString();
             current_fun.ID = ID_fun;
             current_fun.actual_addr = addr;
             current_fun.declr_position = 0;
             current_fun.XLSX_row_index = idx_row;
+            current_fun.InstructionsInFunction.clear();
 
             ID_fun++;
+
         }
         else{
+
                 std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr, idx_row, doc);
                 current_fun.AddInstruction(instr);
+                qDebug() << "Adding to " << current_fun.name << " " << hex << current_fun.ID << " " << idx_row;
                 idx_row++;
-                current_fun.length_in_bytes = current_fun.length_in_bytes + instr->get_length_in_bytes();
+
         }
-        FunctionsParsed.push_back(current_fun);
+
     }
+    FunctionsParsed.push_back(current_fun);
+    qDebug() << " Updating addresses...";
+    QByteArray header = CreateHeaderBytes();
+    int start_header = header.size();
+    for (int idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++){
+        FunctionsParsed[idx_fun].actual_addr += start_header;
+        for (int idx_instr = 0; idx_instr<FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
+           FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->get_addr_instr()+start_header);
+        }
+    }
+    qDebug() << " Updating pointers...";
     UpdatePointersXLSX();
 
 }
 
 void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     //From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
-    //The game first calls the Init and PreInit functions of the script file if they exist.
-    //One of them should call essential functions that can pinpoint which functions are using OP Codes.
-    //An example is the "PutMonster" function I encountered. It is called by the Init function,
-    //it is using OP Codes, and its instructions can identify the functions we need to skip that are not using OP Codes.
-    //Each time we completely parsed a function, we should make sure we never parse it twice.
 
-    qDebug() << "we're going to swap the order of the functions";
-    qDebug() << "current_order:";
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name << " id: " << hex << it->ID;
     std::vector<function>::iterator InitIt = find_function_by_name(FunctionsToParse, "Init");
     qDebug() << "Init found!";
@@ -75,18 +89,24 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
 
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
         if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
-            qDebug() << "Trying to decompile function named " << it->name << " located at " << hex << it->actual_addr;
+
 
             ReadIndividualFunction(*it,dat_content);
         //once a function is read, it should be removed from the FunctionsToParse vector and added to the FunctionsParsed
             FunctionsParsed.push_back(*it);
-        }else {qDebug() << "Huh?";}
+        }
 
 
     }
     std::sort(FunctionsParsed.begin(), FunctionsParsed.end());
+
     UpdatePointersDAT();
-    for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name << " addr: "<< hex << it->actual_addr;
+    int current_addr = FunctionsParsed[0].actual_addr; //first function shouldn't have changed
+    for (int idx_fun = 1; idx_fun < FunctionsParsed.size()-1; idx_fun++){
+
+        current_addr = current_addr + FunctionsParsed[idx_fun-1].get_length_in_bytes();
+        FunctionsParsed[idx_fun].SetAddr(current_addr);
+    }
 
 
 }
@@ -110,6 +130,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     instr = CreateInstructionFromDAT(current_position, dat_content, 0);
 
     fun.AddInstruction(instr);
+
     return current_position;
 }
 bool Builder::UpdatePointersDAT(){
@@ -124,11 +145,20 @@ bool Builder::UpdatePointersDAT(){
     return true;
 
 }
+bool Builder::Reset(){
+    pointers.clear();
+    FunctionsParsed.clear();
+    FunctionsToParse.clear();
+    return true;
+}
 bool Builder::UpdatePointersXLSX(){
     //really not satisfied with that...
     int nb_pointers = pointers.size();
+
     for (int idx_ptr = 0; idx_ptr < nb_pointers; idx_ptr++){
+
         int idx_row_ptr = pointers[idx_ptr]->getIntegerValue();
+
         function current_fun = FunctionsParsed[0];
         if (FunctionsParsed.size()>1){
 
@@ -182,7 +212,7 @@ int Builder::find_instruction(int addr, function fun){
 
     }
     if (!success) {
-        qDebug() << "addr ptr: " << hex << addr;
+
         qDebug() << "Couldn't find an instruction! ";
     }
     return idx_instr;

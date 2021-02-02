@@ -18,7 +18,9 @@ public:
     int ID;
     friend bool operator< (const function &f1, const function &f2);
     friend bool operator== (const function &f1, const function &f2);
-    int length_in_bytes;
+
+    void SetAddr(int addr);
+    int get_length_in_bytes();
 };
 std::vector<function>::iterator find_function_by_name(std::vector<function> &v, QString name);
 std::vector<function>::iterator find_function_by_ID(std::vector<function> &v, int ID);

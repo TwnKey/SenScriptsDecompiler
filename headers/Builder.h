@@ -13,9 +13,11 @@ public:
     virtual std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content)=0;
     virtual std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type)=0;
     virtual bool CreateHeaderFromDAT(QByteArray &dat_content)=0; //Header will probably be game specific
-    virtual bool CreateHeaderFromXLSX(QXlsx::Document &xls_content)=0;
+    virtual QByteArray CreateHeaderBytes()=0;
+
     virtual void ReadFunctionsDAT(QByteArray &dat_content); //Clearly this one is supposed to be generic (assuming the game format doesn't change)
     virtual void ReadFunctionsXLSX(QXlsx::Document &xls_content);
+
     function find_function(int addr);
     int find_instruction(int addr, function fun);
     int find_operande(int addr, Instruction instr);
@@ -25,6 +27,7 @@ public:
     int ReadIndividualFunction(function &fun,QByteArray &dat_content);
     bool UpdatePointersXLSX();
     bool UpdatePointersDAT();
+    bool Reset();
     std::vector<operande *> pointers;
 };
 #endif // INSTRUCTIONBUILDER_H

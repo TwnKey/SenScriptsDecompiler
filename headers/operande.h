@@ -41,7 +41,9 @@ public:
         return ReadIntegerFromByteArray(0, Value);
     }
     int getLength(){
-        return Value.size();
+        int size = Value.size();
+        if (Type=="string") size++;
+        return size;
     }
     int getAddr(){
         return Position;
