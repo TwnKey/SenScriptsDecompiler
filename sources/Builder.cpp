@@ -59,10 +59,11 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
 void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     //From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
 
-    for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name << " id: " << hex << it->ID;
+    for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name << " id: " << hex << it->ID << " addr " << it->actual_addr;
     std::vector<function>::iterator InitIt = find_function_by_name(FunctionsToParse, "Init");
-    qDebug() << "Init found!";
+
     if (InitIt != FunctionsToParse.end()){
+        qDebug() << "Init found!";
         std::iter_swap(InitIt, FunctionsToParse.begin());
         qDebug() << "Swapped Init!";
         std::vector<function>::iterator PreInitIt = find_function_by_name(FunctionsToParse, "PreInit");
@@ -122,7 +123,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     while((unsigned char)dat_content[current_position] != 0x1){
 
         instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
-
+        qDebug() << " OP: " << hex << instr->get_OP() << " at " << hex << instr->get_addr_instr();
         fun.AddInstruction(instr);
     }
 

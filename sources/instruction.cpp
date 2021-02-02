@@ -20,8 +20,8 @@ Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenario
         this->OPCode = OP;
         this->Maker = Maker;
         addr_instr = addr;
+        if (OPCode<=0xFF) addr++;
 
-        addr++;
         int idx_operande = 3;
         QString type = excelScenarioSheet.read(idx_row, idx_operande).toString();
         while(!type.isEmpty()){

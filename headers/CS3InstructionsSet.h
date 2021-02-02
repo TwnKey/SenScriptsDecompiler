@@ -462,6 +462,27 @@ class OPCode5 : public Instruction
             this->AddOperande(operande(addr,"pointer", ReadSubByteArray(content, addr, 4))); // pointer
     }
 };
+class OPCode6 : public Instruction
+{
+    public:
+    OPCode6():Instruction(-1,6,nullptr){}
+    OPCode6(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 6,Maker){}
+    OPCode6(int addr, Builder *Maker):Instruction(addr,"???",6,Maker){}
+    OPCode6(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 6,Maker){
+            addr++;
+            sub05(addr, content, this);
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+
+            for (int i = 0; i < control_byte[0]; i++){
+                QByteArray iVar3_arr = ReadSubByteArray(content, addr,4);
+                this->AddOperande(operande(addr,"int", iVar3_arr));
+                //int iVar3 = ReadIntegerFromByteArray(0,iVar3_arr);
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+            }
+            this->AddOperande(operande(addr,"pointer", ReadSubByteArray(content, addr,4)));
+    }
+};
 class OPCode7 : public Instruction
 {
     public:
@@ -1730,8 +1751,9 @@ class OPCode42 : public Instruction
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//C
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//10
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//14
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//18
-            qFatal("vérifier 42!!");
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));//18 Not sure of the types here
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));//1A
+
 
     }
 };
@@ -2322,6 +2344,21 @@ class OPCode58 : public Instruction
             this->AddOperande(operande(addr,"byte", control_byte));
     }
 };
+class OPCode5A : public Instruction
+{
+    public:
+    OPCode5A():Instruction(-1,0x5A,nullptr){}
+    OPCode5A(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x5A", 0x5A,Maker){}
+    OPCode5A(int addr, Builder *Maker):Instruction(addr,"0x5A",0x5A,Maker){}
+    OPCode5A(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x5A", 0x5A,Maker){
+            addr++;
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+    }
+};
 class OPCode5C : public Instruction
 {
     public:
@@ -2364,6 +2401,28 @@ class OPCode5E : public Instruction
 
     }
 };
+class OPCode61 : public Instruction
+{
+    public:
+    OPCode61():Instruction(-1,0x61,nullptr){}
+    OPCode61(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x61,Maker){}
+    OPCode61(int addr, Builder *Maker):Instruction(addr,"???",0x61,Maker){}
+    OPCode61(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x61,Maker){
+            addr++;
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//8
+            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//C
+            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//10
+            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//14
+            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//18
+            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//1C
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+    }
+};
 class OPCode62 : public Instruction
 {
     public:
@@ -2388,6 +2447,29 @@ class OPCode63 : public Instruction
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr,"byte", control_byte));
 
+    }
+};
+class OPCode65 : public Instruction
+{
+    public:
+    OPCode65():Instruction(-1,0x65,nullptr){}
+    OPCode65(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x65,Maker){}
+    OPCode65(int addr, Builder *Maker):Instruction(addr,"???",0x65,Maker){}
+    OPCode65(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x65,Maker){
+            addr++;
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+            switch((unsigned char)control_byte[0]){
+                case 0:
+                case 1:
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    break;
+                case 2:
+                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    break;
+
+            }
     }
 };
 class OPCode66 : public Instruction
@@ -2939,15 +3021,7 @@ class OPCode98 : public Instruction
                 this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 break;
             }
-            /*TO REMOVE
-            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));//4
-            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));//6
-            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));//8
-            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));//A
-            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));//c
-            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));*/
+
 
 
     }
@@ -2993,6 +3067,35 @@ class OPCode99 : public Instruction
             addr++;
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
 
+    }
+};
+class OPCodeAB : public Instruction
+{
+    public:
+    OPCodeAB():Instruction(-1,0xAB,nullptr){}
+    OPCodeAB(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xAB", 0xAB,Maker){}
+    OPCodeAB(int addr, Builder *Maker):Instruction(addr,"0xAB",0xAB,Maker){}
+    OPCodeAB(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xAB", 0xAB,Maker){
+            addr++;
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            switch((unsigned char)control_byte[0]){
+                case 0x0:
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    for (int i = 4; i <=0x36; i++) this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                    break;
+
+                case 0x2:
+                    this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                    for (int i = 3; i <=0x65; i+=2) this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    break;
+                case 0x3:
+                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    break;
+            }
+            qDebug() << " OP CODE AB: " << hex << addr;
     }
 };
 class OPCodeAC : public Instruction
@@ -3051,6 +3154,119 @@ class OPCodeB1 : public Instruction
 
     }
 };
+class OPCodeBB : public Instruction
+{
+    public:
+    OPCodeBB():Instruction(-1,0xBB,nullptr){}
+    OPCodeBB(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xBB", 0xBB,Maker){}
+    OPCodeBB(int addr, Builder *Maker):Instruction(addr,"0xBB",0xBB,Maker){}
+    OPCodeBB(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xBB", 0xBB,Maker){
+            addr++;
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+
+    }
+};
+class OPCodeBC : public Instruction
+{
+    public:
+    OPCodeBC():Instruction(-1,0xBC,nullptr){}
+    OPCodeBC(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xBC", 0xBC,Maker){}
+    OPCodeBC(int addr, Builder *Maker):Instruction(addr,"0xBC",0xBC,Maker){}
+    OPCodeBC(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xBC", 0xBC,Maker){
+            addr++;
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+            fun_1403c90e0(addr, content, this, 1);
+            switch((unsigned char)control_byte[0]){
+            case 0:
+            case 1:
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//0
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//4
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//8
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//C
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//0
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//4
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//8
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//C
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//0
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//4
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//8
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//C
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//0
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//4
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//8
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//C
+                break;
+            case 2:
+                this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+                break;
+            case 4:
+            case 5:
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                break;
+            case 7:
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                break;
+            case 8:
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+                break;
+            case 9:
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+              break;
+            case 10:
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+              break;
+            case 0xb:
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                break;
+            case 0xc:
+                this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                break;
+            case 0xd:
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                break;
+            case 0xe:
+                fun_1403c90e0(addr, content, this, 1);
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                break;
+            case 0xf:
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                break;
+            case 0x10:
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+              break;
+            case 0x11:
+            case 0x12:
+                this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+              break;
+
+
+            }
+
+    }
+};
+
 class OPCodeC0 : public Instruction
 {
     public:
@@ -3132,6 +3348,38 @@ class OPCodeC4 : public Instruction
 
     }
 };
+class OPCodeC8 : public Instruction
+{
+    public:
+    OPCodeC8():Instruction(-1,0xC8,nullptr){}
+    OPCodeC8(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xC8", 0xC8,Maker){}
+    OPCodeC8(int addr, Builder *Maker):Instruction(addr,"0xC8",0xC8,Maker){}
+    OPCodeC8(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xC8", 0xC8,Maker){
+            addr++;
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+    }
+};
+class OPCodeC9 : public Instruction
+{
+    public:
+    OPCodeC9():Instruction(-1,0xC9,nullptr){}
+    OPCodeC9(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xC9", 0xC9,Maker){}
+    OPCodeC9(int addr, Builder *Maker):Instruction(addr,"0xC9",0xC9,Maker){}
+    OPCodeC9(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xC9", 0xC9,Maker){
+            addr++;
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            switch((unsigned char)control_byte[0]){
+                case 0x0:
+                case 0x1:
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                break;
+            }
+    }
+};
 class OPCodeCA : public Instruction
 {
     public:
@@ -3151,6 +3399,7 @@ class OPCodeCA : public Instruction
 
     }
 };
+
 class CS3TranslationFile : public TranslationFile
 {
     public:
@@ -3177,6 +3426,7 @@ class CS3Builder : public Builder
                 case 0x03: return std::make_shared<OPCode3>(addr,dat_content,this);
                 case 0x04: return std::make_shared<OPCode4>(addr,dat_content,this);
                 case 0x05: return std::make_shared<OPCode5>(addr,dat_content,this);
+                case 0x06: return std::make_shared<OPCode6>(addr,dat_content,this);
                 case 0x07: return std::make_shared<OPCode7>(addr,dat_content,this);
                 case 0x08: return std::make_shared<OPCode8>(addr,dat_content,this);
                 case 0x0C: return std::make_shared<OPCodeC>(addr,dat_content,this);
@@ -3230,10 +3480,13 @@ class CS3Builder : public Builder
                 case 0x56: return std::make_shared<OPCode56>(addr,dat_content,this);
                 case 0x57: return std::make_shared<OPCode57>(addr,dat_content,this);
                 case 0x58: return std::make_shared<OPCode58>(addr,dat_content,this);
+                case 0x5A: return std::make_shared<OPCode5A>(addr,dat_content,this);
                 case 0x5C: return std::make_shared<OPCode5C>(addr,dat_content,this);
                 case 0x5E: return std::make_shared<OPCode5E>(addr,dat_content,this);
+                case 0x61: return std::make_shared<OPCode61>(addr,dat_content,this);
                 case 0x62: return std::make_shared<OPCode62>(addr,dat_content,this);
                 case 0x63: return std::make_shared<OPCode63>(addr,dat_content,this);
+                case 0x65: return std::make_shared<OPCode65>(addr,dat_content,this);
                 case 0x66: return std::make_shared<OPCode66>(addr,dat_content,this);
                 case 0x68: return std::make_shared<OPCode68>(addr,dat_content,this);
                 case 0x69: return std::make_shared<OPCode69>(addr,dat_content,this);
@@ -3254,15 +3507,20 @@ class CS3Builder : public Builder
                 case 0x93: return std::make_shared<OPCode93>(addr,dat_content,this);
                 case 0x98: return std::make_shared<OPCode98>(addr,dat_content,this);
                 case 0x99: return std::make_shared<OPCode99>(addr,dat_content,this);
+                case 0xAB: return std::make_shared<OPCodeAB>(addr,dat_content,this);
                 case 0xAC: return std::make_shared<OPCodeAC>(addr,dat_content,this);
                 case 0xAF: return std::make_shared<OPCodeAF>(addr,dat_content,this);
                 case 0xB1: return std::make_shared<OPCodeB1>(addr,dat_content,this);
+                case 0xBB: return std::make_shared<OPCodeBB>(addr,dat_content,this);
+                case 0xBC: return std::make_shared<OPCodeBC>(addr,dat_content,this);
                 case 0xC0: return std::make_shared<OPCodeC0>(addr,dat_content,this);
                 case 0xC4: return std::make_shared<OPCodeC4>(addr,dat_content,this);
+                case 0xC8: return std::make_shared<OPCodeC8>(addr,dat_content,this);
+                case 0xC9: return std::make_shared<OPCodeC9>(addr,dat_content,this);
                 case 0xCA: return std::make_shared<OPCodeCA>(addr,dat_content,this);
                 default:
                 std::stringstream stream;
-                stream << "L'OP code " << std::hex << OP << " n'est pas défini !!";
+                stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
                 std::string result( stream.str() );
 
                 qFatal(result.c_str());
@@ -3279,6 +3537,7 @@ class CS3Builder : public Builder
 
     }
     bool CreateHeaderFromDAT(QByteArray &dat_content){
+
         //Header structure:
         //The first 0x20 is something used to check if the file is a valid file: it will always be that value
         //The second 0x20 is the offset for the file name (shouldn't change too)
@@ -3294,11 +3553,13 @@ class CS3Builder : public Builder
         //Then the functions section
         //Done; here the function objects holds the number of functions, the addr, name positions
         //everything else can be deduced
-        int nb_functions = dat_content[0x14];
+
+        uint nb_functions = dat_content[0x14];
         int position = 0x20;
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;
         int start_offset_area = 0x20 + filename.length()+1;
+        qDebug() << nb_functions;
         for (int idx_fun = 0; idx_fun < nb_functions; idx_fun++){
             position = start_offset_area + 4*idx_fun;
             int addr = ReadIntegerFromByteArray(position, dat_content);
@@ -3307,7 +3568,9 @@ class CS3Builder : public Builder
             int name_pos_int = name_pos;
             QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
             FunctionsToParse.push_back(function(idx_fun,function_name,name_pos,addr,-1));
+
         }
+
         return true;
     }
     std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content){
@@ -3418,6 +3681,7 @@ class CS3Builder : public Builder
 
 
     QByteArray CreateHeaderBytes(){
+
         QByteArray header;
 
         QByteArray scene_name_bytes = SceneName.toUtf8();

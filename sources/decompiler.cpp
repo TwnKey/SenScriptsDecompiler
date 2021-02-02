@@ -62,9 +62,13 @@ bool Decompiler::UpdateCurrentTF(){
 }
 bool Decompiler::ReadDAT(QFile &File){
 
-    if (!File.open(QIODevice::ReadOnly)) return false;
+    if (!File.open(QIODevice::ReadOnly)) {
+        return false;
+    }
     QByteArray content = File.readAll();
+    QFileInfo info(File);
 
+    qDebug() << info.absoluteFilePath();
     IB->CreateHeaderFromDAT(content);
     IB->ReadFunctionsDAT(content);
     UpdateCurrentTF();
@@ -173,6 +177,8 @@ bool Decompiler::ReadFile(QString filepath){
     CurrentTF = TranslationFile();
     QFile file(filepath);
     QFileInfo infoFile(file);
+    QByteArray kek = file.readAll();
+    qDebug() << hex << kek[0];
     if (infoFile.suffix()=="xlsx") ReadXLSX(file);
     else if (infoFile.suffix()=="dat") ReadDAT(file);
     else {
