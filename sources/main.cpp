@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
         Dc.ReadFile("C:/Users/Antoine/Desktop/dat_en/"+filename);
         Dc.WriteXLSX();
     }*/
-    QString filename = "sound";
+    QString filename = "a0000";
     Dc.SetupGame("CS3");
     Dc.ReadFile("C:/Users/Antoine/Desktop/dat_en/"+filename+".dat");
     Dc.WriteXLSX();

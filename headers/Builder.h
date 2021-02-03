@@ -29,5 +29,6 @@ public:
     bool UpdatePointersDAT();
     bool Reset();
     std::vector<operande *> pointers;
+    bool Passed_Monster_Functions = false;
 };
 #endif // INSTRUCTIONBUILDER_H

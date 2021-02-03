@@ -62,7 +62,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name << " id: " << hex << it->ID << " addr " << it->actual_addr;
     std::vector<function>::iterator InitIt = find_function_by_name(FunctionsToParse, "Init");
 
-    if (InitIt != FunctionsToParse.end()){
+    /*if (InitIt != FunctionsToParse.end()){
         qDebug() << "Init found!";
         std::iter_swap(InitIt, FunctionsToParse.begin());
         qDebug() << "Swapped Init!";
@@ -72,9 +72,9 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
             std::iter_swap(PreInitIt, FunctionsToParse.begin());
             std::iter_swap(PreInitIt, ++FunctionsToParse.begin());
         }
-    }
+    }*/
     int actual_index = 0;
-    for (int i = 0; i<FunctionsToParse.size(); i++){
+   /* for (int i = 0; i<FunctionsToParse.size(); i++){
 
         if (FunctionsToParse[actual_index].name == ""){
             function blank = FunctionsToParse[actual_index];
@@ -84,10 +84,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
 
         }
         else actual_index++;
-    }
-
-    //here the PreInit should be the first function to be parsed and the Init should follow.
-
+    }*/
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
         if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
 
@@ -116,8 +113,10 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     int current_position = fun.actual_addr;
 
     int function_type = 0;
-    if (fun.name == "") function_type = 1;
-    else if (fun.name.startsWith("_")) function_type = 2;
+    if ((!Passed_Monster_Functions)&&((fun.name == "PreInit")||(fun.name == "Init"))) Passed_Monster_Functions = true;
+
+    if (fun.name.startsWith("_")) function_type = 2;
+    else if (!Passed_Monster_Functions) function_type = 1;
 
     std::shared_ptr<Instruction> instr;
 
