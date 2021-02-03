@@ -70,6 +70,7 @@ Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenario
                 QString Operande = (excelScenarioSheet.read(idx_row+1, idx_operande).toString());
                 Value = Operande.toUtf8();
                 Value.replace('\n', 1);
+
                 op = operande(addr,type, Value);
             }
             else if (type == "pointer"){
@@ -155,6 +156,7 @@ void Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<fun
             QTextCodec *codec = QTextCodec::codecForName("UTF-8");
 
             QString string = codec->toUnicode(value_);
+
             excelScenarioSheet.write(row+1, 3+col_cnt, string);
             col_cnt++;
         }

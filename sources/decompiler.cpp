@@ -78,16 +78,21 @@ bool Decompiler::ReadDAT(QFile &File){
 bool Decompiler::WriteDAT(){
     QString folder = QCoreApplication::applicationDirPath() + "/recompiled_files/";
 
-    QByteArray functions, file_content;
+    QByteArray functions, current_fun, file_content;
     /*header creation*/
     QByteArray header = IB->CreateHeaderBytes();
     //Header done; let's do the functions now.
     for (int idx_fun = 0; idx_fun < CurrentTF.FunctionsInFile.size(); idx_fun++) {
         function fun = CurrentTF.FunctionsInFile[idx_fun];
-
+        current_fun.clear();
         for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
-            functions.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
+            current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
         }
+
+        int padding = fun.get_length_in_bytes() - current_fun.size();
+        for (int i_z = 0; i_z < padding; i_z++) current_fun.push_back('\0');
+        functions.push_back(current_fun);
+
     }
 
     file_content.append(header);
@@ -164,6 +169,7 @@ bool Decompiler::WriteXLSX(){
         function fun = CurrentTF.FunctionsInFile[idx_fun];
         excelScenarioSheet.write(excel_row,1,"FUNCTION");
         excelScenarioSheet.write(excel_row,2,fun.name);
+        qDebug() << "Writing function named " << fun.name;
         excel_row++;
         for (int idx_instr=0; idx_instr<fun.InstructionsInFunction.size(); idx_instr++){
             fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet,CurrentTF.FunctionsInFile, excel_row);

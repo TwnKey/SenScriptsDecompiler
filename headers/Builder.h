@@ -28,6 +28,7 @@ public:
     bool UpdatePointersXLSX();
     bool UpdatePointersDAT();
     bool Reset();
+    bool PadWithZeros(int multiple, function &f);
     std::vector<operande *> pointers;
     bool Passed_Monster_Functions = false;
 };

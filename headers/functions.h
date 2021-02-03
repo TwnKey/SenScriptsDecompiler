@@ -6,13 +6,14 @@
 class function{
 public:
     function(){}
-    function(int ID, QString n,int declr_pos,int addr, int row_index);
+    function(int ID, QString n,int declr_pos,int addr, int end);
     void AddInstruction(std::shared_ptr<Instruction> instr);
     void UsingOPCodes(bool is);
     std::vector<std::shared_ptr<Instruction>> InstructionsInFunction;
     QString name;
     int declr_position; //covers the list of offsets at the beginning
     int actual_addr; //covers the pointers before that
+    int end_addr;
     int XLSX_row_index;
     bool isUsingOPCodes;
     int ID;
