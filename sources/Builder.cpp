@@ -106,9 +106,9 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     std::shared_ptr<Instruction> instr;
     if (function_type == 0){ //we use OP codes
         while(current_position<fun.end_addr){
-
+            qDebug() << " OP: " << hex << (unsigned char)dat_content[current_position] << " at " << hex << current_position;
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
-            qDebug() << " OP: " << hex << instr->get_OP() << " at " << hex << instr->get_addr_instr();
+
             fun.AddInstruction(instr);
 
         }
@@ -230,6 +230,7 @@ int Builder::find_instruction(int addr, function fun){
         }
 
     }
+    qDebug() << "Adresse pointée : " << hex << addr << " function: " << fun.actual_addr;
     if (!success) {
 
         qDebug() << "Couldn't find an instruction! ";

@@ -29,7 +29,7 @@ class Instruction{
         void set_addr_instr(int i);
         QByteArray getBytes();
         Builder *Maker;
-    private:
+    protected:
         int addr_instr;
         int OPCode;
         QString name;

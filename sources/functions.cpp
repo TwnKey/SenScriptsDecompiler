@@ -9,8 +9,7 @@ function::function(int ID, QString n,int declr_pos,int addr, int end){
     this->end_addr = end;
 }
 void function::AddInstruction(std::shared_ptr<Instruction> instr){
-    if (instr->get_OP()>0) InstructionsInFunction.push_back(instr); //the only 0 instructions should be
-    //the padded 0 at the end; that we will add ourselves depending on how long the function is
+    InstructionsInFunction.push_back(instr);
 }
 
 void function::UsingOPCodes(bool is){
@@ -25,6 +24,7 @@ void function::SetAddr(int addr){
 }
 int function::get_length_in_bytes(){
     int multiple = 4;
+    if (this->name.startsWith("_")) multiple = 0x10;
     int length_in_bytes = 0;
     for (std::vector<std::shared_ptr<Instruction>>::iterator it = InstructionsInFunction.begin(); it!=InstructionsInFunction.end();it++) length_in_bytes = length_in_bytes+(*it)->get_length_in_bytes();
     int nb_byte_to_add = (((int) ceil((float)length_in_bytes/multiple)))*multiple - length_in_bytes;
