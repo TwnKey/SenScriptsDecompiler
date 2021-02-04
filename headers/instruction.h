@@ -29,11 +29,11 @@ class Instruction{
         void set_addr_instr(int i);
         QByteArray getBytes();
         Builder *Maker;
+        std::vector<operande> operandes;
     protected:
         int addr_instr;
         int OPCode;
         QString name;
-        std::vector<operande> operandes;
         int length_in_bytes;
 
 };

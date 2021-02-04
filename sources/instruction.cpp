@@ -196,7 +196,10 @@ void Instruction::AddOperande(operande op){
 
     operandes.push_back(op);
 
-    if (op.getType() == "pointer") Maker->pointers.push_back(&*(operandes.end()-1));
+    /*if (op.getType() == "pointer") {
+        qDebug() << "POINTER !! " << hex << op.getAddr();
+        Maker->pointers.push_back(&*(operandes.end()-1));
+    }*/
 }
 int Instruction::get_length_in_bytes(){
 

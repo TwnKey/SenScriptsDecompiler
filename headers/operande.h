@@ -38,6 +38,7 @@ public:
         Value = v;
     }
     int getIntegerValue(){
+
         return ReadIntegerFromByteArray(0, Value);
     }
     int getLength(){

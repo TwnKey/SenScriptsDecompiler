@@ -32,9 +32,12 @@ bool Decompiler::SetupGame(QString Game_){
 }
 bool Decompiler::ReadXLSX(QFile &File){
     QFileInfo info(File);
-    if (!File.open(QIODevice::ReadOnly)) return false;
     qDebug() << "Attempt to read " << info.absoluteFilePath();
 
+    if (!File.open(QIODevice::ReadOnly)) return false;
+
+
+    qDebug() << info.absoluteFilePath();
 
 
     Document doc(info.absoluteFilePath());
@@ -65,7 +68,7 @@ bool Decompiler::ReadDAT(QFile &File){
     if (!File.open(QIODevice::ReadOnly)) {
         return false;
     }
-    qDebug() << "erreur : " << File.errorString();
+
     QByteArray content = File.readAll();
     QFileInfo info(File);
 
@@ -97,12 +100,14 @@ bool Decompiler::WriteDAT(){
 
     file_content.append(header);
     file_content.append(functions);
+    file_content.append('\x01');
     /*output file creation*/
     QDir dir(folder);
     if (!dir.exists()) dir.mkpath(".");
 
     QString output_path = CurrentTF.getName() + ".dat";
     QFile file(output_path);
+    qDebug() << "Writing " << output_path;
     file.open(QIODevice::WriteOnly);
     file.write(file_content);
     file.close();
@@ -176,7 +181,56 @@ bool Decompiler::WriteXLSX(){
             excel_row+=2;
         }
     }
+    qDebug() << "Writing XLSX: " << filename;
     excelScenarioSheet.saveAs(filename);
+    return true;
+}
+bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files){
+        QFile file("C:\\Users\\Antoine\\Desktop\\log.txt");
+
+        QTextStream stream(&file);
+        file.remove();
+        file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
+
+
+
+
+    foreach(QString file_, filesToRead) {
+
+        QString full_path = folder_for_reference + file_;
+        QString filename = full_path.mid(full_path.lastIndexOf("/"));
+        QString croped_fileName = filename.section(".",0,0);
+        qDebug() << "Checking " << full_path;
+        QString full_path_ref = folder_for_reference + filename;
+        stream << full_path << "\n";
+        this->SetupGame("CS3");
+        this->ReadFile(full_path);
+        this->WriteXLSX();
+        this->ReadFile(folder_for_generated_files + croped_fileName + ".xlsx");
+        this->WriteDAT();
+        QFile file1(folder_for_generated_files + filename);
+        QFile file2(full_path_ref);
+        if (!file1.open(QIODevice::ReadOnly)) {
+            return false;
+        }
+
+        QByteArray content1 = file1.readAll();
+        if (!file2.open(QIODevice::ReadOnly)) {
+            return false;
+        }
+
+        QByteArray content2 = file2.readAll();
+        std::string msg = "Problème de taille avec " + croped_fileName.toStdString();
+        int ref_size = content2.size();
+        if (content1.size()<ref_size) stream << "size too short" << "\n";
+        else{
+            for (int i=0; i< ref_size; i++){
+                if (content1[i]!=content2[i]) {stream << "mismatch at " << hex << i << "\n"; break;}
+            }
+        }
+
+
+    }
     return true;
 }
 bool Decompiler::ReadFile(QString filepath){
@@ -184,8 +238,6 @@ bool Decompiler::ReadFile(QString filepath){
     CurrentTF = TranslationFile();
     QFile file(filepath);
     QFileInfo infoFile(file);
-    QByteArray kek = file.readAll();
-    qDebug() << hex << kek[0];
     if (infoFile.suffix()=="xlsx") ReadXLSX(file);
     else if (infoFile.suffix()=="dat") ReadDAT(file);
     else {
