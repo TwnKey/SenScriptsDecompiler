@@ -62,12 +62,12 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     //From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
 
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) qDebug() << it->name << " id: " << hex << it->ID << " addr " << it->actual_addr << " ending at " << it->end_addr;
-    std::vector<function>::iterator InitIt = find_function_by_name(FunctionsToParse, "Init");
+
 
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
         if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
 
-
+            qDebug() << "Function " << it->name << " at addr " << hex << it->actual_addr;
             ReadIndividualFunction(*it,dat_content);
 
         //once a function is read, it should be removed from the FunctionsToParse vector and added to the FunctionsParsed
@@ -94,7 +94,11 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     int current_position = fun.actual_addr;
 
     int function_type = 0;
-    if ((!Passed_Monster_Functions)&&((fun.name == "PreInit")||(fun.name == "Init"))) Passed_Monster_Functions = true;
+    if (!Passed_Monster_Functions){
+        std::vector<function>::iterator InitIt = find_function_by_name(FunctionsToParse, "Init");
+        if ((InitIt==FunctionsToParse.end())||((fun.name == "PreInit")||(fun.name == "Init"))) Passed_Monster_Functions = true;
+    }
+
 
     if (fun.name.startsWith("_")) function_type = 2;
     else if (!Passed_Monster_Functions) function_type = 1;
@@ -110,7 +114,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
         }
     }
     else
-    {   //There is a big instruction and the ending instruction in those special functions
+    {
         if ((unsigned char)dat_content[current_position]!=0x1){
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
             fun.AddInstruction(instr);
