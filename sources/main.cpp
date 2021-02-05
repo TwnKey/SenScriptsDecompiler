@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 
 
-    /*QString filename = "a0302";
+    /*QString filename = "r4400";
 
     Dc.SetupGame("CS3");
     Dc.ReadFile("C:/Users/Antoine/Desktop/dat_en/"+filename+".dat");

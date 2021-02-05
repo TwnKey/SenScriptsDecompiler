@@ -153,6 +153,7 @@ void Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<fun
             QByteArray value_ = Value;
 
             value_.replace(1, "\n");
+
             QTextCodec *codec = QTextCodec::codecForName("UTF-8");
 
             QString string = codec->toUnicode(value_);
