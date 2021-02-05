@@ -104,12 +104,12 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
         function_type = 2;
 
     }
-    else if (!Passed_Monster_Functions) function_type = 1;
+    else if ((!Passed_Monster_Functions)||(fun.name == "")) function_type = 1;
 
     std::shared_ptr<Instruction> instr;
     if (function_type == 0){ //we use OP codes
         while(current_position<fun.end_addr){
-            //qDebug() << " OP: " << hex << (unsigned char)dat_content[current_position] << " at " << hex << current_position;
+            qDebug() << " OP: " << hex << (unsigned char)dat_content[current_position] << " at " << hex << current_position;
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
 
             fun.AddInstruction(instr);
@@ -144,6 +144,7 @@ bool Builder::UpdatePointersDAT(){
 
             for (int idx_operand = 0; idx_operand < FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes.size(); idx_operand++){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
+                    //qDebug() << "pointer: " << hex <<  FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue() << " add:r " << FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getAddr();
                     int addr_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
                     function fun = find_function(addr_ptr);
                     int id_instr = find_instruction(addr_ptr,fun);
@@ -237,7 +238,7 @@ int Builder::find_instruction(int addr, function fun){
         }
 
     }
-    //qDebug() << "Adresse pointée : " << hex << addr << " function: " << fun.actual_addr;
+    qDebug() << "Adresse pointée : " << hex << addr << " function: " << fun.actual_addr;
     if (!success) {
 
         qDebug() << "Couldn't find an instruction! ";

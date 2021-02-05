@@ -93,7 +93,7 @@ bool Decompiler::WriteDAT(){
         }
 
         int padding = fun.get_length_in_bytes() - current_fun.size();
-        for (int i_z = 0; i_z < padding; i_z++) current_fun.push_back('\0');
+        for (int i_z = 0; i_z < padding; i_z++) current_fun.push_front('\0');
         functions.push_back(current_fun);
 
     }
