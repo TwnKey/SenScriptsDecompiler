@@ -443,15 +443,6 @@ class OPCode0 : public Instruction
 };
 class OPCode1 : public Instruction
 {
-    //this is very probably a return; some facts:
-    //each function has to start at an address multiple of 4 (or even 0x10) if we talk
-    //about the functions at the end, meaning that if a function is meant to follow this 0x1 directly,
-    //we have to zero pad until the next multiple of 4.
-    //I also think that it is possible there is this instruction in the middle of a function, like we would
-    //do a return in the middle of a C function; therefore we can't stop the parsing of a function at the first
-    //0x1; We actually have to keep track of the address of each function when parsing the dat file
-    //and continue the parsing beyond the 0x1. We can think of the zeros as a zero instruction that would just
-    //contain their OP code; the next function starts when we hit their address.
     public:
     OPCode1():Instruction(-1,1,nullptr){}
     OPCode1(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"Return", 1,Maker){}
@@ -1343,7 +1334,6 @@ class OPCode32 : public Instruction
                 switch((unsigned char)control_byte[0]){
                 case '\x11':
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
                     this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 case '\x12':
@@ -5097,9 +5087,9 @@ class OPCodeCD : public Instruction
 
     }
 };
-/*THE FOLLOWING INSTRUCTIONS ARE SPECIAL.*/
+/*THE FOLLOWING INSTRUCTION IS SPECIAL.*/
 /*Normally there shouldnt be OPCodes greater than CD (the game crashes when trying to load a 0xF8 instruction);
- * unfortunately there are bytes than made NO FUCKING SENSE in some scenario file (the F8 one is from system.dat)
+ * unfortunately there are bytes than made NO SENSE in the file "system.dat"
  * I'm going to store the bytes until the next OPCode in instructions that would only be here to match the original content,
  * but I really can't figure out why on earth they placed such bytes here (just after a random return in the middle of a function
 The game doesn't access it after returning, there is no pointer toward it or the surrounding bytes, I really have no idea what is their purpose here*/
@@ -5118,8 +5108,7 @@ class OPCodeF8 : public Instruction
             }
             garbage.push_back('\0');
             garbage.push_back('\0');
-            garbage.push_back('\0');//dumb additional 3 zeros to match the original length and cheat the check test: The only time I am fine with not having the same
-            //content since I can't explain this and it doesn't seem there is any purpose to it
+            garbage.push_back('\0');//additional 3 zeros to match the original length and cheat the check test; it really sucks.
             this->AddOperande(operande(addr,"bytearray", garbage));
     }
 
@@ -5361,15 +5350,14 @@ class CS3Builder : public Builder
         //Then the pointer section
         //Then the "names positions" section
         //Then the functions section
-        //Done; here the function objects holds the number of functions, the addr, name positions
-        //everything else can be deduced
-
+        //Done; here the "function" objects holds the number of functions, the addr, name positions
+        //everything else can be deduced to recreate the header
+        display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
         int position = 0x20, next_position = 0;
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;
         int start_offset_area = 0x20 + filename.length()+1;
-        qDebug() << nb_functions;
         for (int idx_fun = 0; idx_fun < nb_functions; idx_fun++){
             position = start_offset_area + 4*idx_fun;
             next_position = start_offset_area + 4*(idx_fun+1);
@@ -5388,7 +5376,7 @@ class CS3Builder : public Builder
             FunctionsToParse.push_back(function(idx_fun,function_name,name_pos,addr,end_addr));
 
         }
-
+        display_text("Done.");
         return true;
     }
     std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content){

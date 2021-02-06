@@ -32,23 +32,17 @@ bool Decompiler::SetupGame(QString Game_){
 }
 bool Decompiler::ReadXLSX(QFile &File){
     QFileInfo info(File);
-    qDebug() << "Attempt to read " << info.absoluteFilePath();
+
 
     if (!File.open(QIODevice::ReadOnly)) return false;
-
-
-    qDebug() << info.absoluteFilePath();
-
 
     Document doc(info.absoluteFilePath());
     Game = doc.read(1, 1).toString();
     SetupGame(Game);
-
-    qDebug() << "Scene name: " << doc.read(2, 1).toString();
-    qDebug() << "Reading functions..." << IB;
+    display_text("Reading functions...");
     IB->ReadFunctionsXLSX(doc);
 
-    qDebug() << "Done";
+    display_text("Reading of XLSX done.");
 
     UpdateCurrentTF();
     return true;
@@ -72,7 +66,6 @@ bool Decompiler::ReadDAT(QFile &File){
     QByteArray content = File.readAll();
     QFileInfo info(File);
 
-    qDebug() << info.absoluteFilePath();
     IB->CreateHeaderFromDAT(content);
     IB->ReadFunctionsDAT(content);
     UpdateCurrentTF();
@@ -120,12 +113,13 @@ bool Decompiler::WriteDAT(){
     QDir dir(folder);
     if (!dir.exists()) dir.mkpath(".");
 
-    QString output_path = CurrentTF.getName() + ".dat";
+    QString output_path = folder + CurrentTF.getName() + ".dat";
     QFile file(output_path);
-    qDebug() << "Writing " << output_path;
+    display_text("Writing " + output_path);
     file.open(QIODevice::WriteOnly);
     file.write(file_content);
     file.close();
+    display_text("Done.");
     return true;
 }
 bool Decompiler::WriteXLSX(){
@@ -189,14 +183,12 @@ bool Decompiler::WriteXLSX(){
         function fun = CurrentTF.FunctionsInFile[idx_fun];
         excelScenarioSheet.write(excel_row,1,"FUNCTION");
         excelScenarioSheet.write(excel_row,2,fun.name);
-        //qDebug() << "Writing function named " << fun.name;
         excel_row++;
         for (int idx_instr=0; idx_instr<fun.InstructionsInFunction.size(); idx_instr++){
             fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet,CurrentTF.FunctionsInFile, excel_row);
             excel_row+=2;
         }
     }
-    qDebug() << "Writing XLSX: " << filename;
     excelScenarioSheet.saveAs(filename);
     return true;
 }

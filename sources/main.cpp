@@ -38,17 +38,9 @@ QString header[] = {".                           ,##(&%%@                       
 
 
 int main(int argc, char *argv[])
-{
-
-
-
+    {
     QCoreApplication a(argc, argv);
-    Decompiler Dc;
-    QDir directory("C:/Users/Antoine/Desktop/dat_en/");
-    QStringList filesToConvert = directory.entryList(QStringList() << "*.dat",QDir::Files);
-    Dc.CheckAllFiles(filesToConvert, "C:/Users/Antoine/Desktop/dat_en/", "C:/Users/Antoine/Documents/build-CS3TextDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Debug/");
-    const QString filepath = QCoreApplication::arguments().at(1);
-    display_text(filepath);
+
     if (argc < 2){
         for (int i = 0; i < 32; i++) display_text(header[i]);
         display_text("----------------------------------------------------------------------------------------------------------");
@@ -62,9 +54,10 @@ int main(int argc, char *argv[])
     }
     else
     {
+        const QString filepath = QCoreApplication::arguments().at(1);
         Decompiler Dc;
         Dc.SetupGame("CS3"); //I believe there is some sort of signature for CS3 in the game files (maybe the 0x20 at the beginning), for the moment the game name is hardcoded
-        display_text(filepath);
+        display_text("Processing " + filepath);
         Dc.ReadFile(filepath);
         Dc.WriteFile(filepath);
     }
