@@ -83,24 +83,39 @@ bool Decompiler::WriteDAT(){
 
     QByteArray functions, current_fun, file_content;
     /*header creation*/
+    int addr = 0;
     QByteArray header = IB->CreateHeaderBytes();
+    addr = addr + header.size();
     //Header done; let's do the functions now.
-    for (int idx_fun = 0; idx_fun < CurrentTF.FunctionsInFile.size(); idx_fun++) {
+    for (int idx_fun = 0; idx_fun < CurrentTF.FunctionsInFile.size()-1; idx_fun++) {
         function fun = CurrentTF.FunctionsInFile[idx_fun];
         current_fun.clear();
+
+
         for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
         }
-
-        int padding = fun.get_length_in_bytes() - current_fun.size();
-        for (int i_z = 0; i_z < padding; i_z++) current_fun.push_front('\0');
+        addr = addr + current_fun.size();
+        int multiple = 4;
+        int next_addr = CurrentTF.FunctionsInFile[idx_fun+1].actual_addr;
+        int padding = next_addr - addr;
+        for (int i_z = 0; i_z < padding; i_z++) current_fun.push_back('\0');
+        addr = next_addr;
         functions.push_back(current_fun);
 
     }
+    //no padding for the last one
+    function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size()-1];
+    current_fun.clear();
+    for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
+        current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
+    }
+    functions.push_back(current_fun);
+
 
     file_content.append(header);
     file_content.append(functions);
-    file_content.append('\x01');
+
     /*output file creation*/
     QDir dir(folder);
     if (!dir.exists()) dir.mkpath(".");
@@ -174,7 +189,7 @@ bool Decompiler::WriteXLSX(){
         function fun = CurrentTF.FunctionsInFile[idx_fun];
         excelScenarioSheet.write(excel_row,1,"FUNCTION");
         excelScenarioSheet.write(excel_row,2,fun.name);
-        qDebug() << "Writing function named " << fun.name;
+        //qDebug() << "Writing function named " << fun.name;
         excel_row++;
         for (int idx_instr=0; idx_instr<fun.InstructionsInFunction.size(); idx_instr++){
             fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet,CurrentTF.FunctionsInFile, excel_row);
@@ -222,12 +237,22 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         QByteArray content2 = file2.readAll();
         std::string msg = "Problème de taille avec " + croped_fileName.toStdString();
         int ref_size = content2.size();
-        if (content1.size()<ref_size) stream << "size too short" << "\n";
+        if (content1.size()<ref_size) {
+            qFatal("size too short");
+            stream << "size too short" << "\n";
+        }
         else{
+            if (content1.size()>ref_size) {
+                qFatal("size too big");
+                stream << "too big" << "\n";
+            }
             for (int i=0; i< ref_size; i++){
-                if (content1[i]!=content2[i]) {stream << "mismatch at " << hex << i << "\n"; break;}
+                if (content1[i]!=content2[i]) {
+                    stream << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                }
             }
         }
+        stream << " Size 1: " << hex << content1.size() << " vs Size 2: " << hex << content2.size();
 
 
     }
@@ -240,6 +265,19 @@ bool Decompiler::ReadFile(QString filepath){
     QFileInfo infoFile(file);
     if (infoFile.suffix()=="xlsx") ReadXLSX(file);
     else if (infoFile.suffix()=="dat") ReadDAT(file);
+    else {
+        display_text("FAILURE: Unrecognized extension.");
+        return false;
+    }
+    return true;
+}
+bool Decompiler::WriteFile(QString filepath){
+
+
+    QFile file(filepath);
+    QFileInfo infoFile(file);
+    if (infoFile.suffix()=="dat") WriteXLSX();
+    else if (infoFile.suffix()=="xlsx") WriteDAT();
     else {
         display_text("FAILURE: Unrecognized extension.");
         return false;

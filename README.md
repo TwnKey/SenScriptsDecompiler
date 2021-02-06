@@ -1,14 +1,21 @@
-# CS3TextDecompiler
- THIS IS STILL A WORK IN PROGRESS.
- 
- This is a tool I'm currently writing that is meant to decompile scenario files from The Legend of Heroes: Trails of Cold Steel III (hopefully CS4 too). From what I've seen there is no such tool available and this is why I am making it.
- Unfortunately the code is not really pretty since I'm still a beginner; any advice or contribution is welcome!! (contact: feitaishi45@gmail.com)
- 
- I don't intend to find the exact type of each operande for each OP code in the files. The main purpose of this tool is to allow extraction/insertion of text to help translating those games in other languages than English.
+# CS3ScenarioDecompiler
+ This tool is meant to decompile the game files from The Legend of Heroes: Trails of Cold Steel III, located in data/scripts/scena and data/scripts/talk.
  
 # Why QT?
-I wanted to use Qt for the QXlsx library https://github.com/QtExcel/QXlsx which I believe is the most feature-complete library existing for XLSX file creation. I want to be able to customize the sheets as much as possible (even though I might not do it soon)
+I wanted to use Qt for the QXlsx library https://github.com/QtExcel/QXlsx which I believe is the most feature-complete library existing for XLSX file creation. 
+I want to be able to customize the sheets as much as possible to make it comfortable for translators (currently it is not, though).
 
 # Status
-Currently there is still a LOT to be done. Insertion is not developped yet, and many OP Codes are missing. Decompiling "m3040.dat" should be fine with this code but I need to verify it. Anyway, you can expect some improvements in the coming days.
- 
+This is a tool I mostly made in two weeks while working full time, thus it suffers from several issues:
+- Lack of testing
+- Some instructions in the files might not be correctly delimited
+- Bad quality of code (I'm still a beginner)
+- Some types might not be accurate (float / int)
+- Some pointers might be missing (easy to fix, though)
+- Performance issues (Again I did all of that in two weeks, I focused more on the "reverse engineering" part than the code)
+
+So far it was able to read all files from my version of the game, produce proper XLSX, then rewriting them in dat format with the same number of bytes.
+The content of the files itself was the same except for the case where the game uses -0.0 instead of 0.0 (apparently those two have different bytes representations)
+Since I can't write -0.0 in the excel (I believe), I write 0x00000000 instead of 0x80000000 in the dat file, thus causing a mismatch. I doubt there is a consequence. 
+
+I encourage anyone using this tool and having trouble to contact me immediately (feitaishi45@gmail.com) so that I can fix their problem and make the tool more reliable!

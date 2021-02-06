@@ -19,7 +19,7 @@ public:
     bool WriteDAT();
     bool CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files);
     TranslationFile GetTF();
-
+    bool WriteFile(QString filepath);
 
 private:
     TranslationFile CurrentTF;

@@ -9,51 +9,90 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
     int first_row = 4;
     int last_row = doc.dimension().lastRow();
 
-    int addr = 0;
+
     int ID_fun = 0;
     function current_fun;
-    for (int idx_row = first_row; idx_row < last_row; idx_row++){
+    int padding = 0;
+    current_fun.name  = doc.read(first_row, 2).toString();
+    current_fun.ID = ID_fun;
+    int addr_instr = 0;
+    current_fun.declr_position = 0;
+    current_fun.XLSX_row_index = first_row;
+    current_fun.InstructionsInFunction.clear();
+    current_fun.actual_addr = 0;
+    for (int idx_row = first_row+1; idx_row < last_row; idx_row++){
 
         QString content_first_cell = doc.read(idx_row, 1).toString();
         if (content_first_cell == "FUNCTION"){ //We start a new function
 
-            if (ID_fun!=0){
-                int length = current_fun.get_length_in_bytes();
-                addr =  length + current_fun.actual_addr;
-                current_fun.end_addr = addr;
-                FunctionsParsed.push_back(current_fun);
-            }
-            current_fun.name  = doc.read(idx_row, 2).toString();
+
+            QString next_fun_name = doc.read(idx_row, 2).toString();
+
+
+            addr_instr = 0;
+            int length = current_fun.get_length_in_bytes();
+
+
+            FunctionsParsed.push_back(current_fun);
+
+            current_fun.name  = next_fun_name;
+
             current_fun.ID = ID_fun;
-            current_fun.actual_addr = addr;
+
             current_fun.declr_position = 0;
             current_fun.XLSX_row_index = idx_row;
             current_fun.InstructionsInFunction.clear();
+
 
             ID_fun++;
 
         }
         else{
 
-                std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr, idx_row, doc);
+                std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr_instr, idx_row, doc);
                 current_fun.AddInstruction(instr);
                 idx_row++;
 
         }
 
     }
+    int addr_fun = 0;
+
+
     //PadWithZeros(4,current_fun);
     FunctionsParsed.push_back(current_fun);
-    qDebug() << " Updating addresses...";
+    qDebug() << "Updating addresses...";
     QByteArray header = CreateHeaderBytes();
+
     int start_header = header.size();
-    for (int idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++){
-        FunctionsParsed[idx_fun].actual_addr += start_header;
+    addr_fun = start_header;
+    for (int idx_fun = 0; idx_fun<FunctionsParsed.size()-1; idx_fun++){
+        FunctionsParsed[idx_fun].actual_addr = addr_fun;
+
+        int length = FunctionsParsed[idx_fun].get_length_in_bytes();
+        qDebug() << "length:: " << hex << length;
+        FunctionsParsed[idx_fun].end_addr = length + FunctionsParsed[idx_fun].actual_addr;
+        addr_fun =  length + FunctionsParsed[idx_fun].actual_addr;
+        int multiple = 4;
+        if (FunctionsParsed[idx_fun+1].name.startsWith("_")) multiple = 0x10;
+        qDebug() << "address:: " << hex << addr_fun;
+        int padding = (((int) ceil((float)addr_fun/multiple)))*multiple - addr_fun;
+        qDebug() << "padding:: " << hex << padding;
+        addr_fun = addr_fun + padding;
+
+
         for (int idx_instr = 0; idx_instr<FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
-           FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->get_addr_instr()+start_header);
+           FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->get_addr_instr()+ FunctionsParsed[idx_fun].actual_addr);
         }
     }
-    qDebug() << " Updating pointers...";
+    FunctionsParsed[FunctionsParsed.size()-1].actual_addr = addr_fun;
+    int length = FunctionsParsed[FunctionsParsed.size()-1].get_length_in_bytes();
+    FunctionsParsed[FunctionsParsed.size()-1].end_addr = length + FunctionsParsed[FunctionsParsed.size()-1].actual_addr;
+    for (int idx_instr = 0; idx_instr<FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction.size(); idx_instr++){
+       FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction[idx_instr]->get_addr_instr()+ FunctionsParsed[FunctionsParsed.size()-1].actual_addr);
+    }
+
+    qDebug() << "Updating pointers...";
     UpdatePointersXLSX();
 
 }
@@ -67,7 +106,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
         if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
 
-            //qDebug() << "Function " << it->name << " at addr " << hex << it->actual_addr;
+
             ReadIndividualFunction(*it,dat_content);
 
         //once a function is read, it should be removed from the FunctionsToParse vector and added to the FunctionsParsed
@@ -82,9 +121,15 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
 
     UpdatePointersDAT();
     int current_addr = FunctionsParsed[0].actual_addr; //first function shouldn't have changed
-    for (int idx_fun = 1; idx_fun < FunctionsParsed.size()-1; idx_fun++){
+    for (int idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
+
 
         current_addr = current_addr + FunctionsParsed[idx_fun-1].get_length_in_bytes();
+        int multiple = 4;
+        if (FunctionsParsed[idx_fun].name.startsWith("_")) multiple = 0x10;
+
+        int padding = (((int) ceil((float)current_addr/multiple)))*multiple - current_addr;
+        current_addr = current_addr + padding;
         FunctionsParsed[idx_fun].SetAddr(current_addr);
     }
 
@@ -109,7 +154,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     std::shared_ptr<Instruction> instr;
     if (function_type == 0){ //we use OP codes
         while(current_position<fun.end_addr){
-            qDebug() << " OP: " << hex << (unsigned char)dat_content[current_position] << " at " << hex << current_position;
+           qDebug() << " OP: " << hex << (unsigned char)dat_content[current_position] << " at " << hex << current_position;
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
 
             fun.AddInstruction(instr);
@@ -178,6 +223,7 @@ bool Builder::UpdatePointersXLSX(){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
                     int idx_row_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
                     function current_fun = FunctionsParsed[0];
+                    qDebug() << hex << idx_row_ptr << "  Took the first function " << current_fun.XLSX_row_index;
                     if (FunctionsParsed.size()>1){
 
                         function next_fun = FunctionsParsed[1];
@@ -193,6 +239,7 @@ bool Builder::UpdatePointersXLSX(){
                        }
                     int nb_instruction_inside_function = (idx_row_ptr-(current_fun.XLSX_row_index+1))/2;
                     int addr_pointed = current_fun.InstructionsInFunction[nb_instruction_inside_function]->get_addr_instr();
+                    qDebug() << hex << addr_pointed << "  addr_pointed ";
                     FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setValue(GetBytesFromInt(addr_pointed));
                 }
             }
@@ -238,7 +285,7 @@ int Builder::find_instruction(int addr, function fun){
         }
 
     }
-    qDebug() << "Adresse pointée : " << hex << addr << " function: " << fun.actual_addr;
+
     if (!success) {
 
         qDebug() << "Couldn't find an instruction! ";

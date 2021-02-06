@@ -90,7 +90,7 @@ Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenario
             addr = addr + op.getLength();
             type = excelScenarioSheet.read(idx_row, idx_operande).toString();
         }
-    //qDebug() << this->getBytes() << " " << idx_row;
+
 }
 int Instruction::get_Nb_operandes(){
     return operandes.size();
@@ -104,7 +104,7 @@ int Instruction::get_addr_instr(){
 }
 void Instruction::WriteDat()
 {
-            qDebug() << "WriteDat test";
+
 }
 void Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<function> funs, int row)
 {
