@@ -41,6 +41,13 @@ int main(int argc, char *argv[])
     {
     QCoreApplication a(argc, argv);
 
+    Decompiler Dc;
+    Dc.SetupGame("CS4");
+    QString filepath = "C:/Users/Antoine/Desktop/scripts/t4000.dat";
+    qDebug() << filepath;
+    Dc.ReadFile(filepath);
+    Dc.WriteFile(filepath);
+
     if (argc < 2){
         for (int i = 0; i < 32; i++) display_text(header[i]);
         display_text("----------------------------------------------------------------------------------------------------------");
@@ -55,11 +62,8 @@ int main(int argc, char *argv[])
     else
     {
         const QString filepath = QCoreApplication::arguments().at(1);
-        Decompiler Dc;
-        Dc.SetupGame("CS3"); //I believe there is some sort of signature for CS3 in the game files (maybe the 0x20 at the beginning), for the moment the game name is hardcoded
         display_text("Processing " + filepath);
-        Dc.ReadFile(filepath);
-        Dc.WriteFile(filepath);
+
     }
 
 

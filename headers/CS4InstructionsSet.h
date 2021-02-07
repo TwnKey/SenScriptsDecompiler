@@ -1,21 +1,21 @@
-#ifndef CS3INSTRUCTIONSSET_H
-#define CS3INSTRUCTIONSSET_H
+#ifndef CS4INSTRUCTIONSSET_H
+#define CS4INSTRUCTIONSSET_H
 #include "headers/utilities.h"
 #include "headers/functions.h"
 #include "headers/translationfile.h"
 
 #include <QString>
 
-class CS3TranslationFile : public TranslationFile
+class CS4TranslationFile : public TranslationFile
 {
     public:
-    CS3TranslationFile():TranslationFile(){}
+    CS4TranslationFile():TranslationFile(){}
 
 };
-class CS3Builder : public Builder
+class CS4Builder : public Builder
 {
     public:
-    CS3Builder(){
+    CS4Builder(){
 
     }
     int add_operandes(int &addr, QByteArray &content, Instruction * instr, int size){
@@ -882,6 +882,7 @@ class CS3Builder : public Builder
                 addr++;
                 QByteArray control_byte = ReadSubByteArray(content, addr, 1);
                 this->AddOperande(operande(addr,"byte", control_byte));
+                fun_1403c90e0(addr, content, this, 0);
                 fun_1403c90e0(addr, content, this, 0);
                 fun_1403c90e0(addr, content, this, 0);
                 fun_1403c90e0(addr, content, this, 0);
@@ -1845,6 +1846,25 @@ class CS3Builder : public Builder
                         this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
                         break;
                     case 0:
+                        fun_1403c90e0(addr, content, this, 1);
+                        fun_1403c90e0(addr, content, this, 1);
+                        fun_1403c90e0(addr, content, this, 1);
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                        fun_1403c90e0(addr, content, this, 1);
+                        this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                        this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                        fun_1403c90e0(addr, content, this, 1);
+                        this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+                        fun_1403c90e0(addr, content, this, 1);
+                        fun_1403c90e0(addr, content, this, 1);
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                     break;
                     case 0x32:
                         fun_1403c90e0(addr, content, this, 1);
                         this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
@@ -2111,6 +2131,11 @@ class CS3Builder : public Builder
                     case 0x4:
                         this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                         break;
+                    case 0x5:
+                        this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                        this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                        this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                        break;
 
                 }
 
@@ -2191,6 +2216,9 @@ class CS3Builder : public Builder
 
                   }
                 }
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
 
         }
     };
@@ -2313,6 +2341,7 @@ class CS3Builder : public Builder
                 switch ((unsigned char)control_byte[0])  {
                     case 3:
                         this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                        this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                         break;
                     case 1:
                         this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
@@ -2851,6 +2880,10 @@ class CS3Builder : public Builder
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     break;
+                case 0x54:
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4))); //Rechecker à la sortie de CS4
+                    break;
 
                 }
 
@@ -2943,7 +2976,6 @@ class CS3Builder : public Builder
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
                 this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
-                this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
         }
     };
@@ -3293,6 +3325,10 @@ class CS3Builder : public Builder
                         this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
                         this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
                         this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                        this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
                         break;
                     case 4:
@@ -4501,6 +4537,9 @@ class CS3Builder : public Builder
 
                         this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                         break;
+                    case 0x0D:
+                        fun_1403c90e0(addr, content, this, 0);
+                        break;
                 }
 
         }
@@ -5100,33 +5139,34 @@ class CS3Builder : public Builder
 
         }
     };
-    /*THE FOLLOWING INSTRUCTION IS SPECIAL.*/
-    /*Normally there shouldnt be OPCodes greater than CD (the game crashes when trying to load a 0xF8 instruction);
-     * unfortunately there are bytes than made NO SENSE in the file "system.dat"
-     * I'm going to store the bytes until the next OPCode in instructions that would only be here to match the original content,
-     * but I really can't figure out why on earth they placed such bytes here (just after a random return in the middle of a function
-    The game doesn't access it after returning, there is no pointer toward it or the surrounding bytes, I really have no idea what is their purpose here*/
-    class OPCodeF8 : public Instruction
+    class OPCodeD1 : public Instruction
     {
         public:
-        OPCodeF8():Instruction(-1,0xF8,nullptr){}
-        OPCodeF8(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0xF8,Maker){}
-        OPCodeF8(int addr, Builder *Maker):Instruction(addr,"???",0xF8,Maker){}
-        OPCodeF8(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0xF8,Maker){
+        OPCodeD1():Instruction(-1,0xD1,nullptr){}
+        OPCodeD1(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xD1", 0xD1,Maker){}
+        OPCodeD1(int addr, Builder *Maker):Instruction(addr,"0xD1",0xD1,Maker){}
+        OPCodeD1(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xD1", 0xD1,Maker){
                 addr++;
-                QByteArray garbage;
-                while((unsigned char)content[addr]==0){
-                    addr++;
-                    garbage.push_back('\0');
+                QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+                this->AddOperande(operande(addr,"byte", control_byte));
+                switch((unsigned char)control_byte[0]){
+                    case 0x00:
+
+                        this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+                        this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                        this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                        this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                        break;
+                    case 0x01:
+                        this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+                        this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                        this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
                 }
-                garbage.push_back('\0');
-                garbage.push_back('\0');
-                garbage.push_back('\0');//additional 3 zeros to match the original length and cheat the check test; it really sucks.
-                this->AddOperande(operande(addr,"bytearray", garbage));
+
         }
-
-
     };
+
 
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type){
         int OP = (dat_content[addr]&0xFF);
@@ -5314,7 +5354,7 @@ class CS3Builder : public Builder
                 case 0xCB: return std::make_shared<OPCodeCB>(addr,dat_content,this);
                 case 0xCC: return std::make_shared<OPCodeCC>(addr,dat_content,this);
                 case 0xCD: return std::make_shared<OPCodeCD>(addr,dat_content,this);
-                case 0xF8: return std::make_shared<OPCodeF8>(addr,dat_content,this);
+                case 0xD1: return std::make_shared<OPCodeD1>(addr,dat_content,this);
                 default:
                 std::stringstream stream;
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
@@ -5337,27 +5377,15 @@ class CS3Builder : public Builder
     }
     bool CreateHeaderFromDAT(QByteArray &dat_content){
 
-        //Header structure:
-        //The first 0x20 is something used to check if the file is a valid file: it will always be that value
-        //The second 0x20 is the offset for the file name (shouldn't change too)
-        //The next integer is the position of the first pointer
-        //The 4th: probably the length in bytes of the pointer section
-        //The fifth: probably the position of the "names positions" section (right after the pointer section)
-        //The sixth: the number of functions inside the file
-        //the seventh: the position one byte after the 0x00 separator at the end of the functions section
-        //the eighth: 0xABCDEF00 => seems to always be there (no idea why)
-        //Then the name of the file
-        //Then the pointer section
-        //Then the "names positions" section
-        //Then the functions section
-        //Done; here the "function" objects holds the number of functions, the addr, name positions
-        //everything else can be deduced to recreate the header
+        //Here the main difference with CS3 is that the name of the file seems to always be located at a multiple of 0x04
         display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
         int position = 0x20, next_position = 0;
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;
-        int start_offset_area = 0x20 + filename.length()+1;
+        int nb_byte_to_add_name = (((int) ceil((float)SceneName.size()/4)))*4 - SceneName.size();
+
+        int start_offset_area = 0x20 + filename.length()+nb_byte_to_add_name;
         for (int idx_fun = 0; idx_fun < nb_functions; idx_fun++){
             position = start_offset_area + 4*idx_fun;
             next_position = start_offset_area + 4*(idx_fun+1);
@@ -5563,7 +5591,7 @@ class CS3Builder : public Builder
             case 0xCB: return std::make_shared<OPCodeCB>(addr,row, xls_content,this);
             case 0xCC: return std::make_shared<OPCodeCC>(addr,row, xls_content,this);
             case 0xCD: return std::make_shared<OPCodeCD>(addr,row, xls_content,this);
-            case 0xF8: return std::make_shared<OPCodeF8>(addr,row, xls_content,this);
+            case 0xD1: return std::make_shared<OPCodeD1>(addr,row, xls_content,this);
             case 256: return std::make_shared<CreateMonsters>(addr, row, xls_content,this);
             case 257: return std::make_shared<EffectsInstr>(addr, row, xls_content,this);
             default:
@@ -5583,7 +5611,8 @@ class CS3Builder : public Builder
         QByteArray header;
 
         QByteArray scene_name_bytes = SceneName.toUtf8();
-        scene_name_bytes.append('\x0');
+        int nb_byte_to_add_name = (((int) ceil((float)scene_name_bytes.size()/4)))*4 - scene_name_bytes.size();
+        for (int i = 0; i < nb_byte_to_add_name; i++) scene_name_bytes.append('\x0');
         int size_of_scene_name = scene_name_bytes.length();
         header.append(GetBytesFromInt(0x20));
         header.append(GetBytesFromInt(0x20));
@@ -5625,4 +5654,4 @@ class CS3Builder : public Builder
 };
 
 
-#endif // CS3INSTRUCTIONSSET_H
+#endif // CS4INSTRUCTIONSSET_H

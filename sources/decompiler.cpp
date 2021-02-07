@@ -1,5 +1,6 @@
 #include "headers/decompiler.h"
 #include "headers/CS3InstructionsSet.h"
+#include "headers/CS4InstructionsSet.h"
 #include "qxlsx/headers/xlsxdocument.h"
 #include "qxlsx/headers/xlsxchartsheet.h"
 #include "qxlsx/headers/xlsxcellrange.h"
@@ -24,6 +25,7 @@ bool Decompiler::SetupGame(QString Game_){
     Game = Game_;
 
     if (Game == "CS3") IB = new CS3Builder();
+    else if (Game == "CS4") IB = new CS4Builder();
     else {
         display_text("FAILURE: Unrecognized game specified.");
         return false;

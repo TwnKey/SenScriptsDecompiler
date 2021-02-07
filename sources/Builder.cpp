@@ -85,6 +85,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
 
     for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
         if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
+            qDebug() << "Reading function " << it->name << "at addr " << hex << it->actual_addr;
             ReadIndividualFunction(*it,dat_content);
             FunctionsParsed.push_back(*it);
 
@@ -132,6 +133,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
         while(current_position<fun.end_addr){
 
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
+            qDebug() << hex << instr->get_OP() << " at addr " << instr->get_addr_instr();
             fun.AddInstruction(instr);
 
         }
