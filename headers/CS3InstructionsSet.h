@@ -2166,15 +2166,15 @@ class OPCode40 : public Instruction
 
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//11 -> 15
             }
-            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
             if (control == -0x1fb) {//I'm not sure at all of this behavior, but at the same time I'm not even sure it happens anywhere (lazy)
               while (content[addr] != '\0'){
                 this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
-                this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+				this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+				this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
               }
             }
