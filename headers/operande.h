@@ -41,6 +41,13 @@ public:
 
         return ReadIntegerFromByteArray(0, Value);
     }
+    void setBytesToFill(int b){
+        bytes_to_fill = b;
+    }
+    int getBytesToFill(){
+
+        return bytes_to_fill;
+    }
     int getLength(){
         int size = Value.size();
         if (Type=="string") size++;
@@ -58,10 +65,12 @@ public:
     Destination getDestination(){
         return Dest;
     }
+
 private:
     Destination Dest = Destination(-1,-1,-1);
     int Position;
     QString Type;
     QByteArray Value;
+    int bytes_to_fill;
 };
 #endif // OPERANDE_H

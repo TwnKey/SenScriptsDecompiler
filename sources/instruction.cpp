@@ -55,17 +55,20 @@ Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenario
                 op = operande(addr,"byte", Value);
 
             }
-            else if (type == "bytearray"){
+            else if (type == "fill"){
 
-                while(type == "bytearray"){
-                    unsigned char Operande = ((excelScenarioSheet.read(idx_row+1, idx_operande).toInt())& 0x000000FF);
-                    Value.push_back(Operande);
-                    idx_operande++;
-                    type = excelScenarioSheet.read(idx_row, idx_operande).toString();
-                }
-                op = operande(addr,"bytearray", Value);
-                idx_operande--;
+                QString Operande_prev = excelScenarioSheet.read(idx_row+1, idx_operande-1).toString();
+                QString Operande = excelScenarioSheet.read(idx_row+1, idx_operande).toString();
+                QString str_max_length = Operande.mid(1,Operande.indexOf('-')-1);
+
+                //apparently it is not possible to get the result of the formula...
+
+                for (int id = 0; id < str_max_length.toInt()-Operande_prev.toUtf8().size()-1; id++) Value.push_back('\0');
+
+                op = operande(addr,"fill", Value);
+
             }
+
             else if ((type == "string")||(type == "dialog")){
                 QString Operande = (excelScenarioSheet.read(idx_row+1, idx_operande).toString());
                 Value = Operande.toUtf8();
@@ -73,6 +76,17 @@ Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenario
 
                 op = operande(addr,type, Value);
             }
+            else if (type == "bytearray"){
+
+                            while(type == "bytearray"){
+                                unsigned char Operande = ((excelScenarioSheet.read(idx_row+1, idx_operande).toInt())& 0x000000FF);
+                                Value.push_back(Operande);
+                                idx_operande++;
+                                type = excelScenarioSheet.read(idx_row, idx_operande).toString();
+                            }
+                            op = operande(addr,"bytearray", Value);
+                            idx_operande--;
+                        }
             else if (type == "pointer"){
                 QString Operande = (excelScenarioSheet.read(idx_row+1, idx_operande).toString());
 
@@ -113,6 +127,7 @@ void Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<fun
     excelScenarioSheet.write(row, 2, "OP Code");
     excelScenarioSheet.write(row+1, 2, OPCode);
     int col_cnt = 0;
+
     for (int idx_op = 0; idx_op<operandes.size(); idx_op++){
 
         QString type = operandes[idx_op].getType();
@@ -138,15 +153,20 @@ void Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<fun
             excelScenarioSheet.write(row+1, 3+col_cnt, (int)Value[0]);
             col_cnt++;
         }
+        else if (type == "fill"){
+            excelScenarioSheet.write(row, 3+col_cnt, type);
+            excelScenarioSheet.write(row+1, 3+col_cnt, "="+QString::number(operandes[idx_op].getBytesToFill())+"-LENB(INDIRECT(ADDRESS("+QString::number(row+1)+","+QString::number(3+col_cnt-1)+")))");
+            col_cnt++;
+        }
         else if (type == "bytearray"){
 
-            for (int idx_byte = 0; idx_byte<Value.size(); idx_byte++){
-                excelScenarioSheet.write(row, 3+col_cnt, type);
-                excelScenarioSheet.write(row+1, 3+col_cnt, (int)Value[idx_byte]);
-                col_cnt++;
-            }
+                   for (int idx_byte = 0; idx_byte<Value.size(); idx_byte++){
+                       excelScenarioSheet.write(row, 3+col_cnt, type);
+                       excelScenarioSheet.write(row+1, 3+col_cnt, (int)Value[idx_byte]);
+                       col_cnt++;
+                   }
 
-        }
+               }
         else if ((type == "string")||(type == "dialog")){
 
             excelScenarioSheet.write(row, 3+col_cnt, type);

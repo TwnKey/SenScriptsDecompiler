@@ -6,6 +6,7 @@
 
 #include <QString>
 
+<<<<<<< Updated upstream
 class CS4TranslationFile : public TranslationFile
 {
     public:
@@ -5375,6 +5376,23 @@ class CS4Builder : public Builder
         }
 
     }
+=======
+//START FROM CS3 AT PC RELEASE!!!!!!!!!!!!!
+
+class CS4TranslationFile : public TranslationFile
+{
+    public:
+    CS4TranslationFile():TranslationFile(){}
+
+};
+class CS4Builder : public Builder
+{
+    public:
+    CS4Builder(){
+
+    }
+
+>>>>>>> Stashed changes
     bool CreateHeaderFromDAT(QByteArray &dat_content){
 
         //Here the main difference with CS3 is that the name of the file seems to always be located at a multiple of 0x04
@@ -5407,6 +5425,7 @@ class CS4Builder : public Builder
         display_text("Header parsed.");
         return true;
     }
+<<<<<<< Updated upstream
     std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content){
 
         int OP = xls_content.read(row+1, 2).toInt();
@@ -5651,6 +5670,10 @@ class CS4Builder : public Builder
         return header;
     }
 
+=======
+
+
+>>>>>>> Stashed changes
 };
 
 

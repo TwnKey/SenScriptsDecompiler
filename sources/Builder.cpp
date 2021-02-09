@@ -17,6 +17,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
     current_fun.XLSX_row_index = first_row;
     current_fun.InstructionsInFunction.clear();
     current_fun.actual_addr = 0;
+    qDebug() << "BON";
     for (int idx_row = first_row+1; idx_row < last_row; idx_row++){
 
         QString content_first_cell = doc.read(idx_row, 1).toString();
@@ -111,22 +112,42 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     }
 
 
+
+
 }
 int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     int current_position = fun.actual_addr;
-
-    int function_type = 0;
     if (!Passed_Monster_Functions){
         std::vector<function>::iterator InitIt = find_function_by_name(FunctionsToParse, "Init");
         if ((InitIt==FunctionsToParse.end())||((fun.name == "PreInit")||(fun.name == "Init"))) Passed_Monster_Functions = true;
     }
-
-
-    if (fun.name.startsWith("_")) {
+    //I put the name of the battle functions here but it's ugly
+    //the names are hardcoded in the executable and don't use OP codes.
+    int function_type = 0;
+    if (fun.name == "ActionTable"){
+        function_type = 3;
+    }
+    else if (fun.name == "AlgoTable"){
+        function_type = 4;
+    }
+    else if (fun.name == "WeaponAttTable"){
+        function_type = 5;
+    }
+    else if (fun.name == "BreakTable"){
+        function_type = 6;
+    }
+    else if (fun.name == "SummonTable"){
+        function_type = 7;
+    }
+    else if ((!Passed_Monster_Functions)||(fun.name == "")) function_type = 1;
+    else if (fun.name.startsWith("_")) {
         function_type = 2;
 
     }
-    else if ((!Passed_Monster_Functions)||(fun.name == "")) function_type = 1;
+
+
+
+
 
     std::shared_ptr<Instruction> instr;
     if (function_type == 0){ //we use OP codes
@@ -140,16 +161,12 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     }
     else
     {
-        if ((unsigned char)dat_content[current_position]!=0x1){
+
+        while(current_position<fun.end_addr){
 
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
             fun.AddInstruction(instr);
-
-        }
-        while(current_position<fun.end_addr){
-
-            instr = CreateInstructionFromDAT(current_position, dat_content, 0);
-            fun.AddInstruction(instr);
+            function_type = 0;
 
         }
 

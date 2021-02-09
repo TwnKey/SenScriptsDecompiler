@@ -42,11 +42,22 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     Decompiler Dc;
+<<<<<<< Updated upstream
     Dc.SetupGame("CS4");
     QString filepath = "C:/Users/Antoine/Desktop/scripts/t4000.dat";
     qDebug() << filepath;
     Dc.ReadFile(filepath);
     Dc.WriteFile(filepath);
+=======
+    Dc.SetupGame("CS3");
+    QDir directory("C:/Users/Antoine/Desktop/other_files/battle/dat_en");
+    QStringList dat_files = directory.entryList(QStringList() << "*.dat" << "*.DAT",QDir::Files);
+    Dc.CheckAllFiles(dat_files,  "C:/Users/Antoine/Desktop/other_files/battle/dat_en","C:/Users/Antoine/Documents/build-CS3ScenarioDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Debug");
+    //QString filepath = "C:/Users/Antoine/Desktop/scripts/t4000.dat";
+
+   /* Dc.ReadFile(filepath);
+    Dc.WriteFile(filepath);*/
+>>>>>>> Stashed changes
 
     if (argc < 2){
         for (int i = 0; i < 32; i++) display_text(header[i]);
