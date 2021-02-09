@@ -25,11 +25,7 @@ bool Decompiler::SetupGame(QString Game_){
     Game = Game_;
 
     if (Game == "CS3") IB = new CS3Builder();
-<<<<<<< Updated upstream
-    else if (Game == "CS4") IB = new CS4Builder();
-=======
     //else if (Game == "CS4") IB = new CS4Builder();
->>>>>>> Stashed changes
     else {
         display_text("FAILURE: Unrecognized game specified.");
         return false;
@@ -59,7 +55,7 @@ bool Decompiler::UpdateCurrentTF(){
     CurrentTF.setName(IB->SceneName);
 
 
-
+    CurrentTF.FunctionsInFile.clear();
     for (int idx_fun = 0; idx_fun < IB->FunctionsParsed.size(); idx_fun++) CurrentTF.addFunction(IB->FunctionsParsed[idx_fun]);
 
     return true;
@@ -89,14 +85,17 @@ bool Decompiler::WriteDAT(){
     addr = addr + header.size();
 
     //Header done; let's do the functions now.
-    for (int idx_fun = 0; idx_fun < CurrentTF.FunctionsInFile.size()-1; idx_fun++) {
-        function fun = CurrentTF.FunctionsInFile[idx_fun];
+    for (int idx_fun = 0; idx_fun < CurrentTF.getNbFunctions()-1; idx_fun++) {
 
+        function fun = CurrentTF.FunctionsInFile[idx_fun];
+        qDebug() << fun.name;
         current_fun.clear();
 
 
         for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
+            //qDebug() << hex << fun.InstructionsInFunction[idx_instr]->get_addr_instr();
+            //qDebug() << " allo : " << fun.InstructionsInFunction[idx_instr]->getBytes();
 
         }
         addr = addr + current_fun.size();
@@ -109,14 +108,16 @@ bool Decompiler::WriteDAT(){
 
 
     }
-    //no padding for the last one
-    function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size()-1];
-    current_fun.clear();
-    for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
-        current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
-    }
-    functions.push_back(current_fun);
 
+    //no padding for the last one
+    if (CurrentTF.getNbFunctions()-1>=0){
+        function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size()-1];
+        current_fun.clear();
+        for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
+            current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
+        }
+        functions.push_back(current_fun);
+    }
 
     file_content.append(header);
     file_content.append(functions);

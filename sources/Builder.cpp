@@ -9,109 +9,114 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
     int first_row = 4;
     int last_row = doc.dimension().lastRow();
     int ID_fun = 0;
-    function current_fun;
-    current_fun.name  = doc.read(first_row, 2).toString();
-    current_fun.ID = ID_fun;
-    int addr_instr = 0;
-    current_fun.declr_position = 0;
-    current_fun.XLSX_row_index = first_row;
-    current_fun.InstructionsInFunction.clear();
-    current_fun.actual_addr = 0;
-    qDebug() << "BON";
-    for (int idx_row = first_row+1; idx_row < last_row; idx_row++){
 
-        QString content_first_cell = doc.read(idx_row, 1).toString();
-        if (content_first_cell == "FUNCTION"){ //We start a new function
+    QString content_first_cell = doc.read(first_row, 1).toString();
+    if (content_first_cell == "FUNCTION"){
+        function current_fun;
+        current_fun.name  = doc.read(first_row, 2).toString();
+        current_fun.ID = ID_fun;
+        int addr_instr = 0;
+        current_fun.declr_position = 0;
+        current_fun.XLSX_row_index = first_row;
+        current_fun.InstructionsInFunction.clear();
+        current_fun.actual_addr = 0;
 
-            QString next_fun_name = doc.read(idx_row, 2).toString();
-            addr_instr = 0;
-            FunctionsParsed.push_back(current_fun);
-            current_fun.name  = next_fun_name;
-            current_fun.ID = ID_fun;
-            current_fun.declr_position = 0;
-            current_fun.XLSX_row_index = idx_row;
-            current_fun.InstructionsInFunction.clear();
-            ID_fun++;
+        for (int idx_row = first_row+1; idx_row < last_row; idx_row++){
+
+            QString content_first_cell = doc.read(idx_row, 1).toString();
+            if (content_first_cell == "FUNCTION"){ //We start a new function
+
+                QString next_fun_name = doc.read(idx_row, 2).toString();
+                addr_instr = 0;
+                FunctionsParsed.push_back(current_fun);
+                current_fun.name  = next_fun_name;
+                current_fun.ID = ID_fun;
+                current_fun.declr_position = 0;
+                current_fun.XLSX_row_index = idx_row;
+                current_fun.InstructionsInFunction.clear();
+                ID_fun++;
+
+            }
+            else{
+
+                std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr_instr, idx_row, doc);
+                current_fun.AddInstruction(instr);
+                idx_row++;
+
+            }
 
         }
-        else{
+        int addr_fun = 0;
+        FunctionsParsed.push_back(current_fun);
 
-            std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr_instr, idx_row, doc);
-            current_fun.AddInstruction(instr);
-            idx_row++;
+        QByteArray header = CreateHeaderBytes();
 
+        int start_header = header.size();
+        addr_fun = start_header;
+        for (int idx_fun = 0; idx_fun<FunctionsParsed.size()-1; idx_fun++){
+            FunctionsParsed[idx_fun].actual_addr = addr_fun;
+
+            int length = FunctionsParsed[idx_fun].get_length_in_bytes();
+
+            FunctionsParsed[idx_fun].end_addr = length + FunctionsParsed[idx_fun].actual_addr;
+            addr_fun =  length + FunctionsParsed[idx_fun].actual_addr;
+            int multiple = 4;
+            if (FunctionsParsed[idx_fun+1].name.startsWith("_")) multiple = 0x10;
+
+            int padding = (((int) ceil((float)addr_fun/multiple)))*multiple - addr_fun;
+
+            addr_fun = addr_fun + padding;
+
+
+            for (int idx_instr = 0; idx_instr<FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
+               FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->get_addr_instr()+ FunctionsParsed[idx_fun].actual_addr);
+            }
+        }
+        FunctionsParsed[FunctionsParsed.size()-1].actual_addr = addr_fun;
+        int length = FunctionsParsed[FunctionsParsed.size()-1].get_length_in_bytes();
+        FunctionsParsed[FunctionsParsed.size()-1].end_addr = length + FunctionsParsed[FunctionsParsed.size()-1].actual_addr;
+        for (int idx_instr = 0; idx_instr<FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction.size(); idx_instr++){
+           FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction[idx_instr]->get_addr_instr()+ FunctionsParsed[FunctionsParsed.size()-1].actual_addr);
         }
 
-    }
-    int addr_fun = 0;
-    FunctionsParsed.push_back(current_fun);
 
-    QByteArray header = CreateHeaderBytes();
-
-    int start_header = header.size();
-    addr_fun = start_header;
-    for (int idx_fun = 0; idx_fun<FunctionsParsed.size()-1; idx_fun++){
-        FunctionsParsed[idx_fun].actual_addr = addr_fun;
-
-        int length = FunctionsParsed[idx_fun].get_length_in_bytes();
-
-        FunctionsParsed[idx_fun].end_addr = length + FunctionsParsed[idx_fun].actual_addr;
-        addr_fun =  length + FunctionsParsed[idx_fun].actual_addr;
-        int multiple = 4;
-        if (FunctionsParsed[idx_fun+1].name.startsWith("_")) multiple = 0x10;
-
-        int padding = (((int) ceil((float)addr_fun/multiple)))*multiple - addr_fun;
-
-        addr_fun = addr_fun + padding;
-
-
-        for (int idx_instr = 0; idx_instr<FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
-           FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->get_addr_instr()+ FunctionsParsed[idx_fun].actual_addr);
-        }
-    }
-    FunctionsParsed[FunctionsParsed.size()-1].actual_addr = addr_fun;
-    int length = FunctionsParsed[FunctionsParsed.size()-1].get_length_in_bytes();
-    FunctionsParsed[FunctionsParsed.size()-1].end_addr = length + FunctionsParsed[FunctionsParsed.size()-1].actual_addr;
-    for (int idx_instr = 0; idx_instr<FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction.size(); idx_instr++){
-       FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction[idx_instr]->get_addr_instr()+ FunctionsParsed[FunctionsParsed.size()-1].actual_addr);
+        UpdatePointersXLSX();
     }
 
-
-    UpdatePointersXLSX();
     display_text("XLSX file read.");
 }
 
 void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     //From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
+    if (FunctionsToParse.size()>0){
+        for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
+            if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
+                qDebug() << "Reading function " << it->name << "at addr " << hex << it->actual_addr;
+                ReadIndividualFunction(*it,dat_content);
+                FunctionsParsed.push_back(*it);
 
-    for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
-        if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
-            qDebug() << "Reading function " << it->name << "at addr " << hex << it->actual_addr;
-            ReadIndividualFunction(*it,dat_content);
-            FunctionsParsed.push_back(*it);
+            }
+
 
         }
 
+        std::sort(FunctionsParsed.begin(), FunctionsParsed.end());
+
+        UpdatePointersDAT();
+        int current_addr = FunctionsParsed[0].actual_addr; //first function shouldn't have changed
+        for (int idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
+
+
+            current_addr = current_addr + FunctionsParsed[idx_fun-1].get_length_in_bytes();
+            int multiple = 4;
+            if (FunctionsParsed[idx_fun].name.startsWith("_")) multiple = 0x10;
+
+            int padding = (((int) ceil((float)current_addr/multiple)))*multiple - current_addr;
+            current_addr = current_addr + padding;
+            FunctionsParsed[idx_fun].SetAddr(current_addr);
+        }
 
     }
-
-    std::sort(FunctionsParsed.begin(), FunctionsParsed.end());
-
-    UpdatePointersDAT();
-    int current_addr = FunctionsParsed[0].actual_addr; //first function shouldn't have changed
-    for (int idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
-
-
-        current_addr = current_addr + FunctionsParsed[idx_fun-1].get_length_in_bytes();
-        int multiple = 4;
-        if (FunctionsParsed[idx_fun].name.startsWith("_")) multiple = 0x10;
-
-        int padding = (((int) ceil((float)current_addr/multiple)))*multiple - current_addr;
-        current_addr = current_addr + padding;
-        FunctionsParsed[idx_fun].SetAddr(current_addr);
-    }
-
-
 
 
 }
@@ -139,6 +144,12 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     else if (fun.name == "SummonTable"){
         function_type = 7;
     }
+    else if (fun.name == "ReactionTable"){
+        function_type = 8;
+    }
+    else if (fun.name == "PartTable"){
+        function_type = 9;
+    }
     else if ((!Passed_Monster_Functions)||(fun.name == "")) function_type = 1;
     else if (fun.name.startsWith("_")) {
         function_type = 2;
@@ -154,7 +165,6 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
         while(current_position<fun.end_addr){
 
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
-            qDebug() << hex << instr->get_OP() << " at addr " << instr->get_addr_instr();
             fun.AddInstruction(instr);
 
         }

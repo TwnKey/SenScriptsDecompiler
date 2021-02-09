@@ -218,7 +218,7 @@ void Instruction::AddOperande(operande op){
     operandes.push_back(op);
 
     if (op.getType() == "pointer") {
-        //qDebug() << "POINTER !! " << hex << op.getAddr() << " " << op.getIntegerValue();
+        qDebug() << "POINTER !! " << hex << op.getAddr() << " " << op.getIntegerValue();
         //Maker->pointers.push_back(&*(operandes.end()-1));
     }
 }
