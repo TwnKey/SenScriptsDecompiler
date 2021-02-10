@@ -153,6 +153,13 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     else if (fun.name == "AnimeClipTable"){
         function_type = 10;
     }
+    else if (fun.name == "FieldMonsterData"){
+        function_type = 11;
+    }
+    else if (fun.name == "FieldFollowData"){
+        function_type = 12;
+    }
+
     else if ((!Passed_Monster_Functions)||(fun.name == "")) function_type = 1;
     else if (fun.name.startsWith("_")) {
         function_type = 2;
