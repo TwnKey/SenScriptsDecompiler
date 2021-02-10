@@ -150,6 +150,9 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     else if (fun.name == "PartTable"){
         function_type = 9;
     }
+    else if (fun.name == "AnimeClipTable"){
+        function_type = 10;
+    }
     else if ((!Passed_Monster_Functions)||(fun.name == "")) function_type = 1;
     else if (fun.name.startsWith("_")) {
         function_type = 2;

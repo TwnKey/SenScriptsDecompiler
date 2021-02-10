@@ -43,9 +43,9 @@ int main(int argc, char *argv[])
 
     Decompiler Dc;
     Dc.SetupGame("CS3");
-    QDir directory("C:/Users/Antoine/Desktop/other_files/battle/dat_en");
+    QDir directory("C:/Users/Antoine/Desktop/other_files/ani/dat_en");
     QStringList dat_files = directory.entryList(QStringList() << "*.dat" << "*.DAT",QDir::Files);
-    Dc.CheckAllFiles(dat_files,  "C:/Users/Antoine/Desktop/other_files/battle/dat_en","C:/Users/Antoine/Documents/build-CS3ScenarioDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Debug");
+    Dc.CheckAllFiles(dat_files,  "C:/Users/Antoine/Desktop/other_files/ani/dat_en","C:/Users/Antoine/Documents/build-CS3ScenarioDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Debug");
     //QString filepath = "C:/Users/Antoine/Desktop/scripts/t4000.dat";
 
    /* Dc.ReadFile(filepath);
