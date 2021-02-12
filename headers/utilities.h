@@ -18,4 +18,5 @@ float ReadFloatFromByteArray(int start_pos, QByteArray &content);
 QByteArray GetBytesFromInt(int i);
 QByteArray GetBytesFromFloat(float f);
 QByteArray GetBytesFromShort(short i);
+bool isMultiple0x10(QString fun_name);
 #endif // UTILITIES_H

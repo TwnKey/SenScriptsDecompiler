@@ -61,7 +61,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
             FunctionsParsed[idx_fun].end_addr = length + FunctionsParsed[idx_fun].actual_addr;
             addr_fun =  length + FunctionsParsed[idx_fun].actual_addr;
             int multiple = 4;
-            if (FunctionsParsed[idx_fun+1].name.startsWith("_")) multiple = 0x10;
+            if (isMultiple0x10(FunctionsParsed[idx_fun+1].name)) multiple = 0x10;
 
             int padding = (((int) ceil((float)addr_fun/multiple)))*multiple - addr_fun;
 
@@ -103,13 +103,14 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
         std::sort(FunctionsParsed.begin(), FunctionsParsed.end());
 
         UpdatePointersDAT();
+
         int current_addr = FunctionsParsed[0].actual_addr; //first function shouldn't have changed
         for (int idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
 
 
             current_addr = current_addr + FunctionsParsed[idx_fun-1].get_length_in_bytes();
             int multiple = 4;
-            if (FunctionsParsed[idx_fun].name.startsWith("_")) multiple = 0x10;
+            if (isMultiple0x10(FunctionsParsed[idx_fun].name)) multiple = 0x10;
 
             int padding = (((int) ceil((float)current_addr/multiple)))*multiple - current_addr;
             current_addr = current_addr + padding;
@@ -125,6 +126,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     if (!Passed_Monster_Functions){
         std::vector<function>::iterator InitIt = find_function_by_name(FunctionsToParse, "Init");
         if ((InitIt==FunctionsToParse.end())||((fun.name == "PreInit")||(fun.name == "Init"))) Passed_Monster_Functions = true;
+        //if (fun.name == "Init") Passed_Monster_Functions = true;
     }
     //I put the name of the battle functions here but it's ugly
     //the names are hardcoded in the executable and don't use OP codes.
@@ -159,17 +161,48 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     else if (fun.name == "FieldFollowData"){
         function_type = 12;
     }
+    else if (fun.name.startsWith("FC_auto")){ //14025d625 Only present in face.dat...
+        function_type = 13;
+    }
+    else if (fun.name.startsWith("BookData")){ //Book: the first short read is crucial I think. 0 = text incoming; not zero =
+        QRegExp rx("BookData(\\d+)_(\\d+)");
+        std::vector<int> result;
+        //int Nb_Book = rx.cap(1).toInt();
+        rx.indexIn(fun.name, 0);
+        int Nb_Data = rx.cap(2).toInt();
 
-    else if ((!Passed_Monster_Functions)||(fun.name == "")) function_type = 1;
+        if (Nb_Data == 99) function_type = 14; //DATA, the 99 is clearly hardcoded; The behaviour is: 99=> two shorts (probably number of pages) and that's it
+
+        else function_type = 15;
+
+    }
+    //(!Passed_Monster_Functions)&&(((!fun.name.startsWith("Ani")||
+
+    else if (((fun.name == "")||(!Passed_Monster_Functions)&&(!fun.name.startsWith("Ani")))&&((unsigned char)dat_content[fun.actual_addr]!=1)){
+
+        function_type = 1;
+    }
+    //really really not satisfied with that but what else can I do?
+    //The thing is, in general most of the "monster function" have empty names and are located before the init function
+    //in a0000.dat though, there is a function called with a proper name but which is also a monster function,
+    //and is located before the init
+    //Finally, there is a function with an empty name after an Init (in A1003)
+    //The proper way to do it would be to call those functions as monster functions from the instruction that calls them(I think its the same one that creates NPC)
+    //the fact is, you would have to find all of the occurrences of this instruction and you can't find them without knowing which functions are
+    //using OP Codes or not. In the game it's simple, they just have to call the functions.
+    //I thought always starting with Init, PreInit, ReInit, etc, would be enough to cover all the Monster functions,
+    //but it only covers some of them; it might even be possible that some functions in the files are not used
+    //by the game;
+    //Anyway, this is why I came up with a custom-very-awful policy regarding those:
+    //If the function name is empty, if the function starts with 0x01 it's an empty function, otherwise it's monster
+    //if a function is located before the Init and has a proper name WITHOUT starting with "Ani", it's a monster
+    //function
+    //This policy is obviously not without risks, and it might also not be true for CS4, but I believe it is true
+    //for the CS3 files I have and it is enough for me at the moment
     else if (fun.name.startsWith("_")) {
         function_type = 2;
 
     }
-
-
-
-
-
     std::shared_ptr<Instruction> instr;
     if (function_type == 0){ //we use OP codes
         while(current_position<fun.end_addr){
@@ -204,11 +237,14 @@ bool Builder::UpdatePointersDAT(){
 
             for (int idx_operand = 0; idx_operand < FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes.size(); idx_operand++){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
-
                     int addr_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
+
                     function fun = find_function(addr_ptr);
+
                     int id_instr = find_instruction(addr_ptr,fun);
+
                     int id_op = find_operande(addr_ptr,*fun.InstructionsInFunction[id_instr]);
+
                     FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setDestination(fun.ID, id_instr, id_op);
 
                 }
@@ -296,12 +332,13 @@ int Builder::find_instruction(int addr, function fun){
     }
 
     if (!success) {
-
+        qDebug() << "Couldn't find an instruction! " << hex << addr;
         display_text("Couldn't find an instruction!");
     }
     return idx_instr;
 }
 int Builder::find_operande(int addr, Instruction instr){//NOT USEFUL! Since we should point towards OP codes exclusively
+
     int idx_operande = 0, result = -1;
     bool success = false;
     for (;idx_operande < instr.get_Nb_operandes(); idx_operande++){

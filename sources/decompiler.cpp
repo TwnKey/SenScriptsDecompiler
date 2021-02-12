@@ -71,6 +71,7 @@ bool Decompiler::ReadDAT(QFile &File){
 
     IB->CreateHeaderFromDAT(content);
     IB->ReadFunctionsDAT(content);
+
     UpdateCurrentTF();
     return true;
 }
@@ -88,15 +89,12 @@ bool Decompiler::WriteDAT(){
     for (int idx_fun = 0; idx_fun < CurrentTF.getNbFunctions()-1; idx_fun++) {
 
         function fun = CurrentTF.FunctionsInFile[idx_fun];
-        qDebug() << fun.name;
+
         current_fun.clear();
 
 
         for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
-            //qDebug() << hex << fun.InstructionsInFunction[idx_instr]->get_addr_instr();
-            //qDebug() << " allo : " << fun.InstructionsInFunction[idx_instr]->getBytes();
-
         }
         addr = addr + current_fun.size();
         int multiple = 4;
@@ -197,9 +195,13 @@ bool Decompiler::WriteXLSX(){
         function fun = CurrentTF.FunctionsInFile[idx_fun];
         excelScenarioSheet.write(excel_row,1,"FUNCTION");
         excelScenarioSheet.write(excel_row,2,fun.name);
+
         excel_row++;
         for (int idx_instr=0; idx_instr<fun.InstructionsInFunction.size(); idx_instr++){
-            fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet,CurrentTF.FunctionsInFile, excel_row);
+            excelScenarioSheet.write(excel_row, 1, "Location");
+            excelScenarioSheet.write(excel_row+1, 1, fun.InstructionsInFunction[idx_instr]->get_addr_instr());
+            int col = 0;
+            fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet,CurrentTF.FunctionsInFile, excel_row, col);
             excel_row+=2;
         }
     }
@@ -239,13 +241,13 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         QFile file1(folder_for_generated_files + "/debug/recompiled_files"+ filename);
         QFile file2(full_path_ref);
         if (!file1.open(QIODevice::ReadOnly)) {
-            qDebug() << " nn";
+
             return false;
         }
 
         QByteArray content1 = file1.readAll();
         if (!file2.open(QIODevice::ReadOnly)) {
-            qDebug() << " oui";
+
             return false;
         }
 
@@ -278,6 +280,10 @@ bool Decompiler::ReadFile(QString filepath){
     CurrentTF = TranslationFile();
     QFile file(filepath);
     QFileInfo infoFile(file);
+    /*if (infoFile.baseName()=="mon000s"){ //for CS3, bad ones are : mon000s,
+        qDebug() << "This file is weird/incorrect and crashes the game, I can't read that.";
+        return false;
+    }*/
     if (infoFile.suffix()=="xlsx") ReadXLSX(file);
     else if (infoFile.suffix()=="dat") ReadDAT(file);
     else {
