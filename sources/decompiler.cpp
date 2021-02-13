@@ -190,9 +190,17 @@ bool Decompiler::WriteXLSX(){
     FormatTitleColumnChars.setLeftBorderStyle(Format::BorderThin);
     FormatTitleColumnChars.setRightBorderStyle(Format::BorderThin);
     FormatTitleColumnChars.setTopBorderStyle(Format::BorderThin);
+    Format rowFormatFunctions;
+    rowFormatFunctions.setPatternBackgroundColor(qRgb(255,200,200));
+    rowFormatFunctions.setFont(font);
+    rowFormatFunctions.setFontSize(13);
+    rowFormatFunctions.setBottomBorderStyle(QXlsx::Format::BorderThin);
+
+    rowFormatFunctions.setTopBorderStyle(QXlsx::Format::BorderThin);
     int excel_row = 4;
     for (int idx_fun=0; idx_fun<CurrentTF.FunctionsInFile.size(); idx_fun++){
         function fun = CurrentTF.FunctionsInFile[idx_fun];
+        excelScenarioSheet.setRowFormat(excel_row, excel_row, rowFormatFunctions);
         excelScenarioSheet.write(excel_row,1,"FUNCTION");
         excelScenarioSheet.write(excel_row,2,fun.name);
 
@@ -205,6 +213,8 @@ bool Decompiler::WriteXLSX(){
             excel_row+=2;
         }
     }
+    //excelScenarioSheet.setColumnHidden(1, true);
+    //excelScenarioSheet.setColumnWidth(1, 13);
     excelScenarioSheet.saveAs(filename);
     qDebug() << "done " << filename;
     return true;
