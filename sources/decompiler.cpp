@@ -1,5 +1,6 @@
 #include "headers/decompiler.h"
 #include "headers/CS3InstructionsSet.h"
+#include "headers/CS4InstructionsSet.h"
 #include "qxlsx/headers/xlsxdocument.h"
 #include "qxlsx/headers/xlsxchartsheet.h"
 #include "qxlsx/headers/xlsxcellrange.h"
@@ -24,6 +25,7 @@ bool Decompiler::SetupGame(QString Game_){
     Game = Game_;
 
     if (Game == "CS3") IB = new CS3Builder();
+    //else if (Game == "CS4") IB = new CS4Builder();
     else {
         display_text("FAILURE: Unrecognized game specified.");
         return false;
@@ -40,6 +42,7 @@ bool Decompiler::ReadXLSX(QFile &File){
     Game = doc.read(1, 1).toString();
     SetupGame(Game);
     display_text("Reading functions...");
+    qDebug() << "reading sheet";
     IB->ReadFunctionsXLSX(doc);
 
     display_text("Reading of XLSX done.");
@@ -52,7 +55,7 @@ bool Decompiler::UpdateCurrentTF(){
     CurrentTF.setName(IB->SceneName);
 
 
-
+    CurrentTF.FunctionsInFile.clear();
     for (int idx_fun = 0; idx_fun < IB->FunctionsParsed.size(); idx_fun++) CurrentTF.addFunction(IB->FunctionsParsed[idx_fun]);
 
     return true;
@@ -68,6 +71,7 @@ bool Decompiler::ReadDAT(QFile &File){
 
     IB->CreateHeaderFromDAT(content);
     IB->ReadFunctionsDAT(content);
+
     UpdateCurrentTF();
     return true;
 }
@@ -78,10 +82,14 @@ bool Decompiler::WriteDAT(){
     /*header creation*/
     int addr = 0;
     QByteArray header = IB->CreateHeaderBytes();
+
     addr = addr + header.size();
+
     //Header done; let's do the functions now.
-    for (int idx_fun = 0; idx_fun < CurrentTF.FunctionsInFile.size()-1; idx_fun++) {
+    for (int idx_fun = 0; idx_fun < CurrentTF.getNbFunctions()-1; idx_fun++) {
+
         function fun = CurrentTF.FunctionsInFile[idx_fun];
+
         current_fun.clear();
 
 
@@ -96,15 +104,18 @@ bool Decompiler::WriteDAT(){
         addr = next_addr;
         functions.push_back(current_fun);
 
-    }
-    //no padding for the last one
-    function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size()-1];
-    current_fun.clear();
-    for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
-        current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
-    }
-    functions.push_back(current_fun);
 
+    }
+
+    //no padding for the last one
+    if (CurrentTF.getNbFunctions()-1>=0){
+        function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size()-1];
+        current_fun.clear();
+        for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
+            current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
+        }
+        functions.push_back(current_fun);
+    }
 
     file_content.append(header);
     file_content.append(functions);
@@ -123,6 +134,7 @@ bool Decompiler::WriteDAT(){
     return true;
 }
 bool Decompiler::WriteXLSX(){
+
     QFont font = QFont("Arial");
     QString filename = CurrentTF.getName() + ".xlsx";
     QXlsx::Document excelScenarioSheet;
@@ -178,18 +190,33 @@ bool Decompiler::WriteXLSX(){
     FormatTitleColumnChars.setLeftBorderStyle(Format::BorderThin);
     FormatTitleColumnChars.setRightBorderStyle(Format::BorderThin);
     FormatTitleColumnChars.setTopBorderStyle(Format::BorderThin);
+    Format rowFormatFunctions;
+    rowFormatFunctions.setPatternBackgroundColor(qRgb(255,200,200));
+    rowFormatFunctions.setFont(font);
+    rowFormatFunctions.setFontSize(13);
+    rowFormatFunctions.setBottomBorderStyle(QXlsx::Format::BorderThin);
+
+    rowFormatFunctions.setTopBorderStyle(QXlsx::Format::BorderThin);
     int excel_row = 4;
     for (int idx_fun=0; idx_fun<CurrentTF.FunctionsInFile.size(); idx_fun++){
         function fun = CurrentTF.FunctionsInFile[idx_fun];
+        excelScenarioSheet.setRowFormat(excel_row, excel_row, rowFormatFunctions);
         excelScenarioSheet.write(excel_row,1,"FUNCTION");
         excelScenarioSheet.write(excel_row,2,fun.name);
+
         excel_row++;
         for (int idx_instr=0; idx_instr<fun.InstructionsInFunction.size(); idx_instr++){
-            fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet,CurrentTF.FunctionsInFile, excel_row);
+            excelScenarioSheet.write(excel_row, 1, "Location");
+            excelScenarioSheet.write(excel_row+1, 1, fun.InstructionsInFunction[idx_instr]->get_addr_instr());
+            int col = 0;
+            fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet,CurrentTF.FunctionsInFile, excel_row, col);
             excel_row+=2;
         }
     }
+    //excelScenarioSheet.setColumnHidden(1, true);
+    //excelScenarioSheet.setColumnWidth(1, 13);
     excelScenarioSheet.saveAs(filename);
+    qDebug() << "done " << filename;
     return true;
 }
 bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files){
@@ -204,25 +231,33 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
 
     foreach(QString file_, filesToRead) {
 
-        QString full_path = folder_for_reference + file_;
+        QString full_path = folder_for_reference +"/" + file_;
         QString filename = full_path.mid(full_path.lastIndexOf("/"));
         QString croped_fileName = filename.section(".",0,0);
         qDebug() << "Checking " << full_path;
         QString full_path_ref = folder_for_reference + filename;
         stream << full_path << "\n";
         this->SetupGame("CS3");
+        qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
         this->WriteXLSX();
+        qDebug() << "reading xlsx file" << folder_for_generated_files + croped_fileName + ".xlsx";
         this->ReadFile(folder_for_generated_files + croped_fileName + ".xlsx");
+        qDebug() << "writing dat file";
         this->WriteDAT();
-        QFile file1(folder_for_generated_files + filename);
+        qDebug() << "full done";
+        qDebug() << "reading dat file" << folder_for_generated_files + "/recompiled_files"+ filename;
+        qDebug() << "reading dat file" << full_path_ref;
+        QFile file1(folder_for_generated_files + "/debug/recompiled_files"+ filename);
         QFile file2(full_path_ref);
         if (!file1.open(QIODevice::ReadOnly)) {
+
             return false;
         }
 
         QByteArray content1 = file1.readAll();
         if (!file2.open(QIODevice::ReadOnly)) {
+
             return false;
         }
 
@@ -255,6 +290,10 @@ bool Decompiler::ReadFile(QString filepath){
     CurrentTF = TranslationFile();
     QFile file(filepath);
     QFileInfo infoFile(file);
+    /*if (infoFile.baseName()=="mon000s"){ //for CS3, bad ones are : mon000s,
+        qDebug() << "This file is weird/incorrect and crashes the game, I can't read that.";
+        return false;
+    }*/
     if (infoFile.suffix()=="xlsx") ReadXLSX(file);
     else if (infoFile.suffix()=="dat") ReadDAT(file);
     else {

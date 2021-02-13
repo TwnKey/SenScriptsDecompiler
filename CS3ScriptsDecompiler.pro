@@ -30,6 +30,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     headers/Builder.h \
     headers/CS3InstructionsSet.h \
+    headers/CS4InstructionsSet.h \
     headers/functions.h \
     headers/instruction.h \
     headers/operande.h \
