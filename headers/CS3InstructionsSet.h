@@ -379,7 +379,6 @@ class CS3Builder : public Builder
             //from here, it's just a guess. There is a maximum of 8 enemies hardcoded in the function.
 
             QByteArray array = ReadSubByteArray(content, addr, 4);
-            qDebug() << hex << addr << " addr after int";
             this->AddOperande(operande(addr,"int", array));
             int first = ReadIntegerFromByteArray(0,array);
             do{
