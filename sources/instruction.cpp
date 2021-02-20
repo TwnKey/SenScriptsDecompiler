@@ -43,7 +43,7 @@ Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenario
                 op = operande(addr,"float", Value);
             }
             else if (type == "short"){
-                short Operande = excelScenarioSheet.read(idx_row+1, idx_operande).toInt();
+                ushort Operande = excelScenarioSheet.read(idx_row+1, idx_operande).toInt();
                 Value = GetBytesFromShort(Operande);
                 op = operande(addr,"short", Value);
 
@@ -180,7 +180,7 @@ int Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<func
         }
         else if (type == "short"){
             excelScenarioSheet.write(row, col + 3+col_cnt, type,FormatType);
-            excelScenarioSheet.write(row+1, col + 3+col_cnt, ReadShortFromByteArray(0,Value),FormatInstr);
+            excelScenarioSheet.write(row+1, col + 3+col_cnt, (ushort)ReadShortFromByteArray(0,Value),FormatInstr);
             col_cnt++;
         }
         else if (type == "byte"){
@@ -258,9 +258,7 @@ int Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<func
 
 
     }
-    //excelScenarioSheet.setRowFormat(row, row+1, FormatInstr);
 
-    //excelScenarioSheet.setRowHidden(row, true);
     return col_cnt;
 }
 void Instruction::set_addr_instr(int i){
@@ -268,6 +266,7 @@ void Instruction::set_addr_instr(int i){
 }
 void Instruction::AddOperande(operande op){
     operandes.push_back(op);
+    //if (op.getType()=="string") qDebug() << op.getValue();
 }
 int Instruction::get_length_in_bytes(){
 

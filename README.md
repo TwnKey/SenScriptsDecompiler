@@ -1,45 +1,44 @@
-# CS3ScriptDecompiler
- This tool is meant to decompile the game files from The Legend of Heroes: Trails of Cold Steel III, located in data/scripts.
- It was initially supposed to only deal with the scena files, but I added support for book, ani and battle files. So it should actually be able to parse all the script files.
- EXCEPT:
- - chr_enemy_template.dat
- - mon_template.dat
- - mon000s.dat
- - mon037_c00.dat
- - mon042_c00.dat
- - mon042_c01.dat
- - mon046_c00.dat
- - ply000.dat
- - ply001.dat
- - rob013_c00.dat
+# Sen Scripts Decompiler
+This tool was meant to decompile the game files from The Legend of Heroes: Trails of Cold Steel III, located in data/scripts.
+But I added support for CS1 scripts as well! 
  
- All of those files have instructions that didn't make sense to me. When swapping them with other ani files, it made my game crash (which confirms there is something wrong with them). I'm not even sure those files are used by the game at any point, if someone has more info, please contact me.
- 
+While reading the CS1 files though, I noticed there were a lot of incorrectly generated files from Falcom. 
+In the sense that when feeding the game executable with them, it would crash or not behave correctly. 
+So be aware that my tool might not be able to parse all of them if they were built incorrectly in the first place. 
+
 # Why QT?
 I wanted to use Qt for the QXlsx library https://github.com/QtExcel/QXlsx which I believe is the most feature-complete library existing for XLSX file creation. 
 I want to be able to customize the sheets as much as possible to make it comfortable for modders/translators.
 
-# Instructions
-Just drag and drop a dat file onto the executable, it will produce a XLSX file after some time.
-The XLSX file contains each instruction in the file with its operands; you'll need to find the dialog instructions (they have the text as operands)
-and edit them to translate the game.
-When your edit of the XLSX file is complete, just drag and drop the file onto the executable and it will produce another dat file in a new folder.
-Then copy this dat file to your game directory in the data/scripts directory.
-You can operate on multiple files by writing a simple bat file that calls the executable with the name of each of your files to convert as argument.
+# How to use
+
+Previously it was dragging and dropping the file onto the executable, but since I added CS1 support, it is now mandatory to provide the name
+of the game that uses the file. Indeed the files' structure doesn't change between the games, only the functions and instructions might, therefore
+there is no way to know the game from the file content only.
+
+To generate a XLSX/dat file, just run the command: SenScriptsDecompiler.exe <game> <filepath>
+
+where <game> can currently take "CS1" and "CS3" as values. If the file designated by filepath is a xlsx one, the tool will create a dat file, vice versa.
 
 # Status
-This is a tool I mostly made in three weeks, thus it suffers from several issues:
+
+This is a tool I mostly made in four weeks (including CS1 support), thus it suffers from several issues:
+
 - Lack of testing
 - Some instructions in the files might not be correctly delimited
-- Bad quality of code (I'm still a beginner)
+- Bad quality of code (I'm still some sort of beginner, actually very insecure about that, please give me advice!)
 - Some types might not be accurate (float / int) (easy to fix, though)
 - Some pointers might be missing (easy to fix, though)
-- Performance issues (Again I did all of that in three weeks, I focused more on the "reverse engineering" part than the code)
+- Performance issues (Again I did all of that in four weeks, I focused more on the "reverse engineering" part than the code but I'm still willing to learn)
 
-So far it was able to read all files from my version of the game, produce proper XLSX, then rewriting them in dat format with the same number of bytes.
-The content of the files itself was the same except for the case where the game uses -0.0 instead of 0.0 (apparently those two have different bytes representations)
+So far the tool was able to read most of the correctly generated files from my versions of the games, produce proper XLSX, then rewriting them in dat format with the same number of bytes (with some exceptions though).
+The content of the files itself was the same except for the cases where the game uses -0.0 instead of 0.0 (apparently those two have different bytes representations)
+and minor cases where I would write more zeros at the end of each functions, using different strategies, when I think there is actually no need to worry about that. 
 Since I can't write -0.0 in the excel (I believe), I write 0x00000000 instead of 0x80000000 in the dat file, thus causing a mismatch. I doubt there is a consequence. 
 
-I tested it on some scenes with success. But really I don't know how robust it is.
+I tested it on some scenes from both games with only successes so far. As a demonstration I translated a scene from CS1 in french here, spoilers ahead: https://youtu.be/uNm77TWt2XQ
 
 I encourage anyone using this tool and having trouble to contact me immediately (feitaishi45@gmail.com) so that I can fix their problem and make the tool more reliable!
+
+As for other Falcom games that might need a decompilation, I'm thinking about dealing with Sen IV and Sen II later this year. Since there is the CLE Hajimari PC release coming this summer,
+I might also try to decompile Hajimari scripts and integrate the current english spreadsheet in it.

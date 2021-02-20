@@ -15,13 +15,14 @@ public:
     int actual_addr; //covers the pointers before that
     int end_addr;
     int XLSX_row_index;
-    bool isUsingOPCodes;
+    bool called = false; //by default
     int ID;
     friend bool operator< (const function &f1, const function &f2);
     friend bool operator== (const function &f1, const function &f2);
     int nb_pad;
     void SetAddr(int addr);
     int get_length_in_bytes();
+
 };
 std::vector<function>::iterator find_function_by_name(std::vector<function> &v, QString name);
 std::vector<function>::iterator find_function_by_ID(std::vector<function> &v, int ID);

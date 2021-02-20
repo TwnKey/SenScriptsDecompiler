@@ -346,11 +346,23 @@ class CS3Builder : public Builder
         CreateMonsters(int addr, Builder *Maker):Instruction(addr,"CreateMonsters", 256, Maker){}
         CreateMonsters(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"CreateMonsters", 256,Maker){
             int initial_addr = addr;
+            if (Maker->goal<addr+0x4C){
+                addr = initial_addr;
+                Maker->flag_monsters = false;
+                return;
+            }
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+            int check1 = ReadIntegerFromByteArray(addr,content);
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
 
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+            int check2 = ReadIntegerFromByteArray(addr,content);
+            if (check1 && check2 != 0){ //bad
+                addr = initial_addr;
+                Maker->flag_monsters = false;
+                return;
+            }
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
 
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
@@ -381,9 +393,14 @@ class CS3Builder : public Builder
             QByteArray array = ReadSubByteArray(content, addr, 4);
             this->AddOperande(operande(addr,"int", array));
             int first = ReadIntegerFromByteArray(0,array);
+            int cnt = 0;
             do{
                 int counter = 0;
-
+                if (Maker->goal<initial_addr+0x4C + cnt * (0x90)){
+                    addr = initial_addr;
+                    Maker->flag_monsters = false;
+                    return;
+                }
                 do{
                     counter++;
                     QByteArray monsters_name = ReadStringSubByteArray(content, addr);
@@ -414,12 +431,12 @@ class CS3Builder : public Builder
                 QByteArray array = ReadSubByteArray(content, addr, 4);
                 this->AddOperande(operande(addr,"int", array));
                 first = ReadIntegerFromByteArray(0,array);
-
+                cnt++;
             }
             while(first != -1);
 
             this->AddOperande(operande(addr,"bytearray", ReadSubByteArray(content, addr, 0x18))); //??
-
+            Maker->flag_monsters = true;
         }
 
 
@@ -645,9 +662,9 @@ class CS3Builder : public Builder
     {
         public:
         ReactionTable():Instruction(-1,263,nullptr){}
-        ReactionTable(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"SummonTable", 263,Maker){}
-        ReactionTable(int addr, Builder *Maker):Instruction(addr,"SummonTable", 263, Maker){}
-        ReactionTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"SummonTable", 263,Maker){
+        ReactionTable(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"ReactionTable", 263,Maker){}
+        ReactionTable(int addr, Builder *Maker):Instruction(addr,"ReactionTable", 263, Maker){}
+        ReactionTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"ReactionTable", 263,Maker){
             int cnt = 0;
             do{
                 QByteArray short_bytes = ReadSubByteArray(content, addr,2);
@@ -1235,19 +1252,46 @@ class CS3Builder : public Builder
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//0x1A
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//0x1E
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//0x22
+                QString fun_name = ReadStringFromByteArray(addr, content);
                 this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
-                QByteArray IDFun_bytearray = ReadSubByteArray(content, addr,4);
-                /*int IDfun = ReadIntegerFromByteArray(0, IDFun_bytearray);
-                if (IDfun!=-1){
-                    std::vector<function>::iterator it = find_function_by_ID(Maker->FunctionsToParse,IDfun);
-                    if (!std::count(Maker->FunctionsParsed.begin(), Maker->FunctionsParsed.end(), *it)){
-                        qDebug() << "Calling CreateMonster function at addr " << hex << it->actual_addr << " ID: "<< hex << it->ID;
-                        it->AddInstruction(std::make_shared<CreateMonsters>(it->actual_addr,content,Maker));
-                        Maker->FunctionsParsed.push_back(*it);
+
+                int ID_fun = ReadIntegerFromByteArray(addr,content);
+
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));//i think this one is the id of the battle function it triggers
+                /*if (ID_fun != -1){
+                    std::vector<function>::iterator itt = find_function_by_ID(Maker->FunctionsParsed, ID_fun); //we'll read it right away
+
+                    if (itt == Maker->FunctionsParsed.end()){ //if we never read it, we'll do that.
+
+                        int addr_initial = addr;
+                        std::vector<function>::iterator it_fun_to_read = find_function_by_ID(Maker->FunctionsToParse, ID_fun);
+
+                        qDebug() << "Calling function :" << hex << ID_fun;
+                        it_fun_to_read->called = true;
+                        Maker->ReadIndividualFunction(*it_fun_to_read,content);
+                        Maker->FunctionsParsed.push_back(*it_fun_to_read);
+                        addr = addr_initial;
                     }
+                }
+                else if (fun_name!=""){
+                    std::vector<function>::iterator itt = find_function_by_name(Maker->FunctionsParsed, fun_name); //we'll read it right away
+                    qDebug() << "Calling function :" << hex << fun_name;
+                    if (itt == Maker->FunctionsParsed.end()){ //if we never read it, we'll do that.
+
+                        int addr_initial = addr;
+                        std::vector<function>::iterator it_fun_to_read = find_function_by_name(Maker->FunctionsToParse, fun_name);
+                        if (it_fun_to_read != Maker->FunctionsToParse.end()){
+                        qDebug() << hex << it_fun_to_read->actual_addr;
+                        it_fun_to_read->called = true;
+                        Maker->ReadIndividualFunction(*it_fun_to_read,content);
+                        Maker->FunctionsParsed.push_back(*it_fun_to_read);
+                        addr = addr_initial;
+                        }
+                    }
+
                 }*/
-                this->AddOperande(operande(addr,"int", IDFun_bytearray));
+
                 this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
@@ -6070,36 +6114,11 @@ class CS3Builder : public Builder
 
         }
     };
-    /*THE FOLLOWING INSTRUCTION IS SPECIAL.*/
-    /*Normally there shouldnt be OPCodes greater than CD (the game crashes when trying to load a 0xF8 instruction);
-     * unfortunately there are bytes than made NO SENSE in the file "system.dat"
-     * I'm going to store the bytes until the next OPCode in instructions that would only be here to match the original content,
-     * but I really can't figure out why on earth they placed such bytes here (just after a random return in the middle of a function
-    The game doesn't access it after returning, there is no pointer toward it or the surrounding bytes, I really have no idea what is their purpose here*/
-    class OPCodeF8 : public Instruction
-    {
-        public:
-        OPCodeF8():Instruction(-1,0xF8,nullptr){}
-        OPCodeF8(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0xF8,Maker){}
-        OPCodeF8(int addr, Builder *Maker):Instruction(addr,"???",0xF8,Maker){}
-        OPCodeF8(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0xF8,Maker){
-                addr++;
-                QByteArray garbage;
-                while((unsigned char)content[addr]==0){
-                    addr++;
-                    garbage.push_back('\0');
-                }
-                garbage.push_back('\0');
-                garbage.push_back('\0');
-                garbage.push_back('\0');//additional 3 zeros to match the original length and cheat the check test; it really sucks.
-                this->AddOperande(operande(addr,"bytearray", garbage));
-        }
 
-
-    };
 
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type){
         int OP = (dat_content[addr]&0xFF);
+        //qDebug() << hex << " OP " << OP << " at " << addr;
         if (function_type == 0){ //the function is read with OPCodes
 
 
@@ -6288,14 +6307,15 @@ class CS3Builder : public Builder
                 case 0xCB: return std::make_shared<OPCodeCB>(addr,dat_content,this);
                 case 0xCC: return std::make_shared<OPCodeCC>(addr,dat_content,this);
                 case 0xCD: return std::make_shared<OPCodeCD>(addr,dat_content,this);
-                case 0xF8: return std::make_shared<OPCodeF8>(addr,dat_content,this);
+
                 default:
                 std::stringstream stream;
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
-                std::string result( stream.str() );
+                /*std::string result( stream.str() );
 
-                qFatal(result.c_str());
-
+                qFatal(result.c_str());*/
+                error = true;
+                addr++;
                 return std::shared_ptr<Instruction>();
             }
         }
@@ -6381,10 +6401,11 @@ class CS3Builder : public Builder
         //everything else can be deduced to recreate the header
         display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
-        int position = 0x20, next_position = 0;
+        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content); //should be 0x20, not always the case though (t0600 I SEE YOU)
+        int position = position_filename, next_position = 0;
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;
-        int start_offset_area = 0x20 + filename.length()+1;
+        int start_offset_area = ReadIntegerFromByteArray(0x8, dat_content);
         for (int idx_fun = 0; idx_fun < nb_functions; idx_fun++){
             position = start_offset_area + 4*idx_fun;
             next_position = start_offset_area + 4*(idx_fun+1);
@@ -6595,7 +6616,7 @@ class CS3Builder : public Builder
             case 0xCB: return std::make_shared<OPCodeCB>(addr,row, xls_content,this);
             case 0xCC: return std::make_shared<OPCodeCC>(addr,row, xls_content,this);
             case 0xCD: return std::make_shared<OPCodeCD>(addr,row, xls_content,this);
-            case 0xF8: return std::make_shared<OPCodeF8>(addr,row, xls_content,this);
+
             case 256: return std::make_shared<CreateMonsters>(addr, row, xls_content,this);
             case 257: return std::make_shared<EffectsInstr>(addr, row, xls_content,this);
             case 258: return std::make_shared<ActionTable>(addr, row, xls_content,this);
@@ -6614,9 +6635,10 @@ class CS3Builder : public Builder
             default:
                 std::stringstream stream;
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName.toStdString();
-                std::string result( stream.str() );
 
-                qFatal(result.c_str());
+                error = true;
+                /*std::string result( stream.str() );
+                qFatal(result.c_str());*/
 
                 return std::shared_ptr<Instruction>();
         }

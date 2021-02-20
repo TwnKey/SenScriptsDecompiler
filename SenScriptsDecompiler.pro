@@ -29,6 +29,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     headers/Builder.h \
+    headers/CS1InstructionsSet.h \
+    headers/CS2InstructionsSet.h \
     headers/CS3InstructionsSet.h \
     headers/CS4InstructionsSet.h \
     headers/functions.h \

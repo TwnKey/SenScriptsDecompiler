@@ -17,7 +17,7 @@ public:
 
     virtual void ReadFunctionsDAT(QByteArray &dat_content); //Clearly this one is supposed to be generic (assuming the game format doesn't change)
     virtual void ReadFunctionsXLSX(QXlsx::Document &xls_content);
-
+    bool flag_monsters = false;
     function find_function(int addr);
     int find_instruction(int addr, function fun);
     int find_operande(int addr, Instruction instr);
@@ -28,7 +28,8 @@ public:
     bool UpdatePointersXLSX();
     bool UpdatePointersDAT();
     bool Reset();
-    //std::vector<operande *> pointers;
+    int goal;
+    bool error = false; //flag to tell if an incorrect OP code was found (to help identify monster functions
     bool Passed_Monster_Functions = false;
 };
 #endif // INSTRUCTIONBUILDER_H
