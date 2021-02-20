@@ -1,25 +1,25 @@
-#ifndef CS1INSTRUCTIONSSET_H
-#define CS1INSTRUCTIONSSET_H
+#ifndef CS2INSTRUCTIONSSET_H
+#define CS2INSTRUCTIONSSET_H
 #include "headers/utilities.h"
 #include "headers/functions.h"
 #include "headers/translationfile.h"
 
 #include <QString>
 
-class CS1TranslationFile : public TranslationFile
+class CS2TranslationFile : public TranslationFile
 {
     public:
-    CS1TranslationFile():TranslationFile(){}
+    CS2TranslationFile():TranslationFile(){}
 
 };
-class CS1Builder : public Builder
+class CS2Builder : public Builder
 {
     public:
-    CS1Builder(){
+    CS2Builder(){
 
     }
 
-    QVector<QString> CS1UIFiles = {"battle_menu","camp_menu", "camp_menu_v","note_menu","note_menu_v","shop_menu","shop_menu_v","title_menu","title_menu_v"};
+    QVector<QString> CS2UIFiles = {"battle_menu","camp_menu", "camp_menu_v","note_menu","note_menu_v","shop_menu","shop_menu_v","title_menu","title_menu_v"};
     static void fun_140498b70(int &addr, QByteArray &content, Instruction * instr){
         //related to text/text formating
         QByteArray current_op_value;
@@ -2179,9 +2179,9 @@ class CS1Builder : public Builder
             this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
             this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
             this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
         }
 
     };
@@ -3482,10 +3482,10 @@ class CS1Builder : public Builder
                     break;
                 }
                 case 0x03:{
-                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                    this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
                     break;
@@ -4128,7 +4128,7 @@ class CS1Builder : public Builder
         OPCode61(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x61,Maker){
             addr++;
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
         }
     };
     //0x62
@@ -4592,7 +4592,7 @@ class CS1Builder : public Builder
                 break;
             }
             case 0x05:{
-                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
                 break;
             }
@@ -5265,8 +5265,8 @@ class CS1Builder : public Builder
 
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type){
         int OP = (dat_content[addr]&0xFF);
-
-        int i = CS1UIFiles.indexOf(SceneName);
+        //qDebug() << "OP :" << hex << OP << " at " << addr;
+        int i = CS2UIFiles.indexOf(SceneName);
         if ((i != -1)&&(OP == 0x13)) return std::make_shared<UI_OP13>(addr,dat_content,this); //UI files have a special 0x13 instruction
 
         if (function_type == 0){ //the function is read with OPCodes
@@ -5433,8 +5433,8 @@ class CS1Builder : public Builder
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
 
                 error = true;
-                /*std::string result( stream.str() );
-                qFatal(result.c_str());*/
+                std::string result( stream.str() );
+                qFatal(result.c_str());
 
                 return std::shared_ptr<Instruction>();
             }
@@ -5554,7 +5554,7 @@ class CS1Builder : public Builder
     std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content){
 
         uint OP = xls_content.read(row+1, 2).toInt();
-        int i = CS1UIFiles.indexOf(SceneName);
+        int i = CS2UIFiles.indexOf(SceneName);
         if ((i != -1)&&(OP == 0x13)) return std::make_shared<UI_OP13>(addr,row, xls_content,this);
 
         switch(OP){
@@ -5794,4 +5794,4 @@ class CS1Builder : public Builder
 };
 
 
-#endif // CS1INSTRUCTIONSSET_H
+#endif // CS2INSTRUCTIONSSET_H

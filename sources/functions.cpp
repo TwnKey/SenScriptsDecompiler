@@ -16,9 +16,7 @@ void function::AddInstruction(std::shared_ptr<Instruction> instr){
     if (instr->get_OP() > 0) InstructionsInFunction.push_back(instr);
 }
 
-void function::UsingOPCodes(bool is){
-    this->isUsingOPCodes = is;
-}
+
 bool operator< (const function &f1, const function &f2)
 {
     return f1.actual_addr < f2.actual_addr;

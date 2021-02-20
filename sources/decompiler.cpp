@@ -1,6 +1,8 @@
 #include "headers/decompiler.h"
 #include "headers/CS3InstructionsSet.h"
 #include "headers/CS4InstructionsSet.h"
+#include "headers/CS1InstructionsSet.h"
+#include "headers/CS2InstructionsSet.h"
 #include "qxlsx/headers/xlsxdocument.h"
 #include "qxlsx/headers/xlsxchartsheet.h"
 #include "qxlsx/headers/xlsxcellrange.h"
@@ -24,12 +26,22 @@ Decompiler::Decompiler()
 bool Decompiler::SetupGame(QString Game_){
     Game = Game_;
 
+
+
     if (Game == "CS3") IB = new CS3Builder();
+    else if (Game == "CS1") {
+        IB = new CS1Builder();
+    }
+    else if (Game == "CS2") {
+        qFatal("CS2 not supported (yet)");
+        IB = new CS2Builder();
+    }
     //else if (Game == "CS4") IB = new CS4Builder();
     else {
         display_text("FAILURE: Unrecognized game specified.");
         return false;
     }
+
     return true;
 }
 bool Decompiler::ReadXLSX(QFile &File){
@@ -42,7 +54,7 @@ bool Decompiler::ReadXLSX(QFile &File){
     Game = doc.read(1, 1).toString();
     SetupGame(Game);
     display_text("Reading functions...");
-    qDebug() << "reading sheet";
+
     IB->ReadFunctionsXLSX(doc);
 
     display_text("Reading of XLSX done.");
@@ -213,8 +225,7 @@ bool Decompiler::WriteXLSX(){
             excel_row+=2;
         }
     }
-    //excelScenarioSheet.setColumnHidden(1, true);
-    //excelScenarioSheet.setColumnWidth(1, 13);
+
     excelScenarioSheet.saveAs(filename);
     qDebug() << "done " << filename;
     return true;
@@ -228,7 +239,6 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
 
 
 
-
     foreach(QString file_, filesToRead) {
 
         QString full_path = folder_for_reference +"/" + file_;
@@ -237,7 +247,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         qDebug() << "Checking " << full_path;
         QString full_path_ref = folder_for_reference + filename;
         stream << full_path << "\n";
-        this->SetupGame("CS3");
+        this->SetupGame("CS1");
         qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
         this->WriteXLSX();
@@ -248,7 +258,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         qDebug() << "full done";
         qDebug() << "reading dat file" << folder_for_generated_files + "/recompiled_files"+ filename;
         qDebug() << "reading dat file" << full_path_ref;
-        QFile file1(folder_for_generated_files + "/debug/recompiled_files"+ filename);
+        QFile file1(folder_for_generated_files + "/release/recompiled_files"+ filename);
         QFile file2(full_path_ref);
         if (!file1.open(QIODevice::ReadOnly)) {
 
@@ -290,10 +300,7 @@ bool Decompiler::ReadFile(QString filepath){
     CurrentTF = TranslationFile();
     QFile file(filepath);
     QFileInfo infoFile(file);
-    /*if (infoFile.baseName()=="mon000s"){ //for CS3, bad ones are : mon000s,
-        qDebug() << "This file is weird/incorrect and crashes the game, I can't read that.";
-        return false;
-    }*/
+
     if (infoFile.suffix()=="xlsx") ReadXLSX(file);
     else if (infoFile.suffix()=="dat") ReadDAT(file);
     else {

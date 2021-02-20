@@ -92,9 +92,11 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
         for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
             if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
                 qDebug() << "Reading function " << it->name << "at addr " << hex << it->actual_addr;
-                ReadIndividualFunction(*it,dat_content);
-                FunctionsParsed.push_back(*it);
-
+                std::vector<function>::iterator itt = find_function_by_ID(FunctionsParsed, it->ID);
+                if (itt == FunctionsParsed.end()){ //if we never read it, we'll do that
+                    ReadIndividualFunction(*it,dat_content);
+                    FunctionsParsed.push_back(*it);
+                }
             }
 
 
@@ -117,19 +119,18 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
             FunctionsParsed[idx_fun].SetAddr(current_addr);
         }
 
+
     }
 
 
 }
 int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     int current_position = fun.actual_addr;
-    if (!Passed_Monster_Functions){
-        std::vector<function>::iterator InitIt = find_function_by_name(FunctionsToParse, "Init");
-        if ((InitIt==FunctionsToParse.end())||((fun.name == "PreInit")||(fun.name == "Init"))) Passed_Monster_Functions = true;
-        //if (fun.name == "Init") Passed_Monster_Functions = true;
-    }
-    //I put the name of the battle functions here but it's ugly
-    //the names are hardcoded in the executable and don't use OP codes.
+    goal = fun.end_addr;
+    std::shared_ptr<Instruction> instr;
+    int latest_op_code = 1;
+
+
     int function_type = 0;
     if (fun.name == "ActionTable"){
         function_type = 3;
@@ -176,41 +177,64 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
         else function_type = 15;
 
     }
-    //(!Passed_Monster_Functions)&&(((!fun.name.startsWith("Ani")||
-
-    else if (((fun.name == "")||(!Passed_Monster_Functions)&&(!fun.name.startsWith("Ani")))&&((unsigned char)dat_content[fun.actual_addr]!=1)){
-
-        function_type = 1;
-    }
-    //really really not satisfied with that but what else can I do?
-    //The thing is, in general most of the "monster function" have empty names and are located before the init function
-    //in a0000.dat though, there is a function called with a proper name but which is also a monster function,
-    //and is located before the init
-    //Finally, there is a function with an empty name after an Init (in A1003)
-    //The proper way to do it would be to call those functions as monster functions from the instruction that calls them(I think its the same one that creates NPC)
-    //the fact is, you would have to find all of the occurrences of this instruction and you can't find them without knowing which functions are
-    //using OP Codes or not. In the game it's simple, they just have to call the functions.
-    //I thought always starting with Init, PreInit, ReInit, etc, would be enough to cover all the Monster functions,
-    //but it only covers some of them; it might even be possible that some functions in the files are not used
-    //by the game;
-    //Anyway, this is why I came up with a custom-very-awful policy regarding those:
-    //If the function name is empty, if the function starts with 0x01 it's an empty function, otherwise it's monster
-    //if a function is located before the Init and has a proper name WITHOUT starting with "Ani", it's a monster
-    //function
-    //This policy is obviously not without risks, and it might also not be true for CS4, but I believe it is true
-    //for the CS3 files I have and it is enough for me at the moment
     else if (fun.name.startsWith("_")) {
         function_type = 2;
 
     }
-    std::shared_ptr<Instruction> instr;
+    else if (fun.name == "AddCollision"){
+        function_type = 16;
+    }
+
     if (function_type == 0){ //we use OP codes
+        //First we check if it's really using OP Code (might be a monster function)
+        //There is more chance to fail when interpreting a monster function as an op code function
+        //than the opposite
+        //Although we'll also check if its a valid monster function afterwards
+        //if it fails both checks, wtf. There is something wrong with the function, and we will skip the incorrect instruction (Hopefully it will fix the file)
+        //it will also crash if there is a monster function at the end of the file cause I didn't put protections when parsing
+        //the last function as an OP code, I mean it might go beyond the size of the dat content when reading the instructions (But I think it will fail
+        //before that most of the time)
+        //qDebug() << "First attempt as an OP Code function...";
         while(current_position<fun.end_addr){
 
+
+
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
-            fun.AddInstruction(instr);
+
+            if ((error)||((instr->get_OP() != 0)&&(latest_op_code == 0))){ //this clearly means the function is incorrect or is a monster function.
+                //qDebug() << "Fail. Might be a special function...";
+                int error_addr = current_position;
+                error = false;
+                fun.InstructionsInFunction.clear();
+                current_position = fun.actual_addr;
+                instr = CreateInstructionFromDAT(current_position, dat_content, 1);
+                if (flag_monsters) {
+                    fun.AddInstruction(instr);
+                    instr = CreateInstructionFromDAT(current_position, dat_content, 0);
+                    fun.AddInstruction(instr);
+                    return current_position;
+                }
+                else{ //the function is incorrect, therefore, we parse it again as an OP Code function but remove the part that are incorrect (just a guess tho)
+                    //qDebug() << "Fail. There is a problem with this function at offset " << hex << current_position;
+                    current_position = fun.actual_addr;
+                    while(current_position<fun.end_addr){
+                        instr = CreateInstructionFromDAT(current_position, dat_content, 0);
+                        if (error){
+                            error = false;
+
+                        }
+                        else fun.AddInstruction(instr);
+                    }
+                    return current_position;
+                }
+            }
+            else fun.AddInstruction(instr);
+            latest_op_code = instr->get_OP();
 
         }
+
+
+
     }
     else
     {
