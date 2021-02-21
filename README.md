@@ -16,9 +16,9 @@ Previously it was dragging and dropping the file onto the executable, but since 
 of the game that uses the file. Indeed the files' structure doesn't change between the games, only the functions and instructions might, therefore
 there is no way to know the game from the file content only.
 
-To generate a XLSX/dat file, just run the command: SenScriptsDecompiler.exe <game> <filepath>
+To generate a XLSX/dat file, just run the command: SenScriptsDecompiler.exe "game" "filepath"
 
-where <game> can currently take "CS1" and "CS3" as values. If the file designated by filepath is a xlsx one, the tool will create a dat file, vice versa.
+where "game" can currently take "CS1" and "CS3" as values. If the file designated by filepath is a xlsx one, the tool will create a dat file, vice versa.
 
 # Status
 
