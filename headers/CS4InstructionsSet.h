@@ -8,6 +8,12 @@
 
 //START FROM CS3 AT PC RELEASE!!!!!!!!!!!!!
 
+/*The CSXBuilder contains hundreds of nested classes, every one of them describing the behaviour of a single instruction in the game
+ * Those behaviours were deduced from a combination of analysis directly from the hexadecimal content of the dat files,
+ * study of assembly/pseudo code from Ghidra
+ * and also testing directly in game by modifying the ram and studying with Cheat Engine
+ * all of them are different from one game to another (well except for CS1/CS2 and CS3/CS4 which present similarities)
+*/
 class CS4TranslationFile : public TranslationFile
 {
     public:
@@ -32,7 +38,7 @@ class CS4Builder : public Builder
         int nb_byte_to_add_name = (((int) ceil((float)SceneName.size()/4)))*4 - SceneName.size();
 
         int start_offset_area = 0x20 + filename.length()+nb_byte_to_add_name;
-        for (int idx_fun = 0; idx_fun < nb_functions; idx_fun++){
+        for (uint idx_fun = 0; idx_fun < nb_functions; idx_fun++){
             position = start_offset_area + 4*idx_fun;
             next_position = start_offset_area + 4*(idx_fun+1);
             int addr = ReadIntegerFromByteArray(position, dat_content);

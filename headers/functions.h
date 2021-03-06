@@ -2,7 +2,9 @@
 #define FUNCTIONS_H
 #include <QString>
 #include "headers/instruction.h"
-
+/*
+The class function
+*/
 class function{
 public:
     function(){}

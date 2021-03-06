@@ -40,13 +40,13 @@ QString header[] = {".                           ,##(&%%@                       
 int main(int argc, char *argv[])
     {
     QCoreApplication a(argc, argv);
-    /*Decompiler Dc;
-    Dc.SetupGame("CS1");
-    QDir directory("C:/Users/Antoine/Desktop/CS1Debug");
+    Decompiler Dc;
+    Dc.SetupGame("CS2");
+    QDir directory("C:/Users/Antoine/Desktop/Projets/CS2/script_files");
     QStringList dat = directory.entryList(QStringList() << "*.dat",QDir::Files);
-    Dc.CheckAllFiles(dat, "C:/Users/Antoine/Desktop/CS1Debug", "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
-    */
+    Dc.CheckAllFiles(dat, "C:/Users/Antoine/Desktop/Projets/CS2/script_files", "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
 
+    /*
     if (argc < 3){
         display_text("Here is a Tio, you're welcome:");
         for (int i = 0; i < 32; i++) display_text(header[i]);
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
         Dc.ReadFile(filepath);
         Dc.WriteFile(filepath);
     }
-
+    */
 
 
     return a.exec();

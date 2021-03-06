@@ -6,6 +6,8 @@
 
 #include <QString>
 
+
+
 class CS2TranslationFile : public TranslationFile
 {
     public:
@@ -24,7 +26,7 @@ class CS2Builder : public Builder
         //related to text/text formating
         QByteArray current_op_value;
         int addr_ = addr;
-        bool start = false;
+
         bool start_text = false;
         int cnt = 0;
         do{
@@ -607,7 +609,6 @@ class CS2Builder : public Builder
         WeaponAttTable(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"WeaponAttTable", 260,Maker){}
         WeaponAttTable(int addr, Builder *Maker):Instruction(addr,"WeaponAttTable", 260, Maker){}
         WeaponAttTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"WeaponAttTable", 260,Maker){
-            int cnt = 0;
 
             this->AddOperande(operande(addr,"bytearray", ReadSubByteArray(content, addr,4)));
         }
@@ -679,7 +680,7 @@ class CS2Builder : public Builder
 
             while(cnt < current_shrt){
                 QByteArray short_bytes = ReadSubByteArray(content, addr,2);
-                ushort shrt = ReadShortFromByteArray(0, short_bytes);
+
                 this->AddOperande(operande(addr,"short", short_bytes));
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
@@ -703,7 +704,6 @@ class CS2Builder : public Builder
             while(cnt < current_byte){
 
                 QByteArray int_bytes = ReadSubByteArray(content, addr,4);
-                uint integer = ReadIntegerFromByteArray(0, int_bytes);
                 this->AddOperande(operande(addr,"int", int_bytes));
 
                 QByteArray str = ReadStringSubByteArray(content, addr);
@@ -732,7 +732,7 @@ class CS2Builder : public Builder
         AnimeClipTable(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"AnimeClipTable", 265,Maker){}
         AnimeClipTable(int addr, Builder *Maker):Instruction(addr,"AnimeClipTable", 265, Maker){}
         AnimeClipTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"AnimeClipTable", 265,Maker){
-            int cnt = 0;
+
             int first_integer;
             first_integer = ReadIntegerFromByteArray(addr, content);
 
@@ -772,7 +772,7 @@ class CS2Builder : public Builder
         FieldMonsterData(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"FieldMonsterData", 266,Maker){}
         FieldMonsterData(int addr, Builder *Maker):Instruction(addr,"FieldMonsterData", 266, Maker){}
         FieldMonsterData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"FieldMonsterData", 266,Maker){
-            int cnt = 0;
+
             int first_integer;
             first_integer = ReadIntegerFromByteArray(addr, content);
 
@@ -796,7 +796,7 @@ class CS2Builder : public Builder
         FieldFollowData(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"FieldMonsterData", 267,Maker){}
         FieldFollowData(int addr, Builder *Maker):Instruction(addr,"FieldMonsterData", 267, Maker){}
         FieldFollowData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"FieldMonsterData", 267,Maker){
-            int cnt = 0;
+
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
@@ -1823,7 +1823,7 @@ class CS2Builder : public Builder
             this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
             this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
-            int ID_fun = ReadIntegerFromByteArray(addr,content);
+
 
             this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));//i think this one is the id of the battle function it triggers
 
@@ -1872,7 +1872,8 @@ class CS2Builder : public Builder
         OPCode16(int addr, Builder *Maker):Instruction(addr,"???",0x16,Maker){}
         OPCode16(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x16,Maker){
             addr++;
-            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
           }
 
     };
@@ -2018,19 +2019,21 @@ class CS2Builder : public Builder
                     this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
                     break;
                 }
+
                 case 0x01:{
                     this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     break;
                 }
                 case 0x02:{
-                    this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                    this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x04:{
-                    this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                    this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x05:{
@@ -2044,6 +2047,23 @@ class CS2Builder : public Builder
 
                     break;
                 }
+                case 0x08:{
+                    this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    break;
+                }
+                case 0x09:{
+                    this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    break;
+                }
+                case 0x0C:{
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    break;
+                }
+
 
             }
         }
@@ -2777,18 +2797,19 @@ class CS2Builder : public Builder
             addr++;
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
             this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
         }
 
     };
     //0x30
-    class OPCode30: public Instruction{
+    class OPCode31: public Instruction{
     public:
-        OPCode30():Instruction(-1,0x30,nullptr){}
-        OPCode30(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x30,Maker){}
-        OPCode30(int addr, Builder *Maker):Instruction(addr,"???",0x30,Maker){}
-        OPCode30(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x30,Maker){
+        OPCode31():Instruction(-1,0x31,nullptr){}
+        OPCode31(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x31,Maker){}
+        OPCode31(int addr, Builder *Maker):Instruction(addr,"???",0x31,Maker){}
+        OPCode31(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x31,Maker){
             addr++;
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr,"byte", control_byte));
@@ -2805,7 +2826,6 @@ class CS2Builder : public Builder
                 case 1:{
 
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
-
                     this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
                     break;
                 }
@@ -2843,7 +2863,7 @@ class CS2Builder : public Builder
         }
     };
     //0x31
-    class OPCode31: public Instruction{
+    /*class OPCode31: public Instruction{
     public:
         OPCode31():Instruction(-1,0x31,nullptr){}
         OPCode31(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x31,Maker){}
@@ -3092,7 +3112,7 @@ class CS2Builder : public Builder
         }
         }
 
-    };
+    };*/
     //0x32
     class OPCode32: public Instruction{
     public:
@@ -3294,6 +3314,7 @@ class CS2Builder : public Builder
           return 0;
         }
         if (first_two_bytes == 0xFFFD) return 0;
+        return 1;
     }
 
     class OPCode3C: public Instruction{
@@ -3339,13 +3360,13 @@ class CS2Builder : public Builder
         }
 
     };
-    //0x3E
-    class OPCode3E: public Instruction{
+    //0x3F
+    class OPCode3F: public Instruction{
     public:
-        OPCode3E():Instruction(-1,0x3E,nullptr){}
-        OPCode3E(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x3E,Maker){}
-        OPCode3E(int addr, Builder *Maker):Instruction(addr,"???",0x3E,Maker){}
-        OPCode3E(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x3E,Maker){
+        OPCode3F():Instruction(-1,0x3F,nullptr){}
+        OPCode3F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x3F,Maker){}
+        OPCode3F(int addr, Builder *Maker):Instruction(addr,"???",0x3F,Maker){}
+        OPCode3F(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x3F,Maker){
             addr++;
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
@@ -3356,7 +3377,7 @@ class CS2Builder : public Builder
 
     };
     //0x3F
-    class OPCode3F: public Instruction{
+    /*class OPCode3F: public Instruction{
     public:
         OPCode3F():Instruction(-1,0x3F,nullptr){}
         OPCode3F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x3F,Maker){}
@@ -3389,7 +3410,7 @@ class CS2Builder : public Builder
         }
         }
 
-    };
+    };*/
 
     //0x40
     class OPCode40: public Instruction{
@@ -3916,34 +3937,39 @@ class CS2Builder : public Builder
 
     };
     //0x5B
-    class OPCode5B: public Instruction{
-    public:
-        OPCode5B():Instruction(-1,0x5B,nullptr){}
-        OPCode5B(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x5B,Maker){}
-        OPCode5B(int addr, Builder *Maker):Instruction(addr,"???",0x5B,Maker){}
-        OPCode5B(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x5B,Maker){
-            addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(operande(addr,"byte", control_byte));
-            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            switch((unsigned char)control_byte[0]){
-                case 0x04:
-                case 0x01:
-                case 0x00:{
-                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    break;
-                }
-            }
-        }
-
-    };
-    //0x5C
     class OPCode5C: public Instruction{
     public:
         OPCode5C():Instruction(-1,0x5C,nullptr){}
         OPCode5C(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x5C,Maker){}
         OPCode5C(int addr, Builder *Maker):Instruction(addr,"???",0x5C,Maker){}
         OPCode5C(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x5C,Maker){
+            addr++;
+            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            this->AddOperande(operande(addr,"byte", control_byte));
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            switch((unsigned char)control_byte[0]){
+                case 0x06:
+                case 0x04:
+                case 0x01:
+                case 0x00:{
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    break;
+                }
+                case 0x02:{
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    break;
+                }
+            }
+        }
+
+    };
+    //0x5D
+    class OPCode5D: public Instruction{
+    public:
+        OPCode5D():Instruction(-1,0x5D,nullptr){}
+        OPCode5D(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x5D,Maker){}
+        OPCode5D(int addr, Builder *Maker):Instruction(addr,"???",0x5D,Maker){}
+        OPCode5D(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x5D,Maker){
             addr++;
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr,"byte", control_byte));
@@ -3959,7 +3985,7 @@ class CS2Builder : public Builder
 
     };
     //0x5D
-    class OPCode5D: public Instruction{
+    /*class OPCode5D: public Instruction{
     public:
         OPCode5D():Instruction(-1,0x5D,nullptr){}
         OPCode5D(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x5D,Maker){}
@@ -4008,14 +4034,14 @@ class CS2Builder : public Builder
             }
         }
 
-    };
+    };*/
     //0x5E
-    class OPCode5E: public Instruction{
+    class OPCode5F: public Instruction{
     public:
-        OPCode5E():Instruction(-1,0x5E,nullptr){}
-        OPCode5E(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x5E,Maker){}
-        OPCode5E(int addr, Builder *Maker):Instruction(addr,"???",0x5E,Maker){}
-        OPCode5E(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x5E,Maker){
+        OPCode5F():Instruction(-1,0x5F,nullptr){}
+        OPCode5F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x5F,Maker){}
+        OPCode5F(int addr, Builder *Maker):Instruction(addr,"???",0x5F,Maker){}
+        OPCode5F(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x5F,Maker){
             addr++;
 
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
@@ -4024,6 +4050,7 @@ class CS2Builder : public Builder
                 case 0x00:{
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                     this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
                     break;
                 }
@@ -4032,6 +4059,7 @@ class CS2Builder : public Builder
                 case 0x07:
                 case 0x08:
                 case 0x04:
+                case 0x13:
                 case 0x01:{
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
@@ -4058,11 +4086,25 @@ class CS2Builder : public Builder
                     this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
                     break;
                 }
+                case 0x0E:{
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));;
+                    break;
+                }
                 case 0x0D:
-                case 0x0C:{
+                case 0x0C:
+                case 0x0F:
+                case 0x12:{
 
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+
+                    break;
+                }
+                case 0x10:
+                case 0x11:{
+                    this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
                     break;
                 }
@@ -4073,7 +4115,7 @@ class CS2Builder : public Builder
 
     };
     //0x5F
-    class OPCode5F: public Instruction{
+    /*class OPCode5F: public Instruction{
     public:
         OPCode5F():Instruction(-1,0x5F,nullptr){}
         OPCode5F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x5F,Maker){}
@@ -4101,7 +4143,7 @@ class CS2Builder : public Builder
             }
         }
 
-    };
+    };*/
     //0x60
     class OPCode60: public Instruction{
     public:
@@ -4139,9 +4181,10 @@ class CS2Builder : public Builder
         OPCode62(int addr, Builder *Maker):Instruction(addr,"???",0x62,Maker){}
         OPCode62(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x62,Maker){
             addr++;
-            this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+
+
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
         }
 
     };
@@ -4162,21 +4205,6 @@ class CS2Builder : public Builder
         }
 
     };
-    //0x64
-    class OPCode64: public Instruction{
-    public:
-        OPCode64():Instruction(-1,0x64,nullptr){}
-        OPCode64(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x64,Maker){}
-        OPCode64(int addr, Builder *Maker):Instruction(addr,"???",0x64,Maker){}
-        OPCode64(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x64,Maker){
-            addr++;
-            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
-
-        }
-
-    };
     //0x65
     class OPCode65: public Instruction{
     public:
@@ -4185,11 +4213,26 @@ class CS2Builder : public Builder
         OPCode65(int addr, Builder *Maker):Instruction(addr,"???",0x65,Maker){}
         OPCode65(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x65,Maker){
             addr++;
+            this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+            this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
+
+        }
+
+    };
+    //0x66
+    class OPCode66: public Instruction{
+    public:
+        OPCode66():Instruction(-1,0x66,nullptr){}
+        OPCode66(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x66,Maker){}
+        OPCode66(int addr, Builder *Maker):Instruction(addr,"???",0x66,Maker){}
+        OPCode66(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x66,Maker){
+            addr++;
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr,"byte", control_byte));
             switch((unsigned char)control_byte[0]){
-            case 0x05:
-            case 0x03:
+
+
             case 0x00:{
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
@@ -4197,16 +4240,19 @@ class CS2Builder : public Builder
 
                 break;
             }
-            case 0x06:{
+            case 0x09:
+            case 0x04:
+            case 0x0C:
+            {
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
                 this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
 
                 break;
             }
-            case 0x09:
+
             case 0x07:
-            case 0x04:
+            case 0x0B:
             case 0x01:{
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
@@ -4223,6 +4269,29 @@ class CS2Builder : public Builder
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
+            case 0x05:
+            case 0x03:{
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                break;
+            }
+            case 0x06:{
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+                this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+                this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+
+                break;
+            }
+            case 0x0A:{
+                this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+
+                break;
+            }
 
         }
 
@@ -4231,7 +4300,7 @@ class CS2Builder : public Builder
     };
 
     //0x66
-    class OPCode66: public Instruction{
+    /*class OPCode66: public Instruction{
     public:
         OPCode66():Instruction(-1,0x66,nullptr){}
         OPCode66(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x66,Maker){}
@@ -4243,7 +4312,7 @@ class CS2Builder : public Builder
 
         }
 
-    };
+    };*/
     //0x67
     class OPCode67: public Instruction{
     public:
@@ -5265,7 +5334,7 @@ class CS2Builder : public Builder
 
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type){
         int OP = (dat_content[addr]&0xFF);
-        //qDebug() << "OP :" << hex << OP << " at " << addr;
+        qDebug() << "OP :" << hex << OP << " at " << addr;
         int i = CS2UIFiles.indexOf(SceneName);
         if ((i != -1)&&(OP == 0x13)) return std::make_shared<UI_OP13>(addr,dat_content,this); //UI files have a special 0x13 instruction
 
@@ -5274,167 +5343,167 @@ class CS2Builder : public Builder
             switch(OP){
                 case 0x00: return std::make_shared<OPCode0>(addr,dat_content,this);
                 case 0x01: return std::make_shared<OPCode1>(addr,dat_content,this);
-                case 0x02: return std::make_shared<OPCode02>(addr,dat_content,this);
-                case 0x03: return std::make_shared<OPCode03>(addr,dat_content,this);
-                case 0x04: return std::make_shared<OPCode04>(addr,dat_content,this);
+                //case 0x02: return std::make_shared<OPCode02>(addr,dat_content,this);
+                //case 0x03: return std::make_shared<OPCode03>(addr,dat_content,this);
+                //case 0x04: return std::make_shared<OPCode04>(addr,dat_content,this);
                 case 0x05: return std::make_shared<OPCode05>(addr,dat_content,this);
-                case 0x06: return std::make_shared<OPCode06>(addr,dat_content,this);
-                case 0x07: return std::make_shared<OPCode07>(addr,dat_content,this);
-                case 0x08: return std::make_shared<OPCode08>(addr,dat_content,this);
-                case 0x0A: return std::make_shared<OPCode0A>(addr,dat_content,this);
+                //case 0x06: return std::make_shared<OPCode06>(addr,dat_content,this);
+                //case 0x07: return std::make_shared<OPCode07>(addr,dat_content,this);
+                //case 0x08: return std::make_shared<OPCode08>(addr,dat_content,this);
+                //case 0x0A: return std::make_shared<OPCode0A>(addr,dat_content,this);
                 case 0x0C: return std::make_shared<OPCode0C>(addr,dat_content,this);
                 case 0x0D: return std::make_shared<OPCode0D>(addr,dat_content,this);
                 case 0x0E: return std::make_shared<OPCode0E>(addr,dat_content,this);
-                case 0x0F: return std::make_shared<OPCode0F>(addr,dat_content,this);
-                case 0x10: return std::make_shared<OPCode10>(addr,dat_content,this);
-                case 0x11: return std::make_shared<OPCode11>(addr,dat_content,this);
+                //case 0x0F: return std::make_shared<OPCode0F>(addr,dat_content,this);
+                //case 0x10: return std::make_shared<OPCode10>(addr,dat_content,this);
+                //case 0x11: return std::make_shared<OPCode11>(addr,dat_content,this);
                 case 0x12: return std::make_shared<OPCode12>(addr,dat_content,this);
                 case 0x13: return std::make_shared<OPCode13>(addr,dat_content,this);
-                case 0x14: return std::make_shared<OPCode14>(addr,dat_content,this);
-                case 0x15: return std::make_shared<OPCode15>(addr,dat_content,this);
+                //case 0x14: return std::make_shared<OPCode14>(addr,dat_content,this);
+                //case 0x15: return std::make_shared<OPCode15>(addr,dat_content,this);
                 case 0x16: return std::make_shared<OPCode16>(addr,dat_content,this);
-                case 0x17: return std::make_shared<OPCode17>(addr,dat_content,this);
-                case 0x18: return std::make_shared<OPCode18>(addr,dat_content,this);
-                case 0x19: return std::make_shared<OPCode19>(addr,dat_content,this);
-                case 0x1A: return std::make_shared<OPCode1A>(addr,dat_content,this);
-                case 0x1B: return std::make_shared<OPCode1B>(addr,dat_content,this);
-                case 0x1C: return std::make_shared<OPCode1C>(addr,dat_content,this);
-                case 0x1D: return std::make_shared<OPCode1D>(addr,dat_content,this);
-                case 0x1E: return std::make_shared<OPCode1E>(addr,dat_content,this);
+                //case 0x17: return std::make_shared<OPCode17>(addr,dat_content,this);
+                //case 0x18: return std::make_shared<OPCode18>(addr,dat_content,this);
+                //case 0x19: return std::make_shared<OPCode19>(addr,dat_content,this);
+                //case 0x1A: return std::make_shared<OPCode1A>(addr,dat_content,this);
+                //case 0x1B: return std::make_shared<OPCode1B>(addr,dat_content,this);
+                //case 0x1C: return std::make_shared<OPCode1C>(addr,dat_content,this);
+                //case 0x1D: return std::make_shared<OPCode1D>(addr,dat_content,this);
+                //case 0x1E: return std::make_shared<OPCode1E>(addr,dat_content,this);
                 case 0x1F: return std::make_shared<OPCode1F>(addr,dat_content,this);
-                case 0x20: return std::make_shared<OPCode20>(addr,dat_content,this);
-                case 0x21: return std::make_shared<OPCode21>(addr,dat_content,this);
-                case 0x22: return std::make_shared<OPCode22>(addr,dat_content,this);
-                case 0x23: return std::make_shared<OPCode23>(addr,dat_content,this);
-                case 0x24: return std::make_shared<OPCode24>(addr,dat_content,this);
-                case 0x25: return std::make_shared<OPCode25>(addr,dat_content,this);
-                case 0x26: return std::make_shared<OPCode26>(addr,dat_content,this);
-                case 0x27: return std::make_shared<OPCode27>(addr,dat_content,this);
-                case 0x28: return std::make_shared<OPCode28>(addr,dat_content,this);
-                case 0x29: return std::make_shared<OPCode29>(addr,dat_content,this);
-                case 0x2A: return std::make_shared<OPCode2A>(addr,dat_content,this);
+                //case 0x20: return std::make_shared<OPCode20>(addr,dat_content,this);
+                //case 0x21: return std::make_shared<OPCode21>(addr,dat_content,this);
+                //case 0x22: return std::make_shared<OPCode22>(addr,dat_content,this);
+                //case 0x23: return std::make_shared<OPCode23>(addr,dat_content,this);
+                //case 0x24: return std::make_shared<OPCode24>(addr,dat_content,this);
+                //case 0x25: return std::make_shared<OPCode25>(addr,dat_content,this);
+                //case 0x26: return std::make_shared<OPCode26>(addr,dat_content,this);
+                //case 0x27: return std::make_shared<OPCode27>(addr,dat_content,this);
+                //case 0x28: return std::make_shared<OPCode28>(addr,dat_content,this);
+                //case 0x29: return std::make_shared<OPCode29>(addr,dat_content,this);
+                //case 0x2A: return std::make_shared<OPCode2A>(addr,dat_content,this);
                 case 0x2B: return std::make_shared<OPCode2B>(addr,dat_content,this);
-                case 0x2C: return std::make_shared<OPCode2C>(addr,dat_content,this);
-                case 0x2D: return std::make_shared<OPCode2D>(addr,dat_content,this);
+                //case 0x2C: return std::make_shared<OPCode2C>(addr,dat_content,this);
+                //case 0x2D: return std::make_shared<OPCode2D>(addr,dat_content,this);
                 case 0x2E: return std::make_shared<OPCode2E>(addr,dat_content,this);
                 case 0x2F: return std::make_shared<OPCode2F>(addr,dat_content,this);
-                case 0x30: return std::make_shared<OPCode30>(addr,dat_content,this);
+                //case 0x30: return std::make_shared<OPCode30>(addr,dat_content,this);
                 case 0x31: return std::make_shared<OPCode31>(addr,dat_content,this);
-                case 0x32: return std::make_shared<OPCode32>(addr,dat_content,this);
-                case 0x33: return std::make_shared<OPCode33>(addr,dat_content,this);
-                case 0x34: return std::make_shared<OPCode34>(addr,dat_content,this);
-                case 0x35: return std::make_shared<OPCode35>(addr,dat_content,this);
-                case 0x36: return std::make_shared<OPCode36>(addr,dat_content,this);
-                case 0x37: return std::make_shared<OPCode37>(addr,dat_content,this);
-                case 0x38: return std::make_shared<OPCode38>(addr,dat_content,this);
-                case 0x39: return std::make_shared<OPCode39>(addr,dat_content,this);
-                case 0x3A: return std::make_shared<OPCode3A>(addr,dat_content,this);
-                case 0x3B: return std::make_shared<OPCode3B>(addr,dat_content,this);
-                case 0x3C: return std::make_shared<OPCode3C>(addr,dat_content,this);
-                case 0x3D: return std::make_shared<OPCode3D>(addr,dat_content,this);
-                case 0x3E: return std::make_shared<OPCode3E>(addr,dat_content,this);
+                //case 0x32: return std::make_shared<OPCode32>(addr,dat_content,this);
+                //case 0x33: return std::make_shared<OPCode33>(addr,dat_content,this);
+                //case 0x34: return std::make_shared<OPCode34>(addr,dat_content,this);
+                //case 0x35: return std::make_shared<OPCode35>(addr,dat_content,this);
+                //case 0x36: return std::make_shared<OPCode36>(addr,dat_content,this);
+                //case 0x37: return std::make_shared<OPCode37>(addr,dat_content,this);
+                //case 0x38: return std::make_shared<OPCode38>(addr,dat_content,this);
+                //case 0x39: return std::make_shared<OPCode39>(addr,dat_content,this);
+                //case 0x3A: return std::make_shared<OPCode3A>(addr,dat_content,this);
+                //case 0x3B: return std::make_shared<OPCode3B>(addr,dat_content,this);
+                //case 0x3C: return std::make_shared<OPCode3C>(addr,dat_content,this);
+                //case 0x3D: return std::make_shared<OPCode3D>(addr,dat_content,this);
+                //case 0x3E: return std::make_shared<OPCode3E>(addr,dat_content,this);
                 case 0x3F: return std::make_shared<OPCode3F>(addr,dat_content,this);
-                case 0x40: return std::make_shared<OPCode40>(addr,dat_content,this);
-                case 0x41: return std::make_shared<OPCode41>(addr,dat_content,this);
-                case 0x42: return std::make_shared<OPCode42>(addr,dat_content,this);
-                case 0x43: return std::make_shared<OPCode43>(addr,dat_content,this);
-                case 0x44: return std::make_shared<OPCode44>(addr,dat_content,this);
-                case 0x45: return std::make_shared<OPCode45>(addr,dat_content,this);
-                case 0x46: return std::make_shared<OPCode46>(addr,dat_content,this);
-                case 0x47: return std::make_shared<OPCode47>(addr,dat_content,this);
-                case 0x48: return std::make_shared<OPCode48>(addr,dat_content,this);
-                case 0x49: return std::make_shared<OPCode49>(addr,dat_content,this);
-                case 0x4A: return std::make_shared<OPCode4A>(addr,dat_content,this);
-                case 0x4B: return std::make_shared<OPCode4B>(addr,dat_content,this);
-                case 0x4C: return std::make_shared<OPCode4C>(addr,dat_content,this);
-                case 0x4D: return std::make_shared<OPCode4D>(addr,dat_content,this);
+                //case 0x40: return std::make_shared<OPCode40>(addr,dat_content,this);
+                //case 0x41: return std::make_shared<OPCode41>(addr,dat_content,this);
+                //case 0x42: return std::make_shared<OPCode42>(addr,dat_content,this);
+                //case 0x43: return std::make_shared<OPCode43>(addr,dat_content,this);
+                //case 0x44: return std::make_shared<OPCode44>(addr,dat_content,this);
+                //case 0x45: return std::make_shared<OPCode45>(addr,dat_content,this);
+                //case 0x46: return std::make_shared<OPCode46>(addr,dat_content,this);
+                //case 0x47: return std::make_shared<OPCode47>(addr,dat_content,this);
+                //case 0x48: return std::make_shared<OPCode48>(addr,dat_content,this);
+                //case 0x49: return std::make_shared<OPCode49>(addr,dat_content,this);
+                //case 0x4A: return std::make_shared<OPCode4A>(addr,dat_content,this);
+                //case 0x4B: return std::make_shared<OPCode4B>(addr,dat_content,this);
+                //case 0x4C: return std::make_shared<OPCode4C>(addr,dat_content,this);
+                //case 0x4D: return std::make_shared<OPCode4D>(addr,dat_content,this);
                 //case 0x4E: return std::make_shared<OPCode4E>(addr,dat_content,this);
-                case 0x4F: return std::make_shared<OPCode4F>(addr,dat_content,this);
+                //case 0x4F: return std::make_shared<OPCode4F>(addr,dat_content,this);
                 //case 0x50: return std::make_shared<OPCode50>(addr,dat_content,this);
-                case 0x51: return std::make_shared<OPCode51>(addr,dat_content,this);
-                case 0x52: return std::make_shared<OPCode52>(addr,dat_content,this);
-                case 0x53: return std::make_shared<OPCode53>(addr,dat_content,this);
+                //case 0x51: return std::make_shared<OPCode51>(addr,dat_content,this);
+                //case 0x52: return std::make_shared<OPCode52>(addr,dat_content,this);
+                //case 0x53: return std::make_shared<OPCode53>(addr,dat_content,this);
 
-                case 0x55: return std::make_shared<OPCode55>(addr,dat_content,this);
-                case 0x56: return std::make_shared<OPCode56>(addr,dat_content,this);
-                case 0x57: return std::make_shared<OPCode57>(addr,dat_content,this);
-                case 0x58: return std::make_shared<OPCode58>(addr,dat_content,this);
-                case 0x59: return std::make_shared<OPCode59>(addr,dat_content,this);
-                case 0x5A: return std::make_shared<OPCode5A>(addr,dat_content,this);
-                case 0x5B: return std::make_shared<OPCode5B>(addr,dat_content,this);
+                //case 0x55: return std::make_shared<OPCode55>(addr,dat_content,this);
+                //case 0x56: return std::make_shared<OPCode56>(addr,dat_content,this);
+                //case 0x57: return std::make_shared<OPCode57>(addr,dat_content,this);
+                //case 0x58: return std::make_shared<OPCode58>(addr,dat_content,this);
+                //case 0x59: return std::make_shared<OPCode59>(addr,dat_content,this);
+                //case 0x5A: return std::make_shared<OPCode5A>(addr,dat_content,this);
+                //case 0x5B: return std::make_shared<OPCode5B>(addr,dat_content,this);
                 case 0x5C: return std::make_shared<OPCode5C>(addr,dat_content,this);
                 case 0x5D: return std::make_shared<OPCode5D>(addr,dat_content,this);
-                case 0x5E: return std::make_shared<OPCode5E>(addr,dat_content,this);
+                //case 0x5E: return std::make_shared<OPCode5E>(addr,dat_content,this);
                 case 0x5F: return std::make_shared<OPCode5F>(addr,dat_content,this);
-                case 0x60: return std::make_shared<OPCode60>(addr,dat_content,this);
-                case 0x61: return std::make_shared<OPCode61>(addr,dat_content,this);
+                //case 0x60: return std::make_shared<OPCode60>(addr,dat_content,this);
+                //case 0x61: return std::make_shared<OPCode61>(addr,dat_content,this);
                 case 0x62: return std::make_shared<OPCode62>(addr,dat_content,this);
-                case 0x63: return std::make_shared<OPCode63>(addr,dat_content,this);
-                case 0x64: return std::make_shared<OPCode64>(addr,dat_content,this);
+                //case 0x63: return std::make_shared<OPCode63>(addr,dat_content,this);
+                //case 0x64: return std::make_shared<OPCode64>(addr,dat_content,this);
                 case 0x65: return std::make_shared<OPCode65>(addr,dat_content,this);
                 case 0x66: return std::make_shared<OPCode66>(addr,dat_content,this);
-                case 0x67: return std::make_shared<OPCode67>(addr,dat_content,this);
-                case 0x68: return std::make_shared<OPCode68>(addr,dat_content,this);
-                case 0x69: return std::make_shared<OPCode69>(addr,dat_content,this);
-                case 0x6A: return std::make_shared<OPCode6A>(addr,dat_content,this);
-                case 0x6B: return std::make_shared<OPCode6B>(addr,dat_content,this);
-                case 0x6C: return std::make_shared<OPCode6C>(addr,dat_content,this);
-                case 0x6D: return std::make_shared<OPCode6D>(addr,dat_content,this);
-                case 0x6E: return std::make_shared<OPCode6E>(addr,dat_content,this);
-                case 0x6F: return std::make_shared<OPCode6F>(addr,dat_content,this);
-                case 0x70: return std::make_shared<OPCode70>(addr,dat_content,this);
-                case 0x71: return std::make_shared<OPCode71>(addr,dat_content,this);
-                case 0x72: return std::make_shared<OPCode72>(addr,dat_content,this);
-                case 0x73: return std::make_shared<OPCode73>(addr,dat_content,this);
-                case 0x74: return std::make_shared<OPCode74>(addr,dat_content,this);
+                //case 0x67: return std::make_shared<OPCode67>(addr,dat_content,this);
+                //case 0x68: return std::make_shared<OPCode68>(addr,dat_content,this);
+                //case 0x69: return std::make_shared<OPCode69>(addr,dat_content,this);
+                //case 0x6A: return std::make_shared<OPCode6A>(addr,dat_content,this);
+                //case 0x6B: return std::make_shared<OPCode6B>(addr,dat_content,this);
+                //case 0x6C: return std::make_shared<OPCode6C>(addr,dat_content,this);
+                //case 0x6D: return std::make_shared<OPCode6D>(addr,dat_content,this);
+                //case 0x6E: return std::make_shared<OPCode6E>(addr,dat_content,this);
+                //case 0x6F: return std::make_shared<OPCode6F>(addr,dat_content,this);
+                //case 0x70: return std::make_shared<OPCode70>(addr,dat_content,this);
+                //case 0x71: return std::make_shared<OPCode71>(addr,dat_content,this);
+                //case 0x72: return std::make_shared<OPCode72>(addr,dat_content,this);
+                //case 0x73: return std::make_shared<OPCode73>(addr,dat_content,this);
+                //case 0x74: return std::make_shared<OPCode74>(addr,dat_content,this);
 
-                case 0x77: return std::make_shared<OPCode77>(addr,dat_content,this);
-                case 0x78: return std::make_shared<OPCode78>(addr,dat_content,this);
-                case 0x79: return std::make_shared<OPCode79>(addr,dat_content,this);
-                case 0x7A: return std::make_shared<OPCode7A>(addr,dat_content,this);
-                case 0x7B: return std::make_shared<OPCode7B>(addr,dat_content,this);
+                //case 0x77: return std::make_shared<OPCode77>(addr,dat_content,this);
+                //case 0x78: return std::make_shared<OPCode78>(addr,dat_content,this);
+                //case 0x79: return std::make_shared<OPCode79>(addr,dat_content,this);
+                //case 0x7A: return std::make_shared<OPCode7A>(addr,dat_content,this);
+                //case 0x7B: return std::make_shared<OPCode7B>(addr,dat_content,this);
 
-                case 0x7D: return std::make_shared<OPCode7D>(addr,dat_content,this);
-                case 0x7E: return std::make_shared<OPCode7E>(addr,dat_content,this);
-                case 0x7F: return std::make_shared<OPCode7F>(addr,dat_content,this);
-                case 0x80: return std::make_shared<OPCode80>(addr,dat_content,this);
-                case 0x81: return std::make_shared<OPCode81>(addr,dat_content,this);
-                case 0x82: return std::make_shared<OPCode82>(addr,dat_content,this);
-                case 0x83: return std::make_shared<OPCode83>(addr,dat_content,this);
-                case 0x84: return std::make_shared<OPCode84>(addr,dat_content,this);
-                case 0x85: return std::make_shared<OPCode85>(addr,dat_content,this);
-                case 0x86: return std::make_shared<OPCode86>(addr,dat_content,this);
-                case 0x87: return std::make_shared<OPCode87>(addr,dat_content,this);
-                case 0x88: return std::make_shared<OPCode88>(addr,dat_content,this);
-                case 0x89: return std::make_shared<OPCode89>(addr,dat_content,this);
-                case 0x8A: return std::make_shared<OPCode8A>(addr,dat_content,this);
-                case 0x8B: return std::make_shared<OPCode8B>(addr,dat_content,this);
-                case 0x8C: return std::make_shared<OPCode8C>(addr,dat_content,this);
-                case 0x8D: return std::make_shared<OPCode8D>(addr,dat_content,this);
-                case 0x8E: return std::make_shared<OPCode8E>(addr,dat_content,this);
+                //case 0x7D: return std::make_shared<OPCode7D>(addr,dat_content,this);
+                //case 0x7E: return std::make_shared<OPCode7E>(addr,dat_content,this);
+                //case 0x7F: return std::make_shared<OPCode7F>(addr,dat_content,this);
+                //case 0x80: return std::make_shared<OPCode80>(addr,dat_content,this);
+                //case 0x81: return std::make_shared<OPCode81>(addr,dat_content,this);
+                //case 0x82: return std::make_shared<OPCode82>(addr,dat_content,this);
+                //case 0x83: return std::make_shared<OPCode83>(addr,dat_content,this);
+                //case 0x84: return std::make_shared<OPCode84>(addr,dat_content,this);
+                //case 0x85: return std::make_shared<OPCode85>(addr,dat_content,this);
+                //case 0x86: return std::make_shared<OPCode86>(addr,dat_content,this);
+                //case 0x87: return std::make_shared<OPCode87>(addr,dat_content,this);
+                //case 0x88: return std::make_shared<OPCode88>(addr,dat_content,this);
+                //case 0x89: return std::make_shared<OPCode89>(addr,dat_content,this);
+                //case 0x8A: return std::make_shared<OPCode8A>(addr,dat_content,this);
+                //case 0x8B: return std::make_shared<OPCode8B>(addr,dat_content,this);
+                //case 0x8C: return std::make_shared<OPCode8C>(addr,dat_content,this);
+                //case 0x8D: return std::make_shared<OPCode8D>(addr,dat_content,this);
+                //case 0x8E: return std::make_shared<OPCode8E>(addr,dat_content,this);
 
-                case 0x90: return std::make_shared<OPCode90>(addr,dat_content,this);
-                case 0x91: return std::make_shared<OPCode91>(addr,dat_content,this);
-                case 0x92: return std::make_shared<OPCode92>(addr,dat_content,this);
-                case 0x93: return std::make_shared<OPCode93>(addr,dat_content,this);
-                case 0x94: return std::make_shared<OPCode94>(addr,dat_content,this);
-                case 0x95: return std::make_shared<OPCode95>(addr,dat_content,this);
-                case 0x96: return std::make_shared<OPCode96>(addr,dat_content,this);
-                case 0x97: return std::make_shared<OPCode97>(addr,dat_content,this);
-                case 0x98: return std::make_shared<OPCode98>(addr,dat_content,this);
-                case 0x99: return std::make_shared<OPCode99>(addr,dat_content,this);
-                case 0x9A: return std::make_shared<OPCode9A>(addr,dat_content,this);
-                case 0x9B: return std::make_shared<OPCode9B>(addr,dat_content,this);
-                case 0x9D: return std::make_shared<OPCode9D>(addr,dat_content,this);
-                case 0x9E: return std::make_shared<OPCode9E>(addr,dat_content,this);
-                case 0x9F: return std::make_shared<OPCode9F>(addr,dat_content,this);
+                //case 0x90: return std::make_shared<OPCode90>(addr,dat_content,this);
+                //case 0x91: return std::make_shared<OPCode91>(addr,dat_content,this);
+                //case 0x92: return std::make_shared<OPCode92>(addr,dat_content,this);
+                //case 0x93: return std::make_shared<OPCode93>(addr,dat_content,this);
+                //case 0x94: return std::make_shared<OPCode94>(addr,dat_content,this);
+                //case 0x95: return std::make_shared<OPCode95>(addr,dat_content,this);
+                //case 0x96: return std::make_shared<OPCode96>(addr,dat_content,this);
+                //case 0x97: return std::make_shared<OPCode97>(addr,dat_content,this);
+                //case 0x98: return std::make_shared<OPCode98>(addr,dat_content,this);
+                //case 0x99: return std::make_shared<OPCode99>(addr,dat_content,this);
+                //case 0x9A: return std::make_shared<OPCode9A>(addr,dat_content,this);
+                //case 0x9B: return std::make_shared<OPCode9B>(addr,dat_content,this);
+                //case 0x9D: return std::make_shared<OPCode9D>(addr,dat_content,this);
+                //case 0x9E: return std::make_shared<OPCode9E>(addr,dat_content,this);
+                //case 0x9F: return std::make_shared<OPCode9F>(addr,dat_content,this);
                 default:
                 std::stringstream stream;
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
 
                 error = true;
                 std::string result( stream.str() );
-                qFatal(result.c_str());
+                //qFatal(result.c_str());
 
                 return std::shared_ptr<Instruction>();
             }
@@ -5504,7 +5573,7 @@ class CS2Builder : public Builder
             return std::make_shared<AddCollision>(addr,dat_content,this);
         }
 
-
+        return std::shared_ptr<Instruction>();
     }
     bool CreateHeaderFromDAT(QByteArray &dat_content){
 
@@ -5530,7 +5599,7 @@ class CS2Builder : public Builder
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;
         int start_offset_area = ReadIntegerFromByteArray(0x8, dat_content);
-        for (int idx_fun = 0; idx_fun < nb_functions; idx_fun++){
+        for (uint idx_fun = 0; idx_fun < nb_functions; idx_fun++){
             position = start_offset_area + 4*idx_fun;
             next_position = start_offset_area + 4*(idx_fun+1);
             int addr = ReadIntegerFromByteArray(position, dat_content);
@@ -5560,160 +5629,160 @@ class CS2Builder : public Builder
         switch(OP){
         case 0x00: return std::make_shared<OPCode0>(addr,row, xls_content,this);
         case 0x01: return std::make_shared<OPCode1>(addr,row, xls_content,this);
-        case 0x02: return std::make_shared<OPCode02>(addr,row, xls_content,this);
-        case 0x03: return std::make_shared<OPCode03>(addr,row, xls_content,this);
-        case 0x04: return std::make_shared<OPCode04>(addr,row, xls_content,this);
-        case 0x05: return std::make_shared<OPCode05>(addr,row, xls_content,this);
-        case 0x06: return std::make_shared<OPCode06>(addr,row, xls_content,this);
-        case 0x07: return std::make_shared<OPCode07>(addr,row, xls_content,this);
-        case 0x08: return std::make_shared<OPCode08>(addr,row, xls_content,this);
-        case 0x0A: return std::make_shared<OPCode0A>(addr,row, xls_content,this);
-        case 0x0C: return std::make_shared<OPCode0C>(addr,row, xls_content,this);
-        case 0x0D: return std::make_shared<OPCode0D>(addr,row, xls_content,this);
-        case 0x0E: return std::make_shared<OPCode0E>(addr,row, xls_content,this);
-        case 0x0F: return std::make_shared<OPCode0F>(addr,row, xls_content,this);
-        case 0x10: return std::make_shared<OPCode10>(addr,row, xls_content,this);
-        case 0x11: return std::make_shared<OPCode11>(addr,row, xls_content,this);
-        case 0x12: return std::make_shared<OPCode12>(addr,row, xls_content,this);
-        case 0x13: return std::make_shared<OPCode13>(addr,row, xls_content,this);
-        case 0x14: return std::make_shared<OPCode14>(addr,row, xls_content,this);
-        case 0x15: return std::make_shared<OPCode15>(addr,row, xls_content,this);
-        case 0x16: return std::make_shared<OPCode16>(addr,row, xls_content,this);
-        case 0x17: return std::make_shared<OPCode17>(addr,row, xls_content,this);
-        case 0x18: return std::make_shared<OPCode18>(addr,row, xls_content,this);
-        case 0x19: return std::make_shared<OPCode19>(addr,row, xls_content,this);
-        case 0x1A: return std::make_shared<OPCode1A>(addr,row, xls_content,this);
-        case 0x1B: return std::make_shared<OPCode1B>(addr,row, xls_content,this);
-        case 0x1C: return std::make_shared<OPCode1C>(addr,row, xls_content,this);
-        case 0x1D: return std::make_shared<OPCode1D>(addr,row, xls_content,this);
-        case 0x1E: return std::make_shared<OPCode1E>(addr,row, xls_content,this);
-        case 0x1F: return std::make_shared<OPCode1F>(addr,row, xls_content,this);
-        case 0x20: return std::make_shared<OPCode20>(addr,row, xls_content,this);
-        case 0x21: return std::make_shared<OPCode21>(addr,row, xls_content,this);
-        case 0x22: return std::make_shared<OPCode22>(addr,row, xls_content,this);
-        case 0x23: return std::make_shared<OPCode23>(addr,row, xls_content,this);
-        case 0x24: return std::make_shared<OPCode24>(addr,row, xls_content,this);
-        case 0x25: return std::make_shared<OPCode25>(addr,row, xls_content,this);
-        case 0x26: return std::make_shared<OPCode26>(addr,row, xls_content,this);
-        case 0x27: return std::make_shared<OPCode27>(addr,row, xls_content,this);
-        case 0x28: return std::make_shared<OPCode28>(addr,row, xls_content,this);
-        case 0x29: return std::make_shared<OPCode29>(addr,row, xls_content,this);
-        case 0x2A: return std::make_shared<OPCode2A>(addr,row, xls_content,this);
-        case 0x2B: return std::make_shared<OPCode2B>(addr,row, xls_content,this);
-        case 0x2C: return std::make_shared<OPCode2C>(addr,row, xls_content,this);
-        case 0x2D: return std::make_shared<OPCode2D>(addr,row, xls_content,this);
-        case 0x2E: return std::make_shared<OPCode2E>(addr,row, xls_content,this);
-        case 0x2F: return std::make_shared<OPCode2F>(addr,row, xls_content,this);
-        case 0x30: return std::make_shared<OPCode30>(addr,row, xls_content,this);
-        case 0x31: return std::make_shared<OPCode31>(addr,row, xls_content,this);
-        case 0x32: return std::make_shared<OPCode32>(addr,row, xls_content,this);
-        case 0x33: return std::make_shared<OPCode33>(addr,row, xls_content,this);
-        case 0x34: return std::make_shared<OPCode34>(addr,row, xls_content,this);
-        case 0x35: return std::make_shared<OPCode35>(addr,row, xls_content,this);
-        case 0x36: return std::make_shared<OPCode36>(addr,row, xls_content,this);
-        case 0x37: return std::make_shared<OPCode37>(addr,row, xls_content,this);
-        case 0x38: return std::make_shared<OPCode38>(addr,row, xls_content,this);
-        case 0x39: return std::make_shared<OPCode39>(addr,row, xls_content,this);
-        case 0x3A: return std::make_shared<OPCode3A>(addr,row, xls_content,this);
-        case 0x3B: return std::make_shared<OPCode3B>(addr,row, xls_content,this);
-        case 0x3C: return std::make_shared<OPCode3C>(addr,row, xls_content,this);
-        case 0x3D: return std::make_shared<OPCode3D>(addr,row, xls_content,this);
-        case 0x3E: return std::make_shared<OPCode3E>(addr,row, xls_content,this);
-        case 0x3F: return std::make_shared<OPCode3F>(addr,row, xls_content,this);
-        case 0x40: return std::make_shared<OPCode40>(addr,row, xls_content,this);
-        case 0x41: return std::make_shared<OPCode41>(addr,row, xls_content,this);
-        case 0x42: return std::make_shared<OPCode42>(addr,row, xls_content,this);
-        case 0x43: return std::make_shared<OPCode43>(addr,row, xls_content,this);
-        case 0x44: return std::make_shared<OPCode44>(addr,row, xls_content,this);
-        case 0x45: return std::make_shared<OPCode45>(addr,row, xls_content,this);
-        case 0x46: return std::make_shared<OPCode46>(addr,row, xls_content,this);
-        case 0x47: return std::make_shared<OPCode47>(addr,row, xls_content,this);
-        case 0x48: return std::make_shared<OPCode48>(addr,row, xls_content,this);
-        case 0x49: return std::make_shared<OPCode49>(addr,row, xls_content,this);
-        case 0x4A: return std::make_shared<OPCode4A>(addr,row, xls_content,this);
-        case 0x4B: return std::make_shared<OPCode4B>(addr,row, xls_content,this);
-        case 0x4C: return std::make_shared<OPCode4C>(addr,row, xls_content,this);
-        case 0x4D: return std::make_shared<OPCode4D>(addr,row, xls_content,this);
+        //case 0x02: return std::make_shared<OPCode02>(addr,row, xls_content,this);
+        //case 0x03: return std::make_shared<OPCode03>(addr,row, xls_content,this);
+        //case 0x04: return std::make_shared<OPCode04>(addr,row, xls_content,this);
+        //case 0x05: return std::make_shared<OPCode05>(addr,row, xls_content,this);
+        //case 0x06: return std::make_shared<OPCode06>(addr,row, xls_content,this);
+        //case 0x07: return std::make_shared<OPCode07>(addr,row, xls_content,this);
+        //case 0x08: return std::make_shared<OPCode08>(addr,row, xls_content,this);
+        //case 0x0A: return std::make_shared<OPCode0A>(addr,row, xls_content,this);
+        //case 0x0C: return std::make_shared<OPCode0C>(addr,row, xls_content,this);
+        //case 0x0D: return std::make_shared<OPCode0D>(addr,row, xls_content,this);
+        //case 0x0E: return std::make_shared<OPCode0E>(addr,row, xls_content,this);
+        //case 0x0F: return std::make_shared<OPCode0F>(addr,row, xls_content,this);
+        //case 0x10: return std::make_shared<OPCode10>(addr,row, xls_content,this);
+        //case 0x11: return std::make_shared<OPCode11>(addr,row, xls_content,this);
+        //case 0x12: return std::make_shared<OPCode12>(addr,row, xls_content,this);
+        //case 0x13: return std::make_shared<OPCode13>(addr,row, xls_content,this);
+        //case 0x14: return std::make_shared<OPCode14>(addr,row, xls_content,this);
+        //case 0x15: return std::make_shared<OPCode15>(addr,row, xls_content,this);
+        //case 0x16: return std::make_shared<OPCode16>(addr,row, xls_content,this);
+        //case 0x17: return std::make_shared<OPCode17>(addr,row, xls_content,this);
+        //case 0x18: return std::make_shared<OPCode18>(addr,row, xls_content,this);
+        //case 0x19: return std::make_shared<OPCode19>(addr,row, xls_content,this);
+        //case 0x1A: return std::make_shared<OPCode1A>(addr,row, xls_content,this);
+        //case 0x1B: return std::make_shared<OPCode1B>(addr,row, xls_content,this);
+        //case 0x1C: return std::make_shared<OPCode1C>(addr,row, xls_content,this);
+        //case 0x1D: return std::make_shared<OPCode1D>(addr,row, xls_content,this);
+        //case 0x1E: return std::make_shared<OPCode1E>(addr,row, xls_content,this);
+        //case 0x1F: return std::make_shared<OPCode1F>(addr,row, xls_content,this);
+        //case 0x20: return std::make_shared<OPCode20>(addr,row, xls_content,this);
+        //case 0x21: return std::make_shared<OPCode21>(addr,row, xls_content,this);
+        //case 0x22: return std::make_shared<OPCode22>(addr,row, xls_content,this);
+        //case 0x23: return std::make_shared<OPCode23>(addr,row, xls_content,this);
+        //case 0x24: return std::make_shared<OPCode24>(addr,row, xls_content,this);
+        //case 0x25: return std::make_shared<OPCode25>(addr,row, xls_content,this);
+        //case 0x26: return std::make_shared<OPCode26>(addr,row, xls_content,this);
+        //case 0x27: return std::make_shared<OPCode27>(addr,row, xls_content,this);
+        //case 0x28: return std::make_shared<OPCode28>(addr,row, xls_content,this);
+        //case 0x29: return std::make_shared<OPCode29>(addr,row, xls_content,this);
+        //case 0x2A: return std::make_shared<OPCode2A>(addr,row, xls_content,this);
+        //case 0x2B: return std::make_shared<OPCode2B>(addr,row, xls_content,this);
+        //case 0x2C: return std::make_shared<OPCode2C>(addr,row, xls_content,this);
+        //case 0x2D: return std::make_shared<OPCode2D>(addr,row, xls_content,this);
+        //case 0x2E: return std::make_shared<OPCode2E>(addr,row, xls_content,this);
+        //case 0x2F: return std::make_shared<OPCode2F>(addr,row, xls_content,this);
+        //case 0x30: return std::make_shared<OPCode30>(addr,row, xls_content,this);
+        //case 0x31: return std::make_shared<OPCode31>(addr,row, xls_content,this);
+        //case 0x32: return std::make_shared<OPCode32>(addr,row, xls_content,this);
+        //case 0x33: return std::make_shared<OPCode33>(addr,row, xls_content,this);
+        //case 0x34: return std::make_shared<OPCode34>(addr,row, xls_content,this);
+        //case 0x35: return std::make_shared<OPCode35>(addr,row, xls_content,this);
+        //case 0x36: return std::make_shared<OPCode36>(addr,row, xls_content,this);
+        //case 0x37: return std::make_shared<OPCode37>(addr,row, xls_content,this);
+        //case 0x38: return std::make_shared<OPCode38>(addr,row, xls_content,this);
+        //case 0x39: return std::make_shared<OPCode39>(addr,row, xls_content,this);
+        //case 0x3A: return std::make_shared<OPCode3A>(addr,row, xls_content,this);
+        //case 0x3B: return std::make_shared<OPCode3B>(addr,row, xls_content,this);
+        //case 0x3C: return std::make_shared<OPCode3C>(addr,row, xls_content,this);
+        //case 0x3D: return std::make_shared<OPCode3D>(addr,row, xls_content,this);
+        //case 0x3E: return std::make_shared<OPCode3E>(addr,row, xls_content,this);
+        //case 0x3F: return std::make_shared<OPCode3F>(addr,row, xls_content,this);
+        //case 0x40: return std::make_shared<OPCode40>(addr,row, xls_content,this);
+        //case 0x41: return std::make_shared<OPCode41>(addr,row, xls_content,this);
+        //case 0x42: return std::make_shared<OPCode42>(addr,row, xls_content,this);
+        //case 0x43: return std::make_shared<OPCode43>(addr,row, xls_content,this);
+        //case 0x44: return std::make_shared<OPCode44>(addr,row, xls_content,this);
+        //case 0x45: return std::make_shared<OPCode45>(addr,row, xls_content,this);
+        //case 0x46: return std::make_shared<OPCode46>(addr,row, xls_content,this);
+        //case 0x47: return std::make_shared<OPCode47>(addr,row, xls_content,this);
+        //case 0x48: return std::make_shared<OPCode48>(addr,row, xls_content,this);
+        //case 0x49: return std::make_shared<OPCode49>(addr,row, xls_content,this);
+        //case 0x4A: return std::make_shared<OPCode4A>(addr,row, xls_content,this);
+        //case 0x4B: return std::make_shared<OPCode4B>(addr,row, xls_content,this);
+        //case 0x4C: return std::make_shared<OPCode4C>(addr,row, xls_content,this);
+        //case 0x4D: return std::make_shared<OPCode4D>(addr,row, xls_content,this);
         //case 0x4E: return std::make_shared<OPCode4E>(addr,row, xls_content,this);
-        case 0x4F: return std::make_shared<OPCode4F>(addr,row, xls_content,this);
+        //case 0x4F: return std::make_shared<OPCode4F>(addr,row, xls_content,this);
         //case 0x50: return std::make_shared<OPCode50>(addr,row, xls_content,this);
-        case 0x51: return std::make_shared<OPCode51>(addr,row, xls_content,this);
-        case 0x52: return std::make_shared<OPCode52>(addr,row, xls_content,this);
-        case 0x53: return std::make_shared<OPCode53>(addr,row, xls_content,this);
+        //case 0x51: return std::make_shared<OPCode51>(addr,row, xls_content,this);
+        //case 0x52: return std::make_shared<OPCode52>(addr,row, xls_content,this);
+        //case 0x53: return std::make_shared<OPCode53>(addr,row, xls_content,this);
 
-        case 0x55: return std::make_shared<OPCode55>(addr,row, xls_content,this);
-        case 0x56: return std::make_shared<OPCode56>(addr,row, xls_content,this);
-        case 0x57: return std::make_shared<OPCode57>(addr,row, xls_content,this);
-        case 0x58: return std::make_shared<OPCode58>(addr,row, xls_content,this);
-        case 0x59: return std::make_shared<OPCode59>(addr,row, xls_content,this);
-        case 0x5A: return std::make_shared<OPCode5A>(addr,row, xls_content,this);
-        case 0x5B: return std::make_shared<OPCode5B>(addr,row, xls_content,this);
-        case 0x5C: return std::make_shared<OPCode5C>(addr,row, xls_content,this);
-        case 0x5D: return std::make_shared<OPCode5D>(addr,row, xls_content,this);
-        case 0x5E: return std::make_shared<OPCode5E>(addr,row, xls_content,this);
-        case 0x5F: return std::make_shared<OPCode5F>(addr,row, xls_content,this);
-        case 0x60: return std::make_shared<OPCode60>(addr,row, xls_content,this);
-        case 0x61: return std::make_shared<OPCode61>(addr,row, xls_content,this);
-        case 0x62: return std::make_shared<OPCode62>(addr,row, xls_content,this);
-        case 0x63: return std::make_shared<OPCode63>(addr,row, xls_content,this);
-        case 0x64: return std::make_shared<OPCode64>(addr,row, xls_content,this);
-        case 0x65: return std::make_shared<OPCode65>(addr,row, xls_content,this);
-        case 0x66: return std::make_shared<OPCode66>(addr,row, xls_content,this);
-        case 0x67: return std::make_shared<OPCode67>(addr,row, xls_content,this);
-        case 0x68: return std::make_shared<OPCode68>(addr,row, xls_content,this);
-        case 0x69: return std::make_shared<OPCode69>(addr,row, xls_content,this);
-        case 0x6A: return std::make_shared<OPCode6A>(addr,row, xls_content,this);
-        case 0x6B: return std::make_shared<OPCode6B>(addr,row, xls_content,this);
-        case 0x6C: return std::make_shared<OPCode6C>(addr,row, xls_content,this);
-        case 0x6D: return std::make_shared<OPCode6D>(addr,row, xls_content,this);
-        case 0x6E: return std::make_shared<OPCode6E>(addr,row, xls_content,this);
-        case 0x6F: return std::make_shared<OPCode6F>(addr,row, xls_content,this);
-        case 0x70: return std::make_shared<OPCode70>(addr,row, xls_content,this);
-        case 0x71: return std::make_shared<OPCode71>(addr,row, xls_content,this);
-        case 0x72: return std::make_shared<OPCode72>(addr,row, xls_content,this);
-        case 0x73: return std::make_shared<OPCode73>(addr,row, xls_content,this);
-        case 0x74: return std::make_shared<OPCode74>(addr,row, xls_content,this);
+        //case 0x55: return std::make_shared<OPCode55>(addr,row, xls_content,this);
+        //case 0x56: return std::make_shared<OPCode56>(addr,row, xls_content,this);
+        //case 0x57: return std::make_shared<OPCode57>(addr,row, xls_content,this);
+        //case 0x58: return std::make_shared<OPCode58>(addr,row, xls_content,this);
+        //case 0x59: return std::make_shared<OPCode59>(addr,row, xls_content,this);
+        //case 0x5A: return std::make_shared<OPCode5A>(addr,row, xls_content,this);
+        //case 0x5B: return std::make_shared<OPCode5B>(addr,row, xls_content,this);
+        //case 0x5C: return std::make_shared<OPCode5C>(addr,row, xls_content,this);
+        //case 0x5D: return std::make_shared<OPCode5D>(addr,row, xls_content,this);
+        //case 0x5E: return std::make_shared<OPCode5E>(addr,row, xls_content,this);
+        //case 0x5F: return std::make_shared<OPCode5F>(addr,row, xls_content,this);
+        //case 0x60: return std::make_shared<OPCode60>(addr,row, xls_content,this);
+        //case 0x61: return std::make_shared<OPCode61>(addr,row, xls_content,this);
+        //case 0x62: return std::make_shared<OPCode62>(addr,row, xls_content,this);
+        //case 0x63: return std::make_shared<OPCode63>(addr,row, xls_content,this);
+        //case 0x64: return std::make_shared<OPCode64>(addr,row, xls_content,this);
+        //case 0x65: return std::make_shared<OPCode65>(addr,row, xls_content,this);
+        //case 0x66: return std::make_shared<OPCode66>(addr,row, xls_content,this);
+        //case 0x67: return std::make_shared<OPCode67>(addr,row, xls_content,this);
+        //case 0x68: return std::make_shared<OPCode68>(addr,row, xls_content,this);
+        //case 0x69: return std::make_shared<OPCode69>(addr,row, xls_content,this);
+        //case 0x6A: return std::make_shared<OPCode6A>(addr,row, xls_content,this);
+        //case 0x6B: return std::make_shared<OPCode6B>(addr,row, xls_content,this);
+        //case 0x6C: return std::make_shared<OPCode6C>(addr,row, xls_content,this);
+        //case 0x6D: return std::make_shared<OPCode6D>(addr,row, xls_content,this);
+        //case 0x6E: return std::make_shared<OPCode6E>(addr,row, xls_content,this);
+        //case 0x6F: return std::make_shared<OPCode6F>(addr,row, xls_content,this);
+        //case 0x70: return std::make_shared<OPCode70>(addr,row, xls_content,this);
+        //case 0x71: return std::make_shared<OPCode71>(addr,row, xls_content,this);
+        //case 0x72: return std::make_shared<OPCode72>(addr,row, xls_content,this);
+        //case 0x73: return std::make_shared<OPCode73>(addr,row, xls_content,this);
+        //case 0x74: return std::make_shared<OPCode74>(addr,row, xls_content,this);
 
-        case 0x77: return std::make_shared<OPCode77>(addr,row, xls_content,this);
-        case 0x78: return std::make_shared<OPCode78>(addr,row, xls_content,this);
-        case 0x79: return std::make_shared<OPCode79>(addr,row, xls_content,this);
-        case 0x7A: return std::make_shared<OPCode7A>(addr,row, xls_content,this);
-        case 0x7B: return std::make_shared<OPCode7B>(addr,row, xls_content,this);
+        //case 0x77: return std::make_shared<OPCode77>(addr,row, xls_content,this);
+        //case 0x78: return std::make_shared<OPCode78>(addr,row, xls_content,this);
+        //case 0x79: return std::make_shared<OPCode79>(addr,row, xls_content,this);
+        //case 0x7A: return std::make_shared<OPCode7A>(addr,row, xls_content,this);
+        //case 0x7B: return std::make_shared<OPCode7B>(addr,row, xls_content,this);
 
-        case 0x7D: return std::make_shared<OPCode7D>(addr,row, xls_content,this);
-        case 0x7E: return std::make_shared<OPCode7E>(addr,row, xls_content,this);
-        case 0x7F: return std::make_shared<OPCode7F>(addr,row, xls_content,this);
-        case 0x80: return std::make_shared<OPCode80>(addr,row, xls_content,this);
-        case 0x81: return std::make_shared<OPCode81>(addr,row, xls_content,this);
-        case 0x82: return std::make_shared<OPCode82>(addr,row, xls_content,this);
-        case 0x83: return std::make_shared<OPCode83>(addr,row, xls_content,this);
-        case 0x84: return std::make_shared<OPCode84>(addr,row, xls_content,this);
-        case 0x85: return std::make_shared<OPCode85>(addr,row, xls_content,this);
-        case 0x86: return std::make_shared<OPCode86>(addr,row, xls_content,this);
-        case 0x87: return std::make_shared<OPCode87>(addr,row, xls_content,this);
-        case 0x88: return std::make_shared<OPCode88>(addr,row, xls_content,this);
-        case 0x89: return std::make_shared<OPCode89>(addr,row, xls_content,this);
-        case 0x8A: return std::make_shared<OPCode8A>(addr,row, xls_content,this);
-        case 0x8B: return std::make_shared<OPCode8B>(addr,row, xls_content,this);
-        case 0x8C: return std::make_shared<OPCode8C>(addr,row, xls_content,this);
-        case 0x8D: return std::make_shared<OPCode8D>(addr,row, xls_content,this);
-        case 0x8E: return std::make_shared<OPCode8E>(addr,row, xls_content,this);
+        //case 0x7D: return std::make_shared<OPCode7D>(addr,row, xls_content,this);
+        //case 0x7E: return std::make_shared<OPCode7E>(addr,row, xls_content,this);
+        //case 0x7F: return std::make_shared<OPCode7F>(addr,row, xls_content,this);
+        //case 0x80: return std::make_shared<OPCode80>(addr,row, xls_content,this);
+        //case 0x81: return std::make_shared<OPCode81>(addr,row, xls_content,this);
+        //case 0x82: return std::make_shared<OPCode82>(addr,row, xls_content,this);
+        //case 0x83: return std::make_shared<OPCode83>(addr,row, xls_content,this);
+        //case 0x84: return std::make_shared<OPCode84>(addr,row, xls_content,this);
+        //case 0x85: return std::make_shared<OPCode85>(addr,row, xls_content,this);
+        //case 0x86: return std::make_shared<OPCode86>(addr,row, xls_content,this);
+        //case 0x87: return std::make_shared<OPCode87>(addr,row, xls_content,this);
+        //case 0x88: return std::make_shared<OPCode88>(addr,row, xls_content,this);
+        //case 0x89: return std::make_shared<OPCode89>(addr,row, xls_content,this);
+        //case 0x8A: return std::make_shared<OPCode8A>(addr,row, xls_content,this);
+        //case 0x8B: return std::make_shared<OPCode8B>(addr,row, xls_content,this);
+        //case 0x8C: return std::make_shared<OPCode8C>(addr,row, xls_content,this);
+        //case 0x8D: return std::make_shared<OPCode8D>(addr,row, xls_content,this);
+        //case 0x8E: return std::make_shared<OPCode8E>(addr,row, xls_content,this);
 
-        case 0x90: return std::make_shared<OPCode90>(addr,row, xls_content,this);
-        case 0x91: return std::make_shared<OPCode91>(addr,row, xls_content,this);
-        case 0x92: return std::make_shared<OPCode92>(addr,row, xls_content,this);
-        case 0x93: return std::make_shared<OPCode93>(addr,row, xls_content,this);
-        case 0x94: return std::make_shared<OPCode94>(addr,row, xls_content,this);
-        case 0x95: return std::make_shared<OPCode95>(addr,row, xls_content,this);
-        case 0x96: return std::make_shared<OPCode96>(addr,row, xls_content,this);
-        case 0x97: return std::make_shared<OPCode97>(addr,row, xls_content,this);
-        case 0x98: return std::make_shared<OPCode98>(addr,row, xls_content,this);
-        case 0x99: return std::make_shared<OPCode99>(addr,row, xls_content,this);
-        case 0x9A: return std::make_shared<OPCode9A>(addr,row, xls_content,this);
-        case 0x9B: return std::make_shared<OPCode9B>(addr,row, xls_content,this);
-        case 0x9D: return std::make_shared<OPCode9D>(addr,row, xls_content,this);
-        case 0x9E: return std::make_shared<OPCode9E>(addr,row, xls_content,this);
-        case 0x9F: return std::make_shared<OPCode9F>(addr,row, xls_content,this);
+        //case 0x90: return std::make_shared<OPCode90>(addr,row, xls_content,this);
+        //case 0x91: return std::make_shared<OPCode91>(addr,row, xls_content,this);
+        //case 0x92: return std::make_shared<OPCode92>(addr,row, xls_content,this);
+        //case 0x93: return std::make_shared<OPCode93>(addr,row, xls_content,this);
+        //case 0x94: return std::make_shared<OPCode94>(addr,row, xls_content,this);
+        //case 0x95: return std::make_shared<OPCode95>(addr,row, xls_content,this);
+        //case 0x96: return std::make_shared<OPCode96>(addr,row, xls_content,this);
+        //case 0x97: return std::make_shared<OPCode97>(addr,row, xls_content,this);
+        //case 0x98: return std::make_shared<OPCode98>(addr,row, xls_content,this);
+        //case 0x99: return std::make_shared<OPCode99>(addr,row, xls_content,this);
+        //case 0x9A: return std::make_shared<OPCode9A>(addr,row, xls_content,this);
+        //case 0x9B: return std::make_shared<OPCode9B>(addr,row, xls_content,this);
+        //case 0x9D: return std::make_shared<OPCode9D>(addr,row, xls_content,this);
+        //case 0x9E: return std::make_shared<OPCode9E>(addr,row, xls_content,this);
+        //case 0x9F: return std::make_shared<OPCode9F>(addr,row, xls_content,this);
 
         case 256: return std::make_shared<CreateMonsters>(addr, row, xls_content,this);
                     case 257: return std::make_shared<EffectsInstr>(addr, row, xls_content,this);
@@ -5759,7 +5828,7 @@ class CS2Builder : public Builder
         header.append(GetBytesFromInt(0x20+size_of_scene_name + FunctionsParsed.size()*4));
         header.append(GetBytesFromInt(FunctionsParsed.size()));
         int length_of_names_section = 0;
-        for (int idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) length_of_names_section = length_of_names_section + FunctionsParsed[idx_fun].name.toUtf8().length() + 1;
+        for (uint idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) length_of_names_section = length_of_names_section + FunctionsParsed[idx_fun].name.toUtf8().length() + 1;
         header.append(GetBytesFromInt(0x20+size_of_scene_name + FunctionsParsed.size()*4 + FunctionsParsed.size()*2 + length_of_names_section));
         header.append(GetBytesFromInt(0xABCDEF00));
         header.append(scene_name_bytes);
@@ -5767,14 +5836,13 @@ class CS2Builder : public Builder
             QByteArray position_names;
             QByteArray actual_names;
             int offset_names = 0;
-            for (int idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) {
+            for (uint idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) {
                 header.append(GetBytesFromInt(FunctionsParsed[idx_fun].actual_addr));
                 QByteArray name = FunctionsParsed[idx_fun].name.toUtf8();
                 name.append('\x0');
                 position_names.append(GetBytesFromShort(0x20+size_of_scene_name + FunctionsParsed.size()*4 + FunctionsParsed.size()*2 + offset_names));
                 actual_names.append(name);
                 offset_names = offset_names + name.size();
-
 
             }
             header.append(position_names);

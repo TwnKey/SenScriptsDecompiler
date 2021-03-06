@@ -53,7 +53,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
 
         int start_header = header.size();
         addr_fun = start_header;
-        for (int idx_fun = 0; idx_fun<FunctionsParsed.size()-1; idx_fun++){
+        for (uint idx_fun = 0; idx_fun<FunctionsParsed.size()-1; idx_fun++){
             FunctionsParsed[idx_fun].actual_addr = addr_fun;
 
             int length = FunctionsParsed[idx_fun].get_length_in_bytes();
@@ -68,14 +68,14 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
             addr_fun = addr_fun + padding;
 
 
-            for (int idx_instr = 0; idx_instr<FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
+            for (uint idx_instr = 0; idx_instr<FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
                FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->get_addr_instr()+ FunctionsParsed[idx_fun].actual_addr);
             }
         }
         FunctionsParsed[FunctionsParsed.size()-1].actual_addr = addr_fun;
         int length = FunctionsParsed[FunctionsParsed.size()-1].get_length_in_bytes();
         FunctionsParsed[FunctionsParsed.size()-1].end_addr = length + FunctionsParsed[FunctionsParsed.size()-1].actual_addr;
-        for (int idx_instr = 0; idx_instr<FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction.size(); idx_instr++){
+        for (uint idx_instr = 0; idx_instr<FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction.size(); idx_instr++){
            FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction[idx_instr]->set_addr_instr(FunctionsParsed[FunctionsParsed.size()-1].InstructionsInFunction[idx_instr]->get_addr_instr()+ FunctionsParsed[FunctionsParsed.size()-1].actual_addr);
         }
 
@@ -107,7 +107,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
         UpdatePointersDAT();
 
         int current_addr = FunctionsParsed[0].actual_addr; //first function shouldn't have changed
-        for (int idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
+        for (uint idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
 
 
             current_addr = current_addr + FunctionsParsed[idx_fun-1].get_length_in_bytes();
@@ -194,16 +194,15 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
         //it will also crash if there is a monster function at the end of the file cause I didn't put protections when parsing
         //the last function as an OP code, I mean it might go beyond the size of the dat content when reading the instructions (But I think it will fail
         //before that most of the time)
-        //qDebug() << "First attempt as an OP Code function...";
-        while(current_position<fun.end_addr){
+
+        while(current_position<goal){
 
 
 
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
 
             if ((error)||((instr->get_OP() != 0)&&(latest_op_code == 0))){ //this clearly means the function is incorrect or is a monster function.
-                //qDebug() << "Fail. Might be a special function...";
-                int error_addr = current_position;
+                qDebug() << "it's incorrect or a monster function";
                 error = false;
                 fun.InstructionsInFunction.clear();
                 current_position = fun.actual_addr;
@@ -214,15 +213,12 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                     fun.AddInstruction(instr);
                     return current_position;
                 }
-                else{ //the function is incorrect, therefore, we parse it again as an OP Code function but remove the part that are incorrect (just a guess tho)
+                else{ //the function is incorrect, therefore, we parse it again as an OP Code function but remove the part that is incorrect
                     //qDebug() << "Fail. There is a problem with this function at offset " << hex << current_position;
                     current_position = fun.actual_addr;
-                    while(current_position<fun.end_addr){
+                    while(current_position<goal){
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
-                        if (error){
-                            error = false;
-
-                        }
+                        if (error)error = false;
                         else fun.AddInstruction(instr);
                     }
                     return current_position;
@@ -232,14 +228,10 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
             latest_op_code = instr->get_OP();
 
         }
-
-
-
     }
     else
     {
-
-        while(current_position<fun.end_addr){
+        while(current_position<goal){
 
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
             fun.AddInstruction(instr);
@@ -254,12 +246,12 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
 
 bool Builder::UpdatePointersDAT(){
 
-    for (int idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
+    for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
 
         std::vector<std::shared_ptr<Instruction>> instructions = FunctionsParsed[idx_fun].InstructionsInFunction;
-        for (int idx_instr = 0; idx_instr < FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
+        for (uint idx_instr = 0; idx_instr < FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
 
-            for (int idx_operand = 0; idx_operand < FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes.size(); idx_operand++){
+            for (uint idx_operand = 0; idx_operand < FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes.size(); idx_operand++){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
                     int addr_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
 
@@ -287,19 +279,19 @@ bool Builder::Reset(){
 bool Builder::UpdatePointersXLSX(){
 
 
-    for (int idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
+    for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
 
         std::vector<std::shared_ptr<Instruction>> instructions = FunctionsParsed[idx_fun].InstructionsInFunction;
-        for (int idx_instr = 0; idx_instr < FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
+        for (uint idx_instr = 0; idx_instr < FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++){
 
-            for (int idx_operand = 0; idx_operand < FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes.size(); idx_operand++){
+            for (uint idx_operand = 0; idx_operand < FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes.size(); idx_operand++){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
                     int idx_row_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
                     function current_fun = FunctionsParsed[0];
                     if (FunctionsParsed.size()>1){
 
                         function next_fun = FunctionsParsed[1];
-                        for (int idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
+                        for (uint idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
                             if (idx_row_ptr<next_fun.XLSX_row_index){
                                 break;
                             }
@@ -326,7 +318,7 @@ function Builder::find_function(int addr){
     function result = FunctionsParsed[0];
     bool success = false;
     int fun_addr = FunctionsParsed[0].actual_addr;
-    int idx_fun = 0;
+    uint idx_fun = 0;
     for (; idx_fun < FunctionsParsed.size(); idx_fun++){
         fun_addr = FunctionsParsed[idx_fun].actual_addr;
 
@@ -343,7 +335,7 @@ function Builder::find_function(int addr){
     return result;
 }
 int Builder::find_instruction(int addr, function fun){
-    int idx_instr = 0;
+    uint idx_instr = 0;
     bool success = false;
     for (;idx_instr < fun.InstructionsInFunction.size(); idx_instr++){
         int instr_addr = fun.InstructionsInFunction[idx_instr]->get_addr_instr();
@@ -356,7 +348,7 @@ int Builder::find_instruction(int addr, function fun){
     }
 
     if (!success) {
-        qDebug() << "Couldn't find an instruction! " << hex << addr;
+
         display_text("Couldn't find an instruction!");
     }
     return idx_instr;
