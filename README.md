@@ -8,14 +8,14 @@ and a functionality, which might vary between games. Here are some known instruc
 (credits to NZerker (https://www.youtube.com/channel/UCpeimzf-vGWJuGWI3br6Sag)
 for helping me finding some of them) (also please note that the following names are pure inventions)
 
-SEN3:
-2   : Call
-29  : CreateCharacter (CharacterID, Character Model, Character name, ...)
-36  : CharacterTalk (CharacterID, .., Text, ...)
-44  : UseAnimation
-47  : UseAnimationFromFile
-73  : AddCharacterToParty (.., CharacterID)
-116 : ReadActiveVoiceEvent
+SEN3:\
+2   : Call\
+29  : CreateCharacter (CharacterID, Character Model, Character name, ...)\
+36  : CharacterTalk (CharacterID, .., Text, ...)\
+44  : UseAnimation\
+47  : UseAnimationFromFile\
+73  : AddCharacterToParty (.., CharacterID)\
+116 : ReadActiveVoiceEvent\
 
 # Why QT?
 I wanted to use Qt for the QXlsx library https://github.com/QtExcel/QXlsx which I believe is the most feature-complete library existing for XLSX file creation. 
