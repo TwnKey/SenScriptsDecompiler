@@ -2,9 +2,20 @@
 This tool was meant to decompile the game files from The Legend of Heroes: Trails of Cold Steel III, located in data/scripts.
 But I added support for CS1 scripts as well! 
  
-While reading the CS1 files though, I noticed there were a lot of incorrectly generated files from Falcom. 
-In the sense that when feeding the game executable with them, it would crash or not behave correctly. 
-So be aware that my tool might not be able to parse all of them if they were built incorrectly in the first place. 
+# Instruction codes
+Sen script files are made of functions, which are themselves made of instructions. Each instruction has an OP Code (one signature byte) 
+and a functionality, which might vary between games. Here are some known instructions 
+(credits to NZerker (https://www.youtube.com/channel/UCpeimzf-vGWJuGWI3br6Sag)
+for helping me finding some of them) (also please note that the following names are pure inventions)
+
+SEN3:
+2   : Call
+29  : CreateCharacter (CharacterID, Character Model, Character name, ...)
+36  : CharacterTalk (CharacterID, .., Text, ...)
+44  : UseAnimation
+47  : UseAnimationFromFile
+73  : AddCharacterToParty (.., CharacterID)
+116 : ReadActiveVoiceEvent
 
 # Why QT?
 I wanted to use Qt for the QXlsx library https://github.com/QtExcel/QXlsx which I believe is the most feature-complete library existing for XLSX file creation. 
