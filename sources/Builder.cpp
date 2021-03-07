@@ -213,12 +213,17 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                     fun.AddInstruction(instr);
                     return current_position;
                 }
-                else{ //the function is incorrect, therefore, we parse it again as an OP Code function but remove the part that is incorrect
+                else{
+                    qDebug() << "not a monster function";
+                    //the function is incorrect, therefore, we parse it again as an OP Code function but remove the part that is incorrect
                     //qDebug() << "Fail. There is a problem with this function at offset " << hex << current_position;
                     current_position = fun.actual_addr;
                     while(current_position<goal){
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
-                        if (error)error = false;
+                        if (error){
+                            error = false;
+                            qFatal("ERROR!"); //remove at release
+                        }
                         else fun.AddInstruction(instr);
                     }
                     return current_position;
