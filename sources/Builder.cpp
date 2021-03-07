@@ -91,7 +91,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     if (FunctionsToParse.size()>0){
         for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
             if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
-                qDebug() << "Reading function " << it->name << "at addr " << hex << it->actual_addr;
+                qDebug() << "Reading function " << it->name << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
                 std::vector<function>::iterator itt = find_function_by_ID(FunctionsParsed, it->ID);
                 if (itt == FunctionsParsed.end()){ //if we never read it, we'll do that
                     ReadIndividualFunction(*it,dat_content);
@@ -105,7 +105,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
         std::sort(FunctionsParsed.begin(), FunctionsParsed.end());
 
         UpdatePointersDAT();
-
+qDebug() << "DONE ";
         int current_addr = FunctionsParsed[0].actual_addr; //first function shouldn't have changed
         for (uint idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
 
@@ -166,12 +166,15 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
         function_type = 13;
     }
     else if (fun.name.startsWith("BookData")){ //Book: the first short read is crucial I think. 0 = text incoming; not zero =
-        QRegExp rx("BookData(\\d+)_(\\d+)");
+        QRegExp rx("BookData(\\d+[A-Z]?)_(\\d+)");
         std::vector<int> result;
-        //int Nb_Book = rx.cap(1).toInt();
+        int Nb_Book = rx.cap(1).toInt();
+        qDebug() << Nb_Book;
+
         rx.indexIn(fun.name, 0);
         int Nb_Data = rx.cap(2).toInt();
-
+        qDebug() << "nb_data = " << Nb_Data;
+        qDebug() << "nb_book = " << Nb_Book;
         if (Nb_Data == 99) function_type = 14; //DATA, the 99 is clearly hardcoded; The behaviour is: 99=> two shorts (probably number of pages) and that's it
 
         else function_type = 15;
@@ -184,6 +187,10 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     else if (fun.name == "AddCollision"){
         function_type = 16;
     }
+    else if (fun.name == "ConditionTable"){
+        function_type = 17;
+    }
+
 
     if (function_type == 0){ //we use OP codes
         //First we check if it's really using OP Code (might be a monster function)
@@ -206,6 +213,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                 error = false;
                 fun.InstructionsInFunction.clear();
                 current_position = fun.actual_addr;
+
                 instr = CreateInstructionFromDAT(current_position, dat_content, 1);
                 if (flag_monsters) {
                     fun.AddInstruction(instr);
@@ -222,6 +230,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                         if (error){
                             error = false;
+                            qDebug() << hex << current_position;
                             qFatal("ERROR!"); //remove at release
                         }
                         else fun.AddInstruction(instr);
@@ -353,7 +362,7 @@ int Builder::find_instruction(int addr, function fun){
     }
 
     if (!success) {
-
+        qDebug() << hex << addr;
         display_text("Couldn't find an instruction!");
     }
     return idx_instr;

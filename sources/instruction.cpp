@@ -267,6 +267,7 @@ void Instruction::set_addr_instr(int i){
 void Instruction::AddOperande(operande op){
     operandes.push_back(op);
     //if (op.getType()=="string") qDebug() << op.getValue();
+    //if (op.getType()=="pointer") qDebug() << hex << op.getValue();
 }
 int Instruction::get_length_in_bytes(){
 
