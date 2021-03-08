@@ -6,6 +6,13 @@
 
 #include <QString>
 
+/*The CSXBuilder contains hundreds of nested classes, every one of them describing the behaviour of a single instruction in the game
+ * Those behaviours were deduced from a combination of analysis directly from the hexadecimal content of the dat files,
+ * study of assembly/pseudo code from Ghidra
+ * and also testing directly in game by modifying the ram and studying with Cheat Engine
+ * all of them are different from one game to another (well except for CS1/CS2 and CS3/CS4 which present similarities)
+*/
+
 class CS3TranslationFile : public TranslationFile
 {
     public:
@@ -36,7 +43,7 @@ class CS3Builder : public Builder
         //related to text/text formating
         QByteArray current_op_value;
         int addr_ = addr;
-        bool start = false;
+
         bool start_text = false;
         int cnt = 0;
         do{
@@ -602,7 +609,6 @@ class CS3Builder : public Builder
         WeaponAttTable(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"WeaponAttTable", 260,Maker){}
         WeaponAttTable(int addr, Builder *Maker):Instruction(addr,"WeaponAttTable", 260, Maker){}
         WeaponAttTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"WeaponAttTable", 260,Maker){
-            int cnt = 0;
 
             this->AddOperande(operande(addr,"bytearray", ReadSubByteArray(content, addr,4)));
         }
@@ -730,36 +736,21 @@ class CS3Builder : public Builder
 
         }
     };
-    class AnimeClipTable : public Instruction //140253d20
+
+
+    class AnimeClipTable : public Instruction // from CS3
     {
         public:
         AnimeClipTable():Instruction(-1,265,nullptr){}
         AnimeClipTable(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"AnimeClipTable", 265,Maker){}
         AnimeClipTable(int addr, Builder *Maker):Instruction(addr,"AnimeClipTable", 265, Maker){}
         AnimeClipTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"AnimeClipTable", 265,Maker){
-            int cnt = 0;
+
             int first_integer;
             first_integer = ReadIntegerFromByteArray(addr, content);
-
+            std::vector<function>::iterator itt_current_fun = find_function_by_ID(Maker->FunctionsToParse, Maker->idx_current_fun);
             while(first_integer != 0){
-                QByteArray first_integer_bytes = ReadSubByteArray(content, addr,4);
-                this->AddOperande(operande(addr,"int", first_integer_bytes));//14025b3c2
-
-                QByteArray str = ReadStringSubByteArray(content, addr);
-
-                this->AddOperande(operande(addr,"string", str));
-                QByteArray remaining = ReadSubByteArray(content, addr, (0x20)-str.size()-1);
-                operande fill = operande(addr,"fill", remaining);
-                fill.setBytesToFill((0x20));
-                this->AddOperande(fill);
-
-                str = ReadStringSubByteArray(content, addr);
-
-                this->AddOperande(operande(addr,"string", str));
-                remaining = ReadSubByteArray(content, addr, (0x20)-str.size()-1);
-                fill = operande(addr,"fill", remaining);
-                fill.setBytesToFill((0x20));
-                this->AddOperande(fill);
+                itt_current_fun->AddInstruction(std::make_shared<AnimeClipData>(addr, content,Maker));
                 first_integer = ReadIntegerFromByteArray(addr, content);
 
             }
@@ -770,6 +761,36 @@ class CS3Builder : public Builder
 
         }
     };
+    class AnimeClipData : public Instruction
+    {
+        public:
+        AnimeClipData():Instruction(-1,273,nullptr){}
+        AnimeClipData(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"AnimeClipData", 273,Maker){}
+        AnimeClipData(int addr, Builder *Maker):Instruction(addr,"AnimeClipData", 273, Maker){}
+        AnimeClipData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"AnimeClipData", 273,Maker){
+
+
+                QByteArray first_integer_bytes = ReadSubByteArray(content, addr,4);
+                this->AddOperande(operande(addr,"int", first_integer_bytes));
+                QByteArray str = ReadStringSubByteArray(content, addr);
+                this->AddOperande(operande(addr,"string", str));
+                QByteArray remaining = ReadSubByteArray(content, addr, (0x20)-str.size()-1);
+                operande fill = operande(addr,"fill", remaining);
+                fill.setBytesToFill((0x20));
+                this->AddOperande(fill);
+                str = ReadStringSubByteArray(content, addr);
+                this->AddOperande(operande(addr,"string", str));
+                remaining = ReadSubByteArray(content, addr, (0x20)-str.size()-1);
+                fill = operande(addr,"fill", remaining);
+                fill.setBytesToFill((0x20));
+                this->AddOperande(fill);
+
+
+
+        }
+    };
+
+
     class FieldMonsterData : public Instruction // 00000001402613C2 probably trigger only for monsters on the field
     {
         public:
@@ -777,7 +798,7 @@ class CS3Builder : public Builder
         FieldMonsterData(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"FieldMonsterData", 266,Maker){}
         FieldMonsterData(int addr, Builder *Maker):Instruction(addr,"FieldMonsterData", 266, Maker){}
         FieldMonsterData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"FieldMonsterData", 266,Maker){
-            int cnt = 0;
+
             int first_integer;
             first_integer = ReadIntegerFromByteArray(addr, content);
 
@@ -801,7 +822,7 @@ class CS3Builder : public Builder
         FieldFollowData(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"FieldMonsterData", 267,Maker){}
         FieldFollowData(int addr, Builder *Maker):Instruction(addr,"FieldMonsterData", 267, Maker){}
         FieldFollowData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"FieldMonsterData", 267,Maker){
-            int cnt = 0;
+
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
@@ -1255,8 +1276,6 @@ class CS3Builder : public Builder
                 QString fun_name = ReadStringFromByteArray(addr, content);
                 this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
-
-                int ID_fun = ReadIntegerFromByteArray(addr,content);
 
                 this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));//i think this one is the id of the battle function it triggers
                 /*if (ID_fun != -1){
@@ -3375,7 +3394,6 @@ class CS3Builder : public Builder
                 addr++;
                 QByteArray control_short = ReadSubByteArray(content, addr, 2);
                 this->AddOperande(operande(addr,"short", control_short));
-                short control_shrt = ReadShortFromByteArray(0, control_short);
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
@@ -4045,7 +4063,6 @@ class CS3Builder : public Builder
                 addr++;
                 QByteArray control_short = ReadSubByteArray(content, addr, 2);
                 this->AddOperande(operande(addr,"short", control_short));
-                short control_shrt = ReadShortFromByteArray(0, control_short);
                 QByteArray control_byte = ReadSubByteArray(content, addr, 1);
                 this->AddOperande(operande(addr,"byte", control_byte));
 
@@ -4444,7 +4461,6 @@ class CS3Builder : public Builder
                   }
                 }
                 if (control_shrt != 0xFFFF){
-                    bool bVar9 = control_shrt != 0x270e;
                     if (control_shrt<0x100){
                         switch((unsigned char) control_byte[0]){
                         case '\x06':
@@ -6380,7 +6396,7 @@ class CS3Builder : public Builder
             return std::make_shared<BookDataX>(addr,dat_content,this);
         }
 
-
+        return std::shared_ptr<Instruction>();
     }
     bool CreateHeaderFromDAT(QByteArray &dat_content){
 
@@ -6406,7 +6422,7 @@ class CS3Builder : public Builder
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;
         int start_offset_area = ReadIntegerFromByteArray(0x8, dat_content);
-        for (int idx_fun = 0; idx_fun < nb_functions; idx_fun++){
+        for (uint idx_fun = 0; idx_fun < nb_functions; idx_fun++){
             position = start_offset_area + 4*idx_fun;
             next_position = start_offset_area + 4*(idx_fun+1);
             int addr = ReadIntegerFromByteArray(position, dat_content);
@@ -6632,6 +6648,7 @@ class CS3Builder : public Builder
             case 268: return std::make_shared<FC_autoX>(addr, row, xls_content,this);
             case 269: return std::make_shared<BookData99>(addr, row, xls_content,this);
             case 270: return std::make_shared<BookDataX>(addr, row, xls_content,this);
+            case 273: return std::make_shared<AnimeClipData>(addr, row, xls_content,this);
             default:
                 std::stringstream stream;
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName.toStdString();
@@ -6659,7 +6676,7 @@ class CS3Builder : public Builder
         header.append(GetBytesFromInt(0x20+size_of_scene_name + FunctionsParsed.size()*4));
         header.append(GetBytesFromInt(FunctionsParsed.size()));
         int length_of_names_section = 0;
-        for (int idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) length_of_names_section = length_of_names_section + FunctionsParsed[idx_fun].name.toUtf8().length() + 1;
+        for (uint idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) length_of_names_section = length_of_names_section + FunctionsParsed[idx_fun].name.toUtf8().length() + 1;
         header.append(GetBytesFromInt(0x20+size_of_scene_name + FunctionsParsed.size()*4 + FunctionsParsed.size()*2 + length_of_names_section));
         header.append(GetBytesFromInt(0xABCDEF00));
         header.append(scene_name_bytes);
@@ -6667,7 +6684,7 @@ class CS3Builder : public Builder
             QByteArray position_names;
             QByteArray actual_names;
             int offset_names = 0;
-            for (int idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) {
+            for (uint idx_fun = 0; idx_fun<FunctionsParsed.size(); idx_fun++) {
                 header.append(GetBytesFromInt(FunctionsParsed[idx_fun].actual_addr));
                 QByteArray name = FunctionsParsed[idx_fun].name.toUtf8();
                 name.append('\x0');

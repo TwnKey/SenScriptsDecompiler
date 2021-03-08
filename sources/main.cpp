@@ -40,7 +40,8 @@ QString header[] = {".                           ,##(&%%@                       
 int main(int argc, char *argv[])
     {
     QCoreApplication a(argc, argv);
-    /*Decompiler Dc;
+    /*
+    Decompiler Dc;
     Dc.SetupGame("CS1");
     QDir directory("C:/Users/Antoine/Desktop/CS1Debug");
     QStringList dat = directory.entryList(QStringList() << "*.dat",QDir::Files);
@@ -52,11 +53,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 32; i++) display_text(header[i]);
         display_text("----------------------------------------------------------------------------------------------------------");
         display_text("This tool was made by Twn (@twn_kek on Twitter) to decompile the script files from The Legend of Heroes: Trails of Cold Steel III.");
-        display_text("I recently added support for CS1 script files as well.");
+        display_text("I recently added support for CS1 & CS2 script files as well.");
         display_text("It is not perfect and requires further testing, therefore if you encounter any type of issue, please contact me.");
         display_text("---------------------------------------------HOW TO USE---------------------------------------------------");
         display_text("There is only one command: SenScriptsDecompiler.exe <game> <filepath_to_convert>");
-        display_text("where <game> should be replaced by CS1 or CS3 (other games are not compatible (yet))");
+        display_text("where <game> should be replaced with CS1 or CS2 or CS3 (other games are not compatible (yet))");
         display_text("The output format is decided by the extension of the input file: XLSX gives a DAT and DAT gives a XLSX.");
 
     }

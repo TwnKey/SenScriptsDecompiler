@@ -1,6 +1,6 @@
 #include "headers/decompiler.h"
 #include "headers/CS3InstructionsSet.h"
-#include "headers/CS4InstructionsSet.h"
+//#include "headers/CS4InstructionsSet.h"
 #include "headers/CS1InstructionsSet.h"
 #include "headers/CS2InstructionsSet.h"
 #include "qxlsx/headers/xlsxdocument.h"
@@ -26,14 +26,12 @@ Decompiler::Decompiler()
 bool Decompiler::SetupGame(QString Game_){
     Game = Game_;
 
-
-
     if (Game == "CS3") IB = new CS3Builder();
     else if (Game == "CS1") {
         IB = new CS1Builder();
     }
     else if (Game == "CS2") {
-        qFatal("CS2 not supported (yet)");
+
         IB = new CS2Builder();
     }
     //else if (Game == "CS4") IB = new CS4Builder();
@@ -68,7 +66,7 @@ bool Decompiler::UpdateCurrentTF(){
 
 
     CurrentTF.FunctionsInFile.clear();
-    for (int idx_fun = 0; idx_fun < IB->FunctionsParsed.size(); idx_fun++) CurrentTF.addFunction(IB->FunctionsParsed[idx_fun]);
+    for (uint idx_fun = 0; idx_fun < IB->FunctionsParsed.size(); idx_fun++) CurrentTF.addFunction(IB->FunctionsParsed[idx_fun]);
 
     return true;
 }
@@ -91,13 +89,11 @@ bool Decompiler::WriteDAT(){
     QString folder = QCoreApplication::applicationDirPath() + "/recompiled_files/";
 
     QByteArray functions, current_fun, file_content;
-    /*header creation*/
+
     int addr = 0;
     QByteArray header = IB->CreateHeaderBytes();
 
     addr = addr + header.size();
-
-    //Header done; let's do the functions now.
     for (int idx_fun = 0; idx_fun < CurrentTF.getNbFunctions()-1; idx_fun++) {
 
         function fun = CurrentTF.FunctionsInFile[idx_fun];
@@ -105,11 +101,11 @@ bool Decompiler::WriteDAT(){
         current_fun.clear();
 
 
-        for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
+        for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
         }
         addr = addr + current_fun.size();
-        int multiple = 4;
+
         int next_addr = CurrentTF.FunctionsInFile[idx_fun+1].actual_addr;
         int padding = next_addr - addr;
         for (int i_z = 0; i_z < padding; i_z++) current_fun.push_back('\0');
@@ -119,7 +115,6 @@ bool Decompiler::WriteDAT(){
 
     }
 
-    //no padding for the last one
     if (CurrentTF.getNbFunctions()-1>=0){
         function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size()-1];
         current_fun.clear();
@@ -132,7 +127,6 @@ bool Decompiler::WriteDAT(){
     file_content.append(header);
     file_content.append(functions);
 
-    /*output file creation*/
     QDir dir(folder);
     if (!dir.exists()) dir.mkpath(".");
 
@@ -210,14 +204,14 @@ bool Decompiler::WriteXLSX(){
 
     rowFormatFunctions.setTopBorderStyle(QXlsx::Format::BorderThin);
     int excel_row = 4;
-    for (int idx_fun=0; idx_fun<CurrentTF.FunctionsInFile.size(); idx_fun++){
+    for (uint idx_fun=0; idx_fun<CurrentTF.FunctionsInFile.size(); idx_fun++){
         function fun = CurrentTF.FunctionsInFile[idx_fun];
         excelScenarioSheet.setRowFormat(excel_row, excel_row, rowFormatFunctions);
         excelScenarioSheet.write(excel_row,1,"FUNCTION");
         excelScenarioSheet.write(excel_row,2,fun.name);
 
         excel_row++;
-        for (int idx_instr=0; idx_instr<fun.InstructionsInFunction.size(); idx_instr++){
+        for (uint idx_instr=0; idx_instr<fun.InstructionsInFunction.size(); idx_instr++){
             excelScenarioSheet.write(excel_row, 1, "Location");
             excelScenarioSheet.write(excel_row+1, 1, fun.InstructionsInFunction[idx_instr]->get_addr_instr());
             int col = 0;
@@ -236,8 +230,6 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         QTextStream stream(&file);
         file.remove();
         file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
-
-
 
     foreach(QString file_, filesToRead) {
 
@@ -274,20 +266,23 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         QByteArray content2 = file2.readAll();
         std::string msg = "Problème de taille avec " + croped_fileName.toStdString();
         int ref_size = content2.size();
+        for (int i=0; i< ref_size; i++){
+            if (content1[i]!=content2[i]) {
+                stream << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                qDebug() << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+            }
+        }
         if (content1.size()<ref_size) {
             qFatal("size too short");
             stream << "size too short" << "\n";
         }
         else{
+
             if (content1.size()>ref_size) {
                 qFatal("size too big");
                 stream << "too big" << "\n";
             }
-            for (int i=0; i< ref_size; i++){
-                if (content1[i]!=content2[i]) {
-                    stream << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-                }
-            }
+
         }
         stream << " Size 1: " << hex << content1.size() << " vs Size 2: " << hex << content2.size();
 
