@@ -47,7 +47,7 @@ RichString::RichString()
 /*!
     Constructs a plain string with the given \a text.
 */
-RichString::RichString(const QString text)
+RichString::RichString(const QString& text)
     :d(new RichStringPrivate)
 {
     addFragment(text, Format());
@@ -84,7 +84,13 @@ RichString &RichString::operator =(const RichString &other)
 */
 RichString::operator QVariant() const
 {
-    return QVariant(qMetaTypeId<RichString>(), this);
+    const auto& cref
+#if QT_VERSION >= 0x060000 // Qt 6.0 or over
+        = QMetaType::fromType<RichString>();
+#else
+        = qMetaTypeId<RichString>() ;
+#endif
+    return QVariant(cref, this);
 }
 
 /*!
@@ -110,7 +116,7 @@ bool RichString::isNull() const
  */
 bool RichString::isEmtpy() const
 {
-    for (const QString &str : d->fragmentTexts) {
+    for (const auto& str : d->fragmentTexts) {
         if (!str.isEmpty())
             return false;
     }

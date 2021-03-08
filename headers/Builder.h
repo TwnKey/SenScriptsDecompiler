@@ -86,5 +86,6 @@ public:
     int goal;
     bool flag_monsters = false;
     bool error = false;
+    int idx_current_fun;
 };
 #endif // INSTRUCTIONBUILDER_H

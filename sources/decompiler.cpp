@@ -1,6 +1,6 @@
 #include "headers/decompiler.h"
 #include "headers/CS3InstructionsSet.h"
-#include "headers/CS4InstructionsSet.h"
+//#include "headers/CS4InstructionsSet.h"
 #include "headers/CS1InstructionsSet.h"
 #include "headers/CS2InstructionsSet.h"
 #include "qxlsx/headers/xlsxdocument.h"
@@ -239,7 +239,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         qDebug() << "Checking " << full_path;
         QString full_path_ref = folder_for_reference + filename;
         stream << full_path << "\n";
-        this->SetupGame("CS2");
+        this->SetupGame("CS1");
         qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
         this->WriteXLSX();
@@ -266,20 +266,23 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         QByteArray content2 = file2.readAll();
         std::string msg = "Problème de taille avec " + croped_fileName.toStdString();
         int ref_size = content2.size();
+        for (int i=0; i< ref_size; i++){
+            if (content1[i]!=content2[i]) {
+                stream << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                qDebug() << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+            }
+        }
         if (content1.size()<ref_size) {
             qFatal("size too short");
             stream << "size too short" << "\n";
         }
         else{
+
             if (content1.size()>ref_size) {
                 qFatal("size too big");
                 stream << "too big" << "\n";
             }
-            for (int i=0; i< ref_size; i++){
-                if (content1[i]!=content2[i]) {
-                    stream << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-                }
-            }
+
         }
         stream << " Size 1: " << hex << content1.size() << " vs Size 2: " << hex << content2.size();
 

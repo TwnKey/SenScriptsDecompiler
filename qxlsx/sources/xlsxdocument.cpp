@@ -1325,19 +1325,8 @@ QMap<int, int> Document::getMaximalColumnWidth(int firstRow, int lastRow)
 
 //        QString str = cellLocation.at(i).cell.data()->value().toString();
         QString str = read(row, col).toString();
-	std::string s = str.toLocal8Bit().constData();
 
-	std::string delimiter = "\n";
-	size_t pos = 0;
-	std::string token;
-	int maxlength = 0;
-	while ((pos = s.find(delimiter)) != std::string::npos) {
-	    token = s.substr(0, pos);
-        if (token.length()>maxlength) maxlength = token.length();
-	    s.erase(0, pos + delimiter.length());
-	}
-	if (maxlength == 0) maxlength = str.length();
-        double w = maxlength * double(fs) / defaultPixelSize + 1; // width not perfect, but works reasonably well
+        double w = str.length() * double(fs) / defaultPixelSize + 1; // width not perfect, but works reasonably well
 
         if( (row >= firstRow) && (row <= lastRow))
         {

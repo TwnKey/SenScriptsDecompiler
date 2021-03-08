@@ -94,6 +94,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
                 qDebug() << "Reading function " << it->name << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
                 std::vector<function>::iterator itt = find_function_by_ID(FunctionsParsed, it->ID);
                 if (itt == FunctionsParsed.end()){ //if we never read it, we'll do that
+                    idx_current_fun = it->ID;
                     ReadIndividualFunction(*it,dat_content);
                     FunctionsParsed.push_back(*it);
                 }

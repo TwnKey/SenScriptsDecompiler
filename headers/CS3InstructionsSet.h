@@ -736,7 +736,9 @@ class CS3Builder : public Builder
 
         }
     };
-    class AnimeClipTable : public Instruction //140253d20
+
+
+    class AnimeClipTable : public Instruction // from CS3
     {
         public:
         AnimeClipTable():Instruction(-1,265,nullptr){}
@@ -746,26 +748,9 @@ class CS3Builder : public Builder
 
             int first_integer;
             first_integer = ReadIntegerFromByteArray(addr, content);
-
+            std::vector<function>::iterator itt_current_fun = find_function_by_ID(Maker->FunctionsToParse, Maker->idx_current_fun);
             while(first_integer != 0){
-                QByteArray first_integer_bytes = ReadSubByteArray(content, addr,4);
-                this->AddOperande(operande(addr,"int", first_integer_bytes));//14025b3c2
-
-                QByteArray str = ReadStringSubByteArray(content, addr);
-
-                this->AddOperande(operande(addr,"string", str));
-                QByteArray remaining = ReadSubByteArray(content, addr, (0x20)-str.size()-1);
-                operande fill = operande(addr,"fill", remaining);
-                fill.setBytesToFill((0x20));
-                this->AddOperande(fill);
-
-                str = ReadStringSubByteArray(content, addr);
-
-                this->AddOperande(operande(addr,"string", str));
-                remaining = ReadSubByteArray(content, addr, (0x20)-str.size()-1);
-                fill = operande(addr,"fill", remaining);
-                fill.setBytesToFill((0x20));
-                this->AddOperande(fill);
+                itt_current_fun->AddInstruction(std::make_shared<AnimeClipData>(addr, content,Maker));
                 first_integer = ReadIntegerFromByteArray(addr, content);
 
             }
@@ -776,6 +761,36 @@ class CS3Builder : public Builder
 
         }
     };
+    class AnimeClipData : public Instruction
+    {
+        public:
+        AnimeClipData():Instruction(-1,273,nullptr){}
+        AnimeClipData(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"AnimeClipData", 273,Maker){}
+        AnimeClipData(int addr, Builder *Maker):Instruction(addr,"AnimeClipData", 273, Maker){}
+        AnimeClipData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"AnimeClipData", 273,Maker){
+
+
+                QByteArray first_integer_bytes = ReadSubByteArray(content, addr,4);
+                this->AddOperande(operande(addr,"int", first_integer_bytes));
+                QByteArray str = ReadStringSubByteArray(content, addr);
+                this->AddOperande(operande(addr,"string", str));
+                QByteArray remaining = ReadSubByteArray(content, addr, (0x20)-str.size()-1);
+                operande fill = operande(addr,"fill", remaining);
+                fill.setBytesToFill((0x20));
+                this->AddOperande(fill);
+                str = ReadStringSubByteArray(content, addr);
+                this->AddOperande(operande(addr,"string", str));
+                remaining = ReadSubByteArray(content, addr, (0x20)-str.size()-1);
+                fill = operande(addr,"fill", remaining);
+                fill.setBytesToFill((0x20));
+                this->AddOperande(fill);
+
+
+
+        }
+    };
+
+
     class FieldMonsterData : public Instruction // 00000001402613C2 probably trigger only for monsters on the field
     {
         public:
@@ -6633,6 +6648,7 @@ class CS3Builder : public Builder
             case 268: return std::make_shared<FC_autoX>(addr, row, xls_content,this);
             case 269: return std::make_shared<BookData99>(addr, row, xls_content,this);
             case 270: return std::make_shared<BookDataX>(addr, row, xls_content,this);
+            case 273: return std::make_shared<AnimeClipData>(addr, row, xls_content,this);
             default:
                 std::stringstream stream;
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName.toStdString();
