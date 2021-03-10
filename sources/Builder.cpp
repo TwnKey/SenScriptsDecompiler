@@ -231,8 +231,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                         if (error){
                             error = false;
-                            qDebug() << hex << current_position;
-                            qFatal("ERROR!"); //remove at release
+
                         }
                         else fun.AddInstruction(instr);
                     }

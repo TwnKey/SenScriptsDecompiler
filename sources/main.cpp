@@ -40,8 +40,8 @@ QString header[] = {".                           ,##(&%%@                       
 int main(int argc, char *argv[])
     {
     QCoreApplication a(argc, argv);
-    /*
-    Decompiler Dc;
+
+    /*Decompiler Dc;
     Dc.SetupGame("CS1");
     QDir directory("C:/Users/Antoine/Desktop/CS1Debug");
     QStringList dat = directory.entryList(QStringList() << "*.dat",QDir::Files);
