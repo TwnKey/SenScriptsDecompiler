@@ -40,17 +40,10 @@ QString header[] = {".                           ,##(&%%@                       
 int main(int argc, char *argv[])
     {
     QCoreApplication a(argc, argv);
-<<<<<<< Updated upstream
-    /*
-    Decompiler Dc;
-    Dc.SetupGame("CS1");
-    QDir directory("C:/Users/Antoine/Desktop/CS1Debug");
-=======
 
     Decompiler Dc;
     Dc.SetupGame("TX");
     QDir directory("C:/Users/Antoine/Desktop/TX_Debug");
->>>>>>> Stashed changes
     QStringList dat = directory.entryList(QStringList() << "*.dat",QDir::Files);
     Dc.CheckAllFiles(dat, "C:/Users/Antoine/Desktop/TX_Debug", "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
 
