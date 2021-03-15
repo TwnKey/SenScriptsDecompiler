@@ -2,6 +2,7 @@
 #include "headers/CS3InstructionsSet.h"
 //#include "headers/CS4InstructionsSet.h"
 #include "headers/CS1InstructionsSet.h"
+#include "headers/TXInstructionsSet.h"
 #include "headers/CS2InstructionsSet.h"
 #include "qxlsx/headers/xlsxdocument.h"
 #include "qxlsx/headers/xlsxchartsheet.h"
@@ -25,7 +26,7 @@ Decompiler::Decompiler()
 
 bool Decompiler::SetupGame(QString Game_){
     Game = Game_;
-
+    qDebug() << Game_;
     if (Game == "CS3") IB = new CS3Builder();
     else if (Game == "CS1") {
         IB = new CS1Builder();
@@ -35,6 +36,7 @@ bool Decompiler::SetupGame(QString Game_){
         IB = new CS2Builder();
     }
     //else if (Game == "CS4") IB = new CS4Builder();
+    else if (Game == "TX") IB = new TXBuilder();
     else {
         display_text("FAILURE: Unrecognized game specified.");
         return false;
@@ -239,7 +241,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         qDebug() << "Checking " << full_path;
         QString full_path_ref = folder_for_reference + filename;
         stream << full_path << "\n";
-        this->SetupGame("CS1");
+        this->SetupGame("TX");
         qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
         this->WriteXLSX();

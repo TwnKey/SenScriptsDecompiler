@@ -268,7 +268,7 @@ class CS3Builder : public Builder
                     instr->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 }
                 else if (control_byte3 == 0xFF){
-                    instr->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    instr->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
                     instr->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 }
                 else{

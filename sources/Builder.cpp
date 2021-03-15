@@ -92,6 +92,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
         for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
             if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
                 qDebug() << "Reading function " << it->name << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
+
                 std::vector<function>::iterator itt = find_function_by_ID(FunctionsParsed, it->ID);
                 if (itt == FunctionsParsed.end()){ //if we never read it, we'll do that
                     idx_current_fun = it->ID;
@@ -106,7 +107,6 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
         std::sort(FunctionsParsed.begin(), FunctionsParsed.end());
 
         UpdatePointersDAT();
-qDebug() << "DONE ";
         int current_addr = FunctionsParsed[0].actual_addr; //first function shouldn't have changed
         for (uint idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++){
 
@@ -191,7 +191,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     else if (fun.name == "ConditionTable"){
         function_type = 17;
     }
-
+    qDebug() << "function type " << function_type;
 
     if (function_type == 0){ //we use OP codes
         //First we check if it's really using OP Code (might be a monster function)
@@ -230,6 +230,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                     while(current_position<goal){
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                         if (error){
+                            qFatal("error");
                             error = false;
                             qDebug() << hex << current_position;
                             qFatal("ERROR!"); //remove at release
