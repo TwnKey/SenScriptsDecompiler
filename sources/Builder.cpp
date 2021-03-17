@@ -41,6 +41,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
 
                 std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr_instr, idx_row, doc);
                 current_fun.AddInstruction(instr);
+
                 idx_row++;
 
             }
@@ -268,8 +269,9 @@ bool Builder::UpdatePointersDAT(){
 
             for (uint idx_operand = 0; idx_operand < FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes.size(); idx_operand++){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
-                    int addr_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
 
+                    int addr_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
+                    //qDebug() << "Addr: " << hex << addr_ptr << " at " << FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getAddr();
                     function fun = find_function(addr_ptr);
 
                     int id_instr = find_instruction(addr_ptr,fun);
@@ -303,6 +305,7 @@ bool Builder::UpdatePointersXLSX(){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
                     int idx_row_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
                     function current_fun = FunctionsParsed[0];
+                    qDebug() << "ptr : " << idx_row_ptr;
                     if (FunctionsParsed.size()>1){
 
                         function next_fun = FunctionsParsed[1];

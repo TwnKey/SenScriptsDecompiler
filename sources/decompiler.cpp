@@ -244,6 +244,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         this->SetupGame("TX");
         qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
+        qDebug() << "reading dat done." << full_path;
         this->WriteXLSX();
         qDebug() << "reading xlsx file" << folder_for_generated_files + croped_fileName + ".xlsx";
         this->ReadFile(folder_for_generated_files + croped_fileName + ".xlsx");

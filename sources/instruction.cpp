@@ -1,5 +1,6 @@
 #include "headers/instruction.h"
 #include "headers/functions.h"
+#include "headers/utilities.h"
 Instruction::Instruction(int addr, uint OP, Builder *Maker)
 {
             OPCode = OP;
@@ -266,8 +267,10 @@ void Instruction::set_addr_instr(int i){
 }
 void Instruction::AddOperande(operande op){
     operandes.push_back(op);
+    QByteArray value = op.getValue();
     //if (op.getType()=="string") qDebug() << op.getValue();
-    //if (op.getType()=="pointer") qDebug() << hex << op.getValue();
+
+    //if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
 }
 int Instruction::get_length_in_bytes(){
 
