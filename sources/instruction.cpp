@@ -75,7 +75,7 @@ Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenario
             else if ((type == "string")||(type == "dialog")){
                 QString Operande = (excelScenarioSheet.read(idx_row+1, idx_operande).toString());
                 Value = Operande.toUtf8();
-                /*QTextCodec *codec = QTextCodec::codecForName("Shift-JIS");
+                /*QTextCodec *codec = QTextCodec::codecForName("UTF-8");
                 QByteArray Value = codec->fromUnicode(Operande);*/
                 Value.replace('\n', 1);
 
@@ -272,7 +272,7 @@ void Instruction::AddOperande(operande op){
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
 
     QString string = codec->toUnicode(value);
-    //if (op.getType()=="string") qDebug() << string;
+    //if (op.getType()=="string") qDebug() << value;
 
     //if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
 }

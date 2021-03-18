@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     Dc.CheckAllFiles(dat, "C:/Users/Antoine/Desktop/TX_Debug", "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
 
 
-    if (argc < 3){
+    if (argc < 1){
         display_text("Here is a Tio, you're welcome:");
         for (int i = 0; i < 32; i++) display_text(header[i]);
         display_text("----------------------------------------------------------------------------------------------------------");
@@ -63,11 +63,11 @@ int main(int argc, char *argv[])
     }
     else
     {
-        const QString filepath = QCoreApplication::arguments().at(2);
-        const QString Game = QCoreApplication::arguments().at(1);
+        const QString filepath = QCoreApplication::arguments().at(1);
+        //const QString Game = QCoreApplication::arguments().at(1);
         display_text("Processing " + filepath);
         Decompiler Dc;
-        Dc.SetupGame(Game);
+        Dc.SetupGame("TX");
         Dc.ReadFile(filepath);
         Dc.WriteFile(filepath);
     }

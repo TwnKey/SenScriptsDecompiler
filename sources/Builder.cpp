@@ -192,7 +192,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     else if (fun.name == "ConditionTable"){
         function_type = 17;
     }
-    qDebug() << "function type " << function_type;
+
 
     if (function_type == 0){ //we use OP codes
         //First we check if it's really using OP Code (might be a monster function)
@@ -305,7 +305,7 @@ bool Builder::UpdatePointersXLSX(){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
                     int idx_row_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
                     function current_fun = FunctionsParsed[0];
-                    qDebug() << "ptr : " << idx_row_ptr;
+
                     if (FunctionsParsed.size()>1){
 
                         function next_fun = FunctionsParsed[1];
