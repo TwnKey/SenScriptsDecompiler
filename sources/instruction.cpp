@@ -1,5 +1,8 @@
 #include "headers/instruction.h"
 #include "headers/functions.h"
+#include "headers/utilities.h"
+#include "headers/global_vars.h"
+
 Instruction::Instruction(int addr, uint OP, Builder *Maker)
 {
             OPCode = OP;
@@ -74,7 +77,8 @@ Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenario
             else if ((type == "string")||(type == "dialog")){
                 QString Operande = (excelScenarioSheet.read(idx_row+1, idx_operande).toString());
                 Value = Operande.toUtf8();
-
+                QTextCodec *codec = QTextCodec::codecForName(OutputDatFileEncoding.toUtf8());
+                QByteArray Value = codec->fromUnicode(Operande);
                 Value.replace('\n', 1);
 
                 op = operande(addr,type, Value);
@@ -221,7 +225,7 @@ int Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<func
 
             value_.replace(1, "\n");
 
-            QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+            QTextCodec *codec = QTextCodec::codecForName(InputDatFileEncoding.toUtf8());
 
             QString string = codec->toUnicode(value_);
 
@@ -266,8 +270,13 @@ void Instruction::set_addr_instr(int i){
 }
 void Instruction::AddOperande(operande op){
     operandes.push_back(op);
-    //if (op.getType()=="string") qDebug() << op.getValue();
-    //if (op.getType()=="pointer") qDebug() << hex << op.getValue();
+    QByteArray value = op.getValue();
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+
+    QString string = codec->toUnicode(value);
+    //if (op.getType()=="string") qDebug() << value;
+
+    //if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
 }
 int Instruction::get_length_in_bytes(){
 
