@@ -241,7 +241,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         qDebug() << "Checking " << full_path;
         QString full_path_ref = folder_for_reference + filename;
         stream << full_path << "\n";
-        this->SetupGame("TX");
+        this->SetupGame("CS3");
         qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
         qDebug() << "reading dat done." << full_path;
