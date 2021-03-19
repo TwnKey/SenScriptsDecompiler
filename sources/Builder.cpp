@@ -171,12 +171,10 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
         QRegExp rx("BookData(\\d+[A-Z]?)_(\\d+)");
         std::vector<int> result;
         int Nb_Book = rx.cap(1).toInt();
-        qDebug() << Nb_Book;
 
         rx.indexIn(fun.name, 0);
         int Nb_Data = rx.cap(2).toInt();
-        qDebug() << "nb_data = " << Nb_Data;
-        qDebug() << "nb_book = " << Nb_Book;
+
         if (Nb_Data == 99) function_type = 14; //DATA, the 99 is clearly hardcoded; The behaviour is: 99=> two shorts (probably number of pages) and that's it
 
         else function_type = 15;
@@ -231,7 +229,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                     while(current_position<goal){
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                         if (error){
-                            qFatal("error");
+                            //qFatal("error");
                             error = false;
 
                         }

@@ -1286,7 +1286,6 @@ class CS3Builder : public Builder
                         int addr_initial = addr;
                         std::vector<function>::iterator it_fun_to_read = find_function_by_ID(Maker->FunctionsToParse, ID_fun);
 
-                        qDebug() << "Calling function :" << hex << ID_fun;
                         it_fun_to_read->called = true;
                         Maker->ReadIndividualFunction(*it_fun_to_read,content);
                         Maker->FunctionsParsed.push_back(*it_fun_to_read);
@@ -1295,7 +1294,6 @@ class CS3Builder : public Builder
                 }
                 else if (fun_name!=""){
                     std::vector<function>::iterator itt = find_function_by_name(Maker->FunctionsParsed, fun_name); //we'll read it right away
-                    qDebug() << "Calling function :" << hex << fun_name;
                     if (itt == Maker->FunctionsParsed.end()){ //if we never read it, we'll do that.
 
                         int addr_initial = addr;
@@ -2452,7 +2450,6 @@ class CS3Builder : public Builder
 
                         break;}
                         default:
-                    qDebug() << "byte : " << hex << (unsigned char)control_byte[0];
                     qFatal("Byte not analyzed yet");
                 }
         }
@@ -6134,7 +6131,6 @@ class CS3Builder : public Builder
 
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type){
         int OP = (dat_content[addr]&0xFF);
-        //qDebug() << hex << " OP " << OP << " at " << addr;
         if (function_type == 0){ //the function is read with OPCodes
 
 
@@ -6417,7 +6413,7 @@ class CS3Builder : public Builder
         //everything else can be deduced to recreate the header
         display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
-        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content); //should be 0x20, not always the case though (t0600 I SEE YOU)
+        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content);
         int position = position_filename, next_position = 0;
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;

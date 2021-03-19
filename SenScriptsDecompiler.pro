@@ -35,6 +35,7 @@ HEADERS += \
     headers/CS4InstructionsSet.h \
     headers/TXInstructionsSet.h \
     headers/functions.h \
+    headers/global_vars.h \
     headers/instruction.h \
     headers/operande.h \
     headers/decompiler.h \

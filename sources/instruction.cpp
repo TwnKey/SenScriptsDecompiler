@@ -1,6 +1,8 @@
 #include "headers/instruction.h"
 #include "headers/functions.h"
 #include "headers/utilities.h"
+#include "headers/global_vars.h"
+
 Instruction::Instruction(int addr, uint OP, Builder *Maker)
 {
             OPCode = OP;
@@ -75,8 +77,8 @@ Instruction::Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenario
             else if ((type == "string")||(type == "dialog")){
                 QString Operande = (excelScenarioSheet.read(idx_row+1, idx_operande).toString());
                 Value = Operande.toUtf8();
-                /*QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-                QByteArray Value = codec->fromUnicode(Operande);*/
+                QTextCodec *codec = QTextCodec::codecForName(OutputDatFileEncoding.toUtf8());
+                QByteArray Value = codec->fromUnicode(Operande);
                 Value.replace('\n', 1);
 
                 op = operande(addr,type, Value);
@@ -223,7 +225,7 @@ int Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<func
 
             value_.replace(1, "\n");
 
-            QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+            QTextCodec *codec = QTextCodec::codecForName(InputDatFileEncoding.toUtf8());
 
             QString string = codec->toUnicode(value_);
 

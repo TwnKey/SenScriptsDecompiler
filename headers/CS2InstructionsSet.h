@@ -608,7 +608,6 @@ class CS2Builder : public Builder
         ConditionTable(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"ConditionTable", 272,Maker){}
         ConditionTable(int addr, Builder *Maker):Instruction(addr,"ConditionTable", 272, Maker){}
         ConditionTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"ConditionTable", 272,Maker){
-            qDebug() << hex << "start" << addr;
 
             unsigned char current_byte = content[addr];
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
@@ -652,15 +651,12 @@ class CS2Builder : public Builder
             int cnt = 0;
             unsigned char current_byte = content[addr];
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));//3
-            qDebug() << "starting here " << hex << addr;
             while(cnt < current_byte){
-                qDebug() << "reading short here " << hex << addr;
                 QByteArray short_bytes = ReadSubByteArray(content, addr,2);
 
                 this->AddOperande(operande(addr,"short", short_bytes));
 
 
-                qDebug() << "reading bytearray here " << hex << addr;
                 this->AddOperande(operande(addr,"bytearray", ReadSubByteArray(content, addr,0x1E)));
                 short shrt = ReadShortFromByteArray(0, short_bytes);
                 if (addr+0x20 > Maker->goal) return;
@@ -725,7 +721,6 @@ class CS2Builder : public Builder
                 this->AddOperande(fill);
                 cnt++;
             }
-    qDebug() << hex << "end addr " << addr;
 
         }
     };
@@ -811,9 +806,7 @@ class CS2Builder : public Builder
             int first_integer;
             first_integer = ReadIntegerFromByteArray(addr, content);
             std::vector<function>::iterator itt_current_fun = find_function_by_ID(Maker->FunctionsToParse, Maker->idx_current_fun);
-            qDebug() << " current fun " << Maker->idx_current_fun;
             while(first_integer != 0){
-                qDebug() << "Adding one instruction";
                 itt_current_fun->AddInstruction(std::make_shared<AnimeClipData>(addr, content,Maker));
                 first_integer = ReadIntegerFromByteArray(addr, content);
 
@@ -910,7 +903,6 @@ class CS2Builder : public Builder
         BookData99(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"BookData99", 269,Maker){}
         BookData99(int addr, Builder *Maker):Instruction(addr,"BookData99", 269, Maker){}
         BookData99(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"BookData99", 269,Maker){
-            qDebug() << "BOOK DATA 99";
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
@@ -6773,7 +6765,6 @@ class CS2Builder : public Builder
     };
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type){
         int OP = (dat_content[addr]&0xFF);
-        //qDebug() << "OP :" << hex << OP << " at " << addr;
         int i = CS2UIFiles.indexOf(SceneName);
         if ((i != -1)&&(OP == 0x13)) return std::make_shared<UI_OP13>(addr,dat_content,this); //UI files have a special 0x13 instruction
 
@@ -7060,7 +7051,7 @@ class CS2Builder : public Builder
         //everything else can be deduced to recreate the header
         display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
-        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content); //should be 0x20, not always the case though (t0600 I SEE YOU)
+        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content);
         int position = position_filename, next_position = 0;
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;

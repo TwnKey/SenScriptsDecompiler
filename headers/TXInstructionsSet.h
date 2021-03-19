@@ -492,7 +492,7 @@ class TXBuilder : public Builder
                 this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
                 QByteArray str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr,"string", str));
-                qDebug() << str;
+
                 QByteArray remaining = ReadSubByteArray(content, addr, 0x20-str.size()-1);
 
 
@@ -610,7 +610,6 @@ class TXBuilder : public Builder
         ConditionTable(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"ConditionTable", 272,Maker){}
         ConditionTable(int addr, Builder *Maker):Instruction(addr,"ConditionTable", 272, Maker){}
         ConditionTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"ConditionTable", 272,Maker){
-            qDebug() << hex << "start" << addr;
 
             unsigned char current_byte = content[addr];
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
@@ -654,15 +653,12 @@ class TXBuilder : public Builder
             int cnt = 0;
             unsigned char current_byte = content[addr];
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));//3
-            qDebug() << "starting here " << hex << addr;
             while(cnt < current_byte){
-                qDebug() << "reading short here " << hex << addr;
                 QByteArray short_bytes = ReadSubByteArray(content, addr,2);
 
                 this->AddOperande(operande(addr,"short", short_bytes));
 
 
-                qDebug() << "reading bytearray here " << hex << addr;
                 this->AddOperande(operande(addr,"bytearray", ReadSubByteArray(content, addr,0x1E)));
                 short shrt = ReadShortFromByteArray(0, short_bytes);
                 if (addr+0x20 > Maker->goal) return;
@@ -727,7 +723,6 @@ class TXBuilder : public Builder
                 this->AddOperande(fill);
                 cnt++;
             }
-    qDebug() << hex << "end addr " << addr;
 
         }
     };
@@ -813,9 +808,7 @@ class TXBuilder : public Builder
             int first_integer;
             first_integer = ReadIntegerFromByteArray(addr, content);
             std::vector<function>::iterator itt_current_fun = find_function_by_ID(Maker->FunctionsToParse, Maker->idx_current_fun);
-            qDebug() << " current fun " << Maker->idx_current_fun;
             while(first_integer != 0){
-                qDebug() << "Adding one instruction";
                 itt_current_fun->AddInstruction(std::make_shared<AnimeClipData>(addr, content,Maker));
                 first_integer = ReadIntegerFromByteArray(addr, content);
 
@@ -912,7 +905,6 @@ class TXBuilder : public Builder
         BookData99(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"BookData99", 269,Maker){}
         BookData99(int addr, Builder *Maker):Instruction(addr,"BookData99", 269, Maker){}
         BookData99(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"BookData99", 269,Maker){
-            qDebug() << "BOOK DATA 99";
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
@@ -2097,7 +2089,6 @@ class TXBuilder : public Builder
         OPCode18(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x18,Maker){}
         OPCode18(int addr, Builder *Maker):Instruction(addr,"???",0x18,Maker){}
         OPCode18(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x18,Maker){
-            qDebug() << " addr 18 : " << hex << addr;
             addr++;
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
             fun_140498b70(addr, content, this);
@@ -8809,42 +8800,12 @@ class TXBuilder : public Builder
                 return std::shared_ptr<Instruction>();
             }
         }
-//        else if (function_type==1){//the function is a "CreateMonsters" function
 
-//            return std::make_shared<CreateMonsters>(addr,dat_content,this);
-//        }
         else if (function_type==2){//the function is a "effect" function
 
             return std::make_shared<EffectsInstr>(addr,dat_content,this);
         }
-//        else if (function_type==3){
 
-//            return std::make_shared<ActionTable>(addr,dat_content,this);
-//        }
-//        else if (function_type==4){
-
-//            return std::make_shared<AlgoTable>(addr,dat_content,this);
-//        }
-//        else if (function_type==5){
-
-//            return std::make_shared<WeaponAttTable>(addr,dat_content,this);
-//        }
-//        else if (function_type==6){
-
-//            return std::make_shared<BreakTable>(addr,dat_content,this);
-//        }
-//        else if (function_type==7){
-
-//            return std::make_shared<SummonTable>(addr,dat_content,this);
-//        }
-//        else if (function_type==8){
-
-//            return std::make_shared<ReactionTable>(addr,dat_content,this);
-//        }
-//        else if (function_type==9){
-
-//            return std::make_shared<PartTable>(addr,dat_content,this);
-//        }
         else if (function_type==10){
 
             return std::make_shared<AnimeClipTable>(addr,dat_content,this);
@@ -8853,10 +8814,7 @@ class TXBuilder : public Builder
 
             return std::make_shared<FieldMonsterData>(addr,dat_content,this);
         }
-//        else if (function_type==12){
 
-//            return std::make_shared<FieldFollowData>(addr,dat_content,this);
-//        }
         else if (function_type==13){
 
             return std::make_shared<FC_autoX>(addr,dat_content,this);
@@ -8869,37 +8827,14 @@ class TXBuilder : public Builder
 
             return std::make_shared<BookDataX>(addr,dat_content,this);
         }
-//        else if (function_type==16){
 
-//            return std::make_shared<AddCollision>(addr,dat_content,this);
-//        }
-//        else if (function_type==17){
-
-//            return std::make_shared<ConditionTable>(addr,dat_content,this);
-//        }
 
         return std::shared_ptr<Instruction>();
     }
     bool CreateHeaderFromDAT(QByteArray &dat_content){
-
-        //Header structure:
-        //The first 0x20 is something used to check if the file is a valid file: it will always be that value
-        //The second 0x20 is the offset for the file name (shouldn't change too)
-        //The next integer is the position of the first pointer
-        //The 4th: probably the length in bytes of the pointer section
-        //The fifth: probably the position of the "names positions" section (right after the pointer section)
-        //The sixth: the number of functions inside the file
-        //the seventh: the position one byte after the 0x00 separator at the end of the functions section
-        //the eighth: 0xABCDEF00 => seems to always be there (no idea why)
-        //Then the name of the file
-        //Then the pointer section
-        //Then the "names positions" section
-        //Then the functions section
-        //Done; here the "function" objects holds the number of functions, the addr, name positions
-        //everything else can be deduced to recreate the header
         display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
-        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content); //should be 0x20, not always the case though (t0600 I SEE YOU)
+        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content);
         int position = position_filename, next_position = 0;
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;
@@ -8920,7 +8855,6 @@ class TXBuilder : public Builder
                 end_addr = ReadIntegerFromByteArray(next_position, dat_content);
             }
             FunctionsToParse.push_back(function(idx_fun,function_name,name_pos,addr,end_addr));
-            qDebug() << "Adding function " << function_name;
 
         }
         display_text("Header parsed.");

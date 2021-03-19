@@ -223,7 +223,7 @@ bool Decompiler::WriteXLSX(){
     }
 
     excelScenarioSheet.saveAs(filename);
-    qDebug() << "done " << filename;
+    //qDebug() << "done " << filename;
     return true;
 }
 bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files){

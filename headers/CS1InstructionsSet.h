@@ -561,7 +561,6 @@ class CS1Builder : public Builder
         AddCollision(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"AddCollision", 271,Maker){}
         AddCollision(int addr, Builder *Maker):Instruction(addr,"AddCollision", 271, Maker){}
         AddCollision(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"AddCollision", 271,Maker){
-            qDebug() << hex << "start" << addr;
 
             unsigned char current_byte = content[addr];
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
@@ -606,8 +605,6 @@ class CS1Builder : public Builder
                 cnt++;
             }
 
-            //this->AddOperande(operande(addr,"bytearray", ReadSubByteArray(content, addr,0x1E)));
-            qDebug() << hex << "end" << addr;
         }
     };
     class WeaponAttTable : public Instruction
@@ -672,7 +669,6 @@ class CS1Builder : public Builder
                 this->AddOperande(fill);
                 cnt++;
             }
-    qDebug() << hex << "end addr " << addr;
 
         }
     };
@@ -5533,7 +5529,7 @@ class CS1Builder : public Builder
         //everything else can be deduced to recreate the header
         display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
-        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content); //should be 0x20, not always the case though (t0600 I SEE YOU)
+        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content);
         int position = position_filename, next_position = 0;
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;
