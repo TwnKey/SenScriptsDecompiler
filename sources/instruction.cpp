@@ -268,7 +268,41 @@ int Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<func
 void Instruction::set_addr_instr(int i){
     addr_instr = i;
 }
+/*This version of AddOperande is supposed to check if a string contain illegal xml characters,
+but I didn't finish it yet.
+If there is any illegal xml character, every string in the sheet disappears and the file can't be decompiled,
+this is a problem for some broken files that we would want to restore (example is ply000 from CS3)*/
 void Instruction::AddOperande(operande op){
+
+    QByteArray value = op.getValue();
+    if (op.getType()=="string"){
+        QTextCodec::ConverterState state;
+
+        QTextCodec *codec = QTextCodec::codecForName(InputDatFileEncoding.toUtf8());
+        const QString text = codec->toUnicode(value, value.size(), &state);
+
+        if ((state.invalidChars > 0)||text.contains('\x0B')||text.contains('\x06')||text.contains('\x07')||text.contains('\x08')||text.contains('\x05')||text.contains('\x04')||text.contains('\x03')||text.contains('\x02')) {
+            op.setValue(QByteArray(0));
+
+            //operandes.push_back(op);
+        }
+        else{
+            qDebug() << "value: " << value;
+            operandes.push_back(op);
+        }
+    }
+    else {
+        operandes.push_back(op);
+    }
+
+
+
+    //if (op.getType()=="string") qDebug() << value;
+
+    if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
+}
+
+/*void Instruction::AddOperande(operande op){
     operandes.push_back(op);
     QByteArray value = op.getValue();
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
@@ -277,7 +311,7 @@ void Instruction::AddOperande(operande op){
     //if (op.getType()=="string") qDebug() << value;
 
     //if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
-}
+}*/
 int Instruction::get_length_in_bytes(){
 
     return getBytes().size();

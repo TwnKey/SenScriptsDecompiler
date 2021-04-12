@@ -6131,6 +6131,7 @@ class CS3Builder : public Builder
 
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type){
         int OP = (dat_content[addr]&0xFF);
+        qDebug() << "OP: " << hex << OP << " at " << addr;
         if (function_type == 0){ //the function is read with OPCodes
 
 

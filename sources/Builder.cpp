@@ -229,7 +229,8 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                     while(current_position<goal){
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                         if (error){
-                            //qFatal("error");
+                            qFatal("error");
+
                             error = false;
 
                         }
