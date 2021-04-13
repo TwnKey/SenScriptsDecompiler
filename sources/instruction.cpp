@@ -287,7 +287,7 @@ void Instruction::AddOperande(operande op){
             //operandes.push_back(op);
         }
         else{
-            qDebug() << "value: " << value;
+            //qDebug() << "value: " << value;
             operandes.push_back(op);
         }
     }
@@ -299,7 +299,7 @@ void Instruction::AddOperande(operande op){
 
     //if (op.getType()=="string") qDebug() << value;
 
-    if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
+    //if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
 }
 
 /*void Instruction::AddOperande(operande op){
