@@ -41,3 +41,5 @@ HEADERS += \
     headers/decompiler.h \
     headers/translationfile.h \
     headers/utilities.h
+QMAKE_CXXFLAGS += /bigobj
+

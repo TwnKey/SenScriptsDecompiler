@@ -270,7 +270,6 @@ bool Builder::UpdatePointersDAT(){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
 
                     int addr_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
-                    //qDebug() << "Addr: " << hex << addr_ptr << " at " << FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getAddr();
                     function fun = find_function(addr_ptr);
 
                     int id_instr = find_instruction(addr_ptr,fun);
