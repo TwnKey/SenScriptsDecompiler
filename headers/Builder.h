@@ -87,5 +87,6 @@ public:
     bool flag_monsters = false;
     bool error = false;
     int idx_current_fun;
+    QString previous_fun_name = "";
 };
 #endif // INSTRUCTIONBUILDER_H

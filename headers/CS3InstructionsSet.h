@@ -6,12 +6,7 @@
 
 #include <QString>
 
-/*The CSXBuilder contains hundreds of nested classes, every one of them describing the behaviour of a single instruction in the game
- * Those behaviours were deduced from a combination of analysis directly from the hexadecimal content of the dat files,
- * study of assembly/pseudo code from Ghidra
- * and also testing directly in game by modifying the ram and studying with Cheat Engine
- * all of them are different from one game to another (well except for CS1/CS2 and CS3/CS4 which present similarities)
-*/
+
 
 class CS3TranslationFile : public TranslationFile
 {

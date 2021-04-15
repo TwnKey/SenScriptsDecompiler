@@ -294,7 +294,7 @@ void Instruction::AddOperande(operande op){
     else {
         operandes.push_back(op);
     }
-
+     //if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
 
 
     //if (op.getType()=="string") qDebug() << value;

@@ -12,6 +12,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
 
     QString content_first_cell = doc.read(first_row, 1).toString();
     if (content_first_cell == "FUNCTION"){
+
         function current_fun;
         current_fun.name  = doc.read(first_row, 2).toString();
         current_fun.ID = ID_fun;
@@ -100,6 +101,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
                     ReadIndividualFunction(*it,dat_content);
                     FunctionsParsed.push_back(*it);
                 }
+                previous_fun_name = it->name;
             }
 
 
@@ -164,7 +166,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     else if (fun.name == "FieldFollowData"){
         function_type = 12;
     }
-    else if (fun.name.startsWith("FC_auto")){ //14025d625 Only present in face.dat...
+    else if (fun.name.startsWith("FC_auto")){
         function_type = 13;
     }
     else if (fun.name.startsWith("BookData")){ //Book: the first short read is crucial I think. 0 = text incoming; not zero =
@@ -181,7 +183,10 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
 
     }
     else if (fun.name.startsWith("_")) {
-        function_type = 2;
+        if (fun.name != "_"+previous_fun_name)
+        {
+         function_type = 2;
+        }
 
     }
     else if (fun.name == "AddCollision"){
@@ -193,14 +198,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
 
 
     if (function_type == 0){ //we use OP codes
-        //First we check if it's really using OP Code (might be a monster function)
-        //There is more chance to fail when interpreting a monster function as an op code function
-        //than the opposite
-        //Although we'll also check if its a valid monster function afterwards
-        //if it fails both checks, wtf. There is something wrong with the function, and we will skip the incorrect instruction (Hopefully it will fix the file)
-        //it will also crash if there is a monster function at the end of the file cause I didn't put protections when parsing
-        //the last function as an OP code, I mean it might go beyond the size of the dat content when reading the instructions (But I think it will fail
-        //before that most of the time)
+
 
         while(current_position<goal){
 
@@ -209,7 +207,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
             instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
 
             if ((error)||((instr->get_OP() != 0)&&(latest_op_code == 0))){ //this clearly means the function is incorrect or is a monster function.
-                qDebug() << "it's incorrect or a monster function";
+
                 error = false;
                 fun.InstructionsInFunction.clear();
                 current_position = fun.actual_addr;
