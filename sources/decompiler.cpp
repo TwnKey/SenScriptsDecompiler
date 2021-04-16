@@ -101,9 +101,11 @@ bool Decompiler::WriteDAT(){
 
         current_fun.clear();
 
-
+        //qDebug() << "fun : " << fun.name;
         for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
+            QByteArray qb = fun.InstructionsInFunction[idx_instr]->getBytes();
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
+            //qDebug() << hex << " writing dat: " << (uint)qb[0] << "at addr : " << fun.InstructionsInFunction[idx_instr]->get_addr_instr();
         }
         addr = addr + current_fun.size();
 
@@ -239,7 +241,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         qDebug() << "Checking " << full_path;
         QString full_path_ref = folder_for_reference + filename;
         stream << full_path << "\n";
-        this->SetupGame("CS4");
+        this->SetupGame("CS1");
         qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
         qDebug() << "reading dat done." << full_path;

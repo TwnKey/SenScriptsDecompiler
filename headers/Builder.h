@@ -73,9 +73,9 @@ public:
     virtual void ReadFunctionsXLSX(QXlsx::Document &xls_content);
 
 
-    function find_function(int addr);
-    int find_instruction(int addr, function fun);
-    int find_operande(int addr, Instruction instr);
+    int find_function(uint addr);
+    int find_instruction(uint addr, function fun);
+    int find_operande(uint addr, Instruction instr);
     std::vector<function> FunctionsToParse;
     std::vector<function> FunctionsParsed;
     QString SceneName;

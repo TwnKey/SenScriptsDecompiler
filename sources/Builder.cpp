@@ -28,6 +28,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
             if (content_first_cell == "FUNCTION"){ //We start a new function
 
                 QString next_fun_name = doc.read(idx_row, 2).toString();
+
                 addr_instr = 0;
                 FunctionsParsed.push_back(current_fun);
                 current_fun.name  = next_fun_name;
@@ -84,7 +85,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
 
         UpdatePointersXLSX();
     }
-
+    qDebug() << "Updated XLSX pointers";
     display_text("XLSX file read.");
 }
 
@@ -183,7 +184,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
 
     }
     else if (fun.name.startsWith("_")) {
-        if (fun.name != "_"+previous_fun_name)
+        if ((fun.name != "_"+previous_fun_name)||fun.end_addr == dat_content.size()) //last one is for btl1006, cs3; not cool but I'm starting to feel like the "_" functions are just not supposed to exist, so this hack only helps me checking the integrity of the files
         {
          function_type = 2;
         }
@@ -194,6 +195,9 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     }
     else if (fun.name == "ConditionTable"){
         function_type = 17;
+    }
+    else if (fun.name.startsWith("StyleName")){
+        function_type = 18;
     }
 
 
@@ -211,31 +215,42 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                 error = false;
                 fun.InstructionsInFunction.clear();
                 current_position = fun.actual_addr;
-
-                instr = CreateInstructionFromDAT(current_position, dat_content, 1);
-                if (flag_monsters) {
+                if (fun.name.startsWith("_")){
+                    instr = CreateInstructionFromDAT(current_position, dat_content, 2);
                     fun.AddInstruction(instr);
                     instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                     fun.AddInstruction(instr);
                     return current_position;
+
+
                 }
                 else{
-                    qDebug() << "not a monster function";
-                    //the function is incorrect, therefore, we parse it again as an OP Code function but remove the part that is incorrect
-                    //qDebug() << "Fail. There is a problem with this function at offset " << hex << current_position;
-                    current_position = fun.actual_addr;
-                    while(current_position<goal){
+                    instr = CreateInstructionFromDAT(current_position, dat_content, 1);
+                    if (flag_monsters) {
+                        fun.AddInstruction(instr);
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
-                        if (error){
-                            qFatal("error");
-
-                            error = false;
-
-                        }
-                        else fun.AddInstruction(instr);
+                        fun.AddInstruction(instr);
+                        return current_position;
                     }
-                    return current_position;
+                    else{
+                        qDebug() << "not a monster function";
+                        //the function is incorrect, therefore, we parse it again as an OP Code function but remove the part that is incorrect
+                        //qDebug() << "Fail. There is a problem with this function at offset " << hex << current_position;
+                        current_position = fun.actual_addr;
+                        while(current_position<goal){
+                            instr = CreateInstructionFromDAT(current_position, dat_content, 0);
+                            if (error){
+                                qFatal("error");
+
+                                error = false;
+
+                            }
+                            else fun.AddInstruction(instr);
+                        }
+                        return current_position;
+                    }
                 }
+
             }
             else fun.AddInstruction(instr);
             latest_op_code = instr->get_OP();
@@ -258,7 +273,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
 }
 
 bool Builder::UpdatePointersDAT(){
-
+     qDebug() << "starting updating pointers";
     for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
 
         std::vector<std::shared_ptr<Instruction>> instructions = FunctionsParsed[idx_fun].InstructionsInFunction;
@@ -268,18 +283,30 @@ bool Builder::UpdatePointersDAT(){
                 if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType()=="pointer"){
 
                     int addr_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
-                    function fun = find_function(addr_ptr);
-
-                    int id_instr = find_instruction(addr_ptr,fun);
-
-                    int id_op = find_operande(addr_ptr,*fun.InstructionsInFunction[id_instr]);
-
-                    FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setDestination(fun.ID, id_instr, id_op);
+                    int idx_fun_ = find_function(addr_ptr);
+                    if (idx_fun_ != -1){
+                        function fun = FunctionsParsed[idx_fun_];
+                        int id_instr = find_instruction(addr_ptr,fun);
+                        int id_op = 0;
+                        if (id_instr != -1)
+                        {
+                            id_op = find_operande(addr_ptr,*fun.InstructionsInFunction[id_instr]);
+                            FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setDestination(fun.ID, id_instr, id_op);
+                        }
+                        else{
+                            FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setDestination(fun.ID, 0, 0);
+                        }
+                    }
+                    else{
+                        FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setDestination(0, 0, 0);
+                        qDebug() << "Problem with pointer";
+                    }
 
                 }
             }
         }
     }
+    qDebug() << "Done";
     return true;
 
 }
@@ -328,33 +355,35 @@ bool Builder::UpdatePointersXLSX(){
     return true;
 
 }
-function Builder::find_function(int addr){
-    function result = FunctionsParsed[0];
+int Builder::find_function(uint addr){
+    int result = -1;
     bool success = false;
-    int fun_addr = FunctionsParsed[0].actual_addr;
-    uint idx_fun = 0;
-    for (; idx_fun < FunctionsParsed.size(); idx_fun++){
+    uint fun_addr = FunctionsParsed[0].actual_addr;
+
+    for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
         fun_addr = FunctionsParsed[idx_fun].actual_addr;
 
         if (addr<fun_addr) {
 
-
+            result = idx_fun-1;
             success = true;
             break;
         }
 
     }
-    result = FunctionsParsed[idx_fun-1];
+    if ((result == -1) && (addr <FunctionsParsed[FunctionsParsed.size()-1].end_addr)) result = FunctionsParsed.size()-1;
 
     return result;
 }
-int Builder::find_instruction(int addr, function fun){
+int Builder::find_instruction(uint addr, function fun){
+    uint result = -1;
     uint idx_instr = 0;
     bool success = false;
     for (;idx_instr < fun.InstructionsInFunction.size(); idx_instr++){
-        int instr_addr = fun.InstructionsInFunction[idx_instr]->get_addr_instr();
+        uint instr_addr = fun.InstructionsInFunction[idx_instr]->get_addr_instr();
         if (addr==instr_addr) {
             success = true;
+            result = idx_instr;
 
             break;
         }
@@ -365,9 +394,10 @@ int Builder::find_instruction(int addr, function fun){
         qDebug() << hex << addr;
         display_text("Couldn't find an instruction!");
     }
-    return idx_instr;
+
+    return result;
 }
-int Builder::find_operande(int addr, Instruction instr){//NOT USEFUL! Since we should point towards OP codes exclusively
+int Builder::find_operande(uint addr, Instruction instr){//NOT USEFUL! Since we should point towards OP codes exclusively
 
     int idx_operande = 0, result = -1;
     bool success = false;

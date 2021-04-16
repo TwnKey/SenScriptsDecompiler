@@ -46,15 +46,15 @@ int main(int argc, char *argv[])
     {
     QCoreApplication a(argc, argv);
     QSettings settings(QCoreApplication::applicationDirPath() + "/config.ini", QSettings::IniFormat);
-    Game = settings.value("Game", "CS3").toString();
+    Game = settings.value("Game", "CS4").toString();
     InputDatFileEncoding = settings.value("InputDatFileEncoding", "UTF-8").toString();
     OutputDatFileEncoding = settings.value("OutputDatFileEncoding", "UTF-8").toString();
 
     Decompiler Dc;
-    Dc.SetupGame("CS4");
-    QDir directory("C:/Users/Antoine/Desktop/CS4Debug");
+    Dc.SetupGame("CS1");
+    QDir directory("C:/Users/Antoine/Desktop/CS1Debug");
     QStringList dat = directory.entryList(QStringList() << "*.dat",QDir::Files);
-    Dc.CheckAllFiles(dat, "C:/Users/Antoine/Desktop/CS4Debug", "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
+    Dc.CheckAllFiles(dat, "C:/Users/Antoine/Desktop/CS1Debug", "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
 
 
 
