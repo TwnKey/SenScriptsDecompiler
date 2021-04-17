@@ -6,12 +6,7 @@
 
 #include <QString>
 
-/*The CSXBuilder contains hundreds of nested classes, every one of them describing the behaviour of a single instruction in the game
- * Those behaviours were deduced from a combination of analysis directly from the hexadecimal content of the dat files,
- * study of assembly/pseudo code from Ghidra
- * and also testing directly in game by modifying the ram and studying with Cheat Engine
- * all of them are different from one game to another (well except for CS1/CS2 and CS3/CS4 which present similarities)
-*/
+
 
 class CS3TranslationFile : public TranslationFile
 {
@@ -6131,6 +6126,7 @@ class CS3Builder : public Builder
 
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type){
         int OP = (dat_content[addr]&0xFF);
+        qDebug() << "OP: " << hex << OP << " at " << addr;
         if (function_type == 0){ //the function is read with OPCodes
 
 

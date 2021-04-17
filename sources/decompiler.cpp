@@ -1,6 +1,6 @@
 #include "headers/decompiler.h"
 #include "headers/CS3InstructionsSet.h"
-//#include "headers/CS4InstructionsSet.h"
+#include "headers/CS4InstructionsSet.h"
 #include "headers/CS1InstructionsSet.h"
 #include "headers/TXInstructionsSet.h"
 #include "headers/CS2InstructionsSet.h"
@@ -26,7 +26,6 @@ Decompiler::Decompiler()
 
 bool Decompiler::SetupGame(QString Game_){
     Game = Game_;
-    qDebug() << Game_;
     if (Game == "CS3") IB = new CS3Builder();
     else if (Game == "CS1") {
         IB = new CS1Builder();
@@ -35,7 +34,7 @@ bool Decompiler::SetupGame(QString Game_){
 
         IB = new CS2Builder();
     }
-    //else if (Game == "CS4") IB = new CS4Builder();
+    else if (Game == "CS4") IB = new CS4Builder();
     else if (Game == "TX") IB = new TXBuilder();
     else {
         display_text("FAILURE: Unrecognized game specified.");
@@ -104,7 +103,9 @@ bool Decompiler::WriteDAT(){
 
 
         for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
+            QByteArray qb = fun.InstructionsInFunction[idx_instr]->getBytes();
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
+
         }
         addr = addr + current_fun.size();
 
@@ -134,11 +135,11 @@ bool Decompiler::WriteDAT(){
 
     QString output_path = folder + CurrentTF.getName() + ".dat";
     QFile file(output_path);
-    display_text("Writing " + output_path);
+
     file.open(QIODevice::WriteOnly);
     file.write(file_content);
     file.close();
-    display_text("Done.");
+    display_text("File "+output_path+" created.");
     return true;
 }
 bool Decompiler::WriteXLSX(){
@@ -221,9 +222,8 @@ bool Decompiler::WriteXLSX(){
             excel_row+=2;
         }
     }
-
+    display_text("File "+filename+" created.");
     excelScenarioSheet.saveAs(filename);
-    //qDebug() << "done " << filename;
     return true;
 }
 bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files){
@@ -241,7 +241,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         qDebug() << "Checking " << full_path;
         QString full_path_ref = folder_for_reference + filename;
         stream << full_path << "\n";
-        this->SetupGame("CS3");
+        this->SetupGame("CS4");
         qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
         qDebug() << "reading dat done." << full_path;

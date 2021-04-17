@@ -30,7 +30,7 @@ class Instruction{
         QByteArray getBytes();
         Builder *Maker;
         std::vector<operande> operandes;
-
+        bool error = false;
     protected:
         int addr_instr;
         uint OPCode;
