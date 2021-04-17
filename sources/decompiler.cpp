@@ -101,11 +101,11 @@ bool Decompiler::WriteDAT(){
 
         current_fun.clear();
 
-        //qDebug() << "fun : " << fun.name;
+
         for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
             QByteArray qb = fun.InstructionsInFunction[idx_instr]->getBytes();
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
-            //qDebug() << hex << " writing dat: " << (uint)qb[0] << "at addr : " << fun.InstructionsInFunction[idx_instr]->get_addr_instr();
+
         }
         addr = addr + current_fun.size();
 
@@ -135,11 +135,11 @@ bool Decompiler::WriteDAT(){
 
     QString output_path = folder + CurrentTF.getName() + ".dat";
     QFile file(output_path);
-    display_text("Writing " + output_path);
+
     file.open(QIODevice::WriteOnly);
     file.write(file_content);
     file.close();
-    display_text("Writing dat done.");
+    display_text("File "+output_path+" created.");
     return true;
 }
 bool Decompiler::WriteXLSX(){
@@ -222,7 +222,7 @@ bool Decompiler::WriteXLSX(){
             excel_row+=2;
         }
     }
-
+    display_text("File "+filename+" created.");
     excelScenarioSheet.saveAs(filename);
     return true;
 }
@@ -241,7 +241,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         qDebug() << "Checking " << full_path;
         QString full_path_ref = folder_for_reference + filename;
         stream << full_path << "\n";
-        this->SetupGame("CS1");
+        this->SetupGame("CS4");
         qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
         qDebug() << "reading dat done." << full_path;

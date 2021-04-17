@@ -85,7 +85,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document &doc){
 
         UpdatePointersXLSX();
     }
-    qDebug() << "Updated XLSX pointers";
+
     display_text("XLSX file read.");
 }
 
@@ -94,7 +94,7 @@ void Builder::ReadFunctionsDAT(QByteArray &dat_content){
     if (FunctionsToParse.size()>0){
         for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++){
             if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)){
-                qDebug() << "Reading function " << it->name << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
+                qDebug() << "Reading function " << it->name;// << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
 
                 std::vector<function>::iterator itt = find_function_by_ID(FunctionsParsed, it->ID);
                 if (itt == FunctionsParsed.end()){ //if we never read it, we'll do that
@@ -233,15 +233,15 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                         return current_position;
                     }
                     else{
-                        qDebug() << "not a monster function";
+                        //qDebug() << "not a monster function";
                         //the function is incorrect, therefore, we parse it again as an OP Code function but remove the part that is incorrect
                         //qDebug() << "Fail. There is a problem with this function at offset " << hex << current_position;
                         current_position = fun.actual_addr;
                         while(current_position<goal){
                             instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                             if (error){
-                                qFatal("error");
-
+                                //qFatal("error");
+                                display_text("Incorrect instruction read at " + QString::number(current_position) +". Skipped." );
                                 error = false;
 
                             }
@@ -273,7 +273,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
 }
 
 bool Builder::UpdatePointersDAT(){
-     qDebug() << "starting updating pointers";
+
     for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
 
         std::vector<std::shared_ptr<Instruction>> instructions = FunctionsParsed[idx_fun].InstructionsInFunction;
@@ -299,7 +299,7 @@ bool Builder::UpdatePointersDAT(){
                     }
                     else{
                         FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setDestination(0, 0, 0);
-                        qDebug() << "Problem with pointer";
+
                     }
 
                 }

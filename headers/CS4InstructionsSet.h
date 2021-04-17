@@ -393,17 +393,17 @@ class CS4Builder : public Builder
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2))); //RSI + 0x28
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
 
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4))); //0x2C
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4))); //0x2C
 
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));//0x30
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));//0x32
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));//0x34
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));//0x36
 
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//0x38
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));//0x38
 
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//0x3C
-            this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//0x40
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));//0x3C
+            this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));//0x40
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//0x44
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));//0x48
             //0x4C The first part is done
@@ -4735,9 +4735,9 @@ class CS4Builder : public Builder
                 this->AddOperande(operande(addr,"byte", control_byte));
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
+                this->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr, 4)));
 
         }
     };
