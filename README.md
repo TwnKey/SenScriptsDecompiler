@@ -2,15 +2,19 @@
 
 This tool was originally meant to decompile the scenario files from The Legend of Heroes: Trails of Cold Steel III, located in data/scripts/scena and talk.\
 Then I added support for ani, btl, ui, book.\
-Then I added support for CS1, CS2, and now Tokyo Xanadu.\
-I plan to add support for CS4 after I beat the game when it releases on PC.\
-I also plan to add support for Hajimari when the Clouded Leopard Entertainment PC version releases this summer.
+Then I added support for CS1, CS2, Tokyo Xanadu and CS4.\
+I don't know about Hajimari.
+
+# Warning
+When creating custom functions in XLSX files, never call your function with a name starting with "\_". I don't see a reason to do that and it's safer not to.
+In fact my tool is not handling functions starting with "_" correctly: they are either called from another function (then they use instructions), or never called and follow a very specific format. For now my tool is using a simple workaround that has no guarantee to work for future games, but I don't see any risk right now.
+In the very unlikely case that anyone was having a problem related to that, I would update it though. 
 
 # Instruction codes
 
 Script files from recent Falcom games are made of functions, which are themselves made of instructions. Each instruction has an OP Code (one signature byte) 
 and a functionality, which might vary between games.
-To help understand what the instructions do, I plan to make a documentation (probably only for CS3).
+To help understand what the instructions do, I wrote a simple doc: https://docs.google.com/document/d/1YVjFSkPsj9M0UgsI6_de4TSz35MeL_rGuhSQDtRTXxw/edit?usp=sharing.
 
 # What is the point of this tool? 
 
@@ -21,7 +25,7 @@ Second, it updates pointers in the case you change the text length for dialogs o
 would jump to a random position in the file and interpret them as the start of a new instruction, causing the game to crash or simply have weird behaviour.
 
 What this tool can be used for:
-- Mixing crafts in Cold Steel series
+- Mixing crafts in Cold Steel series (https://www.youtube.com/watch?v=cC9knrPk4sQ&ab_channel=NBigboyC2)
 - Fixing broken characters
 - Fixing broken scenes in scenario
 - Create new scenes
@@ -47,7 +51,7 @@ First, make sure to fill out the "config.ini" file depending on your settings. Y
 Example of "config.ini" file:
 
 [General]
-Game = "TX"                                 <- The game the files are from, possible games are: "TX", "CS1", "CS2", "CS3"\
+Game = "TX"                                 <- The game the files are from, possible games are: "TX", "CS1", "CS2", "CS3", "CS4"\
 InputDatFileEncoding = "UTF-8"              <- Encoding used in the input dat files (sometimes it can be Shift-JIS)\
 OutputDatFileEncoding = "UTF-8"             <- Encoding used in the output dat files 
 
@@ -64,5 +68,4 @@ Below are some issues that can happen with this tool in its current state:
 - Some pointers might be missing (easy to fix, though)
 - Some (a very small amount though) files might be broken and therefore not supported.
 
-I want this tool to be reliable. Currently I want to say it is (no issue found so far), but I only toyed with a few scenes from the games.\
 If anybody finds a bug or any issue at all, please contact me immediately at feitaishi45@gmail.com
