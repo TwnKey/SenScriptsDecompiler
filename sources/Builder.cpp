@@ -226,6 +226,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                 }
                 else{
                     instr = CreateInstructionFromDAT(current_position, dat_content, 1);
+
                     if (flag_monsters) {
                         fun.AddInstruction(instr);
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
@@ -233,7 +234,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
                         return current_position;
                     }
                     else{
-                        //qDebug() << "not a monster function";
+
                         //the function is incorrect, therefore, we parse it again as an OP Code function but remove the part that is incorrect
                         //qDebug() << "Fail. There is a problem with this function at offset " << hex << current_position;
                         current_position = fun.actual_addr;

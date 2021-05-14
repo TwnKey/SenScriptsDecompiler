@@ -22,8 +22,8 @@ class TXBuilder : public Builder
     }
 
     QVector<QString> TXUIFiles = {"battle_menu","camp_menu", "camp_menu_v","note_menu","note_menu_v","shop_menu","shop_menu_v","title_menu","title_menu_v"};
-    static void fun_140498b70(int &addr, QByteArray &content, Instruction * instr){
-        //related to text/text formating
+    static void reading_dialog(int &addr, QByteArray &content, Instruction * instr){
+
         QByteArray current_op_value;
         int addr_ = addr;
 
@@ -32,15 +32,51 @@ class TXBuilder : public Builder
         do{
             unsigned char current_byte = content[addr];
 
-            if (current_byte<0x20){
-                if (current_byte == 0){
+            switch(current_byte){
+                case 0x00:
                     current_op_value.clear();
                     current_op_value[0] = 0;
                     instr->AddOperande(operande(addr,"byte", current_op_value));
                     addr++;
                     return;
-                }
-                else if (current_byte == 0x10){
+                case 0x01:
+
+                    if (start_text)
+                        current_op_value.push_back(current_byte);
+                    else{
+
+                        current_op_value.clear();
+                        current_op_value.push_back(current_byte);
+                        instr->AddOperande(operande(addr,"byte", current_op_value));
+                        current_op_value.clear();
+                    }
+                    addr++;
+                    break;
+                case 0x02:
+                    start_text = false;
+                    if (current_op_value.size()>0) {
+                        instr->AddOperande(operande(addr_,"dialog", current_op_value));
+
+                    }
+                    current_op_value.clear();
+                    current_op_value.push_back(current_byte);
+                    instr->AddOperande(operande(addr,"byte", current_op_value));
+                    current_op_value.clear();
+                    addr++;
+                    break;
+                case 0x10:
+                    if (current_op_value.size()>0) {
+                        instr->AddOperande(operande(addr_,"dialog", current_op_value));
+                    }
+                    current_op_value.clear();
+                    current_op_value.push_back(current_byte);
+                    instr->AddOperande(operande(addr,"byte", current_op_value));
+                    current_op_value.clear();
+                    addr++;
+                    instr->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    break;
+                case 0x17:
+                case 0x19:
                     start_text = false;
                     if (current_op_value.size()>0) {
                         instr->AddOperande(operande(addr_,"dialog", current_op_value));
@@ -52,12 +88,11 @@ class TXBuilder : public Builder
                     current_op_value.clear();
                     addr++;
                     instr->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                }
-                else if ((current_byte > 0x10)&&(current_byte < 0x13)){
-                    start_text = false;
+                    break;
+                case 0x11:
+                case 0x12:
                     if (current_op_value.size()>0) {
                         instr->AddOperande(operande(addr_,"dialog", current_op_value));
-
                     }
                     current_op_value.clear();
                     current_op_value.push_back(current_byte);
@@ -65,177 +100,97 @@ class TXBuilder : public Builder
                     current_op_value.clear();
                     addr++;
                     instr->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
-
-                }
-                else if (current_byte == 0x2){
-
-                    start_text = false;
-                    if (current_op_value.size()>0) {
-                        instr->AddOperande(operande(addr_,"dialog", current_op_value));
-
-                    }
-                    current_op_value.clear();
-                    current_op_value.push_back(current_byte);
-                    instr->AddOperande(operande(addr,"byte", current_op_value));
-                    current_op_value.clear();
+                    break;
+                case 0x23:
+                    current_op_value.push_back(0x23);
+                    addr_ = addr;
                     addr++;
-                }
-                else if ((start_text)&&current_byte == 0x1){
+                    current_byte = content[addr];
+                    if ((((current_byte == 0x45) || (current_byte == 0x65)) || (current_byte == 0x4d)) ||
+                           (current_byte == 0x42)||(current_byte == 0x48)||(current_byte == 0x56)||(current_byte == 0x4b) ||
+                            (current_byte == 0x6b) || (current_byte == 0x46)) {
+                            current_op_value.push_back(current_byte);
+                            addr++;
+                            current_byte = content[addr];
 
-                    current_op_value.push_back(current_byte);
-                    addr++;
-                }
-                else{
-                    if (current_op_value.size()>0) {
-                        instr->AddOperande(operande(addr_,"dialog", current_op_value));
-                    }
-                    current_op_value.clear();
-                    current_op_value.push_back(current_byte);
-                    instr->AddOperande(operande(addr,"byte", current_op_value));
-                    addr++;
-                    current_op_value.clear();
-                }
-
-            }
-            else{
-
-                    if (current_byte == 0x23){
-
-                        current_op_value.push_back(0x23);
-                        addr_ = addr;//beginning of some format stuff
-                        addr++;
-                        current_byte = content[addr];
-                        while (current_byte!=0){
-
-
-                            if ((((current_byte == 0x45) || (current_byte == 0x65)) || (current_byte == 0x4d)) ||
-                               (current_byte == 0x42)||(current_byte == 0x48)||(current_byte == 0x56)||(current_byte == 0x4b) ||
-                                (current_byte == 0x6b) || (current_byte == 0x46)) {
-                                current_op_value.push_back(current_byte);
-                                addr++;
-                                current_byte = content[addr];
-
-                                  if (current_byte != 0x5f) {
-                                      if (current_byte == 0x5b) {
-                                          do{
-                                              current_op_value.push_back(current_byte);
-                                              addr++;
-                                              current_byte = content[addr];
-                                          }
-                                          while(current_byte!=0x5D);
+                              if (current_byte != 0x5f) {
+                                  if (current_byte == 0x5b) {
+                                      do{
                                           current_op_value.push_back(current_byte);
                                           addr++;
                                           current_byte = content[addr];
                                       }
-                                      break;
-                                  }
-                                  else{
+                                      while(current_byte!=0x5D);
                                       current_op_value.push_back(current_byte);
                                       addr++;
                                       current_byte = content[addr];
-                                      current_op_value.push_back(current_byte);
-                                      addr++;
-                                      current_byte = content[addr];
-                                      break;
-
-
                                   }
+                                  break;
+                              }
+                              else{
+                                  current_op_value.push_back(current_byte);
+                                  addr++;
+                                  current_byte = content[addr];
+                                  current_op_value.push_back(current_byte);
+                                  addr++;
+                                  current_byte = content[addr];
+                                  break;
+                              }
 
-                               }
-                            else if(((current_byte + 0xb7 & 0xdf) == 0)||(current_byte == 0x50)||(current_byte == 0x54)||(current_byte == 0x57)||
-                                     (current_byte == 0x53)||(current_byte == 0x73)||(current_byte == 0x43)||(current_byte == 99)||(current_byte == 0x78)||
-                                     (current_byte == 0x79)||(current_byte == 0x47)||(current_byte == 0x44)||(current_byte == 0x55)||(current_byte == 0x52)||(current_byte == 0x50)) {
-                                     current_op_value.push_back(current_byte);
-                                     addr++;
-                                     current_byte = content[addr];
-                                     break;
-
-                            }
-                            else{
-                                if (current_byte<0x20){
-                                    if (current_byte == 0){
-                                        current_op_value.clear();
-                                        current_op_value[0] = 0;
-                                        instr->AddOperande(operande(addr,"byte", current_op_value));
-                                        addr++;
-
-                                        return;
-                                    }
-                                    else if (current_byte == 0x10){
-                                        current_op_value.clear();
-                                        current_op_value.push_back(current_byte);
-                                        instr->AddOperande(operande(addr,"byte", current_op_value));
-                                        current_op_value.clear();
-                                        addr++;
-                                        current_byte = content[addr];
-                                        instr->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                                    }
-                                    else if ((current_byte > 0x10)&&(current_byte < 0x13)){
-                                        start_text = false;
-                                        if (current_op_value.size()>0) {
-                                            instr->AddOperande(operande(addr_,"dialog", current_op_value));
-
-                                        }
-                                        current_op_value.clear();
-                                        current_op_value.push_back(current_byte);
-                                        instr->AddOperande(operande(addr,"byte", current_op_value));
-                                        current_op_value.clear();
-                                        addr++;
-                                        current_byte = content[addr];
-                                        instr->AddOperande(operande(addr,"int", ReadSubByteArray(content, addr,4)));
-
-                                    }
-                                    else if (current_byte == 0x2){
-
-                                        start_text = false;
-                                        if (current_op_value.size()>0) instr->AddOperande(operande(addr_,"dialog", current_op_value));
-                                        current_op_value.clear();
-                                        current_op_value.push_back(current_byte);
-                                        instr->AddOperande(operande(addr,"byte", current_op_value));
-                                        current_op_value.clear();
-                                        addr++;
-                                        current_byte = content[addr];
-                                    }
-                                    else if ((start_text)&&current_byte == 0x1){
-                                        current_op_value.push_back(current_byte);
-                                        addr++;
-                                        current_byte = content[addr];
-                                    }
-                                    else{
-                                        if ((start_text)) instr->AddOperande(operande(addr_,"dialog", current_op_value));
-                                        current_op_value.clear();
-                                        current_op_value.push_back(current_byte);
-                                        instr->AddOperande(operande(addr,"byte", current_op_value));
-                                        addr++;
-                                        current_byte = content[addr];
-                                        current_op_value.clear();
-                                    }
-                                }
-                                else
-                                {
-                                    current_op_value.push_back(current_byte);
-                                    addr++;
-                                    current_byte = content[addr];
-                                }
-                            }
-
-
+                           }
+                        else if(((current_byte + 0xb7 & 0xdf) == 0)||(current_byte == 0x50)||(current_byte == 0x54)||(current_byte == 0x57)||
+                                 (current_byte == 0x53)||(current_byte == 0x73)||(current_byte == 0x43)||(current_byte == 99)||(current_byte == 0x78)||
+                                 (current_byte == 0x79)||(current_byte == 0x47)||(current_byte == 0x44)||(current_byte == 0x55)||(current_byte == 0x52)) {
+                                 current_op_value.push_back(current_byte);
+                                 addr++;
+                                 current_byte = content[addr];
+                                 break;
                         }
-                    }
-                    else{
-                        //here, should be actual text (I think)
-                        if (!start_text) {
-
-                            //instr->AddOperande(operande(addr_,"string", current_op_value));
-                            //current_op_value.clear();
-                            start_text = true;
-                            addr_ = addr;
+                        break;
+                default:
+                    if (current_byte < 0x20){
+                        if (current_op_value.size()>0) {
+                            instr->AddOperande(operande(addr_,"dialog", current_op_value));
                         }
+                        start_text = false;
+                        current_op_value.clear();
                         current_op_value.push_back(current_byte);
+                        instr->AddOperande(operande(addr,"byte", current_op_value));
                         addr++;
-
+                        current_op_value.clear();
                     }
-                }
+                    else {
+                        if (!(start_text)) start_text = true;
+
+                        if ((current_byte < 0xE0)&&(current_byte >= 0xC0)){
+                            current_op_value.push_back(current_byte);
+                            addr++;
+                            current_byte = content[addr];
+                            current_op_value.push_back(current_byte);
+                            addr++;
+                        }
+                        else if ((current_byte >= 0xE0)&&(current_byte <= 0xF7)){
+                            current_op_value.push_back(current_byte);
+                            addr++;
+                            current_byte = content[addr];
+                            current_op_value.push_back(current_byte);
+                            addr++;
+                            current_byte = content[addr];
+                            current_op_value.push_back(current_byte);
+                            addr++;
+                        }
+                        else if ((current_byte > 0xF7)){
+                            current_op_value.push_back(current_byte);
+                            addr++;
+                        }
+                        else{
+                            current_op_value.push_back(current_byte);
+                            addr++;
+                        }
+                    }
+                    break;
+            }
+
 
             cnt++;
         }
@@ -263,7 +218,7 @@ class TXBuilder : public Builder
 
                 if (control_byte3 == 0xDD){
 
-                    //there is a XOR,XOR EDI which causes a jump that ignores the strcpy
+
                     if (param!=0)instr->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                     instr->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 }
@@ -2091,7 +2046,7 @@ class TXBuilder : public Builder
         OPCode18(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x18,Maker){
             addr++;
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            fun_140498b70(addr, content, this);
+            reading_dialog(addr, content, this);
         }
 
     };
@@ -2140,7 +2095,7 @@ class TXBuilder : public Builder
         OPCode1A(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x1A,Maker){
             addr++;
             this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            fun_140498b70(addr, content, this);
+            reading_dialog(addr, content, this);
         }
 
     };
@@ -5869,7 +5824,7 @@ class TXBuilder : public Builder
                     }
 
                     case 0x01:{
-                        //fun_140498b70(addr, content, this);
+                        //reading_dialog(addr, content, this);
                         this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                         this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
                         break;

@@ -275,6 +275,7 @@ this is a problem for some broken files that we would want to restore (example i
 void Instruction::AddOperande(operande op){
 
     QByteArray value = op.getValue();
+
     if (op.getType()=="string"){
         QTextCodec::ConverterState state;
 
