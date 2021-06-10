@@ -31,11 +31,11 @@ public:
     bool ReadDAT(QFile &File);
     bool ReadFile(QString filepath);
     bool UpdateCurrentTF();
-    bool WriteXLSX();
-    bool WriteDAT();
-    bool CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files);
+    bool WriteXLSX(QString output_folder);
+    bool WriteDAT(QString output_folder);
+    bool CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files, QString output_folder);
     TranslationFile GetTF();
-    bool WriteFile(QString filepath);
+    bool WriteFile(QString filepath, QString output_folder);
 
 private:
     TranslationFile CurrentTF;

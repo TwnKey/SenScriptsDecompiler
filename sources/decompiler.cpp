@@ -87,8 +87,8 @@ bool Decompiler::ReadDAT(QFile &File){
     UpdateCurrentTF();
     return true;
 }
-bool Decompiler::WriteDAT(){
-    QString folder = QCoreApplication::applicationDirPath() + "/recompiled_files/";
+bool Decompiler::WriteDAT(QString folder){
+
 
     QByteArray functions, current_fun, file_content;
 
@@ -134,7 +134,7 @@ bool Decompiler::WriteDAT(){
     QDir dir(folder);
     if (!dir.exists()) dir.mkpath(".");
 
-    QString output_path = folder + CurrentTF.getName() + ".dat";
+    QString output_path = folder + "\\"+CurrentTF.getName() + ".dat";
     QFile file(output_path);
 
     file.open(QIODevice::WriteOnly);
@@ -143,7 +143,7 @@ bool Decompiler::WriteDAT(){
     display_text("File "+output_path+" created.");
     return true;
 }
-bool Decompiler::WriteXLSX(){
+bool Decompiler::WriteXLSX(QString output_folder){
 
     QFont font = QFont("Arial");
     QString filename = CurrentTF.getName() + ".xlsx";
@@ -223,11 +223,16 @@ bool Decompiler::WriteXLSX(){
             excel_row+=2;
         }
     }
-    display_text("File "+filename+" created.");
-    excelScenarioSheet.saveAs(filename);
+    display_text("File "+output_folder+"\\"+filename+" created.");
+    QDir dir(output_folder);
+    if (!dir.exists()) dir.mkpath(".");
+    excelScenarioSheet.saveAs(output_folder+"\\"+filename);
     return true;
 }
-bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files){
+
+
+
+bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files,QString output_folder){
         QFile file("C:\\Users\\Antoine\\Desktop\\log.txt");
 
         QTextStream stream(&file);
@@ -246,11 +251,11 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         qDebug() << "reading dat1 file" << full_path;
         this->ReadFile(full_path);
         qDebug() << "reading dat done." << full_path;
-        this->WriteXLSX();
+        this->WriteXLSX(output_folder);
         qDebug() << "reading xlsx file" << folder_for_generated_files + croped_fileName + ".xlsx";
         this->ReadFile(folder_for_generated_files + croped_fileName + ".xlsx");
         qDebug() << "writing dat file";
-        this->WriteDAT();
+        this->WriteDAT(output_folder);
         qDebug() << "full done";
         qDebug() << "reading dat file" << folder_for_generated_files + "/recompiled_files"+ filename;
         qDebug() << "reading dat file" << full_path_ref;
@@ -308,13 +313,12 @@ bool Decompiler::ReadFile(QString filepath){
     }
     return true;
 }
-bool Decompiler::WriteFile(QString filepath){
-
+bool Decompiler::WriteFile(QString filepath, QString output_folder){
 
     QFile file(filepath);
     QFileInfo infoFile(file);
-    if (infoFile.suffix()=="dat") WriteXLSX();
-    else if (infoFile.suffix()=="xlsx") WriteDAT();
+    if (infoFile.suffix()=="dat") WriteXLSX(output_folder);
+    else if (infoFile.suffix()=="xlsx") WriteDAT(output_folder);
     else {
         display_text("FAILURE: Unrecognized extension.");
         return false;
