@@ -75,19 +75,35 @@ int main(int argc, char *argv[])
         display_text("If you need more assistance, please join the discord server for modding Trails games: https://discord.gg/XpFrXWht6j");
         display_text("Credits to NZerker and kirigaia for their support and testing.");
     }
-    else
+    else if (argc >= 2)
     {
-        const QString full_path = QCoreApplication::arguments().at(1);
-        QDir directory = QFileInfo(full_path).absoluteDir();
-        QString file = QFileInfo(full_path).fileName();
-        QStringList dat = directory.entryList(QStringList() << file,QDir::Files);
-        foreach(QString file_, dat){
+        QString full_path;
+        if (argc > 2) {
+            Game = QCoreApplication::arguments().at(1);
+            full_path = QCoreApplication::arguments().at(2);
+        }
+        else {
+            full_path = QCoreApplication::arguments().at(1);
+        }
+        QFileInfo info_file = QFileInfo(full_path);
 
-            Decompiler Dc;
+        QDir directory = info_file.absoluteDir();
+        QString file = info_file.fileName();
+        QFileInfoList dat = directory.entryInfoList(QStringList() << file,QDir::Files);
 
-            Dc.SetupGame(Game);
-            Dc.ReadFile(file_);
-            Dc.WriteFile(file_);
+        if (!dat.isEmpty())
+        {
+            foreach(QFileInfo file_, dat){
+
+                Decompiler Dc;
+
+                Dc.SetupGame(Game);
+                Dc.ReadFile(file_.absoluteFilePath());
+                Dc.WriteFile(file_.absoluteFilePath());
+            }
+        }
+        else {
+            display_text("No file was found.");
         }
     }
 
