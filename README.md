@@ -1,9 +1,8 @@
 # Sen Scripts Decompiler
 
-This tool was originally meant to decompile the scenario files from The Legend of Heroes: Trails of Cold Steel III, located in data/scripts/scena and talk.\
-Then I added support for ani, btl, ui, book.\
-Then I added support for CS1, CS2, Tokyo Xanadu and CS4.\
-I don't know about Hajimari.
+This tool was originally meant to decompile the scenario files from The Legend of Heroes: Trails of Cold Steel III for translation purpose,
+but the modding community asked me to make it compatible with the other CS games. I plan to update it for Hajimari no Kiseki
+as soon as the August CLE release happens.
 
 # Warning
 When creating custom functions in XLSX files, never call your function with a name starting with "\_". I don't see a reason to do that and it's safer not to.
@@ -37,27 +36,23 @@ Here are some examples of what could be done:
 - Making new scenes and stealing crafts from other characters: https://www.youtube.com/watch?v=2RlzRV6KvjA
 - Playable Azure Siegfried in CS3: https://www.youtube.com/watch?v=pDbCoFvR1eQ
 
-# Why QT?
-I wanted to use Qt for the QXlsx library https://github.com/QtExcel/QXlsx which I believe is the most feature-complete library existing for XLSX file creation. 
-I know the XLSX format can be problematic, but I find it useful for pointers and formulas. It also doesn't require a special environment like Python,
-which was the main issue I had with EDDecompiler, used for Sky and Crossbell games (although it's probably the only issue I had with it, fantastic tool).
-
-I won't make other output files formats to suit your needs, because it would complexify the tool even more and I don't want that to happen. 
-You will have to create your own tools to parse my output files, such as https://github.com/Megaflan/Erebonia which is used for translation of Cold Steel games.
-
 # How to use
 
 First, make sure to fill out the "config.ini" file depending on your settings. You have to specify which game the dat files are from.
 Example of "config.ini" file:
 
-[General]
+[General]\
 Game = "TX"                                 <- The game the files are from, possible games are: "TX", "CS1", "CS2", "CS3", "CS4"\
 InputDatFileEncoding = "UTF-8"              <- Encoding used in the input dat files (sometimes it can be Shift-JIS)\
 OutputDatFileEncoding = "UTF-8"             <- Encoding used in the output dat files 
 
 Then, just drag & drop the dat/xlsx file to the SenScriptsDecompiler exe and it will produce the desired output.
 
-You can also run it from batch files by using SenScriptsDecompiler.exe "filepath", and cover multiple files by using  "folder_containing_dats/*.dat"
+You can also use command lines as follows:\
+SenScriptsDecompiler.exe <filepath_to_convert>\
+SenScriptsDecompiler.exe <Game> <filepath_to_convert>\
+SenScriptsDecompiler.exe <Game> <filepath_to_convert> <output_folder>\
+
 # Status
 
 Below are some issues that can happen with this tool in its current state:
@@ -65,7 +60,7 @@ Below are some issues that can happen with this tool in its current state:
 - Some instructions in the files might not be correctly delimited
 - Bad quality of code (I'm still some sort of beginner, actually very insecure about that, please give me advice!)
 - Some types might not be accurate (float / int) (easy to fix, though)
-- Some pointers might be missing (easy to fix, though)
 - Some (a very small amount though) files might be broken and therefore not supported.
 
-If anybody finds a bug or any issue at all, please contact me immediately at feitaishi45@gmail.com
+If anybody finds a bug or any issue at all, please contact me immediately at feitaishi45@gmail.com or report the issue on github
+
