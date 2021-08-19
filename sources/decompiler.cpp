@@ -223,10 +223,13 @@ bool Decompiler::WriteXLSX(QString output_folder){
             excel_row+=2;
         }
     }
-    display_text("File "+output_folder+"\\"+filename+" created.");
+
+    QString xlsx_output_file = QDir::toNativeSeparators(output_folder + "/" + filename);
+
+    display_text("File " +xlsx_output_file + " created.");
     QDir dir(output_folder);
     if (!dir.exists()) dir.mkpath(".");
-    excelScenarioSheet.saveAs(output_folder+"\\"+filename);
+    excelScenarioSheet.saveAs(xlsx_output_file);
     return true;
 }
 
