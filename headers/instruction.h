@@ -2,6 +2,7 @@
 #define INSTRUCTION_H
 #include <QString>
 #include <QDebug>
+#include <cmath>
 #include "headers/operande.h"
 #include "headers/Builder.h"
 
