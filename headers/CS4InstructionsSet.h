@@ -1850,7 +1850,7 @@ class CS4Builder : public Builder
 
                 QByteArray control_byte = ReadSubByteArray(content, addr, 1);
                 this->AddOperande(operande(addr,"byte", control_byte));
-                switch((unsigned char) control_byte[0] == 0){
+                switch((unsigned char) control_byte[0]){
                     case 0:
                     case 1:
                     case 2:
