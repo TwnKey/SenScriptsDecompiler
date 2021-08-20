@@ -41,5 +41,8 @@ HEADERS += \
     headers/decompiler.h \
     headers/translationfile.h \
     headers/utilities.h
-QMAKE_CXXFLAGS += /bigobj
+
+win32-msvc* {
+    QMAKE_CXXFLAGS += /bigobj
+}
 
