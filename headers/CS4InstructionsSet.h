@@ -147,7 +147,7 @@ class CS4Builder : public Builder
                               }
 
                            }
-                        else if(((current_byte + 0xb7 & 0xdf) == 0)||(current_byte == 0x50)||(current_byte == 0x54)||(current_byte == 0x57)||
+                    else if((((current_byte + 0xb7) & 0xdf) == 0)||(current_byte == 0x50)||(current_byte == 0x54)||(current_byte == 0x57)||
                                  (current_byte == 0x53)||(current_byte == 0x73)||(current_byte == 0x43)||(current_byte == 99)||(current_byte == 0x78)||
                                  (current_byte == 0x79)||(current_byte == 0x47)||(current_byte == 0x44)||(current_byte == 0x55)||(current_byte == 0x52)) {
                                  current_op_value.push_back(current_byte);
