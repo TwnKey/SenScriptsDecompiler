@@ -766,8 +766,6 @@ class CS3Builder : public Builder
         FieldMonsterData(int addr, Builder *Maker):Instruction(addr,"FieldMonsterData", 266, Maker){}
         FieldMonsterData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"FieldMonsterData", 266,Maker){
 
-            int first_integer;
-            first_integer = ReadIntegerFromByteArray(addr, content);
 
             QByteArray first_integer_bytes = ReadSubByteArray(content, addr,4);
             this->AddOperande(operande(addr,"int", first_integer_bytes));

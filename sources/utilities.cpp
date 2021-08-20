@@ -33,7 +33,6 @@ int ReadIntegerFromByteArray(int start_pos, QByteArray &content){
             + ((static_cast<unsigned int>(content[start_pos+1]) & 0xFF) << 8)
             + ((static_cast<unsigned int>(content[start_pos+2]) & 0xFF) << 16)
             + ((static_cast<unsigned int>(content[start_pos+3]) & 0xFF) << 24);
-    start_pos+=4;
     return size;
 
 }

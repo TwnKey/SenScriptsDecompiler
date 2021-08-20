@@ -427,7 +427,6 @@ class CS4Builder : public Builder
         EffectsInstr(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"EffectsInstr", 257,Maker){
 
             unsigned char current_byte = content[addr];
-            int initial_addr = addr;
             while (current_byte!=0x01){
 
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
@@ -800,8 +799,6 @@ class CS4Builder : public Builder
         FieldMonsterData(int addr, Builder *Maker):Instruction(addr,"FieldMonsterData", 266, Maker){}
         FieldMonsterData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"FieldMonsterData", 266,Maker){
 
-            int first_integer;
-            first_integer = ReadIntegerFromByteArray(addr, content);
 
             QByteArray first_integer_bytes = ReadSubByteArray(content, addr,4);
             this->AddOperande(operande(addr,"int", first_integer_bytes));

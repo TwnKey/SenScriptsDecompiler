@@ -440,7 +440,6 @@ class CS2Builder : public Builder
         EffectsInstr(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"EffectsInstr", 257,Maker){}
         EffectsInstr(int addr, Builder *Maker):Instruction(addr,"EffectsInstr", 257, Maker){}
         EffectsInstr(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"EffectsInstr", 257,Maker){
-            unsigned char current_byte = content[addr];
             bool bytes_blocks_remain = Maker->goal >= addr+0x28;
 
             while (bytes_blocks_remain){
@@ -458,7 +457,6 @@ class CS2Builder : public Builder
                 fill.setBytesToFill(0x20);
                 this->AddOperande(fill);
 
-                current_byte = content[addr];
                 bytes_blocks_remain = Maker->goal >= addr+0x28;
 
             }
@@ -474,14 +472,12 @@ class CS2Builder : public Builder
         ActionTable(int addr, Builder *Maker):Instruction(addr,"ActionTable", 258, Maker){}
         ActionTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"ActionTable", 258,Maker){
 
-            short shrt = 0;
             unsigned char current_byte = content[addr];
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
             int cnt = 0;
             while(cnt < current_byte){
 
 
-                shrt = ReadShortFromByteArray(addr, content);
 
                 QByteArray short_bytes = ReadSubByteArray(content, addr,2);
                 this->AddOperande(operande(addr,"short", short_bytes));//2
@@ -617,7 +613,6 @@ class CS2Builder : public Builder
 
 
                 this->AddOperande(operande(addr,"bytearray", ReadSubByteArray(content, addr,0x1E)));
-                short shrt = ReadShortFromByteArray(0, short_bytes);
                 if (addr+0x20 > Maker->goal) return;
                 cnt++;
             }
@@ -812,8 +807,6 @@ class CS2Builder : public Builder
         FieldMonsterData(int addr, Builder *Maker):Instruction(addr,"FieldMonsterData", 266, Maker){}
         FieldMonsterData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"FieldMonsterData", 266,Maker){
 
-            int first_integer;
-            first_integer = ReadIntegerFromByteArray(addr, content);
 
             QByteArray first_integer_bytes = ReadSubByteArray(content, addr,4);
             this->AddOperande(operande(addr,"int", first_integer_bytes));

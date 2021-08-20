@@ -445,14 +445,12 @@ class CS1Builder : public Builder
         ActionTable(int addr, Builder *Maker):Instruction(addr,"ActionTable", 258, Maker){}
         ActionTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"ActionTable", 258,Maker){
 
-            short shrt = 0;
             unsigned char current_byte = content[addr];
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
             int cnt = 0;
             while(cnt < current_byte){
 
 
-                shrt = ReadShortFromByteArray(addr, content);
 
                 QByteArray short_bytes = ReadSubByteArray(content, addr,2);
                 this->AddOperande(operande(addr,"short", short_bytes));//2
@@ -730,8 +728,6 @@ class CS1Builder : public Builder
         FieldMonsterData(int addr, Builder *Maker):Instruction(addr,"FieldMonsterData", 266, Maker){}
         FieldMonsterData(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"FieldMonsterData", 266,Maker){
 
-            int first_integer;
-            first_integer = ReadIntegerFromByteArray(addr, content);
 
             QByteArray first_integer_bytes = ReadSubByteArray(content, addr,4);
             this->AddOperande(operande(addr,"int", first_integer_bytes));

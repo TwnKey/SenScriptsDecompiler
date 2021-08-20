@@ -173,7 +173,6 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
     else if (fun.name.startsWith("BookData")){ //Book: the first short read is crucial I think. 0 = text incoming; not zero =
         QRegExp rx("BookData(\\d+[A-Z]?)_(\\d+)");
         std::vector<int> result;
-        int Nb_Book = rx.cap(1).toInt();
 
         rx.indexIn(fun.name, 0);
         int Nb_Data = rx.cap(2).toInt();
@@ -358,7 +357,6 @@ bool Builder::UpdatePointersXLSX(){
 }
 int Builder::find_function(uint addr){
     int result = -1;
-    bool success = false;
     uint fun_addr = FunctionsParsed[0].actual_addr;
 
     for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
@@ -367,7 +365,6 @@ int Builder::find_function(uint addr){
         if (addr<fun_addr) {
 
             result = idx_fun-1;
-            success = true;
             break;
         }
 
@@ -400,15 +397,12 @@ int Builder::find_instruction(uint addr, function fun){
 }
 int Builder::find_operande(uint addr, Instruction instr){//NOT USEFUL! Since we should point towards OP codes exclusively
 
-    int idx_operande = 0, result = -1;
-    bool success = false;
+    int idx_operande = 0;
     for (;idx_operande < instr.get_Nb_operandes(); idx_operande++){
 
         operande ope = instr.get_operande(idx_operande);
         int ope_addr = ope.getAddr();
         if (addr==ope_addr) {
-            success = true;
-            result = idx_operande;
             break;
         }
     }
