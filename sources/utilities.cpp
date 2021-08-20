@@ -2,7 +2,7 @@
 
 void display_text(QString text){
     QTextStream out(stdout);
-    out << text << endl;
+    out << text << Qt::endl;
 }
 QString ConvertBytesToString(QByteArray Bytes){
     QString DataAsString = QString::fromStdString(Bytes.toStdString());

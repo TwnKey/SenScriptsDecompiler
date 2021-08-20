@@ -280,8 +280,8 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         int ref_size = content2.size();
         for (int i=0; i< ref_size; i++){
             if (content1[i]!=content2[i]) {
-                stream << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-                qDebug() << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                stream << "Mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                qDebug() << "Mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
             }
         }
         if (content1.size()<ref_size) {
@@ -296,7 +296,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
             }
 
         }
-        stream << " Size 1: " << hex << content1.size() << " vs Size 2: " << hex << content2.size();
+        stream << " Size 1: " << Qt::hex << content1.size() << " vs Size 2: " << Qt::hex << content2.size();
 
 
     }

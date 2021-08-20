@@ -389,7 +389,7 @@ int Builder::find_instruction(uint addr, function fun){
     }
 
     if (!success) {
-        qDebug() << hex << addr;
+        qDebug() << Qt::hex << addr;
         display_text("Couldn't find an instruction!");
     }
 
