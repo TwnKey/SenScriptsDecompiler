@@ -6283,7 +6283,7 @@ class TXBuilder : public Builder
             addr++;
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr,"byte", control_byte));
-            switch((unsigned char)control_byte[0]){
+            switch(control_byte[0]){
             case 0x01   :
             case 0x00:{
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));

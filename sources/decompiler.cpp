@@ -122,7 +122,7 @@ bool Decompiler::WriteDAT(QString folder){
     if (CurrentTF.getNbFunctions()-1>=0){
         function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size()-1];
         current_fun.clear();
-        for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
+        for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
         }
         functions.push_back(current_fun);

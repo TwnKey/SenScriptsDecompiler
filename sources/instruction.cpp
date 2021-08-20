@@ -166,7 +166,7 @@ int Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<func
     excelScenarioSheet.write(row, col + 2, "OP Code",FormatType);
     excelScenarioSheet.write(row+1, col + 2, OPCode,FormatOP);
     int col_cnt = 0;
-    for (int idx_op = 0; idx_op<operandes.size(); idx_op++){
+    for (uint idx_op = 0; idx_op < operandes.size(); idx_op++){
 
         QString type = operandes[idx_op].getType();
         QByteArray Value = operandes[idx_op].getValue();

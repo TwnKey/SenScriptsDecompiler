@@ -183,7 +183,7 @@ int Builder::ReadIndividualFunction(function &fun,QByteArray &dat_content){
 
     }
     else if (fun.name.startsWith("_")) {
-        if ((fun.name != "_"+previous_fun_name)||fun.end_addr == dat_content.size()) //last one is for btl1006, cs3; not cool but I'm starting to feel like the "_" functions are just not supposed to exist, so this hack only helps me checking the integrity of the files
+        if ((fun.name != "_"+previous_fun_name)||fun.end_addr == static_cast<uint>(dat_content.size())) //last one is for btl1006, cs3; not cool but I'm starting to feel like the "_" functions are just not supposed to exist, so this hack only helps me checking the integrity of the files
         {
          function_type = 2;
         }
@@ -401,7 +401,7 @@ int Builder::find_operande(uint addr, Instruction instr){//NOT USEFUL! Since we 
     for (;idx_operande < instr.get_Nb_operandes(); idx_operande++){
 
         operande ope = instr.get_operande(idx_operande);
-        int ope_addr = ope.getAddr();
+        uint ope_addr = ope.getAddr();
         if (addr==ope_addr) {
             break;
         }
