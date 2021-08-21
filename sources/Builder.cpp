@@ -357,10 +357,9 @@ bool Builder::UpdatePointersXLSX(){
 }
 int Builder::find_function(uint addr){
     int result = -1;
-    uint fun_addr = FunctionsParsed[0].actual_addr;
 
     for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++){
-        fun_addr = FunctionsParsed[idx_fun].actual_addr;
+        uint fun_addr = FunctionsParsed[idx_fun].actual_addr;
 
         if (addr<fun_addr) {
 

@@ -74,7 +74,7 @@ float QByteArrayToFloat(QByteArray &arr) //thanks to jabk https://stackoverflow.
 short ReadShortFromByteArray(int start_pos, QByteArray &content){
     short size = ((static_cast<short>(content[start_pos+0]) & 0xFF) << 0)
              + ((static_cast<short>(content[start_pos+1]) & 0xFF) << 8);
-    start_pos+=2;
+
     return size;
 }
 QByteArray ReadSubByteArray(QByteArray &content, int &addr, int size){

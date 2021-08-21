@@ -1331,7 +1331,6 @@ class CS4Builder : public Builder
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//0x1A
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//0x1E
                 this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));//0x22
-                QString fun_name = ReadStringFromByteArray(addr, content);
                 this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
 

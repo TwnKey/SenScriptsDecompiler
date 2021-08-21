@@ -79,7 +79,6 @@ bool Decompiler::ReadDAT(QFile &File){
     }
 
     QByteArray content = File.readAll();
-    QFileInfo info(File);
 
     IB->CreateHeaderFromDAT(content);
     IB->ReadFunctionsDAT(content);
@@ -104,7 +103,6 @@ bool Decompiler::WriteDAT(QString folder){
 
 
         for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
-            QByteArray qb = fun.InstructionsInFunction[idx_instr]->getBytes();
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
 
         }
