@@ -863,7 +863,7 @@ class CS3Builder : public Builder
         OPCode0():Instruction(-1,0,nullptr){}
         OPCode0(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"Instruction 0", 0,Maker){}
         OPCode0(int addr, Builder *Maker):Instruction(addr,"Instruction 0", 0, Maker){}
-        OPCode0(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"Instruction 0", 0,Maker){
+        OPCode0(int &addr, [[maybe_unused]] QByteArray &content,Builder *Maker):Instruction(addr,"Instruction 0", 0,Maker){
             addr++;
 
         }
@@ -876,7 +876,7 @@ class CS3Builder : public Builder
         OPCode1():Instruction(-1,1,nullptr){}
         OPCode1(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"Return", 1,Maker){}
         OPCode1(int addr, Builder *Maker):Instruction(addr,"Return",1,Maker){}
-        OPCode1(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"Return", 1,Maker){
+        OPCode1(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"Return", 1,Maker){
             addr++;
         }
 
@@ -1426,7 +1426,7 @@ class CS3Builder : public Builder
         OPCode26():Instruction(-1,0x26,nullptr){}
         OPCode26(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x26,Maker){}
         OPCode26(int addr, Builder *Maker):Instruction(addr,"???",0x26,Maker){}
-        OPCode26(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x26,Maker){
+        OPCode26(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x26,Maker){
                 addr++;
         }
 
@@ -4011,7 +4011,7 @@ class CS3Builder : public Builder
         OPCode62():Instruction(-1,0x62,nullptr){}
         OPCode62(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x62,Maker){}
         OPCode62(int addr, Builder *Maker):Instruction(addr,"???",0x62,Maker){}
-        OPCode62(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x62,Maker){
+        OPCode62(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x62,Maker){
                 addr++;
         }
     };
@@ -5000,7 +5000,7 @@ class CS3Builder : public Builder
         OPCode8F():Instruction(-1,0x8F,nullptr){}
         OPCode8F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0x8F", 0x8F,Maker){}
         OPCode8F(int addr, Builder *Maker):Instruction(addr,"0x8F",0x8F,Maker){}
-        OPCode8F(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0x8F", 0x8F, Maker){
+        OPCode8F(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"0x8F", 0x8F, Maker){
                 addr++;
         }
     };
@@ -5282,7 +5282,7 @@ class CS3Builder : public Builder
         OPCodeA0():Instruction(-1,0xA0,nullptr){}
         OPCodeA0(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xA0", 0xA0,Maker){}
         OPCodeA0(int addr, Builder *Maker):Instruction(addr,"0xA0",0xA0,Maker){}
-        OPCodeA0(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xA0", 0xA0,Maker){
+        OPCodeA0(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"0xA0", 0xA0,Maker){
                 addr++;
         }
     };
@@ -5562,7 +5562,7 @@ class CS3Builder : public Builder
         OPCodeB4():Instruction(-1,0xB4,nullptr){}
         OPCodeB4(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"0xB4", 0xB4,Maker){}
         OPCodeB4(int addr, Builder *Maker):Instruction(addr,"0xB4",0xB4,Maker){}
-        OPCodeB4(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"0xB4", 0xB4,Maker){
+        OPCodeB4(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"0xB4", 0xB4,Maker){
                 addr++;
 
 
