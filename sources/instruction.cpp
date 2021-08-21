@@ -179,7 +179,7 @@ int Instruction::WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<func
         }
         else if (type == "float"){
             excelScenarioSheet.write(row, col + 3+col_cnt, type,FormatType);
-            excelScenarioSheet.write(row+1, col + 3+col_cnt, ReadFloatFromByteArray(0,Value),FormatInstr);
+            excelScenarioSheet.write(row+1, col + 3+col_cnt, QByteArrayToFloat(Value), FormatInstr);
             col_cnt++;
         }
         else if (type == "short"){
