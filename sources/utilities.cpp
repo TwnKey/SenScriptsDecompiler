@@ -2,7 +2,7 @@
 
 void display_text(QString text){
     QTextStream out(stdout);
-    out << text << endl;
+    out << text << Qt::endl;
 }
 QString ConvertBytesToString(QByteArray Bytes){
     QString DataAsString = QString::fromStdString(Bytes.toStdString());
@@ -33,7 +33,6 @@ int ReadIntegerFromByteArray(int start_pos, QByteArray &content){
             + ((static_cast<unsigned int>(content[start_pos+1]) & 0xFF) << 8)
             + ((static_cast<unsigned int>(content[start_pos+2]) & 0xFF) << 16)
             + ((static_cast<unsigned int>(content[start_pos+3]) & 0xFF) << 24);
-    start_pos+=4;
     return size;
 
 }
@@ -61,7 +60,7 @@ QByteArray GetBytesFromShort(short i){
 
     return q_b;
 }
-float QByteArrayToFloat(QByteArray arr) //thanks to jabk https://stackoverflow.com/questions/36859447/qbytearray-to-float
+float QByteArrayToFloat(QByteArray &arr) //thanks to jabk https://stackoverflow.com/questions/36859447/qbytearray-to-float
 {
     static_assert(std::numeric_limits<float>::is_iec559, "Only supports IEC 559 (IEEE 754) float");
 
@@ -71,14 +70,11 @@ float QByteArrayToFloat(QByteArray arr) //thanks to jabk https://stackoverflow.c
 
     return *out;
 }
-float ReadFloatFromByteArray(int start_pos, QByteArray &content){
-    return QByteArrayToFloat(content);
-}
 
 short ReadShortFromByteArray(int start_pos, QByteArray &content){
     short size = ((static_cast<short>(content[start_pos+0]) & 0xFF) << 0)
              + ((static_cast<short>(content[start_pos+1]) & 0xFF) << 8);
-    start_pos+=2;
+
     return size;
 }
 QByteArray ReadSubByteArray(QByteArray &content, int &addr, int size){

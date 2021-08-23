@@ -53,7 +53,7 @@ public:
         if (Type=="string") size++;
         return size;
     }
-    int getAddr(){
+    uint getAddr(){
         return Position;
     }
     QString getType(){

@@ -79,7 +79,6 @@ bool Decompiler::ReadDAT(QFile &File){
     }
 
     QByteArray content = File.readAll();
-    QFileInfo info(File);
 
     IB->CreateHeaderFromDAT(content);
     IB->ReadFunctionsDAT(content);
@@ -104,7 +103,6 @@ bool Decompiler::WriteDAT(QString folder){
 
 
         for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
-            QByteArray qb = fun.InstructionsInFunction[idx_instr]->getBytes();
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
 
         }
@@ -122,7 +120,7 @@ bool Decompiler::WriteDAT(QString folder){
     if (CurrentTF.getNbFunctions()-1>=0){
         function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size()-1];
         current_fun.clear();
-        for (int idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
+        for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
             current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
         }
         functions.push_back(current_fun);
@@ -280,8 +278,8 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
         int ref_size = content2.size();
         for (int i=0; i< ref_size; i++){
             if (content1[i]!=content2[i]) {
-                stream << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-                qDebug() << "Mismatch at " << hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                stream << "Mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                qDebug() << "Mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
             }
         }
         if (content1.size()<ref_size) {
@@ -296,7 +294,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead, QString folder_for_refer
             }
 
         }
-        stream << " Size 1: " << hex << content1.size() << " vs Size 2: " << hex << content2.size();
+        stream << " Size 1: " << Qt::hex << content1.size() << " vs Size 2: " << Qt::hex << content2.size();
 
 
     }

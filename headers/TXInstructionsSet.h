@@ -138,7 +138,7 @@ class TXBuilder : public Builder
                               }
 
                            }
-                        else if(((current_byte + 0xb7 & 0xdf) == 0)||(current_byte == 0x50)||(current_byte == 0x54)||(current_byte == 0x57)||
+                    else if((((current_byte + 0xb7) & 0xdf) == 0)||(current_byte == 0x50)||(current_byte == 0x54)||(current_byte == 0x57)||
                                  (current_byte == 0x53)||(current_byte == 0x73)||(current_byte == 0x43)||(current_byte == 99)||(current_byte == 0x78)||
                                  (current_byte == 0x79)||(current_byte == 0x47)||(current_byte == 0x44)||(current_byte == 0x55)||(current_byte == 0x52)) {
                                  current_op_value.push_back(current_byte);
@@ -437,7 +437,6 @@ class TXBuilder : public Builder
         EffectsInstr(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"EffectsInstr", 257,Maker){}
         EffectsInstr(int addr, Builder *Maker):Instruction(addr,"EffectsInstr", 257, Maker){}
         EffectsInstr(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"EffectsInstr", 257,Maker){
-            unsigned char current_byte = content[addr];
             bool bytes_blocks_remain = Maker->goal >= addr+0x28;
 
             while (bytes_blocks_remain){
@@ -455,7 +454,6 @@ class TXBuilder : public Builder
                 fill.setBytesToFill(0x20);
                 this->AddOperande(fill);
 
-                current_byte = content[addr];
                 bytes_blocks_remain = Maker->goal >= addr+0x28;
 
             }
@@ -472,14 +470,12 @@ class TXBuilder : public Builder
         ActionTable(int addr, Builder *Maker):Instruction(addr,"ActionTable", 258, Maker){}
         ActionTable(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"ActionTable", 258,Maker){
 
-            short shrt = 0;
             unsigned char current_byte = content[addr];
             this->AddOperande(operande(addr,"byte", ReadSubByteArray(content, addr,1)));
             int cnt = 0;
             while(cnt < current_byte){
 
 
-                shrt = ReadShortFromByteArray(addr, content);
 
                 QByteArray short_bytes = ReadSubByteArray(content, addr,2);
                 this->AddOperande(operande(addr,"short", short_bytes));//2
@@ -615,7 +611,6 @@ class TXBuilder : public Builder
 
 
                 this->AddOperande(operande(addr,"bytearray", ReadSubByteArray(content, addr,0x1E)));
-                short shrt = ReadShortFromByteArray(0, short_bytes);
                 if (addr+0x20 > Maker->goal) return;
                 cnt++;
             }
@@ -909,7 +904,7 @@ class TXBuilder : public Builder
         OPCode0():Instruction(-1,0,nullptr){}
         OPCode0(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"Instruction 0", 0,Maker){}
         OPCode0(int addr, Builder *Maker):Instruction(addr,"Instruction 0", 0, Maker){}
-        OPCode0(int &addr, QByteArray &content,Builder *Maker):Instruction(addr,"Instruction 0", 0,Maker){
+        OPCode0(int &addr, [[maybe_unused]] QByteArray &content,Builder *Maker):Instruction(addr,"Instruction 0", 0,Maker){
             addr++;
 
         }
@@ -922,7 +917,7 @@ class TXBuilder : public Builder
         OPCode1():Instruction(-1,1,nullptr){}
         OPCode1(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"Return", 1,Maker){}
         OPCode1(int addr, Builder *Maker):Instruction(addr,"Return",1,Maker){}
-        OPCode1(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"Return", 1,Maker){
+        OPCode1(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"Return", 1,Maker){
             addr++;
         }
 
@@ -1970,7 +1965,6 @@ class TXBuilder : public Builder
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
-            QString fun_name = ReadStringFromByteArray(addr, content);
             this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
             this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
@@ -2117,7 +2111,7 @@ class TXBuilder : public Builder
         OPCode1C():Instruction(-1,0x1C,nullptr){}
         OPCode1C(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x1C,Maker){}
         OPCode1C(int addr, Builder *Maker):Instruction(addr,"???",0x1C,Maker){}
-        OPCode1C(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x1C,Maker){
+        OPCode1C(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x1C,Maker){
             addr++;
         }
 
@@ -4091,7 +4085,6 @@ class TXBuilder : public Builder
             QByteArray control_short3 = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr,"short", control_short3));
             ushort short1 = ReadShortFromByteArray(0, control_short);
-            ushort short2 = ReadShortFromByteArray(0, control_short2);
             QByteArray control_short4 = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr,"short", control_short4));
 
@@ -5075,7 +5068,7 @@ class TXBuilder : public Builder
         OPCode57():Instruction(-1,0x57,nullptr){}
         OPCode57(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x57,Maker){}
         OPCode57(int addr, Builder *Maker):Instruction(addr,"???",0x57,Maker){}
-        OPCode57(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x57,Maker){
+        OPCode57(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x57,Maker){
             addr++;
         }
 
@@ -5692,7 +5685,6 @@ class TXBuilder : public Builder
         OPCode67(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x67,Maker){
             addr++;
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
-            ushort control = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr,"short", control_short));
 
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
@@ -6290,7 +6282,7 @@ class TXBuilder : public Builder
             addr++;
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr,"byte", control_byte));
-            switch((unsigned char)control_byte[0]){
+            switch(control_byte[0]){
             case 0x01   :
             case 0x00:{
                 this->AddOperande(operande(addr,"short", ReadSubByteArray(content, addr,2)));
@@ -6429,7 +6421,7 @@ class TXBuilder : public Builder
         OPCode84():Instruction(-1,0x84,nullptr){}
         OPCode84(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x84,Maker){}
         OPCode84(int addr, Builder *Maker):Instruction(addr,"???",0x84,Maker){}
-        OPCode84(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x84,Maker){
+        OPCode84(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x84,Maker){
             addr++;
 
 
@@ -6794,7 +6786,7 @@ class TXBuilder : public Builder
         OPCode95():Instruction(-1,0x95,nullptr){}
         OPCode95(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x95,Maker){}
         OPCode95(int addr, Builder *Maker):Instruction(addr,"???",0x95,Maker){}
-        OPCode95(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x95,Maker){
+        OPCode95(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x95,Maker){
             addr++;
 
         }
@@ -6844,7 +6836,7 @@ class TXBuilder : public Builder
         OPCode99():Instruction(-1,0x99,nullptr){}
         OPCode99(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0x99,Maker){}
         OPCode99(int addr, Builder *Maker):Instruction(addr,"???",0x99,Maker){}
-        OPCode99(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x99,Maker){
+        OPCode99(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"???", 0x99,Maker){
             addr++;
 
         }
@@ -7236,7 +7228,7 @@ class TXBuilder : public Builder
         OPCodeA9():Instruction(-1,0xA9,nullptr){}
         OPCodeA9(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0xA9,Maker){}
         OPCodeA9(int addr, Builder *Maker):Instruction(addr,"???",0xA9,Maker){}
-        OPCodeA9(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0xA9,Maker){
+        OPCodeA9(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"???", 0xA9,Maker){
             addr++;
         }
     };
@@ -7682,7 +7674,6 @@ class TXBuilder : public Builder
             ushort control = ReadShortFromByteArray(0,control_ba);
             this->AddOperande(operande(addr,"short", control_ba));
             QByteArray control_ba2 = ReadSubByteArray(content, addr, 2);
-            ushort control2 = ReadShortFromByteArray(0,control_ba2);
             this->AddOperande(operande(addr,"short", control_ba2));
             switch(control){
                 case 0x00:{
@@ -7735,7 +7726,6 @@ class TXBuilder : public Builder
             addr++;
 
             QByteArray control_ba = ReadSubByteArray(content, addr, 2);
-            ushort control = ReadShortFromByteArray(0,control_ba);
             this->AddOperande(operande(addr,"short", control_ba));
             this->AddOperande(operande(addr,"float", ReadSubByteArray(content, addr,4)));
 
@@ -8532,7 +8522,7 @@ class TXBuilder : public Builder
         OPCodeCA():Instruction(-1,0xCA,nullptr){}
         OPCodeCA(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???", 0xCA,Maker){}
         OPCodeCA(int addr, Builder *Maker):Instruction(addr,"???",0xCA,Maker){}
-        OPCodeCA(int &addr, QByteArray &content, Builder *Maker):Instruction(addr,"???", 0xCA,Maker){
+        OPCodeCA(int &addr, [[maybe_unused]] QByteArray &content, Builder *Maker):Instruction(addr,"???", 0xCA,Maker){
             addr++;
             }
 
@@ -8750,7 +8740,7 @@ class TXBuilder : public Builder
 
                 error = true;
                 std::string result( stream.str() );
-                qFatal(result.c_str());
+                qFatal("%s", result.c_str());
 
                 return std::shared_ptr<Instruction>();
             }

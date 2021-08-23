@@ -18,7 +18,7 @@ class Instruction{
         Instruction(int addr, uint OP, Builder *Maker);
         Instruction(int addr, QString name, uint OP,Builder *Maker);
         Instruction(int &addr, int idx_row, QXlsx::Document  &excelScenarioSheet, QString name, uint OP,Builder *Maker);
-        ~Instruction();
+        virtual ~Instruction();
         virtual int WriteXLSX(QXlsx::Document &excelScenarioSheet, std::vector<function> funs, int row, int &col);
         virtual void WriteDat();
         void AddOperande(operande op);

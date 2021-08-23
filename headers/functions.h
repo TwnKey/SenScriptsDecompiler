@@ -15,7 +15,7 @@ public:
     QString name;
     int declr_position; //covers the list of offsets at the beginning
     int actual_addr; //covers the pointers before that
-    int end_addr;
+    uint end_addr;
     int XLSX_row_index;
     bool called = false; //by default
     int ID;

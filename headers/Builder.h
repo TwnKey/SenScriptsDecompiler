@@ -63,6 +63,7 @@ error: the latest instruction/function was incorrect
 class Builder{
 public:
     Builder();
+    virtual ~Builder() = default;
     virtual std::shared_ptr<Instruction> CreateInstructionFromDAT(int &addr, QByteArray &dat_content, int function_type)=0;
     virtual std::shared_ptr<Instruction> CreateInstructionFromXLSX(int &addr, int row, QXlsx::Document &xls_content)=0;
 
