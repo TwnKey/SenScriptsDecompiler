@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-2019, ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.x"
+      - name: Install build tools
+        run: pip install meson ninja
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: ${{ runner.os }}-QtCache
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: "5.15.2"
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+      - name: Prepare MSVC
+        uses: bus1/cabuild/action/msdevshell@v1
+        if: runner.os == 'Windows'
+      - name: Setup build directory
+        run: meson setup builddir/
+      - name: Build
+        run: meson compile -C builddir/
