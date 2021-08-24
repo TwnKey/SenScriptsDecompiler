@@ -1,5 +1,7 @@
 # Sen Scripts Decompiler
 
+Current Build Status: ![example workflow](https://github.com/TwnKey/SenScriptsDecompiler/actions/workflows/build/badge.svg)
+
 This tool was originally meant to decompile the scenario files from The Legend of Heroes: Trails of Cold Steel III for translation purpose,
 but the modding community asked me to make it compatible with the other CS games. I plan to update it for Hajimari no Kiseki
 as soon as the August CLE release happens.
