@@ -3,11 +3,13 @@ QT -= gui
 CONFIG += c++17 console
 CONFIG -= app_bundle
 
+INCLUDEPATH += $${PWD}/subprojects
+
 #QXlsx
-QXLSX_PARENTPATH=./qxlsx/        # current QXlsx path is . (. means curret directory)
-QXLSX_HEADERPATH=./qxlsx/headers/  # current QXlsx header path is ./header/
-QXLSX_SOURCEPATH=./qxlsx/sources/  # current QXlsx source path is ./source/
-include(./QXlsx.pri)
+QXLSX_PARENTPATH=./subprojects/qxlsx        # current QXlsx path is . (. means curret directory)
+QXLSX_HEADERPATH=$${QXLSX_PARENTPATH}/headers/  # current QXlsx header path is ./header/
+QXLSX_SOURCEPATH=$${QXLSX_PARENTPATH}/sources/  # current QXlsx source path is ./source/
+include($${QXLSX_PARENTPATH}/QXlsx.pri)
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
