@@ -47,6 +47,21 @@ qt_dep = dependency('qt5', modules: ['Core', 'Gui'])
 qxlsx_project = subproject('qxlsx', default_options: ['warning_level=0'])
 qxlsx_dep = qxlsx_project.get_variable('qxlsx_dep')
 
+clangtidy = find_program('run-clang-tidy.py', required: false)
+if clangtidy.found()
+    # Work around meson's bad clang-tidy target (https://github.com/mesonbuild/meson/issues/7200)
+    configure_file(
+        input: '.clang-tidy',
+        output: '.clang-tidy',
+        copy: true
+    )
+
+    clang_tidy_filter = '^((?!(third_party|subprojects|tests|benchmarks)).)*$'
+    run_target('clang-tidy',
+        command : ['run-clang-tidy.py', '-j' , '8', 'files', clang_tidy_filter ,'-format', '-p='+ meson.project_build_root()]
+    )
+endif
+
 executable('SenScriptsDecompiler',
     'sources/Builder.cpp',
     'sources/decompiler.cpp',
