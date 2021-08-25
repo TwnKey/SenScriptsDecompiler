@@ -1,0 +1,18 @@
+HeaderFilterRegex: "^../(sources|headers)/.*"
+Checks: >
+  *,
+  -llvmlibc-*,
+  -hicpp-*,
+  -fuchsia-default-arguments-calls,
+  -fuchsia-default-arguments-declarations,
+  -fuchsia-overloaded-operator,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -misc-non-private-member-variables-in-classes,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -cppcoreguidelines-pro-type-vararg,
+  -readability-magic-numbers,
+  modernize-*,
+  -modernize-use-bool-literals,
+  -modernize-use-trailing-return-type,
+CheckOptions:
+  - { key: readability-braces-around-statements.ShortStatementLines, value: 2 }
