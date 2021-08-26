@@ -1,6 +1,6 @@
 #include "headers/translationfile.h"
 
-TranslationFile::TranslationFile() {}
+TranslationFile::TranslationFile() = default;
 
 void TranslationFile::setName(QString name) { SceneName = name; }
 QString TranslationFile::getName() { return SceneName; }

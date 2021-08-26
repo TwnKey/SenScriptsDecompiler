@@ -7,7 +7,7 @@ The class function
 */
 class function {
   public:
-    function() {}
+    function() = default;
     function(int ID, QString n, int declr_pos, int addr, int end);
     void AddInstruction(std::shared_ptr<Instruction> instr);
     void UsingOPCodes(bool is);

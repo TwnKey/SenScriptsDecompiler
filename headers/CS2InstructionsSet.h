@@ -13,7 +13,7 @@ class CS2TranslationFile : public TranslationFile {
 };
 class CS2Builder : public Builder {
   public:
-    CS2Builder() {}
+    CS2Builder() = default;
 
     QVector<QString> CS2UIFiles = { "battle_menu", "camp_menu",   "camp_menu_v", "note_menu",   "note_menu_v",
                                     "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };
