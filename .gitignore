@@ -1,3 +1,9 @@
+# General ignores
+# compile_commands.json is used by clangd and clang-tidy
+compile_commands.json
 
-headers/CS3InstructionsSet.h.autosave
-headers/functions.h.autosave
+# Project specific ignores
+recompiled_files/
+SenScriptsDecompiler
+*.o
+*.autosave
