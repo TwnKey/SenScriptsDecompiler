@@ -55,8 +55,9 @@ int main(int argc, char* argv[]) {
     "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
     */
     if (argc < 2) {
-        for (int i = 0; i < 32; i++)
+        for (int i = 0; i < 32; i++) {
             display_text(header[i]);
+        }
         display_text("----------------------------------------------------------------------------------------------------------");
         display_text("This tool was first meant for translation projects of the Trails of Cold Steel games, starting with ToCS3.");
         display_text("Then it has become a tool for modding in general.");

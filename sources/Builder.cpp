@@ -154,12 +154,13 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
         rx.indexIn(fun.name, 0);
         int Nb_Data = rx.cap(2).toInt();
 
-        if (Nb_Data == 99)
+        if (Nb_Data == 99) {
             function_type = 14; // DATA, the 99 is clearly hardcoded; The behaviour is: 99=> two shorts (probably number
                                 // of pages) and that's it
 
-        else
+        } else {
             function_type = 15;
+        }
 
     } else if (fun.name.startsWith("_")) {
         if ((fun.name != "_" + previous_fun_name) ||
@@ -218,15 +219,17 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
                                 display_text("Incorrect instruction read at " + QString::number(current_position) + ". Skipped.");
                                 error = false;
 
-                            } else
+                            } else {
                                 fun.AddInstruction(instr);
+                            }
                         }
                         return current_position;
                     }
                 }
 
-            } else
+            } else {
                 fun.AddInstruction(instr);
+            }
             latest_op_code = instr->get_OP();
         }
     } else {

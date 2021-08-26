@@ -45,9 +45,9 @@ class CS4Builder : public Builder {
                     return;
                 case 0x01:
 
-                    if (start_text)
+                    if (start_text) {
                         current_op_value.push_back(current_byte);
-                    else {
+                    } else {
 
                         current_op_value.clear();
                         current_op_value.push_back(current_byte);
@@ -359,11 +359,12 @@ class CS4Builder : public Builder {
                     this->AddOperande(fill);
 
                 } while (counter < 0x8);
-                for (int idx_byte = 0; idx_byte < 8; idx_byte++)
+                for (int idx_byte = 0; idx_byte < 8; idx_byte++) {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                if ((unsigned char)content[addr] == 0)
+                }
+                if ((unsigned char)content[addr] == 0) {
                     this->AddOperande(operande(addr, "bytearray", ReadSubByteArray(content, addr, 8))); //??
-                else {
+                } else {
                     QByteArray monsters_name = ReadStringSubByteArray(content, addr);
                     this->AddOperande(operande(addr, "string", monsters_name));
 
@@ -3750,8 +3751,9 @@ class CS4Builder : public Builder {
                     break;
                 case 0xd:
 
-                    for (int i = 0; i < 0x18; i++)
+                    for (int i = 0; i < 0x18; i++) {
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    }
                     break;
                 case '\x0e':
                 case '\x0f':
@@ -6264,14 +6266,16 @@ class CS4Builder : public Builder {
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    for (int i = 4; i <= 0x36; i++)
+                    for (int i = 4; i <= 0x36; i++) {
                         this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    }
                     break;
 
                 case 0x2:
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    for (int i = 3; i <= 0x65; i += 2)
+                    for (int i = 3; i <= 0x65; i += 2) {
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    }
                     break;
                 case 0x3:
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -7932,9 +7936,9 @@ class CS4Builder : public Builder {
             int name_pos_int = name_pos;
             QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
             int end_addr;
-            if (idx_fun == nb_functions - 1) // we are at the last function, so it ends at the end of the file
+            if (idx_fun == nb_functions - 1) { // we are at the last function, so it ends at the end of the file
                 end_addr = dat_content.size();
-            else {
+            } else {
                 end_addr = ReadIntegerFromByteArray(next_position, dat_content);
             }
             FunctionsToParse.push_back(function(idx_fun, function_name, name_pos, addr, end_addr));
@@ -8410,14 +8414,16 @@ class CS4Builder : public Builder {
         header.append(GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4));
         header.append(GetBytesFromInt(FunctionsParsed.size()));
         int length_of_names_section = 0;
-        for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++)
+        for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
             length_of_names_section = length_of_names_section + FunctionsParsed[idx_fun].name.toUtf8().length() + 1;
+        }
         header.append(
           GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + length_of_names_section));
         header.append(GetBytesFromInt(0xABCDEF00));
         header.append(scene_name_bytes);
-        for (int i = 0; i < nb_byte_to_add_scene_name; i++)
+        for (int i = 0; i < nb_byte_to_add_scene_name; i++) {
             header.append('\x0');
+        }
 
         if (FunctionsParsed.size() > 0) {
             QByteArray position_names;
