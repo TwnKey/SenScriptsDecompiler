@@ -28,10 +28,11 @@ class operande {
         Value = value;
     }
     bool IsPointer() {
-        if ((Dest.FunctionID == -1) || (Dest.InstructionID == -1))
+        if ((Dest.FunctionID == -1) || (Dest.InstructionID == -1)) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
     QByteArray getValue() { return Value; }
     void setValue(QByteArray v) { Value = v; }

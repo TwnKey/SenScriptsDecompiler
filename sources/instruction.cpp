@@ -61,8 +61,9 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
 
             // apparently it is not possible to get the result of the formula...
 
-            for (int id = 0; id < str_max_length.toInt() - Operande_prev.toUtf8().size() - 1; id++)
+            for (int id = 0; id < str_max_length.toInt() - Operande_prev.toUtf8().size() - 1; id++) {
                 Value.push_back('\0');
+            }
 
             op = operande(addr, "fill", Value);
 
@@ -291,8 +292,9 @@ QByteArray Instruction::getBytes() {
 
         QByteArray op_bytes = it->getValue();
         if (it->getType() == "string") op_bytes.push_back('\x0');
-        for (int i = 0; i < op_bytes.size(); i++)
+        for (int i = 0; i < op_bytes.size(); i++) {
             bytes.push_back(op_bytes[i]);
+        }
     }
     return bytes;
 }

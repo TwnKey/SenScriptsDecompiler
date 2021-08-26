@@ -22,19 +22,19 @@ Decompiler::Decompiler() {}
 
 bool Decompiler::SetupGame(QString Game_) {
     Game = Game_;
-    if (Game == "CS3")
+    if (Game == "CS3") {
         IB = new CS3Builder();
-    else if (Game == "CS1") {
+    } else if (Game == "CS1") {
         IB = new CS1Builder();
     } else if (Game == "CS2") {
 
         IB = new CS2Builder();
-    } else if (Game == "CS4")
+    } else if (Game == "CS4") {
         IB = new CS4Builder();
     // else if (Game == "Hajimari") IB = new HajimariBuilder();
-    else if (Game == "TX")
+    } else if (Game == "TX") {
         IB = new TXBuilder();
-    else {
+    } else {
         display_text("FAILURE: Unrecognized game specified.");
         return false;
     }
@@ -63,8 +63,9 @@ bool Decompiler::UpdateCurrentTF() {
     CurrentTF.setName(IB->SceneName);
 
     CurrentTF.FunctionsInFile.clear();
-    for (uint idx_fun = 0; idx_fun < IB->FunctionsParsed.size(); idx_fun++)
+    for (uint idx_fun = 0; idx_fun < IB->FunctionsParsed.size(); idx_fun++) {
         CurrentTF.addFunction(IB->FunctionsParsed[idx_fun]);
+    }
 
     return true;
 }
@@ -103,8 +104,9 @@ bool Decompiler::WriteDAT(QString folder) {
 
         int next_addr = CurrentTF.FunctionsInFile[idx_fun + 1].actual_addr;
         int padding = next_addr - addr;
-        for (int i_z = 0; i_z < padding; i_z++)
+        for (int i_z = 0; i_z < padding; i_z++) {
             current_fun.push_back('\0');
+        }
         addr = next_addr;
         functions.push_back(current_fun);
     }
@@ -297,11 +299,11 @@ bool Decompiler::ReadFile(QString filepath) {
     QFile file(filepath);
     QFileInfo infoFile(file);
 
-    if (infoFile.suffix() == "xlsx")
+    if (infoFile.suffix() == "xlsx") {
         ReadXLSX(file);
-    else if (infoFile.suffix() == "dat")
+    } else if (infoFile.suffix() == "dat") {
         ReadDAT(file);
-    else {
+    } else {
         display_text("FAILURE: Unrecognized extension.");
         return false;
     }
@@ -311,11 +313,11 @@ bool Decompiler::WriteFile(QString filepath, QString output_folder) {
 
     QFile file(filepath);
     QFileInfo infoFile(file);
-    if (infoFile.suffix() == "dat")
+    if (infoFile.suffix() == "dat") {
         WriteXLSX(output_folder);
-    else if (infoFile.suffix() == "xlsx")
+    } else if (infoFile.suffix() == "xlsx") {
         WriteDAT(output_folder);
-    else {
+    } else {
         display_text("FAILURE: Unrecognized extension.");
         return false;
     }

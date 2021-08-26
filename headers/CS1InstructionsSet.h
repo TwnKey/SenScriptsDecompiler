@@ -37,9 +37,9 @@ class CS1Builder : public Builder {
                     return;
                 case 0x01:
 
-                    if (start_text)
+                    if (start_text) {
                         current_op_value.push_back(current_byte);
-                    else {
+                    } else {
 
                         current_op_value.clear();
                         current_op_value.push_back(current_byte);
@@ -341,11 +341,12 @@ class CS1Builder : public Builder {
                     this->AddOperande(fill);
 
                 } while (counter < 0x8);
-                for (int idx_byte = 0; idx_byte < 8; idx_byte++)
+                for (int idx_byte = 0; idx_byte < 8; idx_byte++) {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                if ((unsigned char)content[addr] == 0)
+                }
+                if ((unsigned char)content[addr] == 0) {
                     this->AddOperande(operande(addr, "bytearray", ReadSubByteArray(content, addr, 8))); //??
-                else {
+                } else {
                     QByteArray monsters_name = ReadStringSubByteArray(content, addr);
                     this->AddOperande(operande(addr, "string", monsters_name));
 
@@ -2660,9 +2661,9 @@ class CS1Builder : public Builder {
                 }
                 case '\x12': {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    for (int i = 0; i < 8; i++)
+                    for (int i = 0; i < 8; i++) {
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-
+                    }
                     break;
                 }
                 case '\x13': {
@@ -5943,8 +5944,9 @@ class CS1Builder : public Builder {
         int OP = (dat_content[addr] & 0xFF);
 
         int i = CS1UIFiles.indexOf(SceneName);
-        if ((i != -1) && (OP == 0x13))
+        if ((i != -1) && (OP == 0x13)) {
             return std::make_shared<UI_OP13>(addr, dat_content, this); // UI files have a special 0x13 instruction
+        }
 
         if (function_type == 0) { // the function is read with OPCodes
 
@@ -6350,9 +6352,9 @@ class CS1Builder : public Builder {
             int name_pos_int = name_pos;
             QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
             int end_addr;
-            if (idx_fun == nb_functions - 1) // we are at the last function, so it ends at the end of the file
+            if (idx_fun == nb_functions - 1) { // we are at the last function, so it ends at the end of the file
                 end_addr = dat_content.size();
-            else {
+            } else {
                 end_addr = ReadIntegerFromByteArray(next_position, dat_content);
             }
             FunctionsToParse.push_back(function(idx_fun, function_name, name_pos, addr, end_addr));
@@ -6733,8 +6735,9 @@ class CS1Builder : public Builder {
         header.append(GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4));
         header.append(GetBytesFromInt(FunctionsParsed.size()));
         int length_of_names_section = 0;
-        for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++)
+        for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
             length_of_names_section = length_of_names_section + FunctionsParsed[idx_fun].name.toUtf8().length() + 1;
+        }
         header.append(
           GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + length_of_names_section));
         header.append(GetBytesFromInt(0xABCDEF00));

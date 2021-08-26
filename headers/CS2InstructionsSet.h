@@ -37,10 +37,9 @@ class CS2Builder : public Builder {
                     return;
                 case 0x01:
 
-                    if (start_text)
+                    if (start_text) {
                         current_op_value.push_back(current_byte);
-                    else {
-
+                    } else {
                         current_op_value.clear();
                         current_op_value.push_back(current_byte);
                         instr->AddOperande(operande(addr, "byte", current_op_value));
@@ -341,9 +340,9 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x18))); //?? it's empty
                     Maker->flag_monsters = true;
                     return;
-                } else
+                } else {
                     max_nb_monsters = 8;
-
+                }
                 if (Maker->goal < addr + (0x10) * max_nb_monsters + max_nb_monsters * 2) {
 
                     addr = initial_addr;
@@ -363,12 +362,12 @@ class CS2Builder : public Builder {
 
                 } while (counter < max_nb_monsters);
 
-                for (int idx_byte = 0; idx_byte < max_nb_monsters; idx_byte++)
+                for (int idx_byte = 0; idx_byte < max_nb_monsters; idx_byte++) {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-
-                if ((unsigned char)content[addr] == 0)
+                }
+                if ((unsigned char)content[addr] == 0) {
                     this->AddOperande(operande(addr, "bytearray", ReadSubByteArray(content, addr, max_nb_monsters))); //??
-                else {
+                } else {
                     QByteArray monsters_name = ReadStringSubByteArray(content, addr);
                     this->AddOperande(operande(addr, "string", monsters_name));
 
@@ -2958,9 +2957,9 @@ class CS2Builder : public Builder {
                 }
                 case '\x12': {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    for (int i = 0; i < 8; i++)
+                    for (int i = 0; i < 8; i++) {
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-
+                    }
                     break;
                 }
                 case '\x13': {
@@ -4444,8 +4443,9 @@ class CS2Builder : public Builder {
                     break;
                 }
                 case 0x0D: {
-                    for (int i = 0; i < 0x18; i++)
+                    for (int i = 0; i < 0x18; i++) {
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    }
                     break;
                 }
                 case 0x15:
@@ -7454,8 +7454,9 @@ class CS2Builder : public Builder {
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) {
         int OP = (dat_content[addr] & 0xFF);
         int i = CS2UIFiles.indexOf(SceneName);
-        if ((i != -1) && (OP == 0x13))
+        if ((i != -1) && (OP == 0x13)) {
             return std::make_shared<UI_OP13>(addr, dat_content, this); // UI files have a special 0x13 instruction
+        }
 
         if (function_type == 0) { // the function is read with OPCodes
 
@@ -7909,9 +7910,9 @@ class CS2Builder : public Builder {
             int name_pos_int = name_pos;
             QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
             int end_addr;
-            if (idx_fun == nb_functions - 1) // we are at the last function, so it ends at the end of the file
+            if (idx_fun == nb_functions - 1) { // we are at the last function, so it ends at the end of the file
                 end_addr = dat_content.size();
-            else {
+            } else {
                 end_addr = ReadIntegerFromByteArray(next_position, dat_content);
             }
             FunctionsToParse.push_back(function(idx_fun, function_name, name_pos, addr, end_addr));
@@ -8340,8 +8341,9 @@ class CS2Builder : public Builder {
         header.append(GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4));
         header.append(GetBytesFromInt(FunctionsParsed.size()));
         int length_of_names_section = 0;
-        for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++)
+        for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
             length_of_names_section = length_of_names_section + FunctionsParsed[idx_fun].name.toUtf8().length() + 1;
+        }
         header.append(
           GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + length_of_names_section));
         header.append(GetBytesFromInt(0xABCDEF00));
