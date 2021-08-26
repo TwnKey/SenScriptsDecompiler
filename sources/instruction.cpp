@@ -14,7 +14,7 @@ Instruction::Instruction(int addr, QString name, uint OP, Builder* Maker) {
     this->name = name;
     this->Maker = Maker;
 }
-Instruction::~Instruction() {}
+Instruction::~Instruction() = default;
 Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, QString name, uint OP, Builder* Maker) {
     this->name = name;
     this->OPCode = OP;

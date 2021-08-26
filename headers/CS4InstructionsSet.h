@@ -13,7 +13,7 @@ class CS4TranslationFile : public TranslationFile {
 };
 class CS4Builder : public Builder {
   public:
-    CS4Builder() {}
+    CS4Builder() = default;
     int add_operandes(int& addr, QByteArray& content, Instruction* instr, int size) {
         int plVar15 = addr;
         int lVar5, lVar7;

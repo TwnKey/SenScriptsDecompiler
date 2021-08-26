@@ -18,7 +18,7 @@
 
 using namespace QXlsx;
 
-Decompiler::Decompiler() {}
+Decompiler::Decompiler() = default;
 
 bool Decompiler::SetupGame(QString Game_) {
     Game = Game_;

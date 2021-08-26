@@ -15,7 +15,7 @@ struct Destination {
 class operande {
 
   public:
-    operande() {}
+    operande() = default;
     operande(Destination pointer, int position, QString type, QByteArray value) {
         Dest = pointer;
         Position = position;

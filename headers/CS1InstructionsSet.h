@@ -14,7 +14,7 @@ class CS1TranslationFile : public TranslationFile {
 
 class CS1Builder : public Builder {
   public:
-    CS1Builder() {}
+    CS1Builder() = default;
 
     QVector<QString> CS1UIFiles = { "battle_menu", "camp_menu",   "camp_menu_v", "note_menu",   "note_menu_v",
                                     "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };

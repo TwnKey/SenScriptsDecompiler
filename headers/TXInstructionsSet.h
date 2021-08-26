@@ -13,7 +13,7 @@ class TXTranslationFile : public TranslationFile {
 };
 class TXBuilder : public Builder {
   public:
-    TXBuilder() {}
+    TXBuilder() = default;
 
     QVector<QString> TXUIFiles = { "battle_menu", "camp_menu",   "camp_menu_v", "note_menu",   "note_menu_v",
                                    "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };
