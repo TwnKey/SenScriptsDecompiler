@@ -3,9 +3,8 @@
 
 #include "headers/functions.h"
 
-class TranslationFile
-{
-public:
+class TranslationFile {
+  public:
     TranslationFile();
 
     void setName(QString name);
@@ -14,11 +13,8 @@ public:
     void addFunction(function fun);
     std::vector<function> FunctionsInFile;
 
-
-protected:
-
+  protected:
     QString SceneName;
-
 };
 
 #endif // TRANSLATIONFILE_H

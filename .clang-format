@@ -1,0 +1,13 @@
+---
+BasedOnStyle:  Mozilla
+ColumnLimit: 140
+BreakBeforeBraces: Attach
+ReflowComments: true
+AllowShortIfStatementsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: true
+AlwaysBreakAfterDefinitionReturnType: false
+AlwaysBreakAfterReturnType: None
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+Standard: c++20
