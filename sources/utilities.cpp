@@ -55,7 +55,7 @@ QByteArray GetBytesFromInt(int i) {
 
     return q_b;
 }
-QByteArray GetBytesFromShort(short i) {
+QByteArray GetBytesFromShort(int16_t i) {
     QByteArray q_b;
     q_b.push_back(i & 0x00ff);
     q_b.push_back((i & 0xff00) >> 8);
@@ -73,8 +73,9 @@ float QByteArrayToFloat(QByteArray& arr) // thanks to jabk https://stackoverflow
     return *out;
 }
 
-short ReadShortFromByteArray(int start_pos, QByteArray& content) {
-    short size = ((static_cast<short>(content[start_pos + 0]) & 0xFF) << 0) + ((static_cast<short>(content[start_pos + 1]) & 0xFF) << 8);
+int16_t ReadShortFromByteArray(int start_pos, QByteArray& content) {
+    int16_t size =
+      ((static_cast<int16_t>(content[start_pos + 0]) & 0xFF) << 0) + ((static_cast<int16_t>(content[start_pos + 1]) & 0xFF) << 8);
 
     return size;
 }

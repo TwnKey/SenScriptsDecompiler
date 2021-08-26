@@ -633,7 +633,7 @@ class CS2Builder : public Builder {
             int cnt = 0;
             while (cnt < current_byte) {
                 QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
-                ushort shrt = ReadShortFromByteArray(0, short_bytes);
+                uint16_t shrt = ReadShortFromByteArray(0, short_bytes);
                 this->AddOperande(operande(addr, "short", short_bytes));
                 if (shrt == 0xFFFF) break;
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -661,7 +661,7 @@ class CS2Builder : public Builder {
         ReactionTable(int& addr, QByteArray& content, Builder* Maker)
           : Instruction(addr, "ReactionTable", 263, Maker) {
             int cnt = 0;
-            ushort current_shrt = ReadShortFromByteArray(addr, content);
+            uint16_t current_shrt = ReadShortFromByteArray(addr, content);
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
             while (cnt < current_shrt) {
@@ -868,7 +868,7 @@ class CS2Builder : public Builder {
         BookDataX(int& addr, QByteArray& content, Builder* Maker)
           : Instruction(addr, "BookDataX", 270, Maker) {
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
-            short control = ReadShortFromByteArray(0, control_short);
+            int16_t control = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short)); // 3
             if (control > 0) {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4209,7 +4209,7 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr, "short", control_short));
-            short second_arg = ReadShortFromByteArray(0, control_short);
+            int16_t second_arg = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -4328,7 +4328,7 @@ class CS2Builder : public Builder {
         }
     };
     // 0x3D
-    static int FUN_00644350(ushort first_two_bytes) {
+    static int FUN_00644350(uint16_t first_two_bytes) {
         if (first_two_bytes < 0x10) {
             return 0;
         }
@@ -4353,8 +4353,8 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "short", control_short2));
             QByteArray control_short3 = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr, "short", control_short3));
-            ushort short1 = ReadShortFromByteArray(0, control_short);
-            ushort short2 = ReadShortFromByteArray(0, control_short2);
+            uint16_t short1 = ReadShortFromByteArray(0, control_short);
+            uint16_t short2 = ReadShortFromByteArray(0, control_short2);
 
             int var2 = FUN_00644350(short1);
             int var3 = FUN_00644350(short2);
@@ -5617,7 +5617,7 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x68, Maker) {
             addr++;
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
-            ushort control = ReadShortFromByteArray(0, control_short);
+            uint16_t control = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
@@ -6517,7 +6517,7 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x8E, Maker) {
             addr++;
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
-            short control = ReadShortFromByteArray(0, control_short);
+            int16_t control = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));
             switch (control) {
                 case 0x02:
@@ -7906,7 +7906,7 @@ class CS2Builder : public Builder {
             next_position = start_offset_area + 4 * (idx_fun + 1);
             int addr = ReadIntegerFromByteArray(position, dat_content);
             position = start_offset_area + 4 * nb_functions + 2 * idx_fun;
-            short name_pos = ReadShortFromByteArray(position, dat_content);
+            int16_t name_pos = ReadShortFromByteArray(position, dat_content);
             int name_pos_int = name_pos;
             QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
             int end_addr;
