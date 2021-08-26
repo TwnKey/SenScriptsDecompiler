@@ -41,7 +41,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             Value = GetBytesFromFloat(Operande);
             op = operande(addr, "float", Value);
         } else if (type == "short") {
-            ushort Operande = excelScenarioSheet.read(idx_row + 1, idx_operande).toInt();
+            uint16_t Operande = excelScenarioSheet.read(idx_row + 1, idx_operande).toInt();
             Value = GetBytesFromShort(Operande);
             op = operande(addr, "short", Value);
 
@@ -160,7 +160,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
             col_cnt++;
         } else if (type == "short") {
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, (ushort)ReadShortFromByteArray(0, Value), FormatInstr);
+            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, (uint16_t)ReadShortFromByteArray(0, Value), FormatInstr);
             col_cnt++;
         } else if (type == "byte") {
 

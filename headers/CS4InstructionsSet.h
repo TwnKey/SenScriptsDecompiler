@@ -452,7 +452,7 @@ class CS4Builder : public Builder {
         ActionTable(int& addr, QByteArray& content, Builder* Maker)
           : Instruction(addr, "ActionTable", 258, Maker) {
             int cnt = 0;
-            short shrt = 0;
+            int16_t shrt = 0;
             do {
 
                 shrt = ReadShortFromByteArray(addr, content);
@@ -549,7 +549,7 @@ class CS4Builder : public Builder {
 
             do {
                 QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
-                short shrt = ReadShortFromByteArray(0, short_bytes);
+                int16_t shrt = ReadShortFromByteArray(0, short_bytes);
                 this->AddOperande(operande(addr, "short", short_bytes));
 
                 if (shrt == 0) break;
@@ -588,7 +588,7 @@ class CS4Builder : public Builder {
             int cnt = 0;
             do {
                 QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
-                short shrt = ReadShortFromByteArray(0, short_bytes);
+                int16_t shrt = ReadShortFromByteArray(0, short_bytes);
                 this->AddOperande(operande(addr, "short", short_bytes));
                 if (shrt == 0) break;
                 QByteArray short_bytes2 = ReadSubByteArray(content, addr, 2);
@@ -616,7 +616,7 @@ class CS4Builder : public Builder {
             int cnt = 0;
             do {
                 QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
-                ushort shrt = ReadShortFromByteArray(0, short_bytes);
+                uint16_t shrt = ReadShortFromByteArray(0, short_bytes);
                 this->AddOperande(operande(addr, "short", short_bytes));
                 if (shrt == 0xFFFF) break;
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -647,7 +647,7 @@ class CS4Builder : public Builder {
             int cnt = 0;
             do {
                 QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
-                ushort shrt = ReadShortFromByteArray(0, short_bytes);
+                uint16_t shrt = ReadShortFromByteArray(0, short_bytes);
                 this->AddOperande(operande(addr, "short", short_bytes));
                 if (shrt == 0x0) break;
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -856,7 +856,7 @@ class CS4Builder : public Builder {
         BookDataX(int& addr, QByteArray& content, Builder* Maker)
           : Instruction(addr, "BookDataX", 270, Maker) {
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
-            short control = ReadShortFromByteArray(0, control_short);
+            int16_t control = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short)); // 3
             if (control > 0) {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3485,13 +3485,13 @@ class CS4Builder : public Builder {
 
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 1
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
-            short control = ReadShortFromByteArray(0, control_short);
+            int16_t control = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));                      // 3
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 5
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 9
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // D
 
-            if ((ushort)(control + 0x1feU) < 3) {
+            if ((uint16_t)(control + 0x1feU) < 3) {
 
                 this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 11 -> 15
             }
@@ -3501,7 +3501,7 @@ class CS4Builder : public Builder {
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // b
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // f
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));  // 10
-            if ((ushort)control == 0xFE05) {
+            if ((uint16_t)control == 0xFE05) {
                 while (content[addr] != '\0') {
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                 }
@@ -5075,7 +5075,7 @@ class CS4Builder : public Builder {
             addr++;
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr, "short", control_short));
-            ushort control_shrt = ReadShortFromByteArray(0, control_short);
+            uint16_t control_shrt = ReadShortFromByteArray(0, control_short);
             QByteArray control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             if ((unsigned char)(control_byte[0] - 1U) < 2) {
@@ -5777,7 +5777,7 @@ class CS4Builder : public Builder {
             addr++;
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr, "short", control_short));
-            short control_shrt = ReadShortFromByteArray(0, control_short);
+            int16_t control_shrt = ReadShortFromByteArray(0, control_short);
             switch (control_shrt) {
                 case 1:
                 case 2:
@@ -6757,7 +6757,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, "0xC0", 0xC0, Maker) {
             addr++;
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
-            short control_shrt = ReadShortFromByteArray(0, control_short);
+            int16_t control_shrt = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));
             switch (control_shrt) {
                 case 0x1:
@@ -7112,7 +7112,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, "0xCE", 0xCE, Maker) {
             addr++;
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
-            short control_shrt = ReadShortFromByteArray(0, control_short);
+            int16_t control_shrt = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));
             switch (control_shrt) {
                 case 0:
@@ -7298,7 +7298,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, "0xD2", 0xD2, Maker) {
             addr++;
             QByteArray control_short = ReadSubByteArray(content, addr, 2);
-            short control_shrt = ReadShortFromByteArray(0, control_short);
+            int16_t control_shrt = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));
             switch (control_shrt) {
                 case 0x0:
@@ -7932,7 +7932,7 @@ class CS4Builder : public Builder {
             next_position = start_offset_area + 4 * (idx_fun + 1);
             int addr = ReadIntegerFromByteArray(position, dat_content);
             position = start_offset_area + 4 * nb_functions + 2 * idx_fun;
-            short name_pos = ReadShortFromByteArray(position, dat_content);
+            int16_t name_pos = ReadShortFromByteArray(position, dat_content);
             int name_pos_int = name_pos;
             QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
             int end_addr;
