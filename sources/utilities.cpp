@@ -58,12 +58,12 @@ QByteArray GetBytesFromShort(int16_t i) {
 
     return q_b;
 }
-float QByteArrayToFloat(QByteArray& arr) // thanks to jabk https://stackoverflow.com/questions/36859447/qbytearray-to-float
+float QByteArrayToFloat(QByteArray& content) // thanks to jabk https://stackoverflow.com/questions/36859447/qbytearray-to-float
 {
     static_assert(std::numeric_limits<float>::is_iec559, "Only supports IEC 559 (IEEE 754) float");
 
-    quint32 temp =
-      ((unsigned char)arr[3] << 24) | ((unsigned char)arr[2] << 16) | ((unsigned char)arr[1] << 8) | (unsigned char)arr[0]; // Big endian
+    quint32 temp = ((unsigned char)content[3] << 24) | ((unsigned char)content[2] << 16) | ((unsigned char)content[1] << 8) |
+                   (unsigned char)content[0]; // Big endian
     auto* out = reinterpret_cast<float*>(&temp);
 
     return *out;

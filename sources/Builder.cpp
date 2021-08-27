@@ -1,17 +1,17 @@
 #include "headers/Builder.h"
 #include "headers/functions.h"
 Builder::Builder() = default;
-void Builder::ReadFunctionsXLSX(QXlsx::Document& doc) {
-    SceneName = doc.read(2, 1).toString();
+void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
+    SceneName = xls_content.read(2, 1).toString();
     int first_row = 4;
-    int last_row = doc.dimension().lastRow();
+    int last_row = xls_content.dimension().lastRow();
     int ID_fun = 0;
 
-    QString content_first_cell = doc.read(first_row, 1).toString();
+    QString content_first_cell = xls_content.read(first_row, 1).toString();
     if (content_first_cell == "FUNCTION") {
 
         function current_fun;
-        current_fun.name = doc.read(first_row, 2).toString();
+        current_fun.name = xls_content.read(first_row, 2).toString();
         current_fun.ID = ID_fun;
         int addr_instr = 0;
         current_fun.declr_position = 0;
@@ -21,10 +21,10 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& doc) {
 
         for (int idx_row = first_row + 1; idx_row < last_row; idx_row++) {
 
-            QString content_first_cell = doc.read(idx_row, 1).toString();
+            QString content_first_cell = xls_content.read(idx_row, 1).toString();
             if (content_first_cell == "FUNCTION") { // We start a new function
 
-                QString next_fun_name = doc.read(idx_row, 2).toString();
+                QString next_fun_name = xls_content.read(idx_row, 2).toString();
 
                 addr_instr = 0;
                 FunctionsParsed.push_back(current_fun);
@@ -37,7 +37,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& doc) {
 
             } else {
 
-                std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr_instr, idx_row, doc);
+                std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr_instr, idx_row, xls_content);
                 current_fun.AddInstruction(instr);
 
                 idx_row++;
