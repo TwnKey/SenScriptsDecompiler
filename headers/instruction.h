@@ -23,10 +23,10 @@ class Instruction {
     virtual void WriteDat();
     void AddOperande(operande op);
     int get_length_in_bytes();
-    int get_Nb_operandes();
-    operande get_operande(int i);
-    uint get_OP();
-    int get_addr_instr();
+    [[nodiscard]] int get_Nb_operandes() const;
+    [[nodiscard]] operande get_operande(int i) const;
+    [[nodiscard]] uint get_OP() const;
+    [[nodiscard]] int get_addr_instr() const;
     void set_addr_instr(int i);
     QByteArray getBytes();
     Builder* Maker;

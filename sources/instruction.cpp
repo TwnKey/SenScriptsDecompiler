@@ -104,10 +104,10 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
         type = excelScenarioSheet.read(idx_row, idx_operande).toString();
     }
 }
-int Instruction::get_Nb_operandes() { return operandes.size(); }
-operande Instruction::get_operande(int i) { return operandes[i]; }
+int Instruction::get_Nb_operandes() const { return operandes.size(); }
+operande Instruction::get_operande(int i) const { return operandes[i]; }
 
-int Instruction::get_addr_instr() { return this->addr_instr; }
+int Instruction::get_addr_instr() const { return this->addr_instr; }
 void Instruction::WriteDat() {}
 int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<function> funs, int row, int& col) {
     QXlsx::Format FormatInstr;
@@ -284,7 +284,7 @@ void Instruction::AddOperande(operande op) {
 }*/
 int Instruction::get_length_in_bytes() { return getBytes().size(); }
 
-uint Instruction::get_OP() { return OPCode; }
+uint Instruction::get_OP() const { return OPCode; }
 QByteArray Instruction::getBytes() {
     QByteArray bytes;
     if (OPCode <= 0xFF) bytes.push_back((unsigned char)OPCode);

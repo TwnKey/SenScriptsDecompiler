@@ -8,7 +8,7 @@ class TranslationFile {
     TranslationFile();
 
     void setName(QString name);
-    int getNbFunctions();
+    [[nodiscard]] int getNbFunctions() const;
     QString getName();
     void addFunction(function fun);
     std::vector<function> FunctionsInFile;

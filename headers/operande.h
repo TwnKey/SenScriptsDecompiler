@@ -27,7 +27,7 @@ class operande {
         Type = type;
         Value = value;
     }
-    bool IsPointer() {
+    [[nodiscard]] bool IsPointer() const {
         if ((Dest.FunctionID == -1) || (Dest.InstructionID == -1)) {
             return false;
         } else {
@@ -38,13 +38,13 @@ class operande {
     void setValue(QByteArray v) { Value = v; }
     int getIntegerValue() { return ReadIntegerFromByteArray(0, Value); }
     void setBytesToFill(int b) { bytes_to_fill = b; }
-    int getBytesToFill() { return bytes_to_fill; }
+    [[nodiscard]] int getBytesToFill() const { return bytes_to_fill; }
     int getLength() {
         int size = Value.size();
         if (Type == "string") size++;
         return size;
     }
-    uint getAddr() { return Position; }
+    [[nodiscard]] uint getAddr() const { return Position; }
     QString getType() { return Type; }
     void setDestination(int ID_fun, int ID_instr, int ID_operande) { Dest = Destination(ID_fun, ID_instr, ID_operande); }
     Destination getDestination() { return Dest; }
