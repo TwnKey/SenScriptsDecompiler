@@ -9563,7 +9563,8 @@ class TXBuilder : public Builder {
         display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
         uint position_filename = ReadIntegerFromByteArray(0x4, dat_content);
-        int position = position_filename, next_position = 0;
+        int position = position_filename;
+        int next_position = 0;
         QString filename = ReadStringFromByteArray(position, dat_content);
         SceneName = filename;
         int start_offset_area = ReadIntegerFromByteArray(0x8, dat_content);

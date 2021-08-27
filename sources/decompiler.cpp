@@ -85,7 +85,9 @@ bool Decompiler::ReadDAT(QFile& File) {
 }
 bool Decompiler::WriteDAT(QString folder) {
 
-    QByteArray functions, current_fun, file_content;
+    QByteArray functions;
+    QByteArray current_fun;
+    QByteArray file_content;
 
     int addr = 0;
     QByteArray header = IB->CreateHeaderBytes();
