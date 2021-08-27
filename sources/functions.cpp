@@ -12,7 +12,7 @@ function::function(int ID, QString n, int declr_pos, int addr, int end) {
     int nb_byte_to_add = (((int)ceil((float)addr / multiple))) * multiple - addr;
     nb_pad = nb_byte_to_add;
 }
-void function::AddInstruction(std::shared_ptr<Instruction> instr) {
+void function::AddInstruction(const std::shared_ptr<Instruction>& instr) {
     if (instr->get_OP() > 0) InstructionsInFunction.push_back(instr);
 }
 

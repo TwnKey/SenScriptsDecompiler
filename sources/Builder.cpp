@@ -354,7 +354,7 @@ int Builder::find_instruction(uint addr, function fun) {
     return result;
 }
 int Builder::find_operande(uint addr,
-                           Instruction instr) { // NOT USEFUL! Since we should point towards OP codes exclusively
+                           const Instruction& instr) { // NOT USEFUL! Since we should point towards OP codes exclusively
 
     int idx_operande = 0;
     for (; idx_operande < instr.get_Nb_operandes(); idx_operande++) {

@@ -5,7 +5,7 @@
 #include <QTextStream>
 #include <iomanip>
 #include <sstream>
-void display_text(QString text);
+void display_text(const QString& text);
 
 QString ReadStringFromByteArray(int start_pos, QByteArray& content);
 int ReadIntegerFromByteArray(int start_pos, QByteArray& content);
@@ -17,5 +17,5 @@ float QByteArrayToFloat(QByteArray& content);
 QByteArray GetBytesFromInt(int i);
 QByteArray GetBytesFromFloat(float f);
 QByteArray GetBytesFromShort(int16_t i);
-bool isMultiple0x10(QString fun_name);
+bool isMultiple0x10(const QString& fun_name);
 #endif // UTILITIES_H

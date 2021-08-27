@@ -9,7 +9,7 @@ class function {
   public:
     function() = default;
     function(int ID, QString n, int declr_pos, int addr, int end);
-    void AddInstruction(std::shared_ptr<Instruction> instr);
+    void AddInstruction(const std::shared_ptr<Instruction>& instr);
     void UsingOPCodes(bool is);
     std::vector<std::shared_ptr<Instruction>> InstructionsInFunction;
     QString name;

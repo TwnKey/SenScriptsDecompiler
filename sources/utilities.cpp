@@ -1,10 +1,10 @@
 #include "headers/utilities.h"
 
-void display_text(QString text) {
+void display_text(const QString& text) {
     QTextStream out(stdout);
     out << text << Qt::endl;
 }
-QString ConvertBytesToString(QByteArray Bytes) {
+QString ConvertBytesToString(const QByteArray& Bytes) {
     QString DataAsString = QString::fromStdString(Bytes.toStdString());
     return DataAsString;
 }
@@ -39,7 +39,7 @@ QByteArray GetBytesFromFloat(float f) {
     QByteArray array(reinterpret_cast<const char*>(&f), sizeof(f));
     return array;
 }
-bool isMultiple0x10(QString fun_name) {
+bool isMultiple0x10(const QString& fun_name) {
     return (fun_name == "PTN_TABLE") || (fun_name.startsWith("FC_auto")) || (fun_name.startsWith("_"));
 }
 QByteArray GetBytesFromInt(int i) {

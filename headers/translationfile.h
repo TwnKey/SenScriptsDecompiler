@@ -10,7 +10,7 @@ class TranslationFile {
     void setName(QString name);
     [[nodiscard]] int getNbFunctions() const;
     QString getName();
-    void addFunction(function fun);
+    void addFunction(const function& fun);
     std::vector<function> FunctionsInFile;
 
   protected:

@@ -81,7 +81,7 @@ class Builder {
 
     int find_function(uint addr);
     int find_instruction(uint addr, function fun);
-    int find_operande(uint addr, Instruction instr);
+    int find_operande(uint addr, const Instruction& instr);
     std::vector<function> FunctionsToParse;
     std::vector<function> FunctionsParsed;
     QString SceneName;

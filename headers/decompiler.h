@@ -26,13 +26,16 @@ class Decompiler {
     bool SetupGame(QString Game);
     bool ReadXLSX(QFile& File);
     bool ReadDAT(QFile& File);
-    bool ReadFile(QString filepath);
+    bool ReadFile(const QString& filepath);
     bool UpdateCurrentTF();
-    bool WriteXLSX(QString output_folder);
-    bool WriteDAT(QString output_folder);
-    bool CheckAllFiles(QStringList filesToRead, QString folder_for_reference, QString folder_for_generated_files, QString output_folder);
+    bool WriteXLSX(const QString& output_folder);
+    bool WriteDAT(const QString& output_folder);
+    bool CheckAllFiles(QStringList filesToRead,
+                       const QString& folder_for_reference,
+                       const QString& folder_for_generated_files,
+                       const QString& output_folder);
     TranslationFile GetTF();
-    bool WriteFile(QString filepath, QString output_folder);
+    bool WriteFile(const QString& filepath, const QString& output_folder);
 
   private:
     TranslationFile CurrentTF;

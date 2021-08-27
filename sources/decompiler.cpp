@@ -83,7 +83,7 @@ bool Decompiler::ReadDAT(QFile& File) {
     UpdateCurrentTF();
     return true;
 }
-bool Decompiler::WriteDAT(QString folder) {
+bool Decompiler::WriteDAT(const QString& folder) {
 
     QByteArray functions;
     QByteArray current_fun;
@@ -137,7 +137,7 @@ bool Decompiler::WriteDAT(QString folder) {
     display_text("File " + output_path + " created.");
     return true;
 }
-bool Decompiler::WriteXLSX(QString output_folder) {
+bool Decompiler::WriteXLSX(const QString& output_folder) {
 
     QFont font = QFont("Arial");
     QString filename = CurrentTF.getName() + ".xlsx";
@@ -227,9 +227,9 @@ bool Decompiler::WriteXLSX(QString output_folder) {
 }
 
 bool Decompiler::CheckAllFiles(QStringList filesToRead,
-                               QString folder_for_reference,
-                               QString folder_for_generated_files,
-                               QString output_folder) {
+                               const QString& folder_for_reference,
+                               const QString& folder_for_generated_files,
+                               const QString& output_folder) {
     QFile file("C:\\Users\\Antoine\\Desktop\\log.txt");
 
     QTextStream stream(&file);
@@ -294,7 +294,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead,
     }
     return true;
 }
-bool Decompiler::ReadFile(QString filepath) {
+bool Decompiler::ReadFile(const QString& filepath) {
     IB->Reset();
     CurrentTF = TranslationFile();
     QFile file(filepath);
@@ -310,7 +310,7 @@ bool Decompiler::ReadFile(QString filepath) {
     }
     return true;
 }
-bool Decompiler::WriteFile(QString filepath, QString output_folder) {
+bool Decompiler::WriteFile(const QString& filepath, const QString& output_folder) {
 
     QFile file(filepath);
     QFileInfo infoFile(file);
