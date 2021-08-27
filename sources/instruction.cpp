@@ -113,7 +113,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
     QXlsx::Format FormatInstr;
     QXlsx::Format FormatType;
     QXlsx::Format FormatOP;
-    QColor ColorBg = QColor(qRgb(255, 230, 210));
+    auto ColorBg = QColor(qRgb(255, 230, 210));
     FormatType.setHorizontalAlignment(QXlsx::Format::AlignHCenter);
     FormatType.setVerticalAlignment(QXlsx::Format::AlignVCenter);
     FormatType.setTextWrap(true);
@@ -229,7 +229,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
             format.setRightBorderStyle(QXlsx::Format::BorderThin);
             format.setTopBorderStyle(QXlsx::Format::BorderThin);
             format.setFontBold(true);
-            QColor FontColor = QColor(qRgb(255, 0, 0));
+            auto FontColor = QColor(qRgb(255, 0, 0));
             format.setFontColor(FontColor);
             excelScenarioSheet.write(row + 1, col + 3 + col_cnt, ptrExcel, format);
             col_cnt++;

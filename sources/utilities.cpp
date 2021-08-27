@@ -64,7 +64,7 @@ float QByteArrayToFloat(QByteArray& arr) // thanks to jabk https://stackoverflow
 
     quint32 temp =
       ((unsigned char)arr[3] << 24) | ((unsigned char)arr[2] << 16) | ((unsigned char)arr[1] << 8) | (unsigned char)arr[0]; // Big endian
-    float* out = reinterpret_cast<float*>(&temp);
+    auto* out = reinterpret_cast<float*>(&temp);
 
     return *out;
 }

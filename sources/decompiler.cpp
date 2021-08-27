@@ -145,9 +145,9 @@ bool Decompiler::WriteXLSX(const QString& output_folder) {
     Format format;
     format.setFont(font);
     format.setFontBold(true);
-    QColor DarkYellow = QColor(qRgb(255, 222, 155));
+    auto DarkYellow = QColor(qRgb(255, 222, 155));
     format.setPatternBackgroundColor(DarkYellow);
-    QColor FontColor = QColor(qRgb(255, 0, 0));
+    auto FontColor = QColor(qRgb(255, 0, 0));
 
     format.setFontColor(FontColor);
     format.setFontSize(14);

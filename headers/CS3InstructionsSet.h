@@ -701,7 +701,7 @@ class CS3Builder : public Builder {
 
             int first_integer;
             first_integer = ReadIntegerFromByteArray(addr, content);
-            std::vector<function>::iterator itt_current_fun = find_function_by_ID(Maker->FunctionsToParse, Maker->idx_current_fun);
+            auto itt_current_fun = find_function_by_ID(Maker->FunctionsToParse, Maker->idx_current_fun);
             while (first_integer != 0) {
                 itt_current_fun->AddInstruction(std::make_shared<AnimeClipData>(addr, content, Maker));
                 first_integer = ReadIntegerFromByteArray(addr, content);
