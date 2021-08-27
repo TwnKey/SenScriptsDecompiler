@@ -37,7 +37,7 @@ class Instruction {
     int addr_instr;
     uint OPCode;
     QString name;
-    int length_in_bytes;
+    int length_in_bytes = 0;
 };
 
 #endif // INSTRUCTION_H

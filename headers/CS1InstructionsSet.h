@@ -675,8 +675,7 @@ class CS1Builder : public Builder {
         AnimeClipTable(int& addr, QByteArray& content, Builder* Maker)
           : Instruction(addr, "AnimeClipTable", 265, Maker) {
 
-            int first_integer;
-            first_integer = ReadIntegerFromByteArray(addr, content);
+            int first_integer = ReadIntegerFromByteArray(addr, content);
 
             while (first_integer != 0) {
                 QByteArray first_integer_bytes = ReadSubByteArray(content, addr, 4);
@@ -6353,7 +6352,7 @@ class CS1Builder : public Builder {
             int16_t name_pos = ReadShortFromByteArray(position, dat_content);
             int name_pos_int = name_pos;
             QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
-            int end_addr;
+            int end_addr = 0;
             if (idx_fun == nb_functions - 1) { // we are at the last function, so it ends at the end of the file
                 end_addr = dat_content.size();
             } else {

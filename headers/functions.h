@@ -13,15 +13,15 @@ class function {
     void UsingOPCodes(bool is);
     std::vector<std::shared_ptr<Instruction>> InstructionsInFunction;
     QString name;
-    int declr_position; // covers the list of offsets at the beginning
-    int actual_addr;    // covers the pointers before that
-    uint end_addr;
-    int XLSX_row_index;
+    int declr_position = 0; // covers the list of offsets at the beginning
+    int actual_addr = 0;    // covers the pointers before that
+    uint end_addr = 0;
+    int XLSX_row_index = 0;
     bool called = false; // by default
-    int ID;
+    int ID = 0;
     friend bool operator<(const function& f1, const function& f2);
     friend bool operator==(const function& f1, const function& f2);
-    int nb_pad;
+    int nb_pad = 0;
     void SetAddr(int addr);
     int get_length_in_bytes();
 };

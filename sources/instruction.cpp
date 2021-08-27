@@ -189,8 +189,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
             std::shared_ptr<Instruction> instr = Maker->CreateInstructionFromDAT(
               addr, Value, 0); // function type is 0 here because sub05 is only called by OP Code instructions.
             int column_instr = col + 3 + col_cnt - 2;
-            int cnt;
-            cnt = instr->WriteXLSX(excelScenarioSheet, funs, row, column_instr);
+            int cnt = instr->WriteXLSX(excelScenarioSheet, funs, row, column_instr);
 
             col = col + cnt + 1;
 

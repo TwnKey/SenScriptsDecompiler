@@ -89,10 +89,10 @@ class Builder {
     bool UpdatePointersXLSX();
     bool UpdatePointersDAT();
     bool Reset();
-    int goal;
+    int goal = 0;
     bool flag_monsters = false;
     bool error = false;
-    int idx_current_fun;
+    int idx_current_fun = 0;
     QString previous_fun_name = "";
 };
 #endif // INSTRUCTIONBUILDER_H

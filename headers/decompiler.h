@@ -40,7 +40,7 @@ class Decompiler {
   private:
     TranslationFile CurrentTF;
     QString Game;
-    Builder* IB;
+    Builder* IB = nullptr;
 };
 
 #endif // READER_H

@@ -16,7 +16,7 @@ class CS4Builder : public Builder {
     CS4Builder() = default;
     int add_operandes(int& addr, QByteArray& content, Instruction* instr, int size) {
         int plVar15 = addr;
-        int lVar5;
+        int lVar5 = 0;
         int lVar7 = -1;
         do {
             instr->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -725,8 +725,7 @@ class CS4Builder : public Builder {
         AnimeClipTable(int& addr, QByteArray& content, Builder* Maker)
           : Instruction(addr, "AnimeClipTable", 265, Maker) {
 
-            int first_integer;
-            first_integer = ReadIntegerFromByteArray(addr, content);
+            int first_integer = ReadIntegerFromByteArray(addr, content);
             auto itt_current_fun = find_function_by_ID(Maker->FunctionsToParse, Maker->idx_current_fun);
             while (first_integer != 0) {
                 itt_current_fun->AddInstruction(std::make_shared<AnimeClipData>(addr, content, Maker));
@@ -7936,7 +7935,7 @@ class CS4Builder : public Builder {
             int16_t name_pos = ReadShortFromByteArray(position, dat_content);
             int name_pos_int = name_pos;
             QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
-            int end_addr;
+            int end_addr = 0;
             if (idx_fun == nb_functions - 1) { // we are at the last function, so it ends at the end of the file
                 end_addr = dat_content.size();
             } else {
