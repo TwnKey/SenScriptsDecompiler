@@ -27,13 +27,9 @@ class operande {
         Type = type;
         Value = value;
     }
-    [[nodiscard]] bool IsPointer() const {
-        if ((Dest.FunctionID == -1) || (Dest.InstructionID == -1)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+
+    [[nodiscard]] bool IsPointer() const { return !((Dest.FunctionID == -1) || (Dest.InstructionID == -1)); }
+
     QByteArray getValue() { return Value; }
     void setValue(QByteArray v) { Value = v; }
     int getIntegerValue() { return ReadIntegerFromByteArray(0, Value); }

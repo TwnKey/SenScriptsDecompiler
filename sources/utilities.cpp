@@ -40,11 +40,7 @@ QByteArray GetBytesFromFloat(float f) {
     return array;
 }
 bool isMultiple0x10(QString fun_name) {
-    if ((fun_name == "PTN_TABLE") || (fun_name.startsWith("FC_auto")) || (fun_name.startsWith("_"))) {
-        return true; //||(fun_name.startsWith("ReactionTable"))
-    } else {
-        return false;
-    }
+    return (fun_name == "PTN_TABLE") || (fun_name.startsWith("FC_auto")) || (fun_name.startsWith("_"));
 }
 QByteArray GetBytesFromInt(int i) {
     QByteArray q_b;
