@@ -9134,7 +9134,7 @@ class TXBuilder : public Builder {
             addr++;
         }
     };
-    std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) {
+    std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) override {
         int OP = (dat_content[addr] & 0xFF);
         // qDebug() << "OP :" << hex << OP << " at " << addr;
         int i = TXUIFiles.indexOf(SceneName);
@@ -9559,7 +9559,7 @@ class TXBuilder : public Builder {
 
         return std::shared_ptr<Instruction>();
     }
-    bool CreateHeaderFromDAT(QByteArray& dat_content) {
+    bool CreateHeaderFromDAT(QByteArray& dat_content) override {
         display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
         uint position_filename = ReadIntegerFromByteArray(0x4, dat_content);
@@ -9586,7 +9586,7 @@ class TXBuilder : public Builder {
         display_text("Header parsed.");
         return true;
     }
-    std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) {
+    std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) override {
 
         uint OP = xls_content.read(row + 1, 2).toInt();
         int i = TXUIFiles.indexOf(SceneName);
@@ -10018,7 +10018,7 @@ class TXBuilder : public Builder {
         }
     }
 
-    QByteArray CreateHeaderBytes() {
+    QByteArray CreateHeaderBytes() override {
 
         QByteArray header;
 

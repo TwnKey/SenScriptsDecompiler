@@ -5941,7 +5941,7 @@ class CS1Builder : public Builder {
         }
     };
 
-    std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) {
+    std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) override {
         int OP = (dat_content[addr] & 0xFF);
 
         int i = CS1UIFiles.indexOf(SceneName);
@@ -6320,7 +6320,7 @@ class CS1Builder : public Builder {
 
         return std::shared_ptr<Instruction>();
     }
-    bool CreateHeaderFromDAT(QByteArray& dat_content) {
+    bool CreateHeaderFromDAT(QByteArray& dat_content) override {
 
         // Header structure:
         // The first 0x20 is something used to check if the file is a valid file: it will always be that value
@@ -6363,7 +6363,7 @@ class CS1Builder : public Builder {
         display_text("Header parsed.");
         return true;
     }
-    std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) {
+    std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) override {
 
         uint OP = xls_content.read(row + 1, 2).toInt();
         int i = CS1UIFiles.indexOf(SceneName);
@@ -6722,7 +6722,7 @@ class CS1Builder : public Builder {
         }
     }
 
-    QByteArray CreateHeaderBytes() {
+    QByteArray CreateHeaderBytes() override {
 
         QByteArray header;
 

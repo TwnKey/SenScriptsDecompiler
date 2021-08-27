@@ -7450,7 +7450,7 @@ class CS4Builder : public Builder {
             this->AddOperande(operande(addr, "byte", control_byte));
         }
     };
-    std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) {
+    std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) override {
         int OP = (dat_content[addr] & 0xFF);
         // qDebug() << hex << "OP: " << OP << " at addr " << addr << " type: " << function_type;
         if (function_type == 0) { // the function is read with OPCodes
@@ -7918,7 +7918,7 @@ class CS4Builder : public Builder {
         }
         return std::shared_ptr<Instruction>();
     }
-    bool CreateHeaderFromDAT(QByteArray& dat_content) {
+    bool CreateHeaderFromDAT(QByteArray& dat_content) override {
 
         display_text("Reading header...");
         uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
@@ -7946,7 +7946,7 @@ class CS4Builder : public Builder {
         display_text("Header parsed.");
         return true;
     }
-    std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) {
+    std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) override {
 
         uint OP = xls_content.read(row + 1, 2).toInt();
 
@@ -8397,7 +8397,7 @@ class CS4Builder : public Builder {
         }
     }
 
-    QByteArray CreateHeaderBytes() {
+    QByteArray CreateHeaderBytes() override {
 
         QByteArray header;
 
