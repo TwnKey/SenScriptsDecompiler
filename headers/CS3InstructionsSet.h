@@ -7414,7 +7414,7 @@ class CS3Builder : public Builder {
           GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + length_of_names_section));
         header.append(GetBytesFromInt(0xABCDEF00));
         header.append(scene_name_bytes);
-        if (FunctionsParsed.size() > 0) {
+        if (!FunctionsParsed.empty()) {
             QByteArray position_names;
             QByteArray actual_names;
             int offset_names = 0;

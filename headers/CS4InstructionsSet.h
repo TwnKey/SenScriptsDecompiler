@@ -8425,7 +8425,7 @@ class CS4Builder : public Builder {
             header.append('\x0');
         }
 
-        if (FunctionsParsed.size() > 0) {
+        if (!FunctionsParsed.empty()) {
             QByteArray position_names;
             QByteArray actual_names;
             int offset_names = 0;

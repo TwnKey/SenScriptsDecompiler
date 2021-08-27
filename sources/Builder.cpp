@@ -86,7 +86,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& doc) {
 
 void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
     // From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
-    if (FunctionsToParse.size() > 0) {
+    if (!FunctionsToParse.empty()) {
         for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) {
             if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)) {
                 qDebug() << "Reading function "
