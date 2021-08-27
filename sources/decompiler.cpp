@@ -63,8 +63,8 @@ bool Decompiler::UpdateCurrentTF() {
     CurrentTF.setName(IB->SceneName);
 
     CurrentTF.FunctionsInFile.clear();
-    for (uint idx_fun = 0; idx_fun < IB->FunctionsParsed.size(); idx_fun++) {
-        CurrentTF.addFunction(IB->FunctionsParsed[idx_fun]);
+    for (auto& fun : IB->FunctionsParsed) {
+        CurrentTF.addFunction(fun);
     }
 
     return true;
@@ -97,8 +97,8 @@ bool Decompiler::WriteDAT(QString folder) {
 
         current_fun.clear();
 
-        for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
-            current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
+        for (auto& instr : fun.InstructionsInFunction) {
+            current_fun.push_back(instr->getBytes());
         }
         addr = addr + current_fun.size();
 
@@ -114,8 +114,8 @@ bool Decompiler::WriteDAT(QString folder) {
     if (CurrentTF.getNbFunctions() - 1 >= 0) {
         function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size() - 1];
         current_fun.clear();
-        for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
-            current_fun.push_back(fun.InstructionsInFunction[idx_instr]->getBytes());
+        for (auto& instr : fun.InstructionsInFunction) {
+            current_fun.push_back(instr->getBytes());
         }
         functions.push_back(current_fun);
     }
@@ -200,18 +200,17 @@ bool Decompiler::WriteXLSX(QString output_folder) {
 
     rowFormatFunctions.setTopBorderStyle(QXlsx::Format::BorderThin);
     int excel_row = 4;
-    for (uint idx_fun = 0; idx_fun < CurrentTF.FunctionsInFile.size(); idx_fun++) {
-        function fun = CurrentTF.FunctionsInFile[idx_fun];
+    for (const auto& fun : CurrentTF.FunctionsInFile) {
         excelScenarioSheet.setRowFormat(excel_row, excel_row, rowFormatFunctions);
         excelScenarioSheet.write(excel_row, 1, "FUNCTION");
         excelScenarioSheet.write(excel_row, 2, fun.name);
 
         excel_row++;
-        for (uint idx_instr = 0; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
+        for (auto& instr : fun.InstructionsInFunction) {
             excelScenarioSheet.write(excel_row, 1, "Location");
-            excelScenarioSheet.write(excel_row + 1, 1, fun.InstructionsInFunction[idx_instr]->get_addr_instr());
+            excelScenarioSheet.write(excel_row + 1, 1, instr->get_addr_instr());
             int col = 0;
-            fun.InstructionsInFunction[idx_instr]->WriteXLSX(excelScenarioSheet, CurrentTF.FunctionsInFile, excel_row, col);
+            instr->WriteXLSX(excelScenarioSheet, CurrentTF.FunctionsInFile, excel_row, col);
             excel_row += 2;
         }
     }

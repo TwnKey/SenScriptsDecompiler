@@ -21,8 +21,8 @@ void function::SetAddr(int addr) { this->actual_addr = addr; }
 int function::get_length_in_bytes() {
 
     int length_in_bytes = 0;
-    for (auto it = InstructionsInFunction.begin(); it != InstructionsInFunction.end(); it++) {
-        length_in_bytes = length_in_bytes + (*it)->get_length_in_bytes();
+    for (auto& it : InstructionsInFunction) {
+        length_in_bytes = length_in_bytes + it->get_length_in_bytes();
     }
     return length_in_bytes;
 }

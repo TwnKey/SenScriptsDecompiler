@@ -145,10 +145,10 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
     excelScenarioSheet.write(row, col + 2, "OP Code", FormatType);
     excelScenarioSheet.write(row + 1, col + 2, OPCode, FormatOP);
     int col_cnt = 0;
-    for (uint idx_op = 0; idx_op < operandes.size(); idx_op++) {
+    for (auto& operande : operandes) {
 
-        QString type = operandes[idx_op].getType();
-        QByteArray Value = operandes[idx_op].getValue();
+        QString type = operande.getType();
+        QByteArray Value = operande.getValue();
 
         if (type == "int") {
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
@@ -171,15 +171,15 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
             excelScenarioSheet.write(row + 1,
                                      col + 3 + col_cnt,
-                                     "=" + QString::number(operandes[idx_op].getBytesToFill()) + "-LENB(INDIRECT(ADDRESS(" +
+                                     "=" + QString::number(operande.getBytesToFill()) + "-LENB(INDIRECT(ADDRESS(" +
                                        QString::number(row + 1) + "," + QString::number(3 + col_cnt - 1) + ")))",
                                      FormatInstr);
             col_cnt++;
         } else if (type == "bytearray") {
 
-            for (int idx_byte = 0; idx_byte < Value.size(); idx_byte++) {
+            for (auto&& idx_byte : Value) {
                 excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-                excelScenarioSheet.write(row + 1, col + 3 + col_cnt, (unsigned char)Value[idx_byte], FormatInstr);
+                excelScenarioSheet.write(row + 1, col + 3 + col_cnt, (unsigned char)idx_byte, FormatInstr);
                 col_cnt++;
             }
 
@@ -212,7 +212,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
             int ID = funs[0].ID;
             int nb_row = 3;
             int idx_fun = 0;
-            while (ID != operandes[idx_op].getDestination().FunctionID) {
+            while (ID != operande.getDestination().FunctionID) {
 
                 nb_row = nb_row + 1; // row with function name
                 nb_row = nb_row + 2 * funs[idx_fun].InstructionsInFunction.size();
@@ -220,7 +220,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
                 ID = funs[idx_fun].ID;
             }
             nb_row = nb_row + 1; // row with function name
-            nb_row = nb_row + 2 * (operandes[idx_op].getDestination().InstructionID + 1);
+            nb_row = nb_row + 2 * (operande.getDestination().InstructionID + 1);
             QString ptrExcel = "=A" + QString::number((nb_row));
 
             QXlsx::Format format;
@@ -288,12 +288,12 @@ uint Instruction::get_OP() const { return OPCode; }
 QByteArray Instruction::getBytes() {
     QByteArray bytes;
     if (OPCode <= 0xFF) bytes.push_back((unsigned char)OPCode);
-    for (std::vector<operande>::iterator it = operandes.begin(); it != operandes.end(); it++) {
+    for (auto& it : operandes) {
 
-        QByteArray op_bytes = it->getValue();
-        if (it->getType() == "string") op_bytes.push_back('\x0');
-        for (int i = 0; i < op_bytes.size(); i++) {
-            bytes.push_back(op_bytes[i]);
+        QByteArray op_bytes = it.getValue();
+        if (it.getType() == "string") op_bytes.push_back('\x0');
+        for (auto&& op_byte : op_bytes) {
+            bytes.push_back(op_byte);
         }
     }
     return bytes;

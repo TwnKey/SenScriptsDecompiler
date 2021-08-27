@@ -87,18 +87,18 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& doc) {
 void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
     // From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
     if (!FunctionsToParse.empty()) {
-        for (std::vector<function>::iterator it = FunctionsToParse.begin(); it != FunctionsToParse.end(); it++) {
-            if (!std::count(FunctionsParsed.begin(), FunctionsParsed.end(), *it)) {
+        for (auto& it : FunctionsToParse) {
+            if (std::count(FunctionsParsed.begin(), FunctionsParsed.end(), it) == 0) {
                 qDebug() << "Reading function "
-                         << it->name; // << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
+                         << it.name; // << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
 
-                std::vector<function>::iterator itt = find_function_by_ID(FunctionsParsed, it->ID);
+                std::vector<function>::iterator itt = find_function_by_ID(FunctionsParsed, it.ID);
                 if (itt == FunctionsParsed.end()) { // if we never read it, we'll do that
-                    idx_current_fun = it->ID;
-                    ReadIndividualFunction(*it, dat_content);
-                    FunctionsParsed.push_back(*it);
+                    idx_current_fun = it.ID;
+                    ReadIndividualFunction(it, dat_content);
+                    FunctionsParsed.push_back(it);
                 }
-                previous_fun_name = it->name;
+                previous_fun_name = it.name;
             }
         }
 
@@ -246,16 +246,15 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
 
 bool Builder::UpdatePointersDAT() {
 
-    for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
+    for (auto& idx_fun : FunctionsParsed) {
 
-        std::vector<std::shared_ptr<Instruction>> instructions = FunctionsParsed[idx_fun].InstructionsInFunction;
-        for (uint idx_instr = 0; idx_instr < FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++) {
+        std::vector<std::shared_ptr<Instruction>> instructions = idx_fun.InstructionsInFunction;
+        for (auto& idx_instr : idx_fun.InstructionsInFunction) {
 
-            for (uint idx_operand = 0; idx_operand < FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes.size();
-                 idx_operand++) {
-                if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType() == "pointer") {
+            for (auto& operande : idx_instr->operandes) {
+                if (operande.getType() == "pointer") {
 
-                    int addr_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
+                    int addr_ptr = operande.getIntegerValue();
                     int idx_fun_ = find_function(addr_ptr);
                     if (idx_fun_ != -1) {
                         function fun = FunctionsParsed[idx_fun_];
@@ -263,13 +262,12 @@ bool Builder::UpdatePointersDAT() {
                         int id_op = 0;
                         if (id_instr != -1) {
                             id_op = find_operande(addr_ptr, *fun.InstructionsInFunction[id_instr]);
-                            FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setDestination(
-                              fun.ID, id_instr, id_op);
+                            operande.setDestination(fun.ID, id_instr, id_op);
                         } else {
-                            FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setDestination(fun.ID, 0, 0);
+                            operande.setDestination(fun.ID, 0, 0);
                         }
                     } else {
-                        FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setDestination(0, 0, 0);
+                        operande.setDestination(0, 0, 0);
                     }
                 }
             }
@@ -286,15 +284,14 @@ bool Builder::Reset() {
 }
 bool Builder::UpdatePointersXLSX() {
 
-    for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
+    for (auto& idx_fun : FunctionsParsed) {
 
-        std::vector<std::shared_ptr<Instruction>> instructions = FunctionsParsed[idx_fun].InstructionsInFunction;
-        for (uint idx_instr = 0; idx_instr < FunctionsParsed[idx_fun].InstructionsInFunction.size(); idx_instr++) {
+        std::vector<std::shared_ptr<Instruction>> instructions = idx_fun.InstructionsInFunction;
+        for (auto& idx_instr : idx_fun.InstructionsInFunction) {
 
-            for (uint idx_operand = 0; idx_operand < FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes.size();
-                 idx_operand++) {
-                if (FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getType() == "pointer") {
-                    int idx_row_ptr = FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].getIntegerValue();
+            for (uint idx_operand = 0; idx_operand < idx_instr->operandes.size(); idx_operand++) {
+                if (idx_instr->operandes[idx_operand].getType() == "pointer") {
+                    int idx_row_ptr = idx_instr->operandes[idx_operand].getIntegerValue();
                     function current_fun = FunctionsParsed[0];
 
                     if (FunctionsParsed.size() > 1) {
@@ -311,8 +308,7 @@ bool Builder::UpdatePointersXLSX() {
                     }
                     int nb_instruction_inside_function = (idx_row_ptr - (current_fun.XLSX_row_index + 1)) / 2;
                     int addr_pointed = current_fun.InstructionsInFunction[nb_instruction_inside_function]->get_addr_instr();
-                    FunctionsParsed[idx_fun].InstructionsInFunction[idx_instr]->operandes[idx_operand].setValue(
-                      GetBytesFromInt(addr_pointed));
+                    idx_instr->operandes[idx_operand].setValue(GetBytesFromInt(addr_pointed));
                 }
             }
         }

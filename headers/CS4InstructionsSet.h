@@ -8414,8 +8414,8 @@ class CS4Builder : public Builder {
         header.append(GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4));
         header.append(GetBytesFromInt(FunctionsParsed.size()));
         int length_of_names_section = 0;
-        for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
-            length_of_names_section = length_of_names_section + FunctionsParsed[idx_fun].name.toUtf8().length() + 1;
+        for (auto& fun : FunctionsParsed) {
+            length_of_names_section = length_of_names_section + fun.name.toUtf8().length() + 1;
         }
         header.append(
           GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + length_of_names_section));
@@ -8429,9 +8429,9 @@ class CS4Builder : public Builder {
             QByteArray position_names;
             QByteArray actual_names;
             int offset_names = 0;
-            for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
-                header.append(GetBytesFromInt(FunctionsParsed[idx_fun].actual_addr));
-                QByteArray name = FunctionsParsed[idx_fun].name.toUtf8();
+            for (auto& fun : FunctionsParsed) {
+                header.append(GetBytesFromInt(fun.actual_addr));
+                QByteArray name = fun.name.toUtf8();
                 name.append('\x0');
                 position_names.append(
                   GetBytesFromShort(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + offset_names));
