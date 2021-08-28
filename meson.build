@@ -3,7 +3,9 @@ project('SenScriptsDecompiler',
     version: '1.5.2',
     license: 'MIT',
     meson_version: '>=0.59.0',
-    default_options: ['warning_level=3', 'cpp_std=c++17']
+    # Set cpp_std to none, because we can't use cpp_std for c++20 in a compiler
+    # independent way atm https://github.com/mesonbuild/meson/issues/8246
+    default_options: ['warning_level=3', 'cpp_std=none']
 )
 
 cpp_compiler = meson.get_compiler('cpp')
@@ -14,6 +16,24 @@ if cpp_compiler.get_id() == 'msvc'
         language: 'cpp',
     )
 endif
+
+cpp_std_ver = ''
+if get_option('cpp_std') == 'none'
+    if cpp_compiler.has_argument('-std=c++20')
+        # modern gcc/clang
+        cpp_std_ver += '-std=c++20'
+    elif cpp_compiler.has_argument('/std:c++20')
+        cpp_std_ver += '/std:c++20'
+    elif cpp_compiler.has_argument('/std:c++latest')
+        # msvc++ 2019
+        cpp_std_ver += '/std:c++latest'
+    endif
+endif
+
+add_global_arguments(
+    cpp_std_ver,
+    language: 'cpp',
+)
 
 add_project_arguments(
     '-DQT_DISABLE_DEPRECATED_BEFORE=0x060000',
