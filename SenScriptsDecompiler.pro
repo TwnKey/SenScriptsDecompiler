@@ -1,6 +1,6 @@
 QT -= gui
 
-CONFIG += c++17 console
+CONFIG += c++20 console
 CONFIG -= app_bundle
 
 INCLUDEPATH += $${PWD}/subprojects
