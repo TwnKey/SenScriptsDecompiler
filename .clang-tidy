@@ -6,6 +6,7 @@ Checks: >
   -fuchsia-default-arguments-calls,
   -fuchsia-default-arguments-declarations,
   -fuchsia-overloaded-operator,
+  -fuchsia-trailing-return,
   -cppcoreguidelines-avoid-magic-numbers,
   -misc-non-private-member-variables-in-classes,
   -cppcoreguidelines-non-private-member-variables-in-classes,
