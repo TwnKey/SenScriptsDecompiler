@@ -47,9 +47,9 @@ class operande {
 
   private:
     Destination Dest = Destination(-1, -1, -1);
-    int Position;
+    int Position = 0;
     QString Type;
     QByteArray Value;
-    int bytes_to_fill;
+    int bytes_to_fill = 0;
 };
 #endif // OPERANDE_H
