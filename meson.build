@@ -10,11 +10,12 @@ project('SenScriptsDecompiler',
 
 cpp_compiler = meson.get_compiler('cpp')
 
-if cpp_compiler.get_id() == 'msvc'
-    add_project_arguments(
-        '/bigobj',
-        language: 'cpp',
-    )
+if build_machine.system() == 'windows'
+    if cpp_compiler.get_id() == 'msvc'
+        add_project_arguments('/bigobj', language: 'cpp')
+    elif cpp_compiler.get_id() == 'gcc'
+        add_project_arguments('-Wa,-mbig-obj', language : 'cpp')
+    endif
 endif
 
 cpp_std_ver = ''

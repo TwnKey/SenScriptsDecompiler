@@ -47,4 +47,7 @@ HEADERS += \
 win32-msvc* {
     QMAKE_CXXFLAGS += /bigobj
 }
+win32-g++:{
+  QMAKE_CXXFLAGS += -Wa,-mbig-obj
+}
 
