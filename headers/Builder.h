@@ -3,7 +3,6 @@
 #include "headers/operande.h"
 #include "xlsxdocument.h"
 #include <QByteArray>
-#include <QVector>
 class function;
 class Instruction;
 

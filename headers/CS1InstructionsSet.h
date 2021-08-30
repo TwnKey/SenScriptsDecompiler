@@ -16,8 +16,8 @@ class CS1Builder : public Builder {
   public:
     CS1Builder() = default;
 
-    QVector<std::string> CS1UIFiles = { "battle_menu", "camp_menu",   "camp_menu_v", "note_menu",   "note_menu_v",
-                                        "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };
+    std::set<std::string> CS1UIFiles = { "battle_menu", "camp_menu",   "camp_menu_v", "note_menu",   "note_menu_v",
+                                         "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };
     static void reading_dialog(int& addr, QByteArray& content, Instruction* instr) {
 
         QByteArray current_op_value;
@@ -5942,8 +5942,7 @@ class CS1Builder : public Builder {
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) override {
         int OP = (dat_content[addr] & 0xFF);
 
-        int i = CS1UIFiles.indexOf(SceneName);
-        if ((i != -1) && (OP == 0x13)) {
+        if (CS1UIFiles.contains(SceneName) && (OP == 0x13)) {
             return std::make_shared<UI_OP13>(addr, dat_content, this); // UI files have a special 0x13 instruction
         }
 
@@ -6364,8 +6363,10 @@ class CS1Builder : public Builder {
     std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) override {
 
         uint OP = xls_content.read(row + 1, 2).toInt();
-        int i = CS1UIFiles.indexOf(SceneName);
-        if ((i != -1) && (OP == 0x13)) return std::make_shared<UI_OP13>(addr, row, xls_content, this);
+
+        if (CS1UIFiles.contains(SceneName) && (OP == 0x13)) {
+            return std::make_shared<UI_OP13>(addr, row, xls_content, this);
+        }
 
         switch (OP) {
             case 0x00:

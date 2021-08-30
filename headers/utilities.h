@@ -4,6 +4,7 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <iomanip>
+#include <set>
 #include <sstream>
 #include <string>
 void display_text(const QString& text);
