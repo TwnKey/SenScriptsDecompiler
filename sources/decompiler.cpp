@@ -263,13 +263,13 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead,
             return false;
         }
 
-        QByteArray content1 = file1.readAll();
+        const QByteArray content1 = file1.readAll();
         if (!file2.open(QIODevice::ReadOnly)) {
 
             return false;
         }
 
-        QByteArray content2 = file2.readAll();
+        const QByteArray content2 = file2.readAll();
         std::string msg = "Problème de taille avec " + croped_fileName.toStdString();
         int ref_size = content2.size();
         for (int i = 0; i < ref_size; i++) {
