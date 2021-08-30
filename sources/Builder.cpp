@@ -1,8 +1,9 @@
 #include "headers/Builder.h"
 #include "headers/functions.h"
+#include <string>
 Builder::Builder() = default;
 void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
-    SceneName = xls_content.read(2, 1).toString();
+    SceneName = xls_content.read(2, 1).toString().toStdString();
     int first_row = 4;
     int last_row = xls_content.dimension().lastRow();
     int ID_fun = 0;
@@ -11,7 +12,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
     if (content_first_cell == "FUNCTION") {
 
         function current_fun;
-        current_fun.name = xls_content.read(first_row, 2).toString();
+        current_fun.name = xls_content.read(first_row, 2).toString().toStdString();
         current_fun.ID = ID_fun;
         int addr_instr = 0;
         current_fun.declr_position = 0;
@@ -24,7 +25,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
             QString content_first_cell = xls_content.read(idx_row, 1).toString();
             if (content_first_cell == "FUNCTION") { // We start a new function
 
-                QString next_fun_name = xls_content.read(idx_row, 2).toString();
+                std::string next_fun_name = xls_content.read(idx_row, 2).toString().toStdString();
 
                 addr_instr = 0;
                 FunctionsParsed.push_back(current_fun);
@@ -90,7 +91,8 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
         for (auto& it : FunctionsToParse) {
             if (std::count(FunctionsParsed.begin(), FunctionsParsed.end(), it) == 0) {
                 qDebug() << "Reading function "
-                         << it.name; // << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
+                         << QString::fromStdString(
+                              it.name); // << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
 
                 auto itt = find_function_by_ID(FunctionsParsed, it.ID);
                 if (itt == FunctionsParsed.end()) { // if we never read it, we'll do that
@@ -145,13 +147,13 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
         function_type = 11;
     } else if (fun.name == "FieldFollowData") {
         function_type = 12;
-    } else if (fun.name.startsWith("FC_auto")) {
+    } else if (fun.name.starts_with("FC_auto")) {
         function_type = 13;
-    } else if (fun.name.startsWith("BookData")) { // Book: the first short read is crucial I think. 0 = text incoming; not zero =
+    } else if (fun.name.starts_with("BookData")) { // Book: the first short read is crucial I think. 0 = text incoming; not zero =
         QRegExp rx("BookData(\\d+[A-Z]?)_(\\d+)");
         std::vector<int> result;
 
-        rx.indexIn(fun.name, 0);
+        rx.indexIn(QString::fromStdString(fun.name), 0);
         int Nb_Data = rx.cap(2).toInt();
 
         if (Nb_Data == 99) {
@@ -162,7 +164,7 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
             function_type = 15;
         }
 
-    } else if (fun.name.startsWith("_")) {
+    } else if (fun.name.starts_with("_")) {
         if ((fun.name != "_" + previous_fun_name) ||
             fun.end_addr == static_cast<uint>(dat_content.size())) // last one is for btl1006, cs3; not cool but I'm starting to feel
                                                                    // like the "_" functions are just not supposed to exist, so this
@@ -175,7 +177,7 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
         function_type = 16;
     } else if (fun.name == "ConditionTable") {
         function_type = 17;
-    } else if (fun.name.startsWith("StyleName")) {
+    } else if (fun.name.starts_with("StyleName")) {
         function_type = 18;
     }
 
@@ -191,7 +193,7 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
                 error = false;
                 fun.InstructionsInFunction.clear();
                 current_position = fun.actual_addr;
-                if (fun.name.startsWith("_")) {
+                if (fun.name.starts_with("_")) {
                     instr = CreateInstructionFromDAT(current_position, dat_content, 2);
                     fun.AddInstruction(instr);
                     instr = CreateInstructionFromDAT(current_position, dat_content, 0);

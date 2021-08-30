@@ -1,7 +1,7 @@
 #ifndef OPERANDE_H
 #define OPERANDE_H
 #include "headers/utilities.h"
-#include <QString>
+
 struct Destination {
     Destination(int FID, int IID, int OID) {
         FunctionID = FID;
@@ -16,13 +16,13 @@ class operande {
 
   public:
     operande() = default;
-    operande(Destination pointer, int position, QString type, QByteArray value) {
+    operande(Destination pointer, int position, std::string type, QByteArray value) {
         Dest = pointer;
         Position = position;
         Type = type;
         Value = value;
     }
-    operande(int position, QString type, QByteArray value) {
+    operande(int position, std::string type, QByteArray value) {
         Position = position;
         Type = type;
         Value = value;
@@ -41,14 +41,14 @@ class operande {
         return size;
     }
     [[nodiscard]] uint getAddr() const { return Position; }
-    QString getType() { return Type; }
+    std::string getType() { return Type; }
     void setDestination(int ID_fun, int ID_instr, int ID_operande) { Dest = Destination(ID_fun, ID_instr, ID_operande); }
     Destination getDestination() { return Dest; }
 
   private:
     Destination Dest = Destination(-1, -1, -1);
     int Position = 0;
-    QString Type;
+    std::string Type;
     QByteArray Value;
     int bytes_to_fill = 0;
 };

@@ -8,11 +8,11 @@ QString ConvertBytesToString(const QByteArray& Bytes) {
     QString DataAsString = QString::fromStdString(Bytes.toStdString());
     return DataAsString;
 }
-QString ReadStringFromByteArray(int start_pos, QByteArray& content) {
+std::string ReadStringFromByteArray(int start_pos, QByteArray& content) {
 
-    QString filename = "";
+    std::string filename;
     while (content.at(start_pos) != 0) {
-        filename.push_back((char)content.at(start_pos));
+        filename.push_back(content.at(start_pos));
         start_pos++;
     }
 
@@ -39,8 +39,8 @@ QByteArray GetBytesFromFloat(float f) {
     QByteArray array(reinterpret_cast<const char*>(&f), sizeof(f));
     return array;
 }
-bool isMultiple0x10(const QString& fun_name) {
-    return (fun_name == "PTN_TABLE") || (fun_name.startsWith("FC_auto")) || (fun_name.startsWith("_"));
+bool isMultiple0x10(const std::string& fun_name) {
+    return (fun_name == "PTN_TABLE") || (fun_name.starts_with("FC_auto")) || (fun_name.starts_with("_"));
 }
 QByteArray GetBytesFromInt(int i) {
     QByteArray q_b;

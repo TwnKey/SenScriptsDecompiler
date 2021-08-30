@@ -23,7 +23,7 @@ translation file being edited WriteFile: writes the correct file depending on th
 class Decompiler {
   public:
     Decompiler();
-    bool SetupGame(QString Game);
+    bool SetupGame(std::string Game);
     bool ReadXLSX(QFile& File);
     bool ReadDAT(QFile& File);
     bool ReadFile(const QString& filepath);
@@ -39,7 +39,7 @@ class Decompiler {
 
   private:
     TranslationFile CurrentTF;
-    QString Game;
+    std::string Game;
     Builder* IB = nullptr;
 };
 
