@@ -14,7 +14,6 @@ int ReadIntegerFromByteArray(int start_pos, QByteArray& content);
 int16_t ReadShortFromByteArray(int start_pos, QByteArray& content);
 QByteArray ReadSubByteArray(QByteArray& content, int& addr, int size);
 QByteArray ReadStringSubByteArray(QByteArray& content, int& addr);
-QString ConvertBytesToString(QByteArray Bytes);
 float QByteArrayToFloat(QByteArray& content);
 QByteArray GetBytesFromInt(int i);
 QByteArray GetBytesFromFloat(float f);

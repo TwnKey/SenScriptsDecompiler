@@ -4,10 +4,7 @@ void display_text(const QString& text) {
     QTextStream out(stdout);
     out << text << Qt::endl;
 }
-QString ConvertBytesToString(const QByteArray& Bytes) {
-    QString DataAsString = QString::fromStdString(Bytes.toStdString());
-    return DataAsString;
-}
+
 std::string ReadStringFromByteArray(int start_pos, QByteArray& content) {
 
     std::string filename;
