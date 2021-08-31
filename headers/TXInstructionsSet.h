@@ -10008,9 +10008,6 @@ class TXBuilder : public Builder {
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName;
                 error = true;
                 addr++;
-                /*std::string result( stream.str() );
-
-                qFatal(result.c_str());*/
 
                 return std::shared_ptr<Instruction>();
         }

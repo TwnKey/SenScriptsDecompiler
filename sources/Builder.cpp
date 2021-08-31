@@ -90,9 +90,7 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
     if (!FunctionsToParse.empty()) {
         for (auto& it : FunctionsToParse) {
             if (std::count(FunctionsParsed.begin(), FunctionsParsed.end(), it) == 0) {
-                qDebug() << "Reading function "
-                         << QString::fromStdString(
-                              it.name); // << "at addr " << hex << it->actual_addr << " and ending at " << hex << it->end_addr;
+                qDebug() << "Reading function " << QString::fromStdString(it.name);
 
                 auto itt = find_function_by_ID(FunctionsParsed, it.ID);
                 if (itt == FunctionsParsed.end()) { // if we never read it, we'll do that
@@ -211,13 +209,11 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
                     } else {
 
                         // the function is incorrect, therefore, we parse it again as an OP Code function but remove the
-                        // part that is incorrect qDebug() << "Fail. There is a problem with this function at offset " <<
-                        // hex << current_position;
+                        // part that is incorrect
                         current_position = fun.actual_addr;
                         while (current_position < goal) {
                             instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                             if (error) {
-                                // qFatal("error");
                                 display_text("Incorrect instruction read at " + QString::number(current_position) + ". Skipped.");
                                 error = false;
 

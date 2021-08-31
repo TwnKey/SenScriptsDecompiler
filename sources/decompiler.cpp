@@ -31,7 +31,6 @@ bool Decompiler::SetupGame(std::string Game_) {
         IB = new CS2Builder();
     } else if (Game == "CS4") {
         IB = new CS4Builder();
-    // else if (Game == "Hajimari") IB = new HajimariBuilder();
     } else if (Game == "TX") {
         IB = new TXBuilder();
     } else {

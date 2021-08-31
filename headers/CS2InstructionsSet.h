@@ -7815,7 +7815,6 @@ class CS2Builder : public Builder {
 
                     error = true;
                     std::string result(stream.str());
-                    // qFatal(result.c_str());
 
                     return std::shared_ptr<Instruction>();
             }

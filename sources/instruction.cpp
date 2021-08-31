@@ -259,29 +259,13 @@ void Instruction::AddOperande(operande op) {
 
             // operandes.push_back(op);
         } else {
-            // qDebug() << "value: " << value;
             operandes.push_back(op);
         }
     } else {
         operandes.push_back(op);
     }
-    // if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
-
-    // if (op.getType()=="string") qDebug() << value;
-
-    // if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
 }
 
-/*void Instruction::AddOperande(operande op){
-    operandes.push_back(op);
-    QByteArray value = op.getValue();
-    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-
-    QString string = codec->toUnicode(value);
-    //if (op.getType()=="string") qDebug() << value;
-
-    //if (op.getType()=="pointer") qDebug() << "pointer: " << hex << ReadIntegerFromByteArray(0,value);
-}*/
 int Instruction::get_length_in_bytes() { return getBytes().size(); }
 
 uint Instruction::get_OP() const { return OPCode; }

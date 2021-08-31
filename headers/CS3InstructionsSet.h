@@ -908,17 +908,6 @@ class CS3Builder : public Builder {
             }
             switch ((unsigned char)control_byte[0]) {
                 case 0xB:
-
-                    /*qDebug() << "Calling function " << ConvertBytesToString(function_name);
-                    //here we're calling a function that was defined at the beginning
-                    std::vector<function>::iterator it =
-                    find_function_by_name(Maker->FunctionsToParse,ConvertBytesToString(function_name));
-
-                    if (!std::count(Maker->FunctionsParsed.begin(), Maker->FunctionsParsed.end(), *it)){
-                        Maker->ReadIndividualFunction(*it,content);
-                        Maker->FunctionsParsed.push_back(*it);
-                    }*/
-                    // Maker->FunctionsToParse.erase(it);
                     break;
             }
         }
@@ -6497,7 +6486,7 @@ class CS3Builder : public Builder {
 
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) override {
         int OP = (dat_content[addr] & 0xFF);
-        // qDebug() << "OP: " << hex << OP << " at " << addr;
+
         if (function_type == 0) { // the function is read with OPCodes
 
             switch (OP) {
@@ -6873,9 +6862,7 @@ class CS3Builder : public Builder {
                 default:
                     std::stringstream stream;
                     stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
-                    /*std::string result( stream.str() );
 
-                    qFatal(result.c_str());*/
                     error = true;
                     addr++;
                     return std::shared_ptr<Instruction>();
@@ -7383,8 +7370,6 @@ class CS3Builder : public Builder {
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName;
 
                 error = true;
-                /*std::string result( stream.str() );
-                qFatal(result.c_str());*/
 
                 return std::shared_ptr<Instruction>();
         }
