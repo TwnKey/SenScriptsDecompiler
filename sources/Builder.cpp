@@ -122,7 +122,7 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
     int current_position = fun.actual_addr;
     goal = fun.end_addr;
     std::shared_ptr<Instruction> instr;
-    int latest_op_code = 1;
+    uint latest_op_code = 1;
 
     int function_type = 0;
     if (fun.name == "ActionTable") {
@@ -164,9 +164,9 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
 
     } else if (fun.name.starts_with("_")) {
         if ((fun.name != "_" + previous_fun_name) ||
-            fun.end_addr == static_cast<uint>(dat_content.size())) // last one is for btl1006, cs3; not cool but I'm starting to feel
-                                                                   // like the "_" functions are just not supposed to exist, so this
-                                                                   // hack only helps me checking the integrity of the files
+            fun.end_addr == static_cast<int>(dat_content.size())) // last one is for btl1006, cs3; not cool but I'm starting to feel
+                                                                  // like the "_" functions are just not supposed to exist, so this
+                                                                  // hack only helps me checking the integrity of the files
         {
             function_type = 2;
         }
@@ -314,11 +314,11 @@ bool Builder::UpdatePointersXLSX() {
 
     return true;
 }
-int Builder::find_function(uint addr) {
+int Builder::find_function(int addr) {
     int result = -1;
 
     for (size_t idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
-        uint fun_addr = FunctionsParsed[idx_fun].actual_addr;
+        int fun_addr = FunctionsParsed[idx_fun].actual_addr;
 
         if (addr < fun_addr) {
 
@@ -332,12 +332,12 @@ int Builder::find_function(uint addr) {
 
     return result;
 }
-int Builder::find_instruction(uint addr, function fun) {
+int Builder::find_instruction(int addr, function fun) {
     int result = -1;
     size_t idx_instr = 0;
     bool success = false;
     for (; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
-        uint instr_addr = fun.InstructionsInFunction[idx_instr]->get_addr_instr();
+        int instr_addr = fun.InstructionsInFunction[idx_instr]->get_addr_instr();
         if (addr == instr_addr) {
             success = true;
             result = static_cast<int>(idx_instr);

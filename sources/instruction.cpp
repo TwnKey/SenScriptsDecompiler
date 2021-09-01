@@ -42,7 +42,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             Value = GetBytesFromFloat(Operande);
             op = operande(addr, "float", Value);
         } else if (type == "short") {
-            uint16_t Operande = excelScenarioSheet.read(idx_row + 1, idx_operande).toInt();
+            int16_t Operande = static_cast<int16_t>(excelScenarioSheet.read(idx_row + 1, idx_operande).toInt());
             Value = GetBytesFromShort(Operande);
             op = operande(addr, "short", Value);
 
@@ -50,7 +50,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             int OP = excelScenarioSheet.read(idx_row + 1, idx_operande).toInt();
 
             if (OP <= 0xFF) { // actually the opposite never happens.
-                unsigned char Operande = ((OP)&0x000000FF);
+                auto Operande = static_cast<char>(((OP)&0x000000FF));
                 Value.push_back(Operande);
                 op = operande(addr, "byte", Value);
             }
@@ -81,7 +81,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
         } else if (type == "bytearray") {
 
             while (type == "bytearray") {
-                unsigned char Operande = ((excelScenarioSheet.read(idx_row + 1, idx_operande).toInt()) & 0x000000FF);
+                auto Operande = static_cast<char>(((excelScenarioSheet.read(idx_row + 1, idx_operande).toInt()) & 0x000000FF));
                 Value.push_back(Operande);
                 idx_operande++;
                 type = excelScenarioSheet.read(idx_row, idx_operande).toString().toStdString();
@@ -255,7 +255,7 @@ void Instruction::AddOperande(operande op) {
 
         if ((state.invalidChars > 0) || text.contains('\x0B') || text.contains('\x06') || text.contains('\x07') || text.contains('\x08') ||
             text.contains('\x05') || text.contains('\x04') || text.contains('\x03') || text.contains('\x02')) {
-            op.setValue(QByteArray(0));
+            op.setValue(QByteArray(nullptr));
 
             // operandes.push_back(op);
         } else {
@@ -271,7 +271,7 @@ int Instruction::get_length_in_bytes() { return getBytes().size(); }
 uint Instruction::get_OP() const { return OPCode; }
 QByteArray Instruction::getBytes() {
     QByteArray bytes;
-    if (OPCode <= 0xFF) bytes.push_back((unsigned char)OPCode);
+    if (OPCode <= 0xFF) bytes.push_back((char)OPCode);
     for (auto& it : operandes) {
 
         QByteArray op_bytes = it.getValue();

@@ -14,7 +14,7 @@ class function {
     std::string name;
     int declr_position = 0; // covers the list of offsets at the beginning
     int actual_addr = 0;    // covers the pointers before that
-    uint end_addr = 0;
+    int end_addr = 0;
     int XLSX_row_index = 0;
     bool called = false; // by default
     int ID = 0;

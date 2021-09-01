@@ -78,8 +78,8 @@ class Builder {
       QByteArray& dat_content); // Clearly this one is supposed to be generic (assuming the game format doesn't change)
     virtual void ReadFunctionsXLSX(QXlsx::Document& xls_content);
 
-    int find_function(uint addr);
-    int find_instruction(uint addr, function fun);
+    int find_function(int addr);
+    int find_instruction(int addr, function fun);
     int find_operande(uint addr, const Instruction& instr);
     std::vector<function> FunctionsToParse;
     std::vector<function> FunctionsParsed;

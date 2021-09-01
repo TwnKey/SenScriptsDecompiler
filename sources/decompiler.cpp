@@ -207,7 +207,7 @@ bool Decompiler::WriteXLSX(const QString& output_folder) {
         excelScenarioSheet.write(excel_row, 2, QString::fromStdString(fun.name));
 
         excel_row++;
-        for (auto& instr : fun.InstructionsInFunction) {
+        for (const auto& instr : fun.InstructionsInFunction) {
             excelScenarioSheet.write(excel_row, 1, "Location");
             excelScenarioSheet.write(excel_row + 1, 1, instr->get_addr_instr());
             int col = 0;
