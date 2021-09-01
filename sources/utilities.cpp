@@ -41,17 +41,17 @@ bool isMultiple0x10(const std::string& fun_name) {
 }
 QByteArray GetBytesFromInt(int i) {
     QByteArray q_b;
-    q_b.push_back(i & 0x000000ff);
-    q_b.push_back((i & 0x0000ff00) >> 8);
-    q_b.push_back((i & 0x00ff0000) >> 16);
-    q_b.push_back((i) >> 24);
+    q_b.push_back(static_cast<int8_t>(i & 0x000000ff));
+    q_b.push_back(static_cast<int8_t>((i & 0x0000ff00) >> 8));
+    q_b.push_back(static_cast<int8_t>((i & 0x00ff0000) >> 16));
+    q_b.push_back(static_cast<int8_t>((i) >> 24));
 
     return q_b;
 }
 QByteArray GetBytesFromShort(int16_t i) {
     QByteArray q_b;
-    q_b.push_back(i & 0x00ff);
-    q_b.push_back((i & 0xff00) >> 8);
+    q_b.push_back(static_cast<int8_t>(i & 0x00ff));
+    q_b.push_back(static_cast<int8_t>((i & 0xff00) >> 8));
 
     return q_b;
 }
