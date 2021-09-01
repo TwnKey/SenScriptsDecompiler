@@ -26,10 +26,10 @@ QByteArray ReadStringSubByteArray(QByteArray& content, int& addr) {
     return result;
 }
 int ReadIntegerFromByteArray(int start_pos, QByteArray& content) {
-    int size = ((static_cast<unsigned int>(content[start_pos + 0]) & 0xFF) << 0) +
-               ((static_cast<unsigned int>(content[start_pos + 1]) & 0xFF) << 8) +
-               ((static_cast<unsigned int>(content[start_pos + 2]) & 0xFF) << 16) +
-               ((static_cast<unsigned int>(content[start_pos + 3]) & 0xFF) << 24);
+    int size = static_cast<int>(((static_cast<unsigned int>(content[start_pos + 0]) & 0xFF) << 0) +
+                                ((static_cast<unsigned int>(content[start_pos + 1]) & 0xFF) << 8) +
+                                ((static_cast<unsigned int>(content[start_pos + 2]) & 0xFF) << 16) +
+                                ((static_cast<unsigned int>(content[start_pos + 3]) & 0xFF) << 24));
     return size;
 }
 QByteArray GetBytesFromFloat(float f) {
@@ -67,8 +67,8 @@ float QByteArrayToFloat(QByteArray& content) // thanks to jabk https://stackover
 }
 
 int16_t ReadShortFromByteArray(int start_pos, QByteArray& content) {
-    int16_t size =
-      ((static_cast<int16_t>(content[start_pos + 0]) & 0xFF) << 0) + ((static_cast<int16_t>(content[start_pos + 1]) & 0xFF) << 8);
+    int16_t size = static_cast<int16_t>(((static_cast<int16_t>(content[start_pos + 0]) & 0xFF) << 0) +
+                                        ((static_cast<int16_t>(content[start_pos + 1]) & 0xFF) << 8));
 
     return size;
 }
