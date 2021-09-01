@@ -18,7 +18,7 @@ class CS2Builder : public Builder {
 
     static void reading_dialog(int& addr, QByteArray& content, Instruction* instr) {
 
-        QByteArray current_op_value;
+        std::vector<uint8_t> current_op_value;
         int addr_ = addr;
 
         bool start_text = false;

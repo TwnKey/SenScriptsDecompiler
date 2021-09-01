@@ -17,7 +17,7 @@ class TXBuilder : public Builder {
                                         "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };
     static void reading_dialog(int& addr, QByteArray& content, Instruction* instr) {
 
-        QByteArray current_op_value;
+        std::vector<uint8_t> current_op_value;
         int addr_ = addr;
 
         bool start_text = false;

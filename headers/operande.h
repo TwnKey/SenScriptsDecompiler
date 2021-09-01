@@ -28,6 +28,12 @@ class operande {
         Value = value;
     }
 
+    operande(int position, std::string type, std::vector<uint8_t> value) {
+        Position = position;
+        Type = type;
+        Value = QByteArray(reinterpret_cast<const char*>(value.data()), static_cast<int>(value.size()));
+    }
+
     [[nodiscard]] bool IsPointer() const { return !((Dest.FunctionID == -1) || (Dest.InstructionID == -1)); }
 
     QByteArray getValue() { return Value; }

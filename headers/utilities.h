@@ -7,6 +7,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <vector>
 void display_text(const QString& text);
 
 std::string ReadStringFromByteArray(int start_pos, QByteArray& content);
