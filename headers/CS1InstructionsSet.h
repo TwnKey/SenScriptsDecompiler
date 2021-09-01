@@ -50,7 +50,7 @@ class CS1Builder : public Builder {
                     break;
                 case 0x02:
                     start_text = false;
-                    if (current_op_value.size() > 0) {
+                    if (!current_op_value.empty()) {
                         instr->AddOperande(operande(addr_, "dialog", current_op_value));
                     }
                     current_op_value.clear();
@@ -60,7 +60,7 @@ class CS1Builder : public Builder {
                     addr++;
                     break;
                 case 0x10:
-                    if (current_op_value.size() > 0) {
+                    if (!current_op_value.empty()) {
                         instr->AddOperande(operande(addr_, "dialog", current_op_value));
                     }
                     current_op_value.clear();
@@ -73,7 +73,7 @@ class CS1Builder : public Builder {
                 case 0x17:
                 case 0x19:
                     start_text = false;
-                    if (current_op_value.size() > 0) {
+                    if (!current_op_value.empty()) {
                         instr->AddOperande(operande(addr_, "dialog", current_op_value));
                     }
                     current_op_value.clear();
@@ -85,7 +85,7 @@ class CS1Builder : public Builder {
                     break;
                 case 0x11:
                 case 0x12:
-                    if (current_op_value.size() > 0) {
+                    if (!current_op_value.empty()) {
                         instr->AddOperande(operande(addr_, "dialog", current_op_value));
                     }
                     current_op_value.clear();
@@ -141,7 +141,7 @@ class CS1Builder : public Builder {
                     break;
                 default:
                     if (current_byte < 0x20) {
-                        if (current_op_value.size() > 0) {
+                        if (!current_op_value.empty()) {
                             instr->AddOperande(operande(addr_, "dialog", current_op_value));
                         }
                         start_text = false;
