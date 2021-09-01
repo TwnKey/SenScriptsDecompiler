@@ -10,7 +10,7 @@ function::function(int ID, std::string n, int declr_pos, int addr, int end) {
     this->end_addr = end;
     int multiple = 4;
     if (isMultiple0x10(this->name)) multiple = 0x10;
-    int nb_byte_to_add = (((int)ceil((float)addr / multiple))) * multiple - addr;
+    int nb_byte_to_add = (((int)ceil((float)addr / (float)multiple))) * multiple - addr;
     nb_pad = nb_byte_to_add;
 }
 void function::AddInstruction(const std::shared_ptr<Instruction>& instr) {

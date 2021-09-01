@@ -10051,7 +10051,7 @@ class TXBuilder : public Builder {
             header.append(actual_names);
             int multiple = 4;
             if (FunctionsParsed[0].name.starts_with("_")) multiple = 0x10;
-            int nb_byte_to_add = (((int)ceil((float)header.size() / multiple))) * multiple - header.size();
+            int nb_byte_to_add = (((int)ceil((float)header.size() / (float)multiple))) * multiple - header.size();
             QByteArray remaining;
             for (int i = 0; i < nb_byte_to_add; i++) {
                 remaining.push_back('\x0');
