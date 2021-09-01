@@ -468,19 +468,19 @@ class TXBuilder : public Builder {
                 fill.setBytesToFill(0x10);
                 this->AddOperande(fill);
 
-                QByteArray str_ = ReadStringSubByteArray(content, addr);
-                this->AddOperande(operande(addr, "string", str_));
-                QByteArray remaining_ = ReadSubByteArray(content, addr, 0x20 - str_.size() - 1);
-                operande fill_ = operande(addr, "fill", remaining_);
-                fill_.setBytesToFill(0x20);
-                this->AddOperande(fill_);
+                str = ReadStringSubByteArray(content, addr);
+                this->AddOperande(operande(addr, "string", str));
+                remaining = ReadSubByteArray(content, addr, 0x20 - str.size() - 1);
+                fill = operande(addr, "fill", remaining);
+                fill.setBytesToFill(0x20);
+                this->AddOperande(fill);
 
-                QByteArray str__ = ReadStringSubByteArray(content, addr);
-                this->AddOperande(operande(addr, "string", str__));
-                QByteArray remaining__ = ReadSubByteArray(content, addr, 0x30 - str__.size() - 1);
-                operande fill__ = operande(addr, "fill", remaining__);
-                fill__.setBytesToFill(0x30);
-                this->AddOperande(fill__);
+                str = ReadStringSubByteArray(content, addr);
+                this->AddOperande(operande(addr, "string", str));
+                remaining = ReadSubByteArray(content, addr, 0x30 - str.size() - 1);
+                fill = operande(addr, "fill", remaining);
+                fill.setBytesToFill(0x30);
+                this->AddOperande(fill);
 
                 cnt++;
             }

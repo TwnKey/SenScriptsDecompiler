@@ -504,21 +504,21 @@ class CS4Builder : public Builder {
                 fill.setBytesToFill(0x10);
                 this->AddOperande(fill);
 
-                QByteArray str_ = ReadStringSubByteArray(content, addr);
-                this->AddOperande(operande(addr, "string", str_));
-                QByteArray remaining_ = ReadSubByteArray(content, addr, 0x20 - str_.size() - 1);
-                operande fill_ = operande(addr, "fill", remaining_);
-                fill_.setBytesToFill(0x20);
-                this->AddOperande(fill_);
+                str = ReadStringSubByteArray(content, addr);
+                this->AddOperande(operande(addr, "string", str));
+                remaining = ReadSubByteArray(content, addr, 0x20 - str.size() - 1);
+                fill = operande(addr, "fill", remaining);
+                fill.setBytesToFill(0x20);
+                this->AddOperande(fill);
 
                 // The last string can be 0x20 long and the following 0x20 can terminate the string, I think
                 // it's their purpose here
-                QByteArray str__ = ReadStringSubByteArray(content, addr);
-                this->AddOperande(operande(addr, "string", str__));
-                QByteArray remaining__ = ReadSubByteArray(content, addr, 0x40 - str__.size() - 1);
-                operande fill__ = operande(addr, "fill", remaining__);
-                fill__.setBytesToFill(0x40);
-                this->AddOperande(fill__);
+                str = ReadStringSubByteArray(content, addr);
+                this->AddOperande(operande(addr, "string", str));
+                remaining = ReadSubByteArray(content, addr, 0x40 - str.size() - 1);
+                fill = operande(addr, "fill", remaining);
+                fill.setBytesToFill(0x40);
+                this->AddOperande(fill);
 
                 cnt++;
             } while (cnt < 0x40);
@@ -526,8 +526,8 @@ class CS4Builder : public Builder {
             while (shrt == -1) {
                 QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
                 this->AddOperande(operande(addr, "short", short_bytes));
-                QByteArray remaining___ = ReadSubByteArray(content, addr, 0xC1);
-                this->AddOperande(operande(addr, "bytearray", remaining___));
+                QByteArray remaining = ReadSubByteArray(content, addr, 0xC1);
+                this->AddOperande(operande(addr, "bytearray", remaining));
 
                 shrt = ReadShortFromByteArray(addr, content);
             }
