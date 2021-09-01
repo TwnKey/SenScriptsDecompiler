@@ -302,7 +302,7 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
             int check2 = ReadIntegerFromByteArray(addr, content);
-            if (check1 && check2 != 0) { // bad
+            if (check1 != 0 && check2 != 0) { // bad
 
                 addr = initial_addr;
                 Maker->flag_monsters = false;
