@@ -6353,7 +6353,7 @@ class CS1Builder : public Builder {
             } else {
                 end_addr = ReadIntegerFromByteArray(next_position, dat_content);
             }
-            FunctionsToParse.push_back(function(idx_fun, function_name, name_pos, addr, end_addr));
+            FunctionsToParse.emplace_back(idx_fun, function_name, name_pos, addr, end_addr);
         }
         display_text("Header parsed.");
         return true;
