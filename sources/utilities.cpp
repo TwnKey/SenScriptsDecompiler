@@ -39,22 +39,7 @@ QByteArray GetBytesFromFloat(float f) {
 bool isMultiple0x10(const std::string& fun_name) {
     return (fun_name == "PTN_TABLE") || (fun_name.starts_with("FC_auto")) || (fun_name.starts_with("_"));
 }
-QByteArray GetBytesFromInt(int i) {
-    QByteArray q_b;
-    q_b.push_back(static_cast<int8_t>(i & 0x000000ff));
-    q_b.push_back(static_cast<int8_t>((i & 0x0000ff00) >> 8));
-    q_b.push_back(static_cast<int8_t>((i & 0x00ff0000) >> 16));
-    q_b.push_back(static_cast<int8_t>((i) >> 24));
 
-    return q_b;
-}
-QByteArray GetBytesFromShort(int16_t i) {
-    QByteArray q_b;
-    q_b.push_back(static_cast<int8_t>(i & 0x00ff));
-    q_b.push_back(static_cast<int8_t>((i & 0xff00) >> 8));
-
-    return q_b;
-}
 float QByteArrayToFloat(QByteArray& content) // thanks to jabk https://stackoverflow.com/questions/36859447/qbytearray-to-float
 {
     static_assert(std::numeric_limits<float>::is_iec559, "Only supports IEC 559 (IEEE 754) float");
