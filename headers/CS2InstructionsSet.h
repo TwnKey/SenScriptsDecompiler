@@ -7891,13 +7891,13 @@ class CS2Builder : public Builder {
         // Done; here the "function" objects holds the number of functions, the addr, name positions
         // everything else can be deduced to recreate the header
         display_text("Reading header...");
-        uint nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
-        uint position_filename = ReadIntegerFromByteArray(0x4, dat_content);
+        int nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
+        int position_filename = ReadIntegerFromByteArray(0x4, dat_content);
         int position = position_filename;
         int next_position = 0;
         SceneName = ReadStringFromByteArray(position, dat_content);
         int start_offset_area = ReadIntegerFromByteArray(0x8, dat_content);
-        for (uint idx_fun = 0; idx_fun < nb_functions; idx_fun++) {
+        for (int idx_fun = 0; idx_fun < nb_functions; idx_fun++) {
             position = start_offset_area + 4 * idx_fun;
             next_position = start_offset_area + 4 * (idx_fun + 1);
             int addr = ReadIntegerFromByteArray(position, dat_content);
@@ -8338,7 +8338,7 @@ class CS2Builder : public Builder {
         header.append(GetBytesFromInt(FunctionsParsed.size() * 4));
         header.append(GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4));
         header.append(GetBytesFromInt(FunctionsParsed.size()));
-        int length_of_names_section = 0;
+        size_t length_of_names_section = 0;
         for (auto& fun : FunctionsParsed) {
             length_of_names_section = length_of_names_section + fun.name.size() + 1;
         }

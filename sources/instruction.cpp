@@ -105,7 +105,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
         type = excelScenarioSheet.read(idx_row, idx_operande).toString().toStdString();
     }
 }
-int Instruction::get_Nb_operandes() const { return operandes.size(); }
+int Instruction::get_Nb_operandes() const { return static_cast<int>(operandes.size()); }
 operande Instruction::get_operande(int i) const { return operandes[i]; }
 
 int Instruction::get_addr_instr() const { return this->addr_instr; }
@@ -210,7 +210,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
         } else if (type == "pointer") {
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
             int ID = funs[0].ID;
-            int nb_row = 3;
+            size_t nb_row = 3;
             int idx_fun = 0;
             while (ID != operande.getDestination().FunctionID) {
 

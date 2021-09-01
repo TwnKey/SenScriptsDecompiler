@@ -317,28 +317,30 @@ bool Builder::UpdatePointersXLSX() {
 int Builder::find_function(uint addr) {
     int result = -1;
 
-    for (uint idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
+    for (size_t idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
         uint fun_addr = FunctionsParsed[idx_fun].actual_addr;
 
         if (addr < fun_addr) {
 
-            result = idx_fun - 1;
+            result = static_cast<int>(idx_fun) - 1;
             break;
         }
     }
-    if ((result == -1) && (addr < FunctionsParsed[FunctionsParsed.size() - 1].end_addr)) result = FunctionsParsed.size() - 1;
+    if ((result == -1) && (addr < FunctionsParsed[FunctionsParsed.size() - 1].end_addr)) {
+        result = static_cast<int>(FunctionsParsed.size()) - 1;
+    }
 
     return result;
 }
 int Builder::find_instruction(uint addr, function fun) {
-    uint result = -1;
-    uint idx_instr = 0;
+    int result = -1;
+    size_t idx_instr = 0;
     bool success = false;
     for (; idx_instr < fun.InstructionsInFunction.size(); idx_instr++) {
         uint instr_addr = fun.InstructionsInFunction[idx_instr]->get_addr_instr();
         if (addr == instr_addr) {
             success = true;
-            result = idx_instr;
+            result = static_cast<int>(idx_instr);
 
             break;
         }
