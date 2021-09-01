@@ -16,7 +16,7 @@
 #include <QDebug>
 #include <QDir>
 
-using namespace QXlsx;
+using namespace QXlsx; // NOLINT(google-build-using-namespace)
 
 Decompiler::Decompiler() = default;
 
