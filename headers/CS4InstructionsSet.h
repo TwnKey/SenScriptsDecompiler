@@ -8398,7 +8398,7 @@ class CS4Builder : public Builder {
         scene_name_bytes.append('\x0');
         int size_of_scene_name = scene_name_bytes.length();
 
-        int nb_byte_to_add_scene_name = (((int)ceil((float)(size_of_scene_name) / 4))) * 4 - size_of_scene_name;
+        int nb_byte_to_add_scene_name = (((int)std::ceil((float)(size_of_scene_name) / 4))) * 4 - size_of_scene_name;
         size_of_scene_name += nb_byte_to_add_scene_name;
         header.append(GetBytesFromInt(0x20));
         header.append(GetBytesFromInt(0x20));
@@ -8435,7 +8435,7 @@ class CS4Builder : public Builder {
             header.append(actual_names);
             int multiple = 4;
             if (FunctionsParsed[0].name.starts_with("_")) multiple = 0x10;
-            int nb_byte_to_add = (((int)ceil((float)header.size() / (float)multiple))) * multiple - header.size();
+            int nb_byte_to_add = (((int)std::ceil((float)header.size() / (float)multiple))) * multiple - header.size();
             QByteArray remaining;
             for (int i = 0; i < nb_byte_to_add; i++) {
                 remaining.push_back('\x0');

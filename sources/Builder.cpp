@@ -61,7 +61,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
             int multiple = 4;
             if (isMultiple0x10(FunctionsParsed[idx_fun + 1].name)) multiple = 0x10;
 
-            int padding = (((int)ceil((float)addr_fun / (float)multiple))) * multiple - addr_fun;
+            int padding = (((int)std::ceil((float)addr_fun / (float)multiple))) * multiple - addr_fun;
 
             addr_fun = addr_fun + padding;
 
@@ -112,7 +112,7 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
             int multiple = 4;
             if (isMultiple0x10(FunctionsParsed[idx_fun].name)) multiple = 0x10;
 
-            int padding = (((int)ceil((float)current_addr / (float)multiple))) * multiple - current_addr;
+            int padding = (((int)std::ceil((float)current_addr / (float)multiple))) * multiple - current_addr;
             current_addr = current_addr + padding;
             FunctionsParsed[idx_fun].SetAddr(current_addr);
         }

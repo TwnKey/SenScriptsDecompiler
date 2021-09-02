@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QTextCodec>
 #include <QTextStream>
+#include <cmath>
 #include <concepts>
 #include <cstdint>
 #include <iomanip>
