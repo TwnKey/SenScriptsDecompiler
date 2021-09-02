@@ -229,7 +229,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead,
                                const QString& folder_for_reference,
                                const QString& folder_for_generated_files,
                                const QString& output_folder) {
-    QFile file("C:\\Users\\Antoine\\Desktop\\log.txt");
+    QFile file("C:/Users/Antoine/Desktop/log.txt");
 
     QTextStream stream(&file);
     file.remove();
