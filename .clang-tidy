@@ -1,19 +1,46 @@
+# These are the paths we want to check
 HeaderFilterRegex: "^../(sources|headers)/.*"
+
+# clang-tidy doesn't have an easy way to put comments in for checks
+# so a description will have to go here.
+#
+# IMPORTANT NOTE: Disabling a check with an alias, doesn't disable
+# its analogue. Thus, checks like bugprone-narrowing-conversions are disabled
+# just so we don't get a double warning. Hopefully that changes in the future,
+# but it will mean we need remove it from the checks that are disabled.
+#
+# Generally this file is in alphabetical order, but with the disabled modernize
+# options last, since they are more stylistic than anything.
+#
+# HOWEVER, we're going to use the area after that as a TODO list
+# for which checks we want to reenable.
 Checks: >
   *,
   -llvmlibc-*,
   -hicpp-*,
+  -bugprone-narrowing-conversions,
   -fuchsia-default-arguments-calls,
   -fuchsia-default-arguments-declarations,
   -fuchsia-overloaded-operator,
   -fuchsia-trailing-return,
+  -google-readability-function-size,
   -cppcoreguidelines-avoid-magic-numbers,
+  -llvm-else-after-return,
   -misc-non-private-member-variables-in-classes,
   -cppcoreguidelines-non-private-member-variables-in-classes,
   -cppcoreguidelines-pro-type-vararg,
+  -readability-container-size-empty,
   -readability-magic-numbers,
   modernize-*,
+  -modernize-avoid-c-arrays,
   -modernize-use-bool-literals,
   -modernize-use-trailing-return-type,
+  -bugprone-branch-clone,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-special-member-functions,
+  -google-readability-casting,
+  -readability-convert-member-functions-to-static,
+  -readability-function-cognitive-complexity,
+  -readability-function-size,
 CheckOptions:
   - { key: readability-braces-around-statements.ShortStatementLines, value: 2 }
