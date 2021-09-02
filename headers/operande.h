@@ -19,25 +19,25 @@ class operande {
     operande(Destination pointer, int position, std::string type, QByteArray value) {
         Dest = pointer;
         Position = position;
-        Type = type;
-        Value = value;
+        Type = std::move(type);
+        Value = std::move(value);
     }
     operande(int position, std::string type, QByteArray value) {
         Position = position;
-        Type = type;
-        Value = value;
+        Type = std::move(type);
+        Value = std::move(value);
     }
 
     operande(int position, std::string type, std::vector<uint8_t> value) {
         Position = position;
-        Type = type;
+        Type = std::move(type);
         Value = QByteArray(reinterpret_cast<const char*>(value.data()), static_cast<int>(value.size()));
     }
 
     [[nodiscard]] bool IsPointer() const { return !((Dest.FunctionID == -1) || (Dest.InstructionID == -1)); }
 
     QByteArray getValue() { return Value; }
-    void setValue(QByteArray v) { Value = v; }
+    void setValue(QByteArray v) { Value = std::move(v); }
     int getIntegerValue() { return ReadIntegerFromByteArray(0, Value); }
     void setBytesToFill(int b) { bytes_to_fill = b; }
     [[nodiscard]] int getBytesToFill() const { return bytes_to_fill; }

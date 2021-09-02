@@ -12,12 +12,12 @@ Instruction::Instruction(int addr, uint OP, Builder* Maker) {
 Instruction::Instruction(int addr, std::string name, uint OP, Builder* Maker) {
     this->addr_instr = addr;
     OPCode = OP;
-    this->name = name;
+    this->name = std::move(name);
     this->Maker = Maker;
 }
 Instruction::~Instruction() = default;
 Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker) {
-    this->name = name;
+    this->name = std::move(name);
     this->OPCode = OP;
     this->Maker = Maker;
     addr_instr = addr;

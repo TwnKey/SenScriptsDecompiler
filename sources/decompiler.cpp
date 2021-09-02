@@ -21,7 +21,7 @@ using namespace QXlsx; // NOLINT(google-build-using-namespace)
 Decompiler::Decompiler() = default;
 
 bool Decompiler::SetupGame(std::string Game_) {
-    Game = Game_;
+    Game = std::move(Game_);
     if (Game == "CS3") {
         IB = new CS3Builder();
     } else if (Game == "CS1") {

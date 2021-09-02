@@ -4,7 +4,7 @@
 
 function::function(int ID, std::string n, int declr_pos, int addr, int end) {
     this->ID = ID;
-    name = n;
+    name = std::move(n);
     declr_position = declr_pos;
     actual_addr = addr;
     this->end_addr = end;
