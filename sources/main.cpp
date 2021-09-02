@@ -4,7 +4,9 @@
 #include <QDir>
 #include <QSettings>
 
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables,fuchsia-statically-constructed-objects)
 std::string InputDatFileEncoding;
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables,fuchsia-statically-constructed-objects)
 std::string OutputDatFileEncoding;
 
 std::vector<std::string> get_header() {
