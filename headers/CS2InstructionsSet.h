@@ -115,7 +115,6 @@ class CS2Builder : public Builder {
                                 addr++;
                                 current_byte = content[addr];
                             }
-                            break;
                         } else {
                             current_op_value.push_back(current_byte);
                             addr++;
@@ -123,9 +122,7 @@ class CS2Builder : public Builder {
                             current_op_value.push_back(current_byte);
                             addr++;
                             current_byte = content[addr];
-                            break;
                         }
-
                     } else if ((((current_byte + 0xb7) & 0xdf) == 0) || (current_byte == 0x50) || (current_byte == 0x54) ||
                                (current_byte == 0x57) || (current_byte == 0x53) || (current_byte == 0x73) || (current_byte == 0x43) ||
                                (current_byte == 99) || (current_byte == 0x78) || (current_byte == 0x79) || (current_byte == 0x47) ||
