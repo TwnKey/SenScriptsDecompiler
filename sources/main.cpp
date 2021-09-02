@@ -3,7 +3,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QSettings>
-std::string Game;
+
 std::string InputDatFileEncoding;
 std::string OutputDatFileEncoding;
 
@@ -45,7 +45,7 @@ std::vector<std::string> get_header() {
 int main(int argc, char* argv[]) {
     QCoreApplication a(argc, argv);
     QSettings settings(QCoreApplication::applicationDirPath() + "/config.ini", QSettings::IniFormat);
-    Game = settings.value("Game", "CS4").toString().toStdString();
+    auto Game = settings.value("Game", "CS4").toString().toStdString();
     InputDatFileEncoding = settings.value("InputDatFileEncoding", "UTF-8").toString().toStdString();
     OutputDatFileEncoding = settings.value("OutputDatFileEncoding", "UTF-8").toString().toStdString();
     QString output_folder = QCoreApplication::applicationDirPath() + "/recompiled_files";
@@ -76,10 +76,10 @@ int main(int argc, char* argv[]) {
     } else if (argc >= 2) {
         QString full_path;
         if (argc == 3) {
-            Game = QCoreApplication::arguments().at(1).toStdString();
+            auto Game = QCoreApplication::arguments().at(1).toStdString();
             full_path = QCoreApplication::arguments().at(2);
         } else if (argc == 4) {
-            Game = QCoreApplication::arguments().at(1).toStdString();
+            auto Game = QCoreApplication::arguments().at(1).toStdString();
             full_path = QCoreApplication::arguments().at(2);
             output_folder = QCoreApplication::arguments().at(3);
         } else {

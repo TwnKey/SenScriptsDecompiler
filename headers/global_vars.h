@@ -2,7 +2,6 @@
 #define GLOBAL_VARS_H
 #include <string>
 
-extern std::string Game;
 extern std::string InputDatFileEncoding;
 extern std::string OutputDatFileEncoding;
 
