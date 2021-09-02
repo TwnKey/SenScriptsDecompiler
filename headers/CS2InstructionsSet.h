@@ -5630,7 +5630,7 @@ class CS2Builder : public Builder {
                     break;
                 }
             }
-            if ((control != 0xFFFF) && (control <= 0x101) && (code == 0x6)) {
+            if ((control <= 0x101) && (code == 0x6)) {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             }
         }
