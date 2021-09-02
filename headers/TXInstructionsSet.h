@@ -381,11 +381,10 @@ class TXBuilder : public Builder {
                 if (first != 1) {
                     addr = initial_addr;
                     Maker->flag_monsters = false;
-                    return;
                 } else {
                     Maker->flag_monsters = true;
-                    return;
                 }
+                return;
             }
             this->AddOperande(
               operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C))); //?? we don't forget to take the int as well

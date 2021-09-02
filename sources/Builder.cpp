@@ -198,7 +198,7 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
                     fun.AddInstruction(instr);
                     return current_position;
 
-                } else {
+                } else { // NOLINT(readability-else-after-return)
                     instr = CreateInstructionFromDAT(current_position, dat_content, 1);
 
                     if (flag_monsters) {
@@ -206,7 +206,7 @@ int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
                         instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                         fun.AddInstruction(instr);
                         return current_position;
-                    } else {
+                    } else { // NOLINT(readability-else-after-return)
 
                         // the function is incorrect, therefore, we parse it again as an OP Code function but remove the
                         // part that is incorrect
