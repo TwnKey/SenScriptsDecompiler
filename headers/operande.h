@@ -2,7 +2,8 @@
 #define OPERANDE_H
 #include "headers/utilities.h"
 
-struct Destination {
+class Destination {
+  public:
     Destination(int FID, int IID, int OID) {
         FunctionID = FID;
         InstructionID = IID;
