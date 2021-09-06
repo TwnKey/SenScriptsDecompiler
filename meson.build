@@ -42,6 +42,14 @@ add_project_arguments(
     language : 'cpp',
 )
 
+conf_data = configuration_data()
+conf_data.set('VERSION', meson.project_version())
+configure_file(
+  input: 'headers/version.h.in',
+  output: 'version.h',
+  configuration: conf_data
+)
+
 qt_dep = dependency('qt5', modules: ['Core', 'Gui'])
 
 qxlsx_project = subproject('qxlsx', default_options: ['warning_level=0'])
