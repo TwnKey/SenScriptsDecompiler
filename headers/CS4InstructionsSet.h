@@ -4,8 +4,6 @@
 #include "headers/translationfile.h"
 #include "headers/utilities.h"
 
-#include <QString>
-
 class CS4TranslationFile : public TranslationFile {
   public:
     CS4TranslationFile()
@@ -7924,8 +7922,7 @@ class CS4Builder : public Builder {
         uint position_filename = ReadIntegerFromByteArray(0x4, dat_content);
         int position = position_filename;
         int next_position = 0;
-        QString filename = ReadStringFromByteArray(position, dat_content);
-        SceneName = filename;
+        SceneName = ReadStringFromByteArray(position, dat_content);
         int start_offset_area = ReadIntegerFromByteArray(0x8, dat_content);
         for (uint idx_fun = 0; idx_fun < nb_functions; idx_fun++) {
             position = start_offset_area + 4 * idx_fun;
@@ -7934,7 +7931,7 @@ class CS4Builder : public Builder {
             position = start_offset_area + 4 * nb_functions + 2 * idx_fun;
             int16_t name_pos = ReadShortFromByteArray(position, dat_content);
             int name_pos_int = name_pos;
-            QString function_name = ReadStringFromByteArray(name_pos_int, dat_content);
+            std::string function_name = ReadStringFromByteArray(name_pos_int, dat_content);
             int end_addr = 0;
             if (idx_fun == nb_functions - 1) { // we are at the last function, so it ends at the end of the file
                 end_addr = dat_content.size();
@@ -8387,7 +8384,7 @@ class CS4Builder : public Builder {
                 return std::make_shared<StyleName>(addr, row, xls_content, this);
             default:
                 std::stringstream stream;
-                stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName.toStdString();
+                stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName;
 
                 error = true;
                 /*std::string result( stream.str() );
@@ -8401,7 +8398,7 @@ class CS4Builder : public Builder {
 
         QByteArray header;
 
-        QByteArray scene_name_bytes = SceneName.toUtf8();
+        QByteArray scene_name_bytes = QByteArray::fromStdString(SceneName);
         scene_name_bytes.append('\x0');
         int size_of_scene_name = scene_name_bytes.length();
 
@@ -8415,7 +8412,7 @@ class CS4Builder : public Builder {
         header.append(GetBytesFromInt(FunctionsParsed.size()));
         int length_of_names_section = 0;
         for (auto& fun : FunctionsParsed) {
-            length_of_names_section = length_of_names_section + fun.name.toUtf8().length() + 1;
+            length_of_names_section = length_of_names_section + fun.name.size() + 1;
         }
         header.append(
           GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + length_of_names_section));
@@ -8431,7 +8428,7 @@ class CS4Builder : public Builder {
             int offset_names = 0;
             for (auto& fun : FunctionsParsed) {
                 header.append(GetBytesFromInt(fun.actual_addr));
-                QByteArray name = fun.name.toUtf8();
+                QByteArray name = QByteArray::fromStdString(fun.name);
                 name.append('\x0');
                 position_names.append(
                   GetBytesFromShort(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + offset_names));
@@ -8441,7 +8438,7 @@ class CS4Builder : public Builder {
             header.append(position_names);
             header.append(actual_names);
             int multiple = 4;
-            if (FunctionsParsed[0].name.startsWith("_")) multiple = 0x10;
+            if (FunctionsParsed[0].name.starts_with("_")) multiple = 0x10;
             int nb_byte_to_add = (((int)ceil((float)header.size() / multiple))) * multiple - header.size();
             QByteArray remaining;
             for (int i = 0; i < nb_byte_to_add; i++) {

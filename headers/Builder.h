@@ -84,7 +84,7 @@ class Builder {
     int find_operande(uint addr, const Instruction& instr);
     std::vector<function> FunctionsToParse;
     std::vector<function> FunctionsParsed;
-    QString SceneName;
+    std::string SceneName;
     int ReadIndividualFunction(function& fun, QByteArray& dat_content);
     bool UpdatePointersXLSX();
     bool UpdatePointersDAT();
@@ -93,6 +93,6 @@ class Builder {
     bool flag_monsters = false;
     bool error = false;
     int idx_current_fun = 0;
-    QString previous_fun_name = "";
+    std::string previous_fun_name;
 };
 #endif // INSTRUCTIONBUILDER_H

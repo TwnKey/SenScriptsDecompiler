@@ -7,14 +7,14 @@ class TranslationFile {
   public:
     TranslationFile();
 
-    void setName(QString name);
+    void setName(std::string name);
     [[nodiscard]] int getNbFunctions() const;
-    QString getName();
+    std::string getName();
     void addFunction(const function& fun);
     std::vector<function> FunctionsInFile;
 
   protected:
-    QString SceneName;
+    std::string SceneName;
 };
 
 #endif // TRANSLATIONFILE_H

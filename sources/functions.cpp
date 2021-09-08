@@ -1,7 +1,8 @@
 
 #include "headers/functions.h"
+#include <string>
 
-function::function(int ID, QString n, int declr_pos, int addr, int end) {
+function::function(int ID, std::string n, int declr_pos, int addr, int end) {
     this->ID = ID;
     name = n;
     declr_position = declr_pos;
@@ -27,7 +28,7 @@ int function::get_length_in_bytes() {
     return length_in_bytes;
 }
 bool operator==(const function& f1, const function& f2) { return f1.ID == f2.ID; }
-std::vector<function>::iterator find_function_by_name(std::vector<function>& v, QString name) {
+std::vector<function>::iterator find_function_by_name(std::vector<function>& v, std::string name) {
     return find_if(v.begin(), v.end(), [&name](const function& obj) { return obj.name == name; });
 }
 std::vector<function>::iterator find_function_by_ID(std::vector<function>& v, int ID) {

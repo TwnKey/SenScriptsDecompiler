@@ -3,7 +3,6 @@
 #include "headers/Builder.h"
 #include "headers/operande.h"
 #include <QDebug>
-#include <QString>
 #include <cmath>
 
 #include "xlsxcellrange.h"
@@ -16,8 +15,8 @@
 class Instruction {
   public:
     Instruction(int addr, uint OP, Builder* Maker);
-    Instruction(int addr, QString name, uint OP, Builder* Maker);
-    Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, QString name, uint OP, Builder* Maker);
+    Instruction(int addr, std::string name, uint OP, Builder* Maker);
+    Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker);
     virtual ~Instruction();
     virtual int WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<function> funs, int row, int& col);
     virtual void WriteDat();
@@ -36,7 +35,7 @@ class Instruction {
   protected:
     int addr_instr;
     uint OPCode;
-    QString name;
+    std::string name;
     int length_in_bytes = 0;
 };
 

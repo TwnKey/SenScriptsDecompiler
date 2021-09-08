@@ -20,7 +20,7 @@ using namespace QXlsx;
 
 Decompiler::Decompiler() = default;
 
-bool Decompiler::SetupGame(QString Game_) {
+bool Decompiler::SetupGame(std::string Game_) {
     Game = Game_;
     if (Game == "CS3") {
         IB = new CS3Builder();
@@ -47,7 +47,7 @@ bool Decompiler::ReadXLSX(QFile& File) {
     if (!File.open(QIODevice::ReadOnly)) return false;
 
     Document doc(info.absoluteFilePath());
-    Game = doc.read(1, 1).toString();
+    Game = doc.read(1, 1).toString().toStdString();
     SetupGame(Game);
     display_text("Reading functions...");
 
@@ -128,7 +128,7 @@ bool Decompiler::WriteDAT(const QString& folder) {
     QDir dir(folder);
     if (!dir.exists()) dir.mkpath(".");
 
-    QString output_path = folder + "\\" + CurrentTF.getName() + ".dat";
+    QString output_path = folder + "\\" + QString::fromStdString(CurrentTF.getName()) + ".dat";
     QFile file(output_path);
 
     file.open(QIODevice::WriteOnly);
@@ -140,7 +140,7 @@ bool Decompiler::WriteDAT(const QString& folder) {
 bool Decompiler::WriteXLSX(const QString& output_folder) {
 
     QFont font = QFont("Arial");
-    QString filename = CurrentTF.getName() + ".xlsx";
+    QString filename = QString::fromStdString(CurrentTF.getName()) + ".xlsx";
     QXlsx::Document excelScenarioSheet;
     Format format;
     format.setFont(font);
@@ -152,14 +152,14 @@ bool Decompiler::WriteXLSX(const QString& output_folder) {
     format.setFontColor(FontColor);
     format.setFontSize(14);
 
-    excelScenarioSheet.write("A1", Game, format);
+    excelScenarioSheet.write("A1", QString::fromStdString(Game), format);
 
     Format formatLocation;
 
     formatLocation.setFont(font);
     formatLocation.setFontSize(10);
     formatLocation.setPatternBackgroundColor(DarkYellow);
-    excelScenarioSheet.write("A2", CurrentTF.getName(), formatLocation);
+    excelScenarioSheet.write("A2", QString::fromStdString(CurrentTF.getName()), formatLocation);
 
     Format rowFormat;
     rowFormat.setFillPattern(Format::PatternSolid);
@@ -205,7 +205,7 @@ bool Decompiler::WriteXLSX(const QString& output_folder) {
     for (const auto& fun : CurrentTF.FunctionsInFile) {
         excelScenarioSheet.setRowFormat(excel_row, excel_row, rowFormatFunctions);
         excelScenarioSheet.write(excel_row, 1, "FUNCTION");
-        excelScenarioSheet.write(excel_row, 2, fun.name);
+        excelScenarioSheet.write(excel_row, 2, QString::fromStdString(fun.name));
 
         excel_row++;
         for (auto& instr : fun.InstructionsInFunction) {

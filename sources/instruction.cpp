@@ -2,20 +2,21 @@
 #include "headers/functions.h"
 #include "headers/global_vars.h"
 #include "headers/utilities.h"
+#include <string>
 
 Instruction::Instruction(int addr, uint OP, Builder* Maker) {
     OPCode = OP;
     this->Maker = Maker;
     this->addr_instr = addr;
 }
-Instruction::Instruction(int addr, QString name, uint OP, Builder* Maker) {
+Instruction::Instruction(int addr, std::string name, uint OP, Builder* Maker) {
     this->addr_instr = addr;
     OPCode = OP;
     this->name = name;
     this->Maker = Maker;
 }
 Instruction::~Instruction() = default;
-Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, QString name, uint OP, Builder* Maker) {
+Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker) {
     this->name = name;
     this->OPCode = OP;
     this->Maker = Maker;
@@ -23,8 +24,8 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
     if (OPCode <= 0xFF) addr++;
 
     int idx_operande = 3;
-    QString type = excelScenarioSheet.read(idx_row, idx_operande).toString();
-    while (!type.isEmpty()) {
+    std::string type = excelScenarioSheet.read(idx_row, idx_operande).toString().toStdString();
+    while (!type.empty()) {
 
         QByteArray Value;
         operande op;
@@ -72,7 +73,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
         else if ((type == "string") || (type == "dialog")) {
             QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_operande).toString());
             Value = Operande.toUtf8();
-            QTextCodec* codec = QTextCodec::codecForName(OutputDatFileEncoding.toUtf8());
+            QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(OutputDatFileEncoding).toUtf8());
             QByteArray Value = codec->fromUnicode(Operande);
             Value.replace('\n', 1);
 
@@ -83,7 +84,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
                 unsigned char Operande = ((excelScenarioSheet.read(idx_row + 1, idx_operande).toInt()) & 0x000000FF);
                 Value.push_back(Operande);
                 idx_operande++;
-                type = excelScenarioSheet.read(idx_row, idx_operande).toString();
+                type = excelScenarioSheet.read(idx_row, idx_operande).toString().toStdString();
             }
             op = operande(addr, "bytearray", Value);
             idx_operande--;
@@ -101,7 +102,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
         this->AddOperande(op);
         idx_operande++;
         addr = addr + op.getLength();
-        type = excelScenarioSheet.read(idx_row, idx_operande).toString();
+        type = excelScenarioSheet.read(idx_row, idx_operande).toString().toStdString();
     }
 }
 int Instruction::get_Nb_operandes() const { return operandes.size(); }
@@ -147,7 +148,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
     int col_cnt = 0;
     for (auto& operande : operandes) {
 
-        QString type = operande.getType();
+        QString type = QString::fromStdString(operande.getType());
         QByteArray Value = operande.getValue();
 
         if (type == "int") {
@@ -200,7 +201,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
 
             value_.replace(1, "\n");
 
-            QTextCodec* codec = QTextCodec::codecForName(InputDatFileEncoding.toUtf8());
+            QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(InputDatFileEncoding).toUtf8());
 
             QString string = codec->toUnicode(value_);
 
@@ -249,7 +250,7 @@ void Instruction::AddOperande(operande op) {
     if (op.getType() == "string") {
         QTextCodec::ConverterState state;
 
-        QTextCodec* codec = QTextCodec::codecForName(InputDatFileEncoding.toUtf8());
+        QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(InputDatFileEncoding).toUtf8());
         const QString text = codec->toUnicode(value, value.size(), &state);
 
         if ((state.invalidChars > 0) || text.contains('\x0B') || text.contains('\x06') || text.contains('\x07') || text.contains('\x08') ||
