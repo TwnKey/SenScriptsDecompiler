@@ -225,11 +225,12 @@ bool Decompiler::WriteXLSX(const QString& output_folder) {
     return true;
 }
 
-bool Decompiler::CheckAllFiles(const QStringList& filesToRead,
+bool Decompiler::CheckAllFiles(const QString& log_filename,
+                               const QStringList& filesToRead,
                                const QString& folder_for_reference,
                                const QString& folder_for_generated_files,
                                const QString& output_folder) {
-    QFile file("C:/Users/Antoine/Desktop/log.txt");
+    QFile file(log_filename);
 
     QTextStream stream(&file);
     file.remove();

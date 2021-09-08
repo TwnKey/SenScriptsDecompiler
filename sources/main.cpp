@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     Dc.SetupGame("CS4");
     QDir directory("C:/Users/Antoine/Desktop/CS4Debug");
     QStringList dat = directory.entryList(QStringList() << "*.dat",QDir::Files);
-    Dc.CheckAllFiles(dat, "C:/Users/Antoine/Desktop/CS4Debug",
+    Dc.CheckAllFiles("C:/Users/Antoine/Desktop/log.txt", dat, "C:/Users/Antoine/Desktop/CS4Debug",
     "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
     */
     if (argc < 2) {
