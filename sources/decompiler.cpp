@@ -225,7 +225,7 @@ bool Decompiler::WriteXLSX(const QString& output_folder) {
     return true;
 }
 
-bool Decompiler::CheckAllFiles(QStringList filesToRead,
+bool Decompiler::CheckAllFiles(const QStringList& filesToRead,
                                const QString& folder_for_reference,
                                const QString& folder_for_generated_files,
                                const QString& output_folder) {
@@ -235,8 +235,7 @@ bool Decompiler::CheckAllFiles(QStringList filesToRead,
     file.remove();
     file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
 
-    foreach (QString file_, filesToRead) {
-
+    for (const auto& file_ : filesToRead) {
         QString full_path = folder_for_reference + "/" + file_;
         QString filename = full_path.mid(full_path.lastIndexOf("/"));
         QString croped_fileName = filename.section(".", 0, 0);

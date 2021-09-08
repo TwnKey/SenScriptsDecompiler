@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
         QFileInfoList dat = directory.entryInfoList(QStringList() << file, QDir::Files);
 
         if (!dat.isEmpty()) {
-            foreach (QFileInfo file_, dat) {
+            for (const auto& file_ : dat) {
                 Decompiler Dc;
                 Dc.SetupGame(Game);
                 Dc.ReadFile(file_.absoluteFilePath());

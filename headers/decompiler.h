@@ -30,7 +30,7 @@ class Decompiler {
     bool UpdateCurrentTF();
     bool WriteXLSX(const QString& output_folder);
     bool WriteDAT(const QString& output_folder);
-    bool CheckAllFiles(QStringList filesToRead,
+    bool CheckAllFiles(const QStringList& filesToRead,
                        const QString& folder_for_reference,
                        const QString& folder_for_generated_files,
                        const QString& output_folder);
