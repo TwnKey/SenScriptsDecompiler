@@ -350,7 +350,7 @@ class CS2Builder : public Builder {
                     QByteArray monsters_name = ReadStringSubByteArray(content, addr);
                     this->AddOperande(operande(addr, "string", monsters_name));
 
-                    QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - monsters_name.size() - 1);
+                    QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - monsters_name.size());
                     operande fill = operande(addr, "fill", remaining);
                     fill.setBytesToFill(0x10);
                     this->AddOperande(fill);
@@ -366,7 +366,7 @@ class CS2Builder : public Builder {
                     QByteArray monsters_name = ReadStringSubByteArray(content, addr);
                     this->AddOperande(operande(addr, "string", monsters_name));
 
-                    QByteArray remaining = ReadSubByteArray(content, addr, 12 - monsters_name.size() - 1);
+                    QByteArray remaining = ReadSubByteArray(content, addr, 12 - monsters_name.size());
                     operande fill = operande(addr, "bytearray", remaining);
                     fill.setBytesToFill(12);
                     this->AddOperande(fill);
@@ -412,7 +412,7 @@ class CS2Builder : public Builder {
                 QByteArray str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
 
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x20 - str.size() - 1);
+                QByteArray remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
 
                 operande fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x20);
@@ -459,21 +459,21 @@ class CS2Builder : public Builder {
                 this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-24
                 QByteArray str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - str.size() - 1);
+                QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - str.size());
                 operande fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x10);
                 this->AddOperande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                remaining = ReadSubByteArray(content, addr, 0x20 - str.size() - 1);
+                remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x20);
                 this->AddOperande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                remaining = ReadSubByteArray(content, addr, 0x30 - str.size() - 1);
+                remaining = ReadSubByteArray(content, addr, 0x30 - str.size());
                 fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x30);
                 this->AddOperande(fill);
@@ -634,7 +634,7 @@ class CS2Builder : public Builder {
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                 QByteArray str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x20 - str.size() - 1);
+                QByteArray remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 operande fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x20);
                 this->AddOperande(fill);
@@ -705,14 +705,14 @@ class CS2Builder : public Builder {
 
                 QByteArray str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x20 - str.size() - 1);
+                QByteArray remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 operande fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x20);
                 this->AddOperande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                remaining = ReadSubByteArray(content, addr, 0x20 - str.size() - 1);
+                remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x20);
                 this->AddOperande(fill);
@@ -761,13 +761,13 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "int", first_integer_bytes));
             QByteArray str = ReadStringSubByteArray(content, addr);
             this->AddOperande(operande(addr, "string", str));
-            QByteArray remaining = ReadSubByteArray(content, addr, (0x20) - str.size() - 1);
+            QByteArray remaining = ReadSubByteArray(content, addr, (0x20) - str.size());
             operande fill = operande(addr, "fill", remaining);
             fill.setBytesToFill((0x20));
             this->AddOperande(fill);
             str = ReadStringSubByteArray(content, addr);
             this->AddOperande(operande(addr, "string", str));
-            remaining = ReadSubByteArray(content, addr, (0x20) - str.size() - 1);
+            remaining = ReadSubByteArray(content, addr, (0x20) - str.size());
             fill = operande(addr, "fill", remaining);
             fill.setBytesToFill((0x20));
             this->AddOperande(fill);
@@ -867,7 +867,7 @@ class CS2Builder : public Builder {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                 QByteArray title = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", title));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - title.size() - 1);
+                QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - title.size());
                 operande fill = operande(addr, "bytearray", remaining);
                 fill.setBytesToFill(0x10);
                 this->AddOperande(fill);

@@ -21,7 +21,7 @@ QByteArray ReadStringSubByteArray(QByteArray& content, int& addr) {
         result.push_back(content.at(addr));
         addr++;
     }
-
+	result.push_back(content.at(addr));
     addr++;
     return result;
 }

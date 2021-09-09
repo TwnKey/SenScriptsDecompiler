@@ -44,7 +44,7 @@ class operande {
     [[nodiscard]] int getBytesToFill() const { return bytes_to_fill; }
     int getLength() {
         int size = Value.size();
-        if (Type == "string") size++;
+        
         return size;
     }
     [[nodiscard]] uint getAddr() const { return Position; }
