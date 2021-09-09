@@ -21,7 +21,7 @@ QByteArray ReadStringSubByteArray(const QByteArray& content, int& addr) {
         result.push_back(content.at(addr));
         addr++;
     }
-
+    result.push_back(content.at(addr)); // should be the null byte
     addr++;
     return result;
 }

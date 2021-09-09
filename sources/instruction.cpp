@@ -275,7 +275,6 @@ QByteArray Instruction::getBytes() {
     for (auto& it : operandes) {
 
         QByteArray op_bytes = it.getValue();
-        if (it.getType() == "string") op_bytes.push_back('\x0');
         for (auto&& op_byte : op_bytes) {
             bytes.push_back(op_byte);
         }
