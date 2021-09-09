@@ -31,7 +31,7 @@ class CS1Builder : public Builder {
             switch (current_byte) {
                 case 0x00:
                     current_op_value.clear();
-                    current_op_value[0] = 0;
+                    current_op_value.push_back(0);
                     instr->AddOperande(operande(addr, "byte", current_op_value));
                     addr++;
                     return;
