@@ -22,15 +22,15 @@ Decompiler::Decompiler() = default;
 
 bool Decompiler::setup_game(const std::string& game) {
     if (game == "CS3") {
-        ib = new CS3Builder();
+        ib = std::make_unique<CS3Builder>();
     } else if (game == "CS1") {
-        ib = new CS1Builder();
+        ib = std::make_unique<CS1Builder>();
     } else if (game == "CS2") {
-        ib = new CS2Builder();
+        ib = std::make_unique<CS2Builder>();
     } else if (game == "CS4") {
-        ib = new CS4Builder();
+        ib = std::make_unique<CS4Builder>();
     } else if (game == "TX") {
-        ib = new TXBuilder();
+        ib = std::make_unique<TXBuilder>();
     } else {
         display_text("FAILURE: Unrecognized game specified.");
         return false;

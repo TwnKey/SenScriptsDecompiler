@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QString>
+#include <memory>
 
 /*
 The Decompiler class is here to write the XLSX and DAT output files, as well as setting some global parameters such as
@@ -41,7 +42,7 @@ class Decompiler {
   private:
     TranslationFile current_tf;
     std::string _game;
-    Builder* ib = nullptr;
+    std::unique_ptr<Builder> ib = nullptr;
 };
 
 #endif // READER_H
