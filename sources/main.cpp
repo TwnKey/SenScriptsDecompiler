@@ -52,10 +52,10 @@ int main(int argc, char* argv[]) {
     OutputDatFileEncoding = settings.value("OutputDatFileEncoding", "UTF-8").toString().toStdString();
     QString output_folder = QCoreApplication::applicationDirPath() + "/recompiled_files";
     /*Decompiler Dc;
-    Dc.SetupGame("CS4");
+    Dc.setup_game("CS4");
     QDir directory("C:/Users/Antoine/Desktop/CS4Debug");
     QStringList dat = directory.entryList(QStringList() << "*.dat",QDir::Files);
-    Dc.CheckAllFiles("C:/Users/Antoine/Desktop/log.txt", dat, "C:/Users/Antoine/Desktop/CS4Debug",
+    Dc.check_all_files("C:/Users/Antoine/Desktop/log.txt", dat, "C:/Users/Antoine/Desktop/CS4Debug",
     "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
     */
     if (argc < 2) {
@@ -96,9 +96,9 @@ int main(int argc, char* argv[]) {
         if (!dat.isEmpty()) {
             for (const auto& file_ : dat) {
                 Decompiler Dc;
-                Dc.SetupGame(Game);
-                Dc.ReadFile(file_.absoluteFilePath());
-                Dc.WriteFile(file_.absoluteFilePath(), output_folder);
+                Dc.setup_game(Game);
+                Dc.read_file(file_.absoluteFilePath());
+                Dc.write_file(file_.absoluteFilePath(), output_folder);
             }
         } else {
             display_text("No file was found.");

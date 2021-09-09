@@ -23,25 +23,25 @@ translation file being edited WriteFile: writes the correct file depending on th
 class Decompiler {
   public:
     Decompiler();
-    bool SetupGame(std::string Game);
-    bool ReadXLSX(QFile& File);
-    bool ReadDAT(QFile& File);
-    bool ReadFile(const QString& filepath);
-    bool UpdateCurrentTF();
-    bool WriteXLSX(const QString& output_folder);
-    bool WriteDAT(const QString& output_folder);
-    bool CheckAllFiles(const QString& log_filename,
-                       const QStringList& filesToRead,
-                       const QString& folder_for_reference,
-                       const QString& folder_for_generated_files,
-                       const QString& output_folder);
-    TranslationFile GetTF();
-    bool WriteFile(const QString& filepath, const QString& output_folder);
+    bool setup_game(const std::string& game);
+    bool read_xlsx(QFile& filename);
+    bool read_dat(QFile& filename);
+    bool read_file(const QString& filepath);
+    bool update_current_tf();
+    bool write_xlsx(const QString& output_dir);
+    bool write_dat(const QString& output_dir);
+    bool check_all_files(const QString& log_filename,
+                         const QStringList& files_to_read,
+                         const QString& reference_dir,
+                         const QString& generated_files_dir,
+                         const QString& output_dir);
+    TranslationFile get_tf();
+    bool write_file(const QString& filepath, const QString& output_dir);
 
   private:
-    TranslationFile CurrentTF;
-    std::string Game;
-    Builder* IB = nullptr;
+    TranslationFile current_tf;
+    std::string _game;
+    Builder* ib = nullptr;
 };
 
 #endif // READER_H

@@ -20,19 +20,17 @@ using namespace QXlsx; // NOLINT(google-build-using-namespace)
 
 Decompiler::Decompiler() = default;
 
-bool Decompiler::SetupGame(std::string Game_) {
-    Game = std::move(Game_);
-    if (Game == "CS3") {
-        IB = new CS3Builder();
-    } else if (Game == "CS1") {
-        IB = new CS1Builder();
-    } else if (Game == "CS2") {
-
-        IB = new CS2Builder();
-    } else if (Game == "CS4") {
-        IB = new CS4Builder();
-    } else if (Game == "TX") {
-        IB = new TXBuilder();
+bool Decompiler::setup_game(const std::string& game) {
+    if (game == "CS3") {
+        ib = new CS3Builder();
+    } else if (game == "CS1") {
+        ib = new CS1Builder();
+    } else if (game == "CS2") {
+        ib = new CS2Builder();
+    } else if (game == "CS4") {
+        ib = new CS4Builder();
+    } else if (game == "TX") {
+        ib = new TXBuilder();
     } else {
         display_text("FAILURE: Unrecognized game specified.");
         return false;
@@ -40,61 +38,61 @@ bool Decompiler::SetupGame(std::string Game_) {
 
     return true;
 }
-bool Decompiler::ReadXLSX(QFile& File) {
-    QFileInfo info(File);
+bool Decompiler::read_xlsx(QFile& file) {
+    QFileInfo info(file);
 
-    if (!File.open(QIODevice::ReadOnly)) return false;
+    if (!file.open(QIODevice::ReadOnly)) return false;
 
     Document doc(info.absoluteFilePath());
-    Game = doc.read(1, 1).toString().toStdString();
-    SetupGame(Game);
+    auto game_from_file = doc.read(1, 1).toString().toStdString();
+    setup_game(game_from_file);
     display_text("Reading functions...");
 
-    IB->ReadFunctionsXLSX(doc);
+    ib->ReadFunctionsXLSX(doc);
 
     display_text("Reading of XLSX done.");
 
-    UpdateCurrentTF();
+    update_current_tf();
     return true;
 }
 
-bool Decompiler::UpdateCurrentTF() {
-    CurrentTF.setName(IB->SceneName);
+bool Decompiler::update_current_tf() {
+    current_tf.setName(ib->SceneName);
 
-    CurrentTF.FunctionsInFile.clear();
-    for (auto& fun : IB->FunctionsParsed) {
-        CurrentTF.addFunction(fun);
+    current_tf.FunctionsInFile.clear();
+    for (auto& fun : ib->FunctionsParsed) {
+        current_tf.addFunction(fun);
     }
 
     return true;
 }
-bool Decompiler::ReadDAT(QFile& File) {
+bool Decompiler::read_dat(QFile& file) {
 
-    if (!File.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly)) {
         return false;
     }
 
-    QByteArray content = File.readAll();
+    QByteArray content = file.readAll();
 
-    IB->CreateHeaderFromDAT(content);
-    IB->ReadFunctionsDAT(content);
+    ib->CreateHeaderFromDAT(content);
+    ib->ReadFunctionsDAT(content);
 
-    UpdateCurrentTF();
+    update_current_tf();
     return true;
 }
-bool Decompiler::WriteDAT(const QString& folder) {
+bool Decompiler::write_dat(const QString& output_dir) {
 
     QByteArray functions;
     QByteArray current_fun;
     QByteArray file_content;
 
     int addr = 0;
-    QByteArray header = IB->CreateHeaderBytes();
+    QByteArray header = ib->CreateHeaderBytes();
 
     addr = addr + header.size();
-    for (int idx_fun = 0; idx_fun < CurrentTF.getNbFunctions() - 1; idx_fun++) {
+    for (int idx_fun = 0; idx_fun < current_tf.getNbFunctions() - 1; idx_fun++) {
 
-        function fun = CurrentTF.FunctionsInFile[idx_fun];
+        function fun = current_tf.FunctionsInFile[idx_fun];
 
         current_fun.clear();
 
@@ -103,7 +101,7 @@ bool Decompiler::WriteDAT(const QString& folder) {
         }
         addr = addr + current_fun.size();
 
-        int next_addr = CurrentTF.FunctionsInFile[idx_fun + 1].actual_addr;
+        int next_addr = current_tf.FunctionsInFile[idx_fun + 1].actual_addr;
         int padding = next_addr - addr;
         for (int i_z = 0; i_z < padding; i_z++) {
             current_fun.push_back('\0');
@@ -112,8 +110,8 @@ bool Decompiler::WriteDAT(const QString& folder) {
         functions.push_back(current_fun);
     }
 
-    if (CurrentTF.getNbFunctions() - 1 >= 0) {
-        function fun = CurrentTF.FunctionsInFile[CurrentTF.FunctionsInFile.size() - 1];
+    if (current_tf.getNbFunctions() - 1 >= 0) {
+        function fun = current_tf.FunctionsInFile[current_tf.FunctionsInFile.size() - 1];
         current_fun.clear();
         for (auto& instr : fun.InstructionsInFunction) {
             current_fun.push_back(instr->getBytes());
@@ -124,10 +122,10 @@ bool Decompiler::WriteDAT(const QString& folder) {
     file_content.append(header);
     file_content.append(functions);
 
-    QDir dir(folder);
+    QDir dir(output_dir);
     if (!dir.exists()) dir.mkpath(".");
 
-    QString output_path = folder + "\\" + QString::fromStdString(CurrentTF.getName()) + ".dat";
+    QString output_path = output_dir + "\\" + QString::fromStdString(current_tf.getName()) + ".dat";
     QFile file(output_path);
 
     file.open(QIODevice::WriteOnly);
@@ -136,126 +134,126 @@ bool Decompiler::WriteDAT(const QString& folder) {
     display_text("File " + output_path + " created.");
     return true;
 }
-bool Decompiler::WriteXLSX(const QString& output_folder) {
+bool Decompiler::write_xlsx(const QString& output_dir) {
 
     QFont font = QFont("Arial");
-    QString filename = QString::fromStdString(CurrentTF.getName()) + ".xlsx";
-    QXlsx::Document excelScenarioSheet;
+    QString filename = QString::fromStdString(current_tf.getName()) + ".xlsx";
+    QXlsx::Document excel_scenario_sheet;
     Format format;
     format.setFont(font);
     format.setFontBold(true);
-    auto DarkYellow = QColor(qRgb(255, 222, 155));
-    format.setPatternBackgroundColor(DarkYellow);
-    auto FontColor = QColor(qRgb(255, 0, 0));
+    auto dark_yellow = QColor(qRgb(255, 222, 155));
+    format.setPatternBackgroundColor(dark_yellow);
+    auto font_color = QColor(qRgb(255, 0, 0));
 
-    format.setFontColor(FontColor);
+    format.setFontColor(font_color);
     format.setFontSize(14);
 
-    excelScenarioSheet.write("A1", QString::fromStdString(Game), format);
+    excel_scenario_sheet.write("A1", QString::fromStdString(_game), format);
 
-    Format formatLocation;
+    Format format_location;
 
-    formatLocation.setFont(font);
-    formatLocation.setFontSize(10);
-    formatLocation.setPatternBackgroundColor(DarkYellow);
-    excelScenarioSheet.write("A2", QString::fromStdString(CurrentTF.getName()), formatLocation);
+    format_location.setFont(font);
+    format_location.setFontSize(10);
+    format_location.setPatternBackgroundColor(dark_yellow);
+    excel_scenario_sheet.write("A2", QString::fromStdString(current_tf.getName()), format_location);
 
-    Format rowFormat;
-    rowFormat.setFillPattern(Format::PatternSolid);
-    rowFormat.setPatternBackgroundColor(qRgb(255, 255, 200));
-    rowFormat.setFont(font);
-    rowFormat.setFontSize(10);
-    excelScenarioSheet.setRowFormat(1, 3, format);
-    excelScenarioSheet.setRowFormat(2, 3, format);
-    excelScenarioSheet.setRowFormat(3, 3, format);
-    rowFormat.setBottomBorderStyle(Format::BorderNone);
-    Format formatTitleChars;
-    formatTitleChars.setFont(font);
-    formatTitleChars.setFontSize(10);
-    formatTitleChars.setPatternBackgroundColor(qRgb(255, 255, 200));
-    formatTitleChars.setHorizontalAlignment(Format::AlignHCenter);
-    formatTitleChars.setVerticalAlignment(Format::AlignVCenter);
+    Format row_format;
+    row_format.setFillPattern(Format::PatternSolid);
+    row_format.setPatternBackgroundColor(qRgb(255, 255, 200));
+    row_format.setFont(font);
+    row_format.setFontSize(10);
+    excel_scenario_sheet.setRowFormat(1, 3, format);
+    excel_scenario_sheet.setRowFormat(2, 3, format);
+    excel_scenario_sheet.setRowFormat(3, 3, format);
+    row_format.setBottomBorderStyle(Format::BorderNone);
+    Format format_title_chars;
+    format_title_chars.setFont(font);
+    format_title_chars.setFontSize(10);
+    format_title_chars.setPatternBackgroundColor(qRgb(255, 255, 200));
+    format_title_chars.setHorizontalAlignment(Format::AlignHCenter);
+    format_title_chars.setVerticalAlignment(Format::AlignVCenter);
 
-    Format FormatTitleColumnChars;
-    FormatTitleColumnChars.setHorizontalAlignment(Format::AlignHCenter);
-    FormatTitleColumnChars.setVerticalAlignment(Format::AlignVCenter);
-    FormatTitleColumnChars.setFontSize(10);
-    FormatTitleColumnChars.setPatternBackgroundColor(qRgb(255, 255, 200));
-    FormatTitleColumnChars.setTopBorderStyle(Format::BorderThin);
-    FormatTitleColumnChars.setBottomBorderStyle(Format::BorderThin);
-    FormatTitleColumnChars.setLeftBorderStyle(Format::BorderThin);
-    FormatTitleColumnChars.setRightBorderStyle(Format::BorderThin);
-    FormatTitleColumnChars.setFont(font);
-    FormatTitleColumnChars.setFontSize(10);
-    FormatTitleColumnChars.setPatternBackgroundColor(qRgb(255, 255, 255));
+    Format Format_title_column_chars;
+    Format_title_column_chars.setHorizontalAlignment(Format::AlignHCenter);
+    Format_title_column_chars.setVerticalAlignment(Format::AlignVCenter);
+    Format_title_column_chars.setFontSize(10);
+    Format_title_column_chars.setPatternBackgroundColor(qRgb(255, 255, 200));
+    Format_title_column_chars.setTopBorderStyle(Format::BorderThin);
+    Format_title_column_chars.setBottomBorderStyle(Format::BorderThin);
+    Format_title_column_chars.setLeftBorderStyle(Format::BorderThin);
+    Format_title_column_chars.setRightBorderStyle(Format::BorderThin);
+    Format_title_column_chars.setFont(font);
+    Format_title_column_chars.setFontSize(10);
+    Format_title_column_chars.setPatternBackgroundColor(qRgb(255, 255, 255));
 
-    FormatTitleColumnChars.setBottomBorderStyle(Format::BorderThin);
-    FormatTitleColumnChars.setLeftBorderStyle(Format::BorderThin);
-    FormatTitleColumnChars.setRightBorderStyle(Format::BorderThin);
-    FormatTitleColumnChars.setTopBorderStyle(Format::BorderThin);
-    Format rowFormatFunctions;
-    rowFormatFunctions.setPatternBackgroundColor(qRgb(255, 200, 200));
-    rowFormatFunctions.setFont(font);
-    rowFormatFunctions.setFontSize(13);
-    rowFormatFunctions.setBottomBorderStyle(QXlsx::Format::BorderThin);
+    Format_title_column_chars.setBottomBorderStyle(Format::BorderThin);
+    Format_title_column_chars.setLeftBorderStyle(Format::BorderThin);
+    Format_title_column_chars.setRightBorderStyle(Format::BorderThin);
+    Format_title_column_chars.setTopBorderStyle(Format::BorderThin);
+    Format row_format_functions;
+    row_format_functions.setPatternBackgroundColor(qRgb(255, 200, 200));
+    row_format_functions.setFont(font);
+    row_format_functions.setFontSize(13);
+    row_format_functions.setBottomBorderStyle(QXlsx::Format::BorderThin);
 
-    rowFormatFunctions.setTopBorderStyle(QXlsx::Format::BorderThin);
+    row_format_functions.setTopBorderStyle(QXlsx::Format::BorderThin);
     int excel_row = 4;
-    for (const auto& fun : CurrentTF.FunctionsInFile) {
-        excelScenarioSheet.setRowFormat(excel_row, excel_row, rowFormatFunctions);
-        excelScenarioSheet.write(excel_row, 1, "FUNCTION");
-        excelScenarioSheet.write(excel_row, 2, QString::fromStdString(fun.name));
+    for (const auto& fun : current_tf.FunctionsInFile) {
+        excel_scenario_sheet.setRowFormat(excel_row, excel_row, row_format_functions);
+        excel_scenario_sheet.write(excel_row, 1, "FUNCTION");
+        excel_scenario_sheet.write(excel_row, 2, QString::fromStdString(fun.name));
 
         excel_row++;
         for (const auto& instr : fun.InstructionsInFunction) {
-            excelScenarioSheet.write(excel_row, 1, "Location");
-            excelScenarioSheet.write(excel_row + 1, 1, instr->get_addr_instr());
+            excel_scenario_sheet.write(excel_row, 1, "Location");
+            excel_scenario_sheet.write(excel_row + 1, 1, instr->get_addr_instr());
             int col = 0;
-            instr->WriteXLSX(excelScenarioSheet, CurrentTF.FunctionsInFile, excel_row, col);
+            instr->WriteXLSX(excel_scenario_sheet, current_tf.FunctionsInFile, excel_row, col);
             excel_row += 2;
         }
     }
 
-    QString xlsx_output_file = QDir::toNativeSeparators(output_folder + "/" + filename);
+    QString xlsx_output_file = QDir::toNativeSeparators(output_dir + "/" + filename);
 
     display_text("File " + xlsx_output_file + " created.");
-    QDir dir(output_folder);
+    QDir dir(output_dir);
     if (!dir.exists()) dir.mkpath(".");
-    excelScenarioSheet.saveAs(xlsx_output_file);
+    excel_scenario_sheet.saveAs(xlsx_output_file);
     return true;
 }
 
-bool Decompiler::CheckAllFiles(const QString& log_filename,
-                               const QStringList& filesToRead,
-                               const QString& folder_for_reference,
-                               const QString& folder_for_generated_files,
-                               const QString& output_folder) {
+bool Decompiler::check_all_files(const QString& log_filename,
+                                 const QStringList& files,
+                                 const QString& reference_dir,
+                                 const QString& generated_files_dir,
+                                 const QString& output_dir) {
     QFile file(log_filename);
 
     QTextStream stream(&file);
     file.remove();
     file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
 
-    for (const auto& file_ : filesToRead) {
-        QString full_path = folder_for_reference + "/" + file_;
+    for (const auto& file_ : files) {
+        QString full_path = reference_dir + "/" + file_;
         QString filename = full_path.mid(full_path.lastIndexOf("/"));
         QString croped_fileName = filename.section(".", 0, 0);
         qDebug() << "Checking " << full_path;
-        QString full_path_ref = folder_for_reference + filename;
+        QString full_path_ref = reference_dir + filename;
         stream << full_path << "\n";
-        this->SetupGame("CS4");
+        this->setup_game("CS4");
         qDebug() << "reading dat1 file" << full_path;
-        this->ReadFile(full_path);
+        this->read_file(full_path);
         qDebug() << "reading dat done." << full_path;
-        this->WriteXLSX(output_folder);
-        qDebug() << "reading xlsx file" << folder_for_generated_files + croped_fileName + ".xlsx";
-        this->ReadFile(folder_for_generated_files + croped_fileName + ".xlsx");
+        this->write_xlsx(output_dir);
+        qDebug() << "reading xlsx file" << generated_files_dir + croped_fileName + ".xlsx";
+        this->read_file(generated_files_dir + croped_fileName + ".xlsx");
         qDebug() << "writing dat file";
-        this->WriteDAT(output_folder);
+        this->write_dat(output_dir);
         qDebug() << "full done";
-        qDebug() << "reading dat file" << folder_for_generated_files + "/recompiled_files" + filename;
+        qDebug() << "reading dat file" << generated_files_dir + "/recompiled_files" + filename;
         qDebug() << "reading dat file" << full_path_ref;
-        QFile file1(folder_for_generated_files + "/release/recompiled_files" + filename);
+        QFile file1(generated_files_dir + "/release/recompiled_files" + filename);
         QFile file2(full_path_ref);
         if (!file1.open(QIODevice::ReadOnly)) {
 
@@ -293,34 +291,34 @@ bool Decompiler::CheckAllFiles(const QString& log_filename,
     }
     return true;
 }
-bool Decompiler::ReadFile(const QString& filepath) {
-    IB->Reset();
-    CurrentTF = TranslationFile();
+bool Decompiler::read_file(const QString& filepath) {
+    ib->Reset();
+    current_tf = TranslationFile();
     QFile file(filepath);
-    QFileInfo infoFile(file);
+    QFileInfo info_file(file);
 
-    if (infoFile.suffix() == "xlsx") {
-        ReadXLSX(file);
-    } else if (infoFile.suffix() == "dat") {
-        ReadDAT(file);
+    if (info_file.suffix() == "xlsx") {
+        read_xlsx(file);
+    } else if (info_file.suffix() == "dat") {
+        read_dat(file);
     } else {
         display_text("FAILURE: Unrecognized extension.");
         return false;
     }
     return true;
 }
-bool Decompiler::WriteFile(const QString& filepath, const QString& output_folder) {
+bool Decompiler::write_file(const QString& filepath, const QString& output_dir) {
 
     QFile file(filepath);
-    QFileInfo infoFile(file);
-    if (infoFile.suffix() == "dat") {
-        WriteXLSX(output_folder);
-    } else if (infoFile.suffix() == "xlsx") {
-        WriteDAT(output_folder);
+    QFileInfo info_file(file);
+    if (info_file.suffix() == "dat") {
+        write_xlsx(output_dir);
+    } else if (info_file.suffix() == "xlsx") {
+        write_dat(output_dir);
     } else {
         display_text("FAILURE: Unrecognized extension.");
         return false;
     }
     return true;
 }
-TranslationFile Decompiler::GetTF() { return CurrentTF; }
+TranslationFile Decompiler::get_tf() { return current_tf; }
