@@ -21,6 +21,7 @@ using namespace QXlsx; // NOLINT(google-build-using-namespace)
 Decompiler::Decompiler() = default;
 
 bool Decompiler::setup_game(const std::string& game) {
+    this->_game = game;
     if (game == "CS3") {
         ib = std::make_unique<CS3Builder>();
     } else if (game == "CS1") {
@@ -226,7 +227,6 @@ bool Decompiler::write_xlsx(const QString& output_dir) {
 bool Decompiler::check_all_files(const QString& log_filename,
                                  const QStringList& files,
                                  const QString& reference_dir,
-                                 const QString& generated_files_dir,
                                  const QString& output_dir) {
     QFile file(log_filename);
 
@@ -235,6 +235,9 @@ bool Decompiler::check_all_files(const QString& log_filename,
     file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
 
     for (const auto& file_ : files) {
+
+        bool success = true;
+
         QString full_path = reference_dir + "/" + file_;
         QString filename = full_path.mid(full_path.lastIndexOf("/"));
         QString croped_fileName = filename.section(".", 0, 0);
@@ -246,14 +249,14 @@ bool Decompiler::check_all_files(const QString& log_filename,
         this->read_file(full_path);
         qDebug() << "reading dat done." << full_path;
         this->write_xlsx(output_dir);
-        qDebug() << "reading xlsx file" << generated_files_dir + croped_fileName + ".xlsx";
-        this->read_file(generated_files_dir + croped_fileName + ".xlsx");
+        qDebug() << "reading xlsx file" << output_dir + croped_fileName + ".xlsx";
+        this->read_file(output_dir + croped_fileName + ".xlsx");
         qDebug() << "writing dat file";
         this->write_dat(output_dir);
         qDebug() << "full done";
-        qDebug() << "reading dat file" << generated_files_dir + "/recompiled_files" + filename;
+        qDebug() << "reading dat file" << output_dir + filename;
         qDebug() << "reading dat file" << full_path_ref;
-        QFile file1(generated_files_dir + "/release/recompiled_files" + filename);
+        QFile file1(output_dir + filename);
         QFile file2(full_path_ref);
         if (!file1.open(QIODevice::ReadOnly)) {
 
@@ -268,26 +271,97 @@ bool Decompiler::check_all_files(const QString& log_filename,
 
         const QByteArray content2 = file2.readAll();
         std::string msg = "Problème de taille avec " + croped_fileName.toStdString();
-        int ref_size = content2.size();
-        for (int i = 0; i < ref_size; i++) {
-            if (content1[i] != content2[i]) {
-                stream << "Mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-                qDebug() << "Mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-            }
-        }
-        if (content1.size() < ref_size) {
-            qFatal("size too short");
-            stream << "size too short"
-                   << "\n";
-        } else {
 
-            if (content1.size() > ref_size) {
-                qFatal("size too big");
-                stream << "too big"
-                       << "\n";
+        int length_header2 = ReadIntegerFromByteArray(0x18, content2);
+        int idx_addresses_loc1 = ReadIntegerFromByteArray(8, content1);
+        int idx_addresses_loc2 = ReadIntegerFromByteArray(8, content2);
+        int size_pointer_section = ReadIntegerFromByteArray(0xC, content2);
+
+        for (int i = 0; i < idx_addresses_loc2; i++) {
+            if (content1[i] != content2[i]) {
+                stream << "First part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                qDebug() << "First part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                success = false;
             }
         }
-        stream << " Size 1: " << Qt::hex << content1.size() << " vs Size 2: " << Qt::hex << content2.size();
+
+        for (int i = idx_addresses_loc2 + size_pointer_section; i < length_header2; i++) {
+            if (content1[i] != content2[i]) {
+                stream << "Second part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                qDebug() << "Second part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                success = false;
+            }
+        }
+        this->read_file(output_dir + filename);
+        std::vector<int> idx_fun_1;
+        std::vector<int> idx_fun_2;
+        for (int i = idx_addresses_loc1; i < idx_addresses_loc1 + size_pointer_section; i += 4) {
+            idx_fun_1.push_back(ReadIntegerFromByteArray(i, content1));
+        }
+        for (int i = idx_addresses_loc2; i < idx_addresses_loc2 + size_pointer_section; i += 4) {
+            idx_fun_2.push_back(ReadIntegerFromByteArray(i, content2));
+        }
+
+        for (size_t i = 0; i < (uint)current_tf.getNbFunctions(); ++i) {
+            int index_byte = idx_fun_2[i];
+
+            for (size_t j = 0; j < (uint)current_tf.FunctionsInFile[i].InstructionsInFunction.size(); ++j) {
+                uint OPCode = current_tf.FunctionsInFile[i].InstructionsInFunction[j]->get_OP();
+                uint byte_in_file = (content2[index_byte]) & 0xFF;
+
+                if (OPCode <= 0xFF) {
+                    if (OPCode != byte_in_file) {
+                        stream << "OP Code Mismatch at " << Qt::hex << index_byte << " " << OPCode << " should be " << byte_in_file << "\n";
+                        qDebug() << "OP Code Mismatch at " << Qt::hex << index_byte << " " << OPCode << " should be " << byte_in_file << "\n";
+                        success = false;
+                    }
+                    index_byte++;
+                }
+                for (size_t k = 0; k < (uint)current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes.size(); ++k) {
+                    operande op_k = current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes[k];
+                    QByteArray bytes = op_k.getValue();
+
+                    if (op_k.getType() == "pointer") {
+                        int diff1 = op_k.getIntegerValue() - ReadIntegerFromByteArray(index_byte, content2);
+                        int diff2 = current_tf.FunctionsInFile[i].actual_addr - idx_fun_2[i];
+                        if (diff1 != diff2) {
+                            stream << "Mismatching pointers at " << Qt::hex << index_byte << " " << diff1 << " should be " << diff2 << "\n";
+                            qDebug() << "Mismatching pointers at " << Qt::hex << index_byte << " " << diff1 << " should be " << diff2 << "\n";
+                            success = false;
+                        }
+                        index_byte+=4;
+
+                    } else if (op_k.getType() == "float") {
+                        QByteArray float_bytes = ReadSubByteArray(content2, index_byte, 4);
+                        float float2 = QByteArrayToFloat(float_bytes);
+                        float float1 = QByteArrayToFloat(bytes);
+                        if (float2 != float1) {
+                            stream << "Mismatching floats at " << Qt::hex << index_byte << " " << float1 << " should be " << float2 << "\n";
+                            qDebug() << "Mismatching floats at " << Qt::hex << index_byte << " " << float1 << " should be " << float2 << "\n";
+                            success = false;
+                        }
+                    } else {
+                        for (auto&& byte : bytes) {
+                            uint8_t byte1 = content2[index_byte];
+                            uint8_t byte2 = byte;
+
+                            if (byte1 != byte2) {
+                                stream << "Mismatch at " << Qt::hex << index_byte << " " << (int)byte1 << " should be " << (int)byte2 << "\n";
+                                qDebug() << "Mismatch at " << Qt::hex << index_byte << " " << (int)byte1 << " should be " << (int)byte2 << "\n";
+                                success = false;
+                            }
+                            index_byte++;
+                        }
+                    }
+                }
+            }
+        }
+        if (!success) {
+            qFatal("Mismatch");
+            stream << "Mismatch"
+                   << "\n";
+        }
+        stream << " Size 1: " << Qt::hex << content1.size() << " vs Size 2: " << Qt::hex << content2.size() << " " << (int)success;
     }
     return true;
 }

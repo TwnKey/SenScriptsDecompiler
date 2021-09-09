@@ -34,7 +34,6 @@ class Decompiler {
     bool check_all_files(const QString& log_filename,
                          const QStringList& files_to_read,
                          const QString& reference_dir,
-                         const QString& generated_files_dir,
                          const QString& output_dir);
     TranslationFile get_tf();
     bool write_file(const QString& filepath, const QString& output_dir);
