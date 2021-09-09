@@ -25,7 +25,7 @@ QByteArray ReadStringSubByteArray(QByteArray& content, int& addr) {
     addr++;
     return result;
 }
-int ReadIntegerFromByteArray(int start_pos, QByteArray& content) {
+int ReadIntegerFromByteArray(int start_pos, const QByteArray& content) {
     int size = static_cast<int>(((static_cast<unsigned int>(content[start_pos + 0]) & 0xFF) << 0) +
                                 ((static_cast<unsigned int>(content[start_pos + 1]) & 0xFF) << 8) +
                                 ((static_cast<unsigned int>(content[start_pos + 2]) & 0xFF) << 16) +
@@ -57,7 +57,7 @@ int16_t ReadShortFromByteArray(int start_pos, QByteArray& content) {
 
     return size;
 }
-QByteArray ReadSubByteArray(QByteArray& content, int& addr, int size) {
+QByteArray ReadSubByteArray(const QByteArray& content, int& addr, int size) {
     int start = addr;
     addr = start + size;
 

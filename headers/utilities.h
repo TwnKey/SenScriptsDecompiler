@@ -15,9 +15,9 @@
 void display_text(const QString& text);
 
 std::string ReadStringFromByteArray(int start_pos, QByteArray& content);
-int ReadIntegerFromByteArray(int start_pos, QByteArray& content);
+int ReadIntegerFromByteArray(int start_pos, const QByteArray& content);
 int16_t ReadShortFromByteArray(int start_pos, QByteArray& content);
-QByteArray ReadSubByteArray(QByteArray& content, int& addr, int size);
+QByteArray ReadSubByteArray(const QByteArray& content, int& addr, int size);
 QByteArray ReadStringSubByteArray(QByteArray& content, int& addr);
 float QByteArrayToFloat(QByteArray& content);
 QByteArray GetBytesFromFloat(float f);
