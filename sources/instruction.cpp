@@ -75,6 +75,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             Value = Operande.toUtf8();
             QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(OutputDatFileEncoding).toUtf8());
             QByteArray Value = codec->fromUnicode(Operande);
+            if (type == "string") Value.push_back('\0');
             Value.replace('\n', 1);
 
             op = operande(addr, type, Value);
