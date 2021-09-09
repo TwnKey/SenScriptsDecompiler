@@ -95,6 +95,7 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
                 auto itt = find_function_by_ID(FunctionsParsed, it.ID);
                 if (itt == FunctionsParsed.end()) { // if we never read it, we'll do that
                     idx_current_fun = it.ID;
+                    GuessTypeByName(it, dat_content);
                     ReadIndividualFunction(it, dat_content);
                     FunctionsParsed.push_back(it);
                 }
@@ -118,126 +119,166 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
         }
     }
 }
-int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
-    int current_position = fun.actual_addr;
-    goal = fun.end_addr;
-    std::shared_ptr<Instruction> instr;
-    uint latest_op_code = 1;
-
-    int function_type = 0;
+std::vector<int> Builder::GuessTypeByName(function& fun, QByteArray& dat_content) {
+    std::vector<int> result;
     if (fun.name == "ActionTable") {
-        function_type = 3;
+        result.push_back(ActionTable_t);
     } else if (fun.name == "AlgoTable") {
-        function_type = 4;
+        result.push_back(AlgoTable_t);
     } else if (fun.name == "WeaponAttTable") {
-        function_type = 5;
+        result.push_back(WeaponAttTable_t);
     } else if (fun.name == "BreakTable") {
-        function_type = 6;
+        result.push_back(BreakTable_t);
     } else if (fun.name == "SummonTable") {
-        function_type = 7;
+        result.push_back(SummonTable_t);
     } else if (fun.name == "ReactionTable") {
-        function_type = 8;
+        result.push_back(ReactionTable_t);
     } else if (fun.name == "PartTable") {
-        function_type = 9;
+        result.push_back(PartTable_t);
     } else if (fun.name == "AnimeClipTable") {
-        function_type = 10;
+        result.push_back(AnimeClipTable_t);
     } else if (fun.name == "FieldMonsterData") {
-        function_type = 11;
+        result.push_back(FieldMonsterData_t);
     } else if (fun.name == "FieldFollowData") {
-        function_type = 12;
+        result.push_back(FieldFollowData_t);
     } else if (fun.name.starts_with("FC_auto")) {
-        function_type = 13;
+        result.push_back(FC_auto_t);
     } else if (fun.name.starts_with("BookData")) { // Book: the first short read is crucial I think. 0 = text incoming; not zero =
         QRegExp rx("BookData(\\d+[A-Z]?)_(\\d+)");
-        std::vector<int> result;
+
 
         rx.indexIn(QString::fromStdString(fun.name), 0);
         int Nb_Data = rx.cap(2).toInt();
 
         if (Nb_Data == 99) {
-            function_type = 14; // DATA, the 99 is clearly hardcoded; The behaviour is: 99=> two shorts (probably number
-                                // of pages) and that's it
-
+            result.push_back(BookData99_t);
         } else {
-            function_type = 15;
+            result.push_back(BookDataX_t);
         }
 
     } else if (fun.name.starts_with("_")) {
-        if ((fun.name != "_" + previous_fun_name) ||
-            fun.end_addr == static_cast<int>(dat_content.size())) // last one is for btl1006, cs3; not cool but I'm starting to feel
-                                                                  // like the "_" functions are just not supposed to exist, so this
-                                                                  // hack only helps me checking the integrity of the files
+        /*if ((fun.name != "_" + previous_fun_name) ||
+            fun.end_addr == static_cast<uint>(dat_content.size())) // last one is for btl1006, cs3; not cool but I'm starting to feel
+                                                                   // like the "_" functions are just not supposed to exist, so this
+         */                                                          // hack only helps me checking the integrity of the files
         {
-            function_type = 2;
+            result.push_back(OPCodeFun);
+            result.push_back(_fun);
         }
 
     } else if (fun.name == "AddCollision") {
-        function_type = 16;
+        result.push_back(AddCollision_t);
     } else if (fun.name == "ConditionTable") {
-        function_type = 17;
+        result.push_back(ConditionTable_t);
     } else if (fun.name.starts_with("StyleName")) {
-        function_type = 18;
+        result.push_back(StyleName_t);
     }
+    else {
+        result.push_back(OPCodeFun);
+        result.push_back(CreateMonsters_t);
+        result.push_back(_fun);
+    }
+    return result;
+}
+int Builder::AttemptsAtReadingFunction(function& fun, QByteArray& dat_content, std::vector<int> fallback_types){
+    int current_position = fun.actual_addr;
+    this->goal = fun.end_addr;
+    int latest_op_code = 1;
+    size_t fails = 0;
 
-    if (function_type == 0) { // we use OP codes
 
-        while (current_position < goal) {
+    /*
+         * Possible problems when parsing an instruction:
+        - the (wrongly interpreted) instruction go past the "goal" (end_addr)
+        - We encounter an OP code that does not match any instruction
+        - We go past dat_content size
+        - The previous instruction had op code 0, and the current has something else (this shouldn't happen since 0 is for padding at
+        the end of the function, but could technically happen if there is a return instruction in the middle of the function... let's hope not
 
-            instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
+        if there is one of those problems, the decompiler switches to the fallback functions (which have been decided based on name)
 
-            if ((error) || ((instr->get_OP() != 0) &&
-                            (latest_op_code == 0))) { // this clearly means the function is incorrect or is a monster function.
+        if even the fallbacks fail, the decompiler concludes the function is an OP Code function with an incorrect instruction somewhere,
+        it will generate the file but the function containing the instruction might be wrongly parsed (and will need to be fixed in xlsx)
+        */
 
-                error = false;
-                fun.InstructionsInFunction.clear();
-                current_position = fun.actual_addr;
-                if (fun.name.starts_with("_")) {
-                    instr = CreateInstructionFromDAT(current_position, dat_content, 2);
+    for (auto &function_type : fallback_types)
+    {
+        try{
+            if (function_type == OPCodeFun){
+
+                while (current_position < this->goal) {
+                    std::shared_ptr<Instruction> instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
+
+                    if ((instr->get_OP() != 0) && (latest_op_code == 0)) throw std::exception();
+                    if ((instr->get_OP() == 0) && ((latest_op_code != 1) && (latest_op_code != 0))) throw std::exception();
                     fun.AddInstruction(instr);
-                    instr = CreateInstructionFromDAT(current_position, dat_content, 0);
+
+                    latest_op_code = instr->get_OP();
+                }
+                if (current_position != this->goal) throw std::exception();
+                return current_position;
+            }
+            else {
+
+                std::shared_ptr<Instruction> instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
+                fun.AddInstruction(instr);
+                std::shared_ptr<Instruction> return_instr = CreateInstructionFromDAT(current_position, dat_content, 0);
+                fun.AddInstruction(return_instr);
+                while (current_position < this->goal){
+                    if ((uint8_t) dat_content[current_position] != 0) throw std::exception();
+                    current_position++;
+                }
+                return current_position;
+            }
+
+        }
+        catch (const std::exception& e){
+
+            //we retry with another function type candidate
+
+            fun.InstructionsInFunction.clear();
+            current_position = fun.actual_addr;
+            fails++;
+
+        }
+    }
+    if (fails == fallback_types.size()){
+        latest_op_code = 1;
+
+        //The first parsing attempt failed, so we need interpret it as OPCode function
+        fun.InstructionsInFunction.clear();
+        current_position = fun.actual_addr;
+        while (current_position < this->goal) {
+            std::shared_ptr<Instruction> instr;
+            try{
+                instr = CreateInstructionFromDAT(current_position, dat_content, 0);
+                //if ((instr->get_OP() != 0) && (latest_op_code == 0)) throw std::exception();
+                if ((instr->get_OP() == 0) && ((latest_op_code != 1) && (latest_op_code != 0))) throw std::exception();
+                fun.AddInstruction(instr);
+
+                latest_op_code = instr->get_OP();
+            }
+            catch (const std::exception& e){
+                if (instr != NULL){
+                    instr->error = true;
                     fun.AddInstruction(instr);
-                    return current_position;
-
-                } else { // NOLINT(readability-else-after-return)
-                    instr = CreateInstructionFromDAT(current_position, dat_content, 1);
-
-                    if (flag_monsters) {
-                        fun.AddInstruction(instr);
-                        instr = CreateInstructionFromDAT(current_position, dat_content, 0);
-                        fun.AddInstruction(instr);
-                        return current_position;
-                    } else { // NOLINT(readability-else-after-return)
-
-                        // the function is incorrect, therefore, we parse it again as an OP Code function but remove the
-                        // part that is incorrect
-                        current_position = fun.actual_addr;
-                        while (current_position < goal) {
-                            instr = CreateInstructionFromDAT(current_position, dat_content, 0);
-                            if (error) {
-                                display_text("Incorrect instruction read at " + QString::number(current_position) + ". Skipped.");
-                                error = false;
-
-                            } else {
-                                fun.AddInstruction(instr);
-                            }
-                        }
-                        return current_position;
-                    }
+                    latest_op_code = instr->get_OP();
                 }
 
-            } else {
-                fun.AddInstruction(instr);
-            }
-            latest_op_code = instr->get_OP();
-        }
-    } else {
-        while (current_position < goal) {
+                //qFatal("error");
+                display_text("Incorrect instruction read at " + QString::number(current_position) + ". Skipped.");
+                current_position++;
 
-            instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
-            fun.AddInstruction(instr);
-            function_type = 0;
+            }
         }
+        return current_position;
+
     }
+}
+int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
+
+    std::vector<int> fallback_types = GuessTypeByName(fun, dat_content);
+    int current_position = AttemptsAtReadingFunction(fun, dat_content, fallback_types);
 
     return current_position;
 }

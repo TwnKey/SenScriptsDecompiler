@@ -3,6 +3,8 @@
 #include "headers/functions.h"
 #include "headers/translationfile.h"
 #include "headers/utilities.h"
+#include "headers/exceptions.h"
+
 
 class CS2TranslationFile : public TranslationFile {
   public:
@@ -227,7 +229,7 @@ class CS2Builder : public Builder {
         instr->AddOperande(operande(addr, "byte", control_byte));
 
         while ((int)control_byte[0] != 1) {
-
+            if (addr > content.size()) throw std::exception(); //QByteArray
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
                 case 0x24:
@@ -283,7 +285,7 @@ class CS2Builder : public Builder {
             if (Maker->goal < addr + 0x20) {
 
                 addr = initial_addr;
-                Maker->flag_monsters = false;
+                throw exception_unexpected_operand();
                 return;
             }
             int first = ReadIntegerFromByteArray(addr, content);
@@ -291,8 +293,7 @@ class CS2Builder : public Builder {
             if ((first == -1) && (addr + 0x20 == Maker->goal)) {
 
                 this->AddOperande(
-                  operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C))); //?? we don't forget to take the int as well
-                Maker->flag_monsters = true;
+                  operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C)));
                 return;
             }
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -341,7 +342,7 @@ class CS2Builder : public Builder {
                 if (Maker->goal < addr + (0x10) * max_nb_monsters + max_nb_monsters * 2) {
 
                     addr = initial_addr;
-                    Maker->flag_monsters = false;
+                    throw exception_unexpected_operand();
                     return;
                 }
 
@@ -381,15 +382,14 @@ class CS2Builder : public Builder {
                 first = ReadIntegerFromByteArray(addr, content);
                 if (first != 1) {
                     addr = initial_addr;
-                    Maker->flag_monsters = false;
-                } else {
-                    Maker->flag_monsters = true;
+                    throw exception_unexpected_operand();
+                    
                 }
                 return;
             }
             this->AddOperande(
               operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C))); //?? we don't forget to take the int as well
-            Maker->flag_monsters = true;
+            
         }
     };
     class EffectsInstr : public Instruction {
@@ -7808,63 +7808,68 @@ class CS2Builder : public Builder {
                 default:
                     std::stringstream stream;
                     stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
-
+                    throw exception_incorrect_OP_code();
                     error = true;
                     std::string result(stream.str());
 
                     return std::shared_ptr<Instruction>();
             }
-        } else if (function_type == 1) { // the function is a "CreateMonsters" function
+        } else {
+            std::shared_ptr<Instruction> res;
+            if (function_type == CreateMonsters_t) {
+                res = std::make_shared<CreateMonsters>(addr, dat_content, this);
+            } else if (function_type == _fun) {
 
-            return std::make_shared<CreateMonsters>(addr, dat_content, this);
-        } else if (function_type == 2) { // the function is a "effect" function
+                res = std::make_shared<EffectsInstr>(addr, dat_content, this);
+            } else if (function_type == ActionTable_t) {
 
-            return std::make_shared<EffectsInstr>(addr, dat_content, this);
-        } else if (function_type == 3) {
+                res = std::make_shared<ActionTable>(addr, dat_content, this);
+            } else if (function_type == AlgoTable_t) {
 
-            return std::make_shared<ActionTable>(addr, dat_content, this);
-        } else if (function_type == 4) {
+                res = std::make_shared<AlgoTable>(addr, dat_content, this);
+            } else if (function_type == WeaponAttTable_t) {
 
-            return std::make_shared<AlgoTable>(addr, dat_content, this);
-        } else if (function_type == 5) {
+                res = std::make_shared<WeaponAttTable>(addr, dat_content, this);
+            } else if (function_type == BreakTable_t) {
 
-            return std::make_shared<WeaponAttTable>(addr, dat_content, this);
-        } else if (function_type == 6) {
+                res = std::make_shared<BreakTable>(addr, dat_content, this);
+            } else if (function_type == SummonTable_t) {
 
-            return std::make_shared<BreakTable>(addr, dat_content, this);
-        } else if (function_type == 7) {
+                res = std::make_shared<SummonTable>(addr, dat_content, this);
+            } else if (function_type == ReactionTable_t) {
 
-            return std::make_shared<SummonTable>(addr, dat_content, this);
-        } else if (function_type == 8) {
+                res = std::make_shared<ReactionTable>(addr, dat_content, this);
+            } else if (function_type == PartTable_t) {
 
-            return std::make_shared<ReactionTable>(addr, dat_content, this);
-        } else if (function_type == 9) {
+                res = std::make_shared<PartTable>(addr, dat_content, this);
+            } else if (function_type == AnimeClipTable_t) {
 
-            return std::make_shared<PartTable>(addr, dat_content, this);
-        } else if (function_type == 10) {
+                res = std::make_shared<AnimeClipTable>(addr, dat_content, this);
+            } else if (function_type == FieldMonsterData_t) {
 
-            return std::make_shared<AnimeClipTable>(addr, dat_content, this);
-        } else if (function_type == 11) {
+                res = std::make_shared<FieldMonsterData>(addr, dat_content, this);
+            } else if (function_type == FieldFollowData_t) {
 
-            return std::make_shared<FieldMonsterData>(addr, dat_content, this);
-        } else if (function_type == 12) {
+                res = std::make_shared<FieldFollowData>(addr, dat_content, this);
+            } else if (function_type == FC_auto_t) {
 
-            return std::make_shared<FieldFollowData>(addr, dat_content, this);
-        } else if (function_type == 13) {
+                res = std::make_shared<FC_autoX>(addr, dat_content, this);
+            } else if (function_type == BookData99_t) {
 
-            return std::make_shared<FC_autoX>(addr, dat_content, this);
-        } else if (function_type == 14) {
+                res = std::make_shared<BookData99>(addr, dat_content, this);
+            } else if (function_type == BookDataX_t) {
 
-            return std::make_shared<BookData99>(addr, dat_content, this);
-        } else if (function_type == 15) {
+                res = std::make_shared<BookDataX>(addr, dat_content, this);
+            } else if (function_type == AddCollision_t) {
 
-            return std::make_shared<BookDataX>(addr, dat_content, this);
-        } else if (function_type == 16) {
+                res = std::make_shared<AddCollision>(addr, dat_content, this);
+            } else if (function_type == ConditionTable_t) {
 
-            return std::make_shared<AddCollision>(addr, dat_content, this);
-        } else if (function_type == 17) {
-
-            return std::make_shared<ConditionTable>(addr, dat_content, this);
+                res = std::make_shared<ConditionTable>(addr, dat_content, this);
+            }
+            if ((uint8_t) dat_content[addr] != 1) throw exception_past_the_end_addr();
+            if (this->goal < addr) throw exception_past_the_end_addr();
+            return res;
         }
 
         return std::shared_ptr<Instruction>();

@@ -3,6 +3,8 @@
 #include "headers/functions.h"
 #include "headers/translationfile.h"
 #include "headers/utilities.h"
+#include "headers/exceptions.h"
+
 
 class TXTranslationFile : public TranslationFile {
   public:
@@ -224,7 +226,7 @@ class TXBuilder : public Builder {
         instr->AddOperande(operande(addr, "byte", control_byte));
 
         while ((int)control_byte[0] != 1) {
-
+            if (addr > content.size()) throw std::exception();
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
                 case 0x24:
@@ -280,7 +282,7 @@ class TXBuilder : public Builder {
             if (Maker->goal < addr + 0x20) {
 
                 addr = initial_addr;
-                Maker->flag_monsters = false;
+                throw exception_unexpected_operand();
                 return;
             }
             int first = ReadIntegerFromByteArray(addr, content);
@@ -289,7 +291,7 @@ class TXBuilder : public Builder {
 
                 this->AddOperande(
                   operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C))); //?? we don't forget to take the int as well
-                Maker->flag_monsters = true;
+                throw exception_unexpected_operand();
                 return;
             }
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -330,7 +332,7 @@ class TXBuilder : public Builder {
                     max_nb_monsters = 4;
                 } else if (first == -1) {
                     this->AddOperande(operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x18))); //?? it's empty
-                    Maker->flag_monsters = true;
+
                     return;
                 } else {
                     max_nb_monsters = 8;
@@ -339,7 +341,7 @@ class TXBuilder : public Builder {
                 if (Maker->goal < addr + (0x10) * max_nb_monsters + max_nb_monsters * 2) {
 
                     addr = initial_addr;
-                    Maker->flag_monsters = false;
+                    throw exception_unexpected_operand();
                     return;
                 }
 
@@ -380,15 +382,14 @@ class TXBuilder : public Builder {
                 first = ReadIntegerFromByteArray(addr, content);
                 if (first != 1) {
                     addr = initial_addr;
-                    Maker->flag_monsters = false;
-                } else {
-                    Maker->flag_monsters = true;
+                    throw exception_unexpected_operand();
+                    
                 }
                 return;
             }
             this->AddOperande(
               operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C))); //?? we don't forget to take the int as well
-            Maker->flag_monsters = true;
+
         }
     };
     class EffectsInstr : public Instruction {
@@ -9515,37 +9516,38 @@ class TXBuilder : public Builder {
                 default:
                     std::stringstream stream;
                     stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
-
-                    error = true;
-                    std::string result(stream.str());
-                    qFatal("%s", result.c_str());
-
-                    return std::shared_ptr<Instruction>();
+                    throw exception_incorrect_OP_code();
+                    
             }
         }
 
-        else if (function_type == 2) { // the function is a "effect" function
+        else {
+            std::shared_ptr<Instruction> res;
+            if (function_type == _fun) { // the function is a "effect" function
+                res = std::make_shared<EffectsInstr>(addr, dat_content, this);
+            }
 
-            return std::make_shared<EffectsInstr>(addr, dat_content, this);
-        }
+            else if (function_type == AnimeClipTable_t) {
 
-        else if (function_type == 10) {
+                res =  std::make_shared<AnimeClipTable>(addr, dat_content, this);
+            } else if (function_type == FieldMonsterData_t) {
 
-            return std::make_shared<AnimeClipTable>(addr, dat_content, this);
-        } else if (function_type == 11) {
+                res =  std::make_shared<FieldMonsterData>(addr, dat_content, this);
+            }
 
-            return std::make_shared<FieldMonsterData>(addr, dat_content, this);
-        }
+            else if (function_type == FC_auto_t) {
 
-        else if (function_type == 13) {
+                res =  std::make_shared<FC_autoX>(addr, dat_content, this);
+            } else if (function_type == BookData99_t) {
 
-            return std::make_shared<FC_autoX>(addr, dat_content, this);
-        } else if (function_type == 14) {
+                res =  std::make_shared<BookData99>(addr, dat_content, this);
+            } else if (function_type == BookDataX_t) {
 
-            return std::make_shared<BookData99>(addr, dat_content, this);
-        } else if (function_type == 15) {
-
-            return std::make_shared<BookDataX>(addr, dat_content, this);
+                res =  std::make_shared<BookDataX>(addr, dat_content, this);
+            }
+            if ((uint8_t) dat_content[addr] != 1) throw exception_past_the_end_addr();
+            if (this->goal < addr) throw exception_past_the_end_addr();
+            return res;
         }
 
         return std::shared_ptr<Instruction>();

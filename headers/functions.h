@@ -1,9 +1,28 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 #include "headers/instruction.h"
-/*
-The class function
-*/
+
+enum FunctionType {
+            OPCodeFun,
+            CreateMonsters_t,
+            _fun,
+            ActionTable_t,
+            AlgoTable_t,
+            WeaponAttTable_t,
+            BreakTable_t,
+            SummonTable_t,
+            ReactionTable_t,
+            PartTable_t,
+            AnimeClipTable_t,
+            FieldMonsterData_t,
+            FieldFollowData_t,
+            FC_auto_t,
+            BookData99_t,
+            BookDataX_t,
+            AddCollision_t,
+            ConditionTable_t,
+            StyleName_t };
+
 class function {
   public:
     function() = default;
