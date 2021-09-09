@@ -84,6 +84,8 @@ class Builder {
     std::vector<function> FunctionsToParse;
     std::vector<function> FunctionsParsed;
     std::string SceneName;
+    std::vector<int> guess_type_by_name(function& fun);
+    int attempts_at_reading_function(function& fun, QByteArray& dat_content, const std::vector<int>& fallback_types);
     int ReadIndividualFunction(function& fun, QByteArray& dat_content);
     bool UpdatePointersXLSX();
     bool UpdatePointersDAT();

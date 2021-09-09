@@ -12,6 +12,8 @@
 #include <string>
 #include <vector>
 
+#include "headers/exceptions.h"
+
 void display_text(const QString& text);
 
 std::string ReadStringFromByteArray(int start_pos, const QByteArray& content);
