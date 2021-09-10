@@ -293,18 +293,13 @@ class CS3Builder : public Builder {
                 throw exception_unexpected_operand();
                 return;
             }
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            int check1 = ReadIntegerFromByteArray(addr, content);
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            QByteArray map = ReadStringSubByteArray(content, addr);
+            this->AddOperande(operande(addr, "string", map));
 
-            int check2 = ReadIntegerFromByteArray(addr, content);
-            if (check1 != 0 && check2 != 0) { // bad
-                addr = initial_addr;
-                Maker->flag_monsters = false;
-                return;
-            }
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            QByteArray remaining1 = ReadSubByteArray(content, addr, 0x10 - map.size());
+            operande fill1 = operande(addr, "fill", remaining1);
+            fill1.setBytesToFill(0x10);
+            this->AddOperande(fill1);
 
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -316,25 +311,28 @@ class CS3Builder : public Builder {
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RSI + 0x28
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x2C
+            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4))); // 0x2C
 
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x30
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x32
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x34
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x36
 
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x38
+            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4))); // 0x38
 
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x3C
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x40
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x44
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x48
-            // 0x4C The first part is done
-            // from here, it's just a guess. There is a maximum of 8 enemies hardcoded in the function.
+            QByteArray btl_name = ReadStringSubByteArray(content, addr);
+            this->AddOperande(operande(addr, "string", btl_name));
+
+            QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - btl_name.size());
+            operande fill = operande(addr, "fill", remaining);
+            fill.setBytesToFill(0x10);
+            this->AddOperande(fill);
+
 
             QByteArray array = ReadSubByteArray(content, addr, 4);
             this->AddOperande(operande(addr, "int", array));
             int first = ReadIntegerFromByteArray(0, array);
+
             int cnt = 0;
             do {
                 int counter = 0;
@@ -748,15 +746,15 @@ class CS3Builder : public Builder {
         FieldMonsterData(int& addr, QByteArray& content, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 266, Maker) {
 
-            QByteArray first_integer_bytes = ReadSubByteArray(content, addr, 4);
-            this->AddOperande(operande(addr, "int", first_integer_bytes));
+            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            int sentinel = ReadIntegerFromByteArray(addr, content);
+            while (sentinel!=1){
+                this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                sentinel = ReadIntegerFromByteArray(addr, content);
+            }
         }
     };
     class FieldFollowData
@@ -847,7 +845,8 @@ class CS3Builder : public Builder {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x24
                 this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             } else {
-                this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                if ((unsigned char)content[addr] != 1)
+                    this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             }
         }
     };

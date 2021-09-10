@@ -287,23 +287,21 @@ class CS1Builder : public Builder {
             }
             int first = ReadIntegerFromByteArray(addr, content);
 
-            if ((first == -1) && (addr + 0x20 == Maker->goal)) {
+            if (first == -1){
                 this->AddOperande(
-                  operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C))); //?? we don't forget to take the int as well
-                Maker->flag_monsters = true;
+                  operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C)));
                 return;
             }
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            int check1 = ReadIntegerFromByteArray(addr, content);
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
-            int check2 = ReadIntegerFromByteArray(addr, content);
-            if (check1 != 0 && check2 != 0) { // bad
-                addr = initial_addr;
-                Maker->flag_monsters = false;
-                return;
-            }
+            QByteArray map = ReadStringSubByteArray(content, addr);
+            this->AddOperande(operande(addr, "string", map));
+
+            QByteArray remaining1 = ReadSubByteArray(content, addr, 0x10 - map.size());
+            operande fill1 = operande(addr, "fill", remaining1);
+            fill1.setBytesToFill(0x10);
+            this->AddOperande(fill1);
+
+
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x10
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -311,7 +309,7 @@ class CS1Builder : public Builder {
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x1A
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // 0x1C
+
             // 0x20
 
             int cnt = 0;
@@ -363,10 +361,7 @@ class CS1Builder : public Builder {
                     addr = initial_addr;
                     throw exception_unexpected_operand();
                     
-                } else {
-
-                    return;
-                }
+                } 
                 return;
             }
             this->AddOperande(
@@ -713,15 +708,15 @@ class CS1Builder : public Builder {
         FieldMonsterData(int& addr, QByteArray& content, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 266, Maker) {
 
-            QByteArray first_integer_bytes = ReadSubByteArray(content, addr, 4);
-            this->AddOperande(operande(addr, "int", first_integer_bytes));
+            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            int sentinel = ReadIntegerFromByteArray(addr, content);
+            while (sentinel!=1){
+                this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                sentinel = ReadIntegerFromByteArray(addr, content);
+            }
         }
     };
     class FieldFollowData
@@ -812,7 +807,8 @@ class CS1Builder : public Builder {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x24
                 this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             } else {
-                this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                if ((unsigned char)content[addr] != 1)
+                    this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             }
         }
     };
@@ -5322,10 +5318,14 @@ class CS1Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case -1: {
+                    this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
+
+                    this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
