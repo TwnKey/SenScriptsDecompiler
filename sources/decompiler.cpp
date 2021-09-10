@@ -390,7 +390,7 @@ bool Decompiler::check_all_files(const QString& log_filename,
 return true;
 }
 bool Decompiler::read_file(const QString& filepath) {
-    ib->Reset();
+    ib->reset();
     current_tf = TranslationFile();
     QFile file(filepath);
     QFileInfo info_file(file);

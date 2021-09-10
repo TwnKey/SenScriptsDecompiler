@@ -79,7 +79,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
               FunctionsParsed[FunctionsParsed.size() - 1].actual_addr);
         }
 
-        UpdatePointersXLSX();
+        update_pointers_XLSX();
     }
 
     display_text("XLSX file read.");
@@ -95,8 +95,8 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
                 auto itt = find_function_by_ID(FunctionsParsed, it.ID);
                 if (itt == FunctionsParsed.end()) { // if we never read it, we'll do that
                     idx_current_fun = it.ID;
-                    GuessTypeByName(it, dat_content);
-                    ReadIndividualFunction(it, dat_content);
+                    guess_type_by_name(it, dat_content);
+                    read_individual_function(it, dat_content);
                     FunctionsParsed.push_back(it);
                 }
                 previous_fun_name = it.name;
@@ -105,7 +105,7 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
 
         std::sort(FunctionsParsed.begin(), FunctionsParsed.end());
 
-        UpdatePointersDAT();
+        update_pointers_DAT();
         int current_addr = FunctionsParsed[0].actual_addr; // first function shouldn't have changed
         for (uint idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++) {
 
@@ -119,7 +119,7 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
         }
     }
 }
-std::vector<int> Builder::GuessTypeByName(function& fun, QByteArray& dat_content) {
+std::vector<int> Builder::guess_type_by_name(function &fun, QByteArray &dat_content){
     std::vector<int> result;
     if (fun.name == "ActionTable") {
         result.push_back(ActionTable_t);
@@ -180,7 +180,7 @@ std::vector<int> Builder::GuessTypeByName(function& fun, QByteArray& dat_content
     }
     return result;
 }
-int Builder::AttemptsAtReadingFunction(function& fun, QByteArray& dat_content, std::vector<int> fallback_types){
+int Builder::attempts_at_reading_function(function &fun, QByteArray &dat_content, std::vector<int> fallback_types){
     int current_position = fun.actual_addr;
     this->goal = fun.end_addr;
     int latest_op_code = 1;
@@ -275,15 +275,15 @@ int Builder::AttemptsAtReadingFunction(function& fun, QByteArray& dat_content, s
 
     }
 }
-int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
+int Builder::read_individual_function(function &fun, QByteArray &dat_content) {
 
-    std::vector<int> fallback_types = GuessTypeByName(fun, dat_content);
-    int current_position = AttemptsAtReadingFunction(fun, dat_content, fallback_types);
+    std::vector<int> fallback_types = guess_type_by_name(fun, dat_content);
+    int current_position = attempts_at_reading_function(fun, dat_content, fallback_types);
 
     return current_position;
 }
 
-bool Builder::UpdatePointersDAT() {
+bool Builder::update_pointers_DAT() {
 
     for (auto& idx_fun : FunctionsParsed) {
 
@@ -313,13 +313,13 @@ bool Builder::UpdatePointersDAT() {
     qDebug() << "Done";
     return true;
 }
-bool Builder::Reset() {
+bool Builder::reset() {
 
     FunctionsParsed.clear();
     FunctionsToParse.clear();
     return true;
 }
-bool Builder::UpdatePointersXLSX() {
+bool Builder::update_pointers_XLSX() {
 
     for (auto& idx_fun : FunctionsParsed) {
 
