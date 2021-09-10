@@ -257,15 +257,13 @@ bool Builder::UpdatePointersDAT() {
                     if (idx_fun_ != -1) {
                         function fun = FunctionsParsed[idx_fun_];
                         int id_instr = find_instruction(addr_ptr, fun);
-                        int id_op = 0;
                         if (id_instr != -1) {
-                            id_op = find_operande(addr_ptr, *fun.InstructionsInFunction[id_instr]);
-                            operande.setDestination(fun.ID, id_instr, id_op);
+                            operande.setDestination(fun.ID, id_instr);
                         } else {
-                            operande.setDestination(fun.ID, 0, 0);
+                            operande.setDestination(fun.ID, 0);
                         }
                     } else {
-                        operande.setDestination(0, 0, 0);
+                        operande.setDestination(0, 0);
                     }
                 }
             }
@@ -353,17 +351,4 @@ int Builder::find_instruction(int addr, function fun) {
 
     return result;
 }
-int Builder::find_operande(uint addr,
-                           const Instruction& instr) { // NOT USEFUL! Since we should point towards OP codes exclusively
 
-    int idx_operande = 0;
-    for (; idx_operande < instr.get_Nb_operandes(); idx_operande++) {
-
-        operande ope = instr.get_operande(idx_operande);
-        uint ope_addr = ope.getAddr();
-        if (addr == ope_addr) {
-            break;
-        }
-    }
-    return idx_operande;
-}

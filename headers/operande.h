@@ -4,14 +4,12 @@
 
 class Destination {
   public:
-    Destination(int FID, int IID, int OID) {
+    Destination(int FID, int IID) {
         FunctionID = FID;
         InstructionID = IID;
-        OperandeID = OID;
     }
     int FunctionID;
     int InstructionID;
-    int OperandeID;
 };
 class operande {
 
@@ -48,11 +46,11 @@ class operande {
     }
     [[nodiscard]] uint getAddr() const { return Position; }
     std::string getType() { return Type; }
-    void setDestination(int ID_fun, int ID_instr, int ID_operande) { Dest = Destination(ID_fun, ID_instr, ID_operande); }
+    void setDestination(int ID_fun, int ID_instr) { Dest = Destination(ID_fun, ID_instr); }
     Destination getDestination() { return Dest; }
 
   private:
-    Destination Dest = Destination(-1, -1, -1);
+    Destination Dest = Destination(-1, -1);
     int Position = 0;
     std::string Type;
     QByteArray Value;

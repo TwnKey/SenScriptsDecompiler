@@ -80,7 +80,7 @@ class Builder {
 
     int find_function(int addr);
     int find_instruction(int addr, function fun);
-    int find_operande(uint addr, const Instruction& instr);
+
     std::vector<function> FunctionsToParse;
     std::vector<function> FunctionsParsed;
     std::string SceneName;
