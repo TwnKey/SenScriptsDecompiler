@@ -5,6 +5,7 @@
 #include "headers/CS3InstructionsSet.h"
 #include "headers/CS4InstructionsSet.h"
 #include "headers/TXInstructionsSet.h"
+#include "headers/ReverieInstructionsSet.h"
 #include "qxlsx/headers/xlsxcellrange.h"
 #include "qxlsx/headers/xlsxchart.h"
 #include "qxlsx/headers/xlsxchartsheet.h"
@@ -31,6 +32,8 @@ bool Decompiler::setup_game(const std::string& game) {
         ib = new CS2Builder();
     } else if (game == "CS4") {
         ib = new CS4Builder();
+    } else if (game == "Reverie") {
+        ib = new ReverieBuilder();
     } else if (game == "TX") {
         ib = new TXBuilder();
     } else {
@@ -245,7 +248,7 @@ bool Decompiler::check_all_files(const QString& log_filename,
         qDebug() << "Checking " << full_path;
         QString full_path_ref = reference_dir + filename;
         stream << full_path << "\n";
-        this->setup_game("CS4");
+        this->setup_game("Reverie");
         qDebug() << "reading dat1 file" << full_path;
         this->read_file(full_path);
         qDebug() << "reading dat done." << full_path;

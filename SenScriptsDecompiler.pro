@@ -35,6 +35,7 @@ HEADERS += \
     headers/CS2InstructionsSet.h \
     headers/CS3InstructionsSet.h \
     headers/CS4InstructionsSet.h \
+    headers/ReverieInstructionsSet.h \
     headers/TXInstructionsSet.h \
     headers/functions.h \
     headers/global_vars.h \
