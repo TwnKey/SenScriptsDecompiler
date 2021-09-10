@@ -3,6 +3,7 @@
 #include "headers/global_vars.h"
 #include "headers/utilities.h"
 #include <string>
+#include <stack>
 
 Instruction::Instruction(int addr, uint OP, Builder* Maker) {
     OPCode = OP;
@@ -20,58 +21,93 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
     this->name = std::move(name);
     this->OPCode = OP;
     this->Maker = Maker;
+    std::stack<std::pair<size_t, uint8_t>> stack_of_headers;
+
+
     addr_instr = addr;
     if (OPCode <= 0xFF) addr++;
 
-    int idx_operande = 3;
-    std::string type = excelScenarioSheet.read(idx_row, idx_operande).toString().toStdString();
+    int idx_column = 3;
+    std::string type = excelScenarioSheet.read(idx_row, idx_column).toString().toStdString();
     while (!type.empty()) {
 
         QByteArray Value;
         operande op;
         if (type == "int") {
-            int Operande = excelScenarioSheet.read(idx_row + 1, idx_operande).toInt();
+            int Operande = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
 
             Value = GetBytesFromInt(Operande);
             op = operande(addr, "int", Value);
+            this->AddOperande(op);
+            addr = addr + op.getLength();
+			} else if (type == "Group ID"){
+                stack_of_headers.push(std::make_pair(0,addr-1)); //the count includes OPCode thus -1
+
+                int OperandeGrp = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
+                idx_column++;
+                uint8_t OperandeLength = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
+                //If the byte for length is 0xFF we don't calculate it
+                if (OperandeLength != 0xFF) stack_of_headers.top().first = get_Nb_operandes();
+                Value = GetBytesFromInt(OperandeGrp + (OperandeLength << 0x18));
+                op = operande(addr, "header", Value);
+                this->AddOperande(op);
+                addr = addr + op.getLength();
 
         } else if (type == "float") {
 
-            float Operande = excelScenarioSheet.read(idx_row + 1, idx_operande).toFloat();
+            float Operande = excelScenarioSheet.read(idx_row + 1, idx_column).toFloat();
 
             Value = GetBytesFromFloat(Operande);
             op = operande(addr, "float", Value);
+            this->AddOperande(op);
+            addr = addr + op.getLength();
         } else if (type == "short") {
-            int16_t Operande = static_cast<int16_t>(excelScenarioSheet.read(idx_row + 1, idx_operande).toInt());
+            int16_t Operande = static_cast<int16_t>(excelScenarioSheet.read(idx_row + 1, idx_column).toInt());
             Value = GetBytesFromShort(Operande);
             op = operande(addr, "short", Value);
+            this->AddOperande(op);
+            addr = addr + op.getLength();
 
         } else if ((type == "byte") || (type == "OP Code")) {
-            int OP = excelScenarioSheet.read(idx_row + 1, idx_operande).toInt();
+            int OP = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
 
             if (OP <= 0xFF) { // actually the opposite never happens.
                 auto Operande = static_cast<char>(((OP)&0x000000FF));
                 Value.push_back(Operande);
                 op = operande(addr, "byte", Value);
+                this->AddOperande(op);
+                addr = addr + op.getLength();
             }
+		} else if (type == "End"){
+            if (!stack_of_headers.empty()){
+                if (stack_of_headers.top().first != 0){
+
+                    uint32_t new_header_value = ((addr - stack_of_headers.top().second) << 0x18) + (this->get_operande(stack_of_headers.top().first).getIntegerValue() & 0xFFFFFF);
+                    QByteArray header_bytes = GetBytesFromInt(new_header_value);
+                    this->get_operande(stack_of_headers.top().first).setValue(header_bytes);
+                    stack_of_headers.pop();
+                }
+            }
+
+
         } else if (type == "fill") {
 
-            QString Operande_prev = excelScenarioSheet.read(idx_row + 1, idx_operande - 1).toString();
-            QString Operande = excelScenarioSheet.read(idx_row + 1, idx_operande).toString();
+            QString Operande_prev = excelScenarioSheet.read(idx_row + 1, idx_column - 1).toString();
+            QString Operande = excelScenarioSheet.read(idx_row + 1, idx_column).toString();
             QString str_max_length = Operande.mid(1, Operande.indexOf('-') - 1);
-
-            // apparently it is not possible to get the result of the formula...
 
             for (int id = 0; id < str_max_length.toInt() - Operande_prev.toUtf8().size() - 1; id++) {
                 Value.push_back('\0');
             }
 
             op = operande(addr, "fill", Value);
+			this->AddOperande(op);
+            addr = addr + op.getLength();
 
         }
 
         else if ((type == "string") || (type == "dialog")) {
-            QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_operande).toString());
+            QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
             Value = Operande.toUtf8();
             QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(OutputDatFileEncoding).toUtf8());
             QByteArray Value = codec->fromUnicode(Operande);
@@ -79,18 +115,22 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             Value.replace('\n', 1);
 
             op = operande(addr, type, Value);
+			this->AddOperande(op);
+            addr = addr + op.getLength();
         } else if (type == "bytearray") {
 
             while (type == "bytearray") {
-                auto Operande = static_cast<char>(((excelScenarioSheet.read(idx_row + 1, idx_operande).toInt()) & 0x000000FF));
+                auto Operande = static_cast<char>(((excelScenarioSheet.read(idx_row + 1, idx_column).toInt()) & 0x000000FF));
                 Value.push_back(Operande);
-                idx_operande++;
-                type = excelScenarioSheet.read(idx_row, idx_operande).toString().toStdString();
+                idx_column++;
+                type = excelScenarioSheet.read(idx_row, idx_column).toString().toStdString();
             }
             op = operande(addr, "bytearray", Value);
-            idx_operande--;
+            idx_column--;
+			this->AddOperande(op);
+            addr = addr + op.getLength();
         } else if (type == "pointer") {
-            QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_operande).toString());
+            QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
 
             QString RowPointedStr = Operande.right(Operande.length() - 2);
 
@@ -99,11 +139,20 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             Value = GetBytesFromInt(actual_row);
 
             op = operande(addr, "pointer", Value);
+			this->AddOperande(op);
+            addr = addr + op.getLength();
         }
-        this->AddOperande(op);
-        idx_operande++;
-        addr = addr + op.getLength();
-        type = excelScenarioSheet.read(idx_row, idx_operande).toString().toStdString();
+        
+        idx_column++;
+        type = excelScenarioSheet.read(idx_row, idx_column).toString().toStdString();
+    }
+    if (!stack_of_headers.empty()){
+        if (stack_of_headers.top().first != 0){
+            uint32_t new_header_value = ((addr - stack_of_headers.top().second) << 0x18) + (this->get_operande(stack_of_headers.top().first).getIntegerValue() & 0xFFFFFF);
+            QByteArray header_bytes = GetBytesFromInt(new_header_value);
+            this->get_operande(stack_of_headers.top().first).setValue(header_bytes);
+            stack_of_headers.pop();
+        }
     }
 }
 int Instruction::get_Nb_operandes() const { return static_cast<int>(operandes.size()); }
@@ -115,6 +164,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
     QXlsx::Format FormatInstr;
     QXlsx::Format FormatType;
     QXlsx::Format FormatOP;
+    QXlsx::Format FormatStartEnd;
     auto ColorBg = QColor(qRgb(255, 230, 210));
     FormatType.setHorizontalAlignment(QXlsx::Format::AlignHCenter);
     FormatType.setVerticalAlignment(QXlsx::Format::AlignVCenter);
@@ -138,12 +188,20 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
     FormatOP.setRightBorderStyle(QXlsx::Format::BorderThin);
     FormatOP.setTopBorderStyle(QXlsx::Format::BorderThin);
 
+	QColor colorRed = QColor(qRgb(255, 0, 0));
+    
+    FormatStartEnd.setPatternBackgroundColor(colorRed);
+    FormatStartEnd.setHorizontalAlignment(QXlsx::Format::AlignHCenter);
+    FormatStartEnd.setVerticalAlignment(QXlsx::Format::AlignVCenter);
+    FormatStartEnd.setTextWrap(true);
     FormatType.setFontBold(true);
     QColor color;
 
     color = QColor::fromHsl((int)OPCode, 255, 185, 255);
     FormatOP.setPatternBackgroundColor(color);
 
+	if (error)
+        excelScenarioSheet.write(row, col + 1, "ERROR!", FormatType);
     excelScenarioSheet.write(row, col + 2, "OP Code", FormatType);
     excelScenarioSheet.write(row + 1, col + 2, OPCode, FormatOP);
     int col_cnt = 0;
@@ -155,6 +213,17 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
         if (type == "int") {
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
             excelScenarioSheet.write(row + 1, col + 3 + col_cnt, ReadIntegerFromByteArray(0, Value), FormatInstr);
+            col_cnt++;
+ 
+        } else if (type == "header"){
+            uint32_t header_value = ReadIntegerFromByteArray(0, Value);
+            uint8_t length_byte = header_value >> 0x18;
+            uint32_t group_id = header_value & 0xFFFFFF;
+            excelScenarioSheet.write(row, col + 3 + col_cnt, "Group ID", FormatType);
+            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, group_id, FormatInstr);
+            col_cnt++;
+            excelScenarioSheet.write(row, col + 3 + col_cnt, "Length", FormatType);
+            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, length_byte, FormatInstr);
             col_cnt++;
         } else if (type == "float") {
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
@@ -187,13 +256,20 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
 
         } else if (type == "instruction") {
             int addr = 0;
+			excelScenarioSheet.write(row, col + 3 + col_cnt, "Start", FormatStartEnd);
+            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, "", FormatStartEnd);
+            col_cnt++;
 
             std::shared_ptr<Instruction> instr = Maker->CreateInstructionFromDAT(
               addr, Value, 0); // function type is 0 here because sub05 is only called by OP Code instructions.
             int column_instr = col + 3 + col_cnt - 2;
             int cnt = instr->WriteXLSX(excelScenarioSheet, funs, row, column_instr);
-
             col = col + cnt + 1;
+
+            excelScenarioSheet.write(row, col + 3 + col_cnt, "End", FormatStartEnd);
+            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, "", FormatStartEnd);
+            col_cnt++;
+
 
         } else if ((type == "string") || (type == "dialog")) {
 
