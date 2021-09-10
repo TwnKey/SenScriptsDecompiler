@@ -303,7 +303,7 @@ class TXBuilder : public Builder {
             if (check1 != 0 && check2 != 0) { // bad
 
                 addr = initial_addr;
-                Maker->flag_monsters = false;
+                throw exception_unexpected_operand();
                 return;
             }
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
