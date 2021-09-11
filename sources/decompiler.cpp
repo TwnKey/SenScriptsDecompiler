@@ -70,13 +70,7 @@ bool Decompiler::update_current_tf() {
     return true;
 }
 bool Decompiler::read_dat(const std::filesystem::path& filepath) {
-
-    QFile file(QString::fromStdString(filepath.string()));
-    if (!file.open(QIODevice::ReadOnly)) {
-        return false;
-    }
-
-    QByteArray content = file.readAll();
+    QByteArray content = ssd::utils::read_file(filepath);
 
     ib->CreateHeaderFromDAT(content);
     ib->ReadFunctionsDAT(content);
@@ -129,11 +123,9 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
     if (!fs::exists(output_dir)) fs::create_directories(output_dir);
 
     fs::path output_path = output_dir / (current_tf.getName() += ".dat");
-    QFile file(QString::fromStdString(output_path.string()));
 
-    file.open(QIODevice::WriteOnly);
-    file.write(file_content);
-    file.close();
+    ssd::utils::write_file(output_path, file_content);
+
     display_text("File " + output_path.string() + " created.");
     return true;
 }
@@ -262,20 +254,10 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
         qDebug() << "full done";
         qDebug() << "reading dat file" << QString::fromStdString(fs::path(local_dat_path).string());
         qDebug() << "reading dat file" << QString::fromStdString(reference_dat_path.string());
-        QFile file1(QString::fromStdString(fs::path(local_dat_path).string()));
-        QFile file2(QString::fromStdString(reference_dat_path.string()));
-        if (!file1.open(QIODevice::ReadOnly)) {
 
-            return false;
-        }
+        const QByteArray content1 = ssd::utils::read_file(local_dat_path);
+        const QByteArray content2 = ssd::utils::read_file(reference_dat_path);
 
-        const QByteArray content1 = file1.readAll();
-        if (!file2.open(QIODevice::ReadOnly)) {
-
-            return false;
-        }
-
-        const QByteArray content2 = file2.readAll();
         std::string msg = "Problème de taille avec " + file_stem;
 
         int length_header2 = ReadIntegerFromByteArray(0x18, content2);

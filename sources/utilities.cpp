@@ -1,4 +1,33 @@
 #include "headers/utilities.h"
+#include <fstream>
+
+namespace ssd::utils {
+namespace fs = std::filesystem;
+QByteArray read_file(const std::filesystem::path& filepath) {
+    if (!fs::exists(filepath)) throw std::runtime_error("ERROR: File \"" + filepath.string() + "\" does not exist");
+    std::ifstream file;
+    file.exceptions(std::ifstream::badbit);
+    file.open(filepath, std::ios::in | std::ios::binary);
+
+    std::vector<char> temp_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+    file.close();
+
+    return QByteArray(reinterpret_cast<const char*>(temp_content.data()), (int)temp_content.size());
+}
+
+void write_file(const std::filesystem::path& filepath, const QByteArray& content) {
+    auto dir = filepath.parent_path();
+    if (!fs::exists(dir)) throw std::runtime_error("ERROR: Directory \"" + dir.string() + "\" does not exist");
+
+    std::ofstream file;
+    file.exceptions(std::ofstream::badbit);
+    file.open(filepath, std::ios::out | std::ios::binary);
+
+    file.write(reinterpret_cast<const char*>(content.data()), content.size());
+    file.close();
+}
+} // namespace ssd::utils
 
 void display_text(const std::string& text) {
     QTextStream out(stdout);
