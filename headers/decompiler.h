@@ -4,8 +4,8 @@
 #include "headers/translationfile.h"
 
 #include <QFile>
-#include <QFileInfo>
 #include <QString>
+#include <filesystem>
 #include <memory>
 
 /*
@@ -25,18 +25,18 @@ class Decompiler {
   public:
     Decompiler();
     bool setup_game(const std::string& game);
-    bool read_xlsx(QFile& filename);
+    bool read_xlsx(const std::filesystem::path& filename);
     bool read_dat(QFile& filename);
-    bool read_file(const QString& filepath);
+    bool read_file(const std::filesystem::path& filepath);
     bool update_current_tf();
-    bool write_xlsx(const QString& output_dir);
-    bool write_dat(const QString& output_dir);
-    bool check_all_files(const QString& log_filename,
-                         const QStringList& files_to_read,
-                         const QString& reference_dir,
-                         const QString& output_dir);
+    bool write_xlsx(const std::filesystem::path& output_dir);
+    bool write_dat(const std::filesystem::path& output_dir);
+    bool check_all_files(const std::filesystem::path& log_filename,
+                         const std::vector<std::filesystem::path>& files_to_read,
+                         const std::filesystem::path& reference_dir,
+                         const std::filesystem::path& output_dir);
     TranslationFile get_tf();
-    bool write_file(const QString& filepath, const QString& output_dir);
+    bool write_file(const std::filesystem::path& filepath, const std::filesystem::path& output_dir);
 
   private:
     TranslationFile current_tf;

@@ -15,9 +15,9 @@
 #include <QColor>
 #include <QCoreApplication>
 #include <QDebug>
-#include <QDir>
 
 using namespace QXlsx; // NOLINT(google-build-using-namespace)
+namespace fs = std::filesystem;
 
 Decompiler::Decompiler() = default;
 
@@ -42,12 +42,10 @@ bool Decompiler::setup_game(const std::string& game) {
 
     return true;
 }
-bool Decompiler::read_xlsx(QFile& file) {
-    QFileInfo info(file);
+bool Decompiler::read_xlsx(const std::filesystem::path& filename) {
+    if (!fs::exists(filename)) return false;
 
-    if (!file.open(QIODevice::ReadOnly)) return false;
-
-    Document doc(info.absoluteFilePath());
+    Document doc(QString::fromStdString(filename.string()));
     auto game_from_file = doc.read(1, 1).toString().toStdString();
     setup_game(game_from_file);
     display_text("Reading functions...");
@@ -84,7 +82,7 @@ bool Decompiler::read_dat(QFile& file) {
     update_current_tf();
     return true;
 }
-bool Decompiler::write_dat(const QString& output_dir) {
+bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
 
     QByteArray functions;
     QByteArray current_fun;
@@ -126,22 +124,21 @@ bool Decompiler::write_dat(const QString& output_dir) {
     file_content.append(header);
     file_content.append(functions);
 
-    QDir dir(output_dir);
-    if (!dir.exists()) dir.mkpath(".");
+    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
 
-    QString output_path = output_dir + "\\" + QString::fromStdString(current_tf.getName()) + ".dat";
-    QFile file(output_path);
+    fs::path output_path = output_dir / (current_tf.getName() += ".dat");
+    QFile file(QString::fromStdString(output_path.string()));
 
     file.open(QIODevice::WriteOnly);
     file.write(file_content);
     file.close();
-    display_text("File " + output_path + " created.");
+    display_text("File " + QString::fromStdString(output_path.string()) + " created.");
     return true;
 }
-bool Decompiler::write_xlsx(const QString& output_dir) {
+bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
 
     QFont font = QFont("Arial");
-    QString filename = QString::fromStdString(current_tf.getName()) + ".xlsx";
+    fs::path filename = current_tf.getName() + ".xlsx";
     QXlsx::Document excel_scenario_sheet;
     Format format;
     format.setFont(font);
@@ -218,20 +215,22 @@ bool Decompiler::write_xlsx(const QString& output_dir) {
         }
     }
 
-    QString xlsx_output_file = QDir::toNativeSeparators(output_dir + "/" + filename);
+    fs::path xlsx_output_file = output_dir / filename;
 
-    display_text("File " + xlsx_output_file + " created.");
-    QDir dir(output_dir);
-    if (!dir.exists()) dir.mkpath(".");
-    excel_scenario_sheet.saveAs(xlsx_output_file);
+    display_text("File " + QString::fromStdString(xlsx_output_file.string()) + " created.");
+
+    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
+
+    excel_scenario_sheet.saveAs(QString::fromStdString(xlsx_output_file.string()));
+
     return true;
 }
 
-bool Decompiler::check_all_files(const QString& log_filename,
-                                 const QStringList& files,
-                                 const QString& reference_dir,
-                                 const QString& output_dir) {
-    QFile file(log_filename);
+bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
+                                 const std::vector<std::filesystem::path>& files,
+                                 const std::filesystem::path& reference_dir,
+                                 const std::filesystem::path& output_dir) {
+    QFile file(QString::fromStdString(log_filename.string()));
 
     QTextStream stream(&file);
     file.remove();
@@ -241,26 +240,29 @@ bool Decompiler::check_all_files(const QString& log_filename,
 
         bool success = true;
 
-        QString full_path = reference_dir + "/" + file_;
-        QString filename = full_path.mid(full_path.lastIndexOf("/"));
-        QString croped_fileName = filename.section(".", 0, 0);
-        qDebug() << "Checking " << full_path;
-        QString full_path_ref = reference_dir + filename;
-        stream << full_path << "\n";
+        const fs::path full_path = reference_dir / file_;
+        const fs::path filename = full_path.filename();
+        const std::string file_stem = filename.stem().string();
+        const fs::path reference_dat_path = reference_dir / filename;
+        const fs::path local_dat_path = output_dir / filename;
+        const fs::path xlsx_path = output_dir / (file_stem + ".xlsx");
+
+        qDebug() << "Checking " << QString::fromStdString(reference_dat_path.string());
+        stream << QString::fromStdString(reference_dat_path.string()) << "\n";
         this->setup_game("Reverie");
-        qDebug() << "reading dat1 file" << full_path;
-        this->read_file(full_path);
-        qDebug() << "reading dat done." << full_path;
+        qDebug() << "reading dat1 file" << QString::fromStdString(reference_dat_path.string());
+        this->read_file(reference_dat_path);
+        qDebug() << "reading dat done." << QString::fromStdString(reference_dat_path.string());
         this->write_xlsx(output_dir);
-        qDebug() << "reading xlsx file" << output_dir + croped_fileName + ".xlsx";
-        this->read_file(output_dir + croped_fileName + ".xlsx");
+        qDebug() << "reading xlsx file" << QString::fromStdString((xlsx_path).string());
+        this->read_file(xlsx_path);
         qDebug() << "writing dat file";
         this->write_dat(output_dir);
         qDebug() << "full done";
-        qDebug() << "reading dat file" << output_dir + filename;
-        qDebug() << "reading dat file" << full_path_ref;
-        QFile file1(output_dir + filename);
-        QFile file2(full_path_ref);
+        qDebug() << "reading dat file" << QString::fromStdString(fs::path(local_dat_path).string());
+        qDebug() << "reading dat file" << QString::fromStdString(reference_dat_path.string());
+        QFile file1(QString::fromStdString(fs::path(local_dat_path).string()));
+        QFile file2(QString::fromStdString(reference_dat_path.string()));
         if (!file1.open(QIODevice::ReadOnly)) {
 
             return false;
@@ -273,7 +275,7 @@ bool Decompiler::check_all_files(const QString& log_filename,
         }
 
         const QByteArray content2 = file2.readAll();
-        std::string msg = "Problème de taille avec " + croped_fileName.toStdString();
+        std::string msg = "Problème de taille avec " + file_stem;
 
         int length_header2 = ReadIntegerFromByteArray(0x18, content2);
         int idx_addresses_loc1 = ReadIntegerFromByteArray(8, content1);
@@ -295,7 +297,7 @@ bool Decompiler::check_all_files(const QString& log_filename,
                 success = false;
             }
         }
-        this->read_file(output_dir + filename);
+        this->read_file(local_dat_path);
         std::vector<int> idx_fun_1;
         std::vector<int> idx_fun_2;
         for (int i = idx_addresses_loc1; i < idx_addresses_loc1 + size_pointer_section; i += 4) {
@@ -368,15 +370,14 @@ bool Decompiler::check_all_files(const QString& log_filename,
     }
     return true;
 }
-bool Decompiler::read_file(const QString& filepath) {
+bool Decompiler::read_file(const fs::path& filepath) {
     ib->Reset();
     current_tf = TranslationFile();
-    QFile file(filepath);
-    QFileInfo info_file(file);
 
-    if (info_file.suffix() == "xlsx") {
-        read_xlsx(file);
-    } else if (info_file.suffix() == "dat") {
+    if (filepath.extension() == ".xlsx") {
+        read_xlsx(filepath);
+    } else if (filepath.extension() == ".dat") {
+        QFile file(QString::fromStdString(filepath.string()));
         read_dat(file);
     } else {
         display_text("FAILURE: Unrecognized extension.");
@@ -384,13 +385,11 @@ bool Decompiler::read_file(const QString& filepath) {
     }
     return true;
 }
-bool Decompiler::write_file(const QString& filepath, const QString& output_dir) {
+bool Decompiler::write_file(const fs::path& filepath, const fs::path& output_dir) {
 
-    QFile file(filepath);
-    QFileInfo info_file(file);
-    if (info_file.suffix() == "dat") {
+    if (filepath.extension() == ".dat") {
         write_xlsx(output_dir);
-    } else if (info_file.suffix() == "xlsx") {
+    } else if (filepath.extension() == ".xlsx") {
         write_dat(output_dir);
     } else {
         display_text("FAILURE: Unrecognized extension.");

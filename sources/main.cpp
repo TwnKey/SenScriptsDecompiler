@@ -1,8 +1,9 @@
 #include "headers/decompiler.h"
 #include "headers/global_vars.h"
 #include <QCoreApplication>
-#include <QDir>
 #include <QSettings>
+
+namespace fs = std::filesystem;
 
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables,fuchsia-statically-constructed-objects)
 std::string InputDatFileEncoding;
@@ -50,7 +51,7 @@ int main(int argc, char* argv[]) {
     auto Game = settings.value("Game", "CS4").toString().toStdString();
     InputDatFileEncoding = settings.value("InputDatFileEncoding", "UTF-8").toString().toStdString();
     OutputDatFileEncoding = settings.value("OutputDatFileEncoding", "UTF-8").toString().toStdString();
-    QString output_folder = QCoreApplication::applicationDirPath() + "/recompiled_files";
+    fs::path output_dir = fs::path(QCoreApplication::applicationDirPath().toStdString()) / "recompiled_files";
 
     if (argc < 2) {
         for (const auto& i : get_header()) {
@@ -70,29 +71,23 @@ int main(int argc, char* argv[]) {
                      "https://discord.gg/XpFrXWht6j");
         display_text("Credits to NZerker and kirigaia for their support and testing.");
     } else if (argc >= 2) {
-        QString full_path;
+        fs::path full_path = QCoreApplication::arguments().at(1).toStdString();
         if (argc == 3) {
             auto Game = QCoreApplication::arguments().at(1).toStdString();
-            full_path = QCoreApplication::arguments().at(2);
+            full_path = QCoreApplication::arguments().at(2).toStdString();
         } else if (argc == 4) {
             auto Game = QCoreApplication::arguments().at(1).toStdString();
-            full_path = QCoreApplication::arguments().at(2);
-            output_folder = QCoreApplication::arguments().at(3);
-        } else {
-            full_path = QCoreApplication::arguments().at(1);
+            full_path = QCoreApplication::arguments().at(2).toStdString();
+            output_dir = fs::path(QCoreApplication::arguments().at(3).toStdString());
         }
-        QFileInfo info_file = QFileInfo(full_path);
 
-        QDir directory = info_file.absoluteDir();
-        QString file = info_file.fileName();
-        QFileInfoList dat = directory.entryInfoList(QStringList() << file, QDir::Files);
-
-        if (!dat.isEmpty()) {
-            for (const auto& file_ : dat) {
+        std::vector<fs::path> files{ full_path };
+        if (!files.empty()) {
+            for (const auto& file : files) {
                 Decompiler Dc;
                 Dc.setup_game(Game);
-                Dc.read_file(file_.absoluteFilePath());
-                Dc.write_file(file_.absoluteFilePath(), output_folder);
+                Dc.read_file(fs::absolute(file));
+                Dc.write_file(fs::absolute(file), output_dir);
             }
         } else {
             display_text("No file was found.");
