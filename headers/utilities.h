@@ -15,6 +15,11 @@
 
 #include "headers/exceptions.h"
 
+namespace ssd::utils {
+QByteArray read_file(const std::filesystem::path& filename);
+void write_file(const std::filesystem::path& filename, const QByteArray&);
+} // namespace ssd::utils
+
 void display_text(const QString& text);
 
 std::string ReadStringFromByteArray(int start_pos, const QByteArray& content);

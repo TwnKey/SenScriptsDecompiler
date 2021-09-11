@@ -1,4 +1,29 @@
 #include "headers/utilities.h"
+#include <fstream>
+
+namespace ssd::utils {
+
+QByteArray read_file(const std::filesystem::path& filename) {
+    std::ifstream file(filename, std::ios::in | std::ios::binary);
+    file.exceptions(std::ifstream::badbit);
+
+    std::vector<char> temp_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+    file.close();
+
+    return QByteArray(reinterpret_cast<const char*>(temp_content.data()), (int)temp_content.size());
+}
+
+void write_file(const std::filesystem::path& filename, const QByteArray& contents) {
+
+    std::ofstream file(filename, std::ios::out | std::ios::binary);
+    file.exceptions(std::ofstream::badbit);
+
+    file.write(reinterpret_cast<const char*>(contents.data()), contents.size());
+    file.close();
+}
+
+} // namespace ssd::utils
 
 void display_text(const QString& text) {
     QTextStream out(stdout);

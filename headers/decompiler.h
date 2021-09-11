@@ -26,7 +26,7 @@ class Decompiler {
     Decompiler();
     bool setup_game(const std::string& game);
     bool read_xlsx(const std::filesystem::path& filename);
-    bool read_dat(QFile& filename);
+    bool read_dat(const std::filesystem::path& filename);
     bool read_file(const std::filesystem::path& filepath);
     bool update_current_tf();
     bool write_xlsx(const std::filesystem::path& output_dir);
