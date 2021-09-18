@@ -248,8 +248,8 @@ int Builder::attempts_at_reading_function(function& fun, QByteArray& dat_content
                 current_position++;
             }
         }
-        return current_position;
     }
+    return current_position;
 }
 int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
 
