@@ -34,9 +34,6 @@ jobs:
         with:
           version: "5.15.2"
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
-      - name: Prepare MSVC
-        uses: bus1/cabuild/action/msdevshell@v1
-        if: runner.os == 'Windows'
       - name: Prefer upstream Clang over MacOS Clang
         run: |
           echo "/usr/local/opt/llvm/bin" >> $GITHUB_PATH
