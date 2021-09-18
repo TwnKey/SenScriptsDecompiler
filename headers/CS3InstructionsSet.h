@@ -235,7 +235,7 @@ class CS3Builder : public Builder {
         instr->AddOperande(operande(addr, "byte", control_byte));
 
         while ((int)control_byte[0] != 1) {
-
+            if (addr > content.size()) throw ssd::exceptions::unspecified_recoverable();
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
                 case 0x24:
@@ -289,21 +289,15 @@ class CS3Builder : public Builder {
             int initial_addr = addr;
             if (Maker->goal < addr + 0x4C) {
                 addr = initial_addr;
-                Maker->flag_monsters = false;
-                return;
+                throw ssd::exceptions::unexpected_operand();
             }
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            int check1 = ReadIntegerFromByteArray(addr, content);
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            QByteArray map = ReadStringSubByteArray(content, addr);
+            this->AddOperande(operande(addr, "string", map));
 
-            int check2 = ReadIntegerFromByteArray(addr, content);
-            if (check1 != 0 && check2 != 0) { // bad
-                addr = initial_addr;
-                Maker->flag_monsters = false;
-                return;
-            }
-            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            QByteArray remaining1 = ReadSubByteArray(content, addr, 0x10 - map.size());
+            operande fill1 = operande(addr, "fill", remaining1);
+            fill1.setBytesToFill(0x10);
+            this->AddOperande(fill1);
 
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -315,32 +309,34 @@ class CS3Builder : public Builder {
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RSI + 0x28
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x2C
+            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4))); // 0x2C
 
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x30
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x32
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x34
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x36
 
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x38
+            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4))); // 0x38
 
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x3C
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x40
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x44
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x48
-            // 0x4C The first part is done
-            // from here, it's just a guess. There is a maximum of 8 enemies hardcoded in the function.
+            QByteArray btl_name = ReadStringSubByteArray(content, addr);
+            this->AddOperande(operande(addr, "string", btl_name));
+
+            QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - btl_name.size());
+            operande fill = operande(addr, "fill", remaining);
+            fill.setBytesToFill(0x10);
+            this->AddOperande(fill);
+
 
             QByteArray array = ReadSubByteArray(content, addr, 4);
             this->AddOperande(operande(addr, "int", array));
             int first = ReadIntegerFromByteArray(0, array);
+
             int cnt = 0;
             do {
                 int counter = 0;
                 if (Maker->goal < initial_addr + 0x4C + cnt * (0x90)) {
                     addr = initial_addr;
-                    Maker->flag_monsters = false;
-                    return;
+                    throw ssd::exceptions::unexpected_operand();
                 }
                 do {
                     counter++;
@@ -375,7 +371,7 @@ class CS3Builder : public Builder {
             } while (first != -1);
 
             this->AddOperande(operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x18))); //??
-            Maker->flag_monsters = true;
+
         }
     };
     class EffectsInstr : public Instruction {
@@ -747,15 +743,15 @@ class CS3Builder : public Builder {
         FieldMonsterData(int& addr, QByteArray& content, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 266, Maker) {
 
-            QByteArray first_integer_bytes = ReadSubByteArray(content, addr, 4);
-            this->AddOperande(operande(addr, "int", first_integer_bytes));
+            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            int sentinel = ReadIntegerFromByteArray(addr, content);
+            while (sentinel!=1){
+                this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                sentinel = ReadIntegerFromByteArray(addr, content);
+            }
         }
     };
     class FieldFollowData
@@ -846,7 +842,9 @@ class CS3Builder : public Builder {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x24
                 this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             } else {
-                this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                if ((unsigned char)content[addr] != 1) {
+                    this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                }
             }
         }
     };
@@ -6859,56 +6857,59 @@ class CS3Builder : public Builder {
                 default:
                     std::stringstream stream;
                     stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
-
-                    error = true;
-                    addr++;
-                    return std::shared_ptr<Instruction>();
+                    throw ssd::exceptions::bad_opcode();
             }
-        } else if (function_type == 1) { // the function is a "CreateMonsters" function
+        } else {
+            std::shared_ptr<Instruction> res;
+            if (function_type == 1) { // the function is a "CreateMonsters" function
 
-            return std::make_shared<CreateMonsters>(addr, dat_content, this);
-        } else if (function_type == 2) { // the function is a "effect" function
+                res = std::make_shared<CreateMonsters>(addr, dat_content, this);
+            } else if (function_type == 2) { // the function is a "effect" function
 
-            return std::make_shared<EffectsInstr>(addr, dat_content, this);
-        } else if (function_type == 3) {
+                res = std::make_shared<EffectsInstr>(addr, dat_content, this);
+            } else if (function_type == 3) {
 
-            return std::make_shared<ActionTable>(addr, dat_content, this);
-        } else if (function_type == 4) {
+                res = std::make_shared<ActionTable>(addr, dat_content, this);
+            } else if (function_type == 4) {
 
-            return std::make_shared<AlgoTable>(addr, dat_content, this);
-        } else if (function_type == 5) {
+                res = std::make_shared<AlgoTable>(addr, dat_content, this);
+            } else if (function_type == 5) {
 
-            return std::make_shared<WeaponAttTable>(addr, dat_content, this);
-        } else if (function_type == 6) {
+                res = std::make_shared<WeaponAttTable>(addr, dat_content, this);
+            } else if (function_type == 6) {
 
-            return std::make_shared<BreakTable>(addr, dat_content, this);
-        } else if (function_type == 7) {
+                res = std::make_shared<BreakTable>(addr, dat_content, this);
+            } else if (function_type == 7) {
 
-            return std::make_shared<SummonTable>(addr, dat_content, this);
-        } else if (function_type == 8) {
+                res = std::make_shared<SummonTable>(addr, dat_content, this);
+            } else if (function_type == 8) {
 
-            return std::make_shared<ReactionTable>(addr, dat_content, this);
-        } else if (function_type == 9) {
+                res = std::make_shared<ReactionTable>(addr, dat_content, this);
+            } else if (function_type == 9) {
 
-            return std::make_shared<PartTable>(addr, dat_content, this);
-        } else if (function_type == 10) {
+                res = std::make_shared<PartTable>(addr, dat_content, this);
+            } else if (function_type == 10) {
 
-            return std::make_shared<AnimeClipTable>(addr, dat_content, this);
-        } else if (function_type == 11) {
+                res = std::make_shared<AnimeClipTable>(addr, dat_content, this);
+            } else if (function_type == 11) {
 
-            return std::make_shared<FieldMonsterData>(addr, dat_content, this);
-        } else if (function_type == 12) {
+                res = std::make_shared<FieldMonsterData>(addr, dat_content, this);
+            } else if (function_type == 12) {
 
-            return std::make_shared<FieldFollowData>(addr, dat_content, this);
-        } else if (function_type == 13) {
+                res = std::make_shared<FieldFollowData>(addr, dat_content, this);
+            } else if (function_type == 13) {
 
-            return std::make_shared<FC_autoX>(addr, dat_content, this);
-        } else if (function_type == 14) {
+                res = std::make_shared<FC_autoX>(addr, dat_content, this);
+            } else if (function_type == 14) {
 
-            return std::make_shared<BookData99>(addr, dat_content, this);
-        } else if (function_type == 15) {
+                res = std::make_shared<BookData99>(addr, dat_content, this);
+            } else if (function_type == 15) {
 
-            return std::make_shared<BookDataX>(addr, dat_content, this);
+                res = std::make_shared<BookDataX>(addr, dat_content, this);
+            }
+            if ((uint8_t)dat_content[addr] != 1) throw ssd::exceptions::past_the_end_addr();
+            if (this->goal < addr) throw ssd::exceptions::past_the_end_addr();
+            return res;
         }
 
         return std::shared_ptr<Instruction>();
