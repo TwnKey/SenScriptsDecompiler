@@ -227,7 +227,7 @@ class CS2Builder : public Builder {
         instr->AddOperande(operande(addr, "byte", control_byte));
 
         while ((int)control_byte[0] != 1) {
-            if (addr > content.size()) throw std::exception(); //QByteArray
+            if (addr > content.size()) throw ssd::exceptions::unspecified_recoverable(); // QByteArray
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
                 case 0x24:

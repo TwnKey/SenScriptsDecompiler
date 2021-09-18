@@ -198,25 +198,23 @@ int Builder::attempts_at_reading_function(function& fun, QByteArray& dat_content
                 while (current_position < this->goal) {
                     std::shared_ptr<Instruction> instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
 
-                    if ((instr->get_OP() != 0) && (latest_op_code == 0)) throw std::exception();
-                    if ((instr->get_OP() == 0) && ((latest_op_code != 1) && (latest_op_code != 0))) throw std::exception();
                     fun.AddInstruction(instr);
 
                     latest_op_code = instr->get_OP();
                 }
-                if (current_position != this->goal) throw std::exception();
+                if (current_position != this->goal) throw ssd::exceptions::unspecified_recoverable();
             } else {
                 std::shared_ptr<Instruction> instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
                 fun.AddInstruction(instr);
                 std::shared_ptr<Instruction> return_instr = CreateInstructionFromDAT(current_position, dat_content, 0);
                 fun.AddInstruction(return_instr);
                 while (current_position < this->goal) {
-                    if ((uint8_t) dat_content[current_position] != 0) throw std::exception();
+                    if ((uint8_t)dat_content[current_position] != 0) throw ssd::exceptions::unspecified_recoverable();
                     current_position++;
                 }
             }
             return current_position;
-        } catch (const std::exception& e) {
+        } catch (const ssd::exceptions::recoverable& e) {
             // we retry with another function type candidate
             fun.InstructionsInFunction.clear();
             current_position = fun.actual_addr;
@@ -233,11 +231,13 @@ int Builder::attempts_at_reading_function(function& fun, QByteArray& dat_content
             std::shared_ptr<Instruction> instr;
             try {
                 instr = CreateInstructionFromDAT(current_position, dat_content, 0);
-                if ((instr->get_OP() == 0) && ((latest_op_code != 1) && (latest_op_code != 0))) throw std::exception();
+                if ((instr->get_OP() == 0) && ((latest_op_code != 1) && (latest_op_code != 0))) {
+                    throw ssd::exceptions::unspecified_recoverable();
+                }
                 fun.AddInstruction(instr);
 
                 latest_op_code = instr->get_OP();
-            } catch (const std::exception& e) {
+            } catch (const ssd::exceptions::recoverable& e) {
                 if (instr != nullptr) {
                     instr->error = true;
                     fun.AddInstruction(instr);

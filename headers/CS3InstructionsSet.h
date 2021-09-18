@@ -235,7 +235,7 @@ class CS3Builder : public Builder {
         instr->AddOperande(operande(addr, "byte", control_byte));
 
         while ((int)control_byte[0] != 1) {
-            if (addr > content.size()) throw std::exception();
+            if (addr > content.size()) throw ssd::exceptions::unspecified_recoverable();
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
                 case 0x24:
