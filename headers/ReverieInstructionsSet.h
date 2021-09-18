@@ -241,7 +241,7 @@ public:
         instr->AddOperande(operande(addr, "byte", control_byte));
 
         while ((int)control_byte[0] != 1) {
-            if (addr > content.size()) throw std::exception();
+            if (addr > content.size()) throw ssd::exceptions::unspecified_recoverable();
             switch ((unsigned char)control_byte[0]) {
 
             case 0x0:
@@ -295,7 +295,7 @@ public:
             : Instruction(addr, "CreateMonsters", 256, Maker) {
             int initial_addr = addr;
             if (Maker->goal < addr + 0x60) {
-                throw exception_unexpected_operand();
+                throw ssd::exceptions::unexpected_operand();
                 return;
             }
             QByteArray map = ReadStringSubByteArray(content, addr);
@@ -342,7 +342,7 @@ public:
             {
                 int counter = 0;
                 if (Maker->goal < initial_addr + 0x60 + cnt * (0x90)) {
-                    throw exception_unexpected_operand();
+                    throw ssd::exceptions::unexpected_operand();
                     return;
                 }
                 do {
@@ -394,7 +394,7 @@ public:
 
             unsigned char current_byte = content[addr];
             while (current_byte != 0x01) {
-                if (Maker->goal < addr + 0x28) throw std::exception();
+                if (Maker->goal < addr + 0x28) throw ssd::exceptions::unspecified_recoverable();
 
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -9457,8 +9457,7 @@ public:
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
                 std::string result( stream.str() );
                 qDebug() << Qt::hex << "OP: " << OP << " at addr " << addr << " type: " << function_type;
-                throw exception_incorrect_OP_code();
-
+                throw ssd::exceptions::bad_opcode();
             }
         } else {
             std::shared_ptr<Instruction> res;
@@ -9497,12 +9496,12 @@ public:
             } else if (function_type == 18) {
                 return std::make_shared<StyleName>(addr, dat_content, this);
             }
-            if ((uint8_t) dat_content[addr] != 1) throw exception_past_the_end_addr();
-            if (this->goal < addr) throw exception_past_the_end_addr();
+            if ((uint8_t)dat_content[addr] != 1) throw ssd::exceptions::past_the_end_addr();
+            if (this->goal < addr) throw ssd::exceptions::past_the_end_addr();
             return res;
         }
 
-        if (this->goal < addr) throw exception_past_the_end_addr();
+        if (this->goal < addr) throw ssd::exceptions::past_the_end_addr();
         return std::shared_ptr<Instruction>();
     }
     bool CreateHeaderFromDAT(QByteArray& dat_content) override {
@@ -10016,10 +10015,7 @@ public:
             stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName;
 
             error = true;
-            std::string result( stream.str() );
-            qFatal("%s", result.c_str());
-
-            return std::shared_ptr<Instruction>();
+            throw ssd::exceptions::bad_opcode();
         }
     }
 
