@@ -1,7 +1,7 @@
 #ifndef READER_H
 #define READER_H
 
-#include "headers/translationfile.h"
+#include "headers/scriptdata.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -28,18 +28,18 @@ class Decompiler {
     bool read_xlsx(QFile& filename);
     bool read_dat(QFile& filename);
     bool read_file(const QString& filepath);
-    bool update_current_tf();
+    bool update_current_data();
     bool write_xlsx(const QString& output_dir);
     bool write_dat(const QString& output_dir);
     bool check_all_files(const QString& log_filename,
                          const QStringList& files_to_read,
                          const QString& reference_dir,
                          const QString& output_dir);
-    TranslationFile get_tf();
+    ScriptData get_tf();
     bool write_file(const QString& filepath, const QString& output_dir);
 
   private:
-    TranslationFile current_tf;
+    ScriptData current_data;
     std::string _game;
     std::unique_ptr<Builder> ib = nullptr;
 };

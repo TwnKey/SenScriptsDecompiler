@@ -1,11 +1,11 @@
-#ifndef TRANSLATIONFILE_H
-#define TRANSLATIONFILE_H
+#ifndef SCRIPTDATA_H
+#define SCRIPTDATA_H
 
 #include "headers/functions.h"
 
-class TranslationFile {
+class ScriptData {
   public:
-    TranslationFile();
+    ScriptData();
 
     void setName(std::string name);
     [[nodiscard]] int getNbFunctions() const;
@@ -17,4 +17,4 @@ class TranslationFile {
     std::string SceneName;
 };
 
-#endif // TRANSLATIONFILE_H
+#endif // SCRIPTDATA_H

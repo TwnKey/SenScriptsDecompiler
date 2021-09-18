@@ -1,13 +1,13 @@
 #ifndef TXINSTRUCTIONSSET_H
 #define TXINSTRUCTIONSSET_H
 #include "headers/functions.h"
-#include "headers/translationfile.h"
+#include "headers/scriptdata.h"
 #include "headers/utilities.h"
 
-class TXTranslationFile : public TranslationFile {
+class TXScriptData : public ScriptData {
   public:
-    TXTranslationFile()
-      : TranslationFile() {}
+    TXScriptData()
+      : ScriptData() {}
 };
 class TXBuilder : public Builder {
   public:

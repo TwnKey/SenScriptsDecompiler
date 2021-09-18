@@ -1,15 +1,15 @@
 #ifndef CS1INSTRUCTIONSSET_H
 #define CS1INSTRUCTIONSSET_H
 #include "headers/functions.h"
-#include "headers/translationfile.h"
+#include "headers/scriptdata.h"
 #include "headers/utilities.h"
 
 #include <cstdint>
 
-class CS1TranslationFile : public TranslationFile {
+class CS1ScriptData : public ScriptData {
   public:
-    CS1TranslationFile()
-      : TranslationFile() {}
+    CS1ScriptData()
+      : ScriptData() {}
 };
 
 class CS1Builder : public Builder {

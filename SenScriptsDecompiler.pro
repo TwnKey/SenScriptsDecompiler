@@ -21,7 +21,7 @@ SOURCES += \
         sources/instruction.cpp \
         sources/main.cpp \
         sources/decompiler.cpp \
-        sources/translationfile.cpp \
+        sources/scriptdata.cpp \
         sources/utilities.cpp
 
 # Default rules for deployment.
@@ -42,7 +42,7 @@ HEADERS += \
     headers/instruction.h \
     headers/operande.h \
     headers/decompiler.h \
-    headers/translationfile.h \
+    headers/scriptdata.h \
     headers/utilities.h
 
 win32-msvc* {

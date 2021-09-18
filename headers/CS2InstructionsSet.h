@@ -1,13 +1,13 @@
 #ifndef CS2INSTRUCTIONSSET_H
 #define CS2INSTRUCTIONSSET_H
 #include "headers/functions.h"
-#include "headers/translationfile.h"
+#include "headers/scriptdata.h"
 #include "headers/utilities.h"
 
-class CS2TranslationFile : public TranslationFile {
+class CS2ScriptData : public ScriptData {
   public:
-    CS2TranslationFile()
-      : TranslationFile() {}
+    CS2ScriptData()
+      : ScriptData() {}
 };
 class CS2Builder : public Builder {
   public:

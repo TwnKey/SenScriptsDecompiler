@@ -1,13 +1,13 @@
 #ifndef CS3INSTRUCTIONSSET_H
 #define CS3INSTRUCTIONSSET_H
 #include "headers/functions.h"
-#include "headers/translationfile.h"
+#include "headers/scriptdata.h"
 #include "headers/utilities.h"
 
-class CS3TranslationFile : public TranslationFile {
+class CS3ScriptData : public ScriptData {
   public:
-    CS3TranslationFile()
-      : TranslationFile() {}
+    CS3ScriptData()
+      : ScriptData() {}
 };
 class CS3Builder : public Builder {
   public:

@@ -1,13 +1,13 @@
 #ifndef REVERIEINSTRUCTIONSSET_H
 #define REVERIEINSTRUCTIONSSET_H
 #include "headers/functions.h"
-#include "headers/translationfile.h"
+#include "headers/scriptdata.h"
 #include "headers/utilities.h"
 
-class ReverieTranslationFile : public TranslationFile {
+class ReverieScriptData : public ScriptData {
 public:
-    ReverieTranslationFile()
-        : TranslationFile() {}
+    ReverieScriptData()
+        : ScriptData() {}
 };
 class ReverieBuilder : public Builder {
 public:

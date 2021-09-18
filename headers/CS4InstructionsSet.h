@@ -1,13 +1,13 @@
 #ifndef CS4INSTRUCTIONSSET_H
 #define CS4INSTRUCTIONSSET_H
 #include "headers/functions.h"
-#include "headers/translationfile.h"
+#include "headers/scriptdata.h"
 #include "headers/utilities.h"
 
-class CS4TranslationFile : public TranslationFile {
+class CS4ScriptData : public ScriptData {
   public:
-    CS4TranslationFile()
-      : TranslationFile() {}
+    CS4ScriptData()
+      : ScriptData() {}
 };
 class CS4Builder : public Builder {
   public:

@@ -56,16 +56,16 @@ bool Decompiler::read_xlsx(QFile& file) {
 
     display_text("Reading of XLSX done.");
 
-    update_current_tf();
+    update_current_data();
     return true;
 }
 
-bool Decompiler::update_current_tf() {
-    current_tf.setName(ib->SceneName);
+bool Decompiler::update_current_data() {
+    current_data.setName(ib->SceneName);
 
-    current_tf.FunctionsInFile.clear();
+    current_data.FunctionsInFile.clear();
     for (auto& fun : ib->FunctionsParsed) {
-        current_tf.addFunction(fun);
+        current_data.addFunction(fun);
     }
 
     return true;
@@ -81,7 +81,7 @@ bool Decompiler::read_dat(QFile& file) {
     ib->CreateHeaderFromDAT(content);
     ib->ReadFunctionsDAT(content);
 
-    update_current_tf();
+    update_current_data();
     return true;
 }
 bool Decompiler::write_dat(const QString& output_dir) {
@@ -94,9 +94,9 @@ bool Decompiler::write_dat(const QString& output_dir) {
     QByteArray header = ib->CreateHeaderBytes();
 
     addr = addr + header.size();
-    for (int idx_fun = 0; idx_fun < current_tf.getNbFunctions() - 1; idx_fun++) {
+    for (int idx_fun = 0; idx_fun < current_data.getNbFunctions() - 1; idx_fun++) {
 
-        function fun = current_tf.FunctionsInFile[idx_fun];
+        function fun = current_data.FunctionsInFile[idx_fun];
 
         current_fun.clear();
 
@@ -105,7 +105,7 @@ bool Decompiler::write_dat(const QString& output_dir) {
         }
         addr = addr + current_fun.size();
 
-        int next_addr = current_tf.FunctionsInFile[idx_fun + 1].actual_addr;
+        int next_addr = current_data.FunctionsInFile[idx_fun + 1].actual_addr;
         int padding = next_addr - addr;
         for (int i_z = 0; i_z < padding; i_z++) {
             current_fun.push_back('\0');
@@ -114,8 +114,8 @@ bool Decompiler::write_dat(const QString& output_dir) {
         functions.push_back(current_fun);
     }
 
-    if (current_tf.getNbFunctions() - 1 >= 0) {
-        function fun = current_tf.FunctionsInFile[current_tf.FunctionsInFile.size() - 1];
+    if (current_data.getNbFunctions() - 1 >= 0) {
+        function fun = current_data.FunctionsInFile[current_data.FunctionsInFile.size() - 1];
         current_fun.clear();
         for (auto& instr : fun.InstructionsInFunction) {
             current_fun.push_back(instr->getBytes());
@@ -129,7 +129,7 @@ bool Decompiler::write_dat(const QString& output_dir) {
     QDir dir(output_dir);
     if (!dir.exists()) dir.mkpath(".");
 
-    QString output_path = output_dir + "\\" + QString::fromStdString(current_tf.getName()) + ".dat";
+    QString output_path = output_dir + "\\" + QString::fromStdString(current_data.getName()) + ".dat";
     QFile file(output_path);
 
     file.open(QIODevice::WriteOnly);
@@ -141,7 +141,7 @@ bool Decompiler::write_dat(const QString& output_dir) {
 bool Decompiler::write_xlsx(const QString& output_dir) {
 
     QFont font = QFont("Arial");
-    QString filename = QString::fromStdString(current_tf.getName()) + ".xlsx";
+    QString filename = QString::fromStdString(current_data.getName()) + ".xlsx";
     QXlsx::Document excel_scenario_sheet;
     Format format;
     format.setFont(font);
@@ -160,7 +160,7 @@ bool Decompiler::write_xlsx(const QString& output_dir) {
     format_location.setFont(font);
     format_location.setFontSize(10);
     format_location.setPatternBackgroundColor(dark_yellow);
-    excel_scenario_sheet.write("A2", QString::fromStdString(current_tf.getName()), format_location);
+    excel_scenario_sheet.write("A2", QString::fromStdString(current_data.getName()), format_location);
 
     Format row_format;
     row_format.setFillPattern(Format::PatternSolid);
@@ -203,7 +203,7 @@ bool Decompiler::write_xlsx(const QString& output_dir) {
 
     row_format_functions.setTopBorderStyle(QXlsx::Format::BorderThin);
     int excel_row = 4;
-    for (const auto& fun : current_tf.FunctionsInFile) {
+    for (const auto& fun : current_data.FunctionsInFile) {
         excel_scenario_sheet.setRowFormat(excel_row, excel_row, row_format_functions);
         excel_scenario_sheet.write(excel_row, 1, "FUNCTION");
         excel_scenario_sheet.write(excel_row, 2, QString::fromStdString(fun.name));
@@ -213,7 +213,7 @@ bool Decompiler::write_xlsx(const QString& output_dir) {
             excel_scenario_sheet.write(excel_row, 1, "Location");
             excel_scenario_sheet.write(excel_row + 1, 1, instr->get_addr_instr());
             int col = 0;
-            instr->WriteXLSX(excel_scenario_sheet, current_tf.FunctionsInFile, excel_row, col);
+            instr->WriteXLSX(excel_scenario_sheet, current_data.FunctionsInFile, excel_row, col);
             excel_row += 2;
         }
     }
@@ -305,11 +305,11 @@ bool Decompiler::check_all_files(const QString& log_filename,
             idx_fun_2.push_back(ReadIntegerFromByteArray(i, content2));
         }
 
-        for (size_t i = 0; i < (uint)current_tf.getNbFunctions(); ++i) {
+        for (size_t i = 0; i < (uint)current_data.getNbFunctions(); ++i) {
             int index_byte = idx_fun_2[i];
 
-            for (size_t j = 0; j < (uint)current_tf.FunctionsInFile[i].InstructionsInFunction.size(); ++j) {
-                uint OPCode = current_tf.FunctionsInFile[i].InstructionsInFunction[j]->get_OP();
+            for (size_t j = 0; j < (uint)current_data.FunctionsInFile[i].InstructionsInFunction.size(); ++j) {
+                uint OPCode = current_data.FunctionsInFile[i].InstructionsInFunction[j]->get_OP();
                 uint byte_in_file = (content2[index_byte]) & 0xFF;
 
                 if (OPCode <= 0xFF) {
@@ -320,13 +320,13 @@ bool Decompiler::check_all_files(const QString& log_filename,
                     }
                     index_byte++;
                 }
-                for (size_t k = 0; k < (uint)current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes.size(); ++k) {
-                    operande op_k = current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes[k];
+                for (size_t k = 0; k < (uint)current_data.FunctionsInFile[i].InstructionsInFunction[j]->operandes.size(); ++k) {
+                    operande op_k = current_data.FunctionsInFile[i].InstructionsInFunction[j]->operandes[k];
                     QByteArray bytes = op_k.getValue();
 
                     if (op_k.getType() == "pointer") {
                         int diff1 = op_k.getIntegerValue() - ReadIntegerFromByteArray(index_byte, content2);
-                        int diff2 = current_tf.FunctionsInFile[i].actual_addr - idx_fun_2[i];
+                        int diff2 = current_data.FunctionsInFile[i].actual_addr - idx_fun_2[i];
                         if (diff1 != diff2) {
                             stream << "Mismatching pointers at " << Qt::hex << index_byte << " " << diff1 << " should be " << diff2 << "\n";
                             qDebug() << "Mismatching pointers at " << Qt::hex << index_byte << " " << diff1 << " should be " << diff2 << "\n";
@@ -370,7 +370,7 @@ bool Decompiler::check_all_files(const QString& log_filename,
 }
 bool Decompiler::read_file(const QString& filepath) {
     ib->Reset();
-    current_tf = TranslationFile();
+    current_data = ScriptData();
     QFile file(filepath);
     QFileInfo info_file(file);
 
@@ -398,4 +398,4 @@ bool Decompiler::write_file(const QString& filepath, const QString& output_dir) 
     }
     return true;
 }
-TranslationFile Decompiler::get_tf() { return current_tf; }
+ScriptData Decompiler::get_tf() { return current_data; }
