@@ -2,21 +2,35 @@
 #define EXCEPTIONS_H
 #include <stdexcept>
 
-class exception_past_the_end_addr : public std::runtime_error {
+namespace ssd::exceptions {
+class recoverable : public std::runtime_error {
   public:
-    explicit exception_past_the_end_addr(const std::string& msg = "")
-      : std::runtime_error("ERROR: index reached the next function: " + msg) {}
+    explicit recoverable(const std::string& msg = "")
+      : std::runtime_error(msg) {}
 };
 
-class exception_incorrect_OP_code : public std::runtime_error {
+class unspecified_recoverable : public recoverable {
   public:
-    explicit exception_incorrect_OP_code(const std::string& msg = "")
-      : std::runtime_error("ERROR: OP code is not defined:" + msg) {}
+    explicit unspecified_recoverable(const std::string& msg = "")
+      : recoverable("ERROR: unspecified parser problem: " + msg) {}
 };
 
-class exception_unexpected_operand : public std::runtime_error {
+class past_the_end_addr : public recoverable {
   public:
-    explicit exception_unexpected_operand(const std::string& msg = "")
-      : std::runtime_error("ERROR: unexpected operand" + msg) {}
+    explicit past_the_end_addr(const std::string& msg = "")
+      : recoverable("ERROR: index reached the next function: " + msg) {}
 };
+
+class bad_opcode : public recoverable {
+  public:
+    explicit bad_opcode(const std::string& msg = "")
+      : recoverable("ERROR: OP code is not defined:" + msg) {}
+};
+
+class unexpected_operand : public recoverable {
+  public:
+    explicit unexpected_operand(const std::string& msg = "")
+      : recoverable("ERROR: unexpected operand:" + msg) {}
+};
+} // namespace ssd::exceptions
 #endif // EXCEPTIONS_H

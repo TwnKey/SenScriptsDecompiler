@@ -280,7 +280,7 @@ class TXBuilder : public Builder {
             if (Maker->goal < addr + 0x20) {
 
                 addr = initial_addr;
-                throw exception_unexpected_operand();
+                throw ssd::exceptions::unexpected_operand();
             }
             int first = ReadIntegerFromByteArray(addr, content);
 
@@ -288,7 +288,7 @@ class TXBuilder : public Builder {
 
                 this->AddOperande(
                   operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C))); //?? we don't forget to take the int as well
-                throw exception_unexpected_operand();
+                throw ssd::exceptions::unexpected_operand();
             }
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -298,7 +298,7 @@ class TXBuilder : public Builder {
             int check2 = ReadIntegerFromByteArray(addr, content);
             if (check1 != 0 && check2 != 0) { // bad
                 addr = initial_addr;
-                throw exception_unexpected_operand();
+                throw ssd::exceptions::unexpected_operand();
             }
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x10
@@ -334,7 +334,7 @@ class TXBuilder : public Builder {
                 if (Maker->goal < addr + (0x10) * max_nb_monsters + max_nb_monsters * 2) {
 
                     addr = initial_addr;
-                    throw exception_unexpected_operand();
+                    throw ssd::exceptions::unexpected_operand();
                 }
 
                 do {
@@ -374,7 +374,7 @@ class TXBuilder : public Builder {
                 first = ReadIntegerFromByteArray(addr, content);
                 if (first != 1) {
                     addr = initial_addr;
-                    throw exception_unexpected_operand();
+                    throw ssd::exceptions::unexpected_operand();
                 }
                 return;
             }
@@ -9506,7 +9506,7 @@ class TXBuilder : public Builder {
                 default:
                     std::stringstream stream;
                     stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
-                    throw exception_incorrect_OP_code();
+                    throw ssd::exceptions::bad_opcode();
             }
         } else {
             std::shared_ptr<Instruction> res;
@@ -9523,8 +9523,8 @@ class TXBuilder : public Builder {
             } else if (function_type == 15) {
                 res =  std::make_shared<BookDataX>(addr, dat_content, this);
             }
-            if ((uint8_t) dat_content[addr] != 1) throw exception_past_the_end_addr();
-            if (this->goal < addr) throw exception_past_the_end_addr();
+            if ((uint8_t)dat_content[addr] != 1) throw ssd::exceptions::past_the_end_addr();
+            if (this->goal < addr) throw ssd::exceptions::past_the_end_addr();
             return res;
         }
 

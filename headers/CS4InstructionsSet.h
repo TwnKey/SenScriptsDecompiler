@@ -290,7 +290,7 @@ class CS4Builder : public Builder {
             int initial_addr = addr;
             if (Maker->goal < addr + 0x4C) {
                 addr = initial_addr;
-                throw exception_unexpected_operand();
+                throw ssd::exceptions::unexpected_operand();
             }
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -338,7 +338,7 @@ class CS4Builder : public Builder {
                 int counter = 0;
                 if (Maker->goal < initial_addr + 0x4C + cnt * (0x90)) {
                     addr = initial_addr;
-                    throw exception_unexpected_operand();
+                    throw ssd::exceptions::unexpected_operand();
                 }
                 do {
                     counter++;
@@ -7848,7 +7848,7 @@ class CS4Builder : public Builder {
                 default:
                     std::stringstream stream;
                     stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
-                    throw exception_incorrect_OP_code();
+                    throw ssd::exceptions::bad_opcode();
             }
         } else {
             std::shared_ptr<Instruction> res;
@@ -7904,8 +7904,8 @@ class CS4Builder : public Builder {
 
                 res = std::make_shared<StyleName>(addr, dat_content, this);
             }
-            if ((uint8_t) dat_content[addr] != 1) throw exception_past_the_end_addr();
-            if (this->goal < addr) throw exception_past_the_end_addr();
+            if ((uint8_t)dat_content[addr] != 1) throw ssd::exceptions::past_the_end_addr();
+            if (this->goal < addr) throw ssd::exceptions::past_the_end_addr();
             return res;
         }
         return std::shared_ptr<Instruction>();

@@ -283,7 +283,7 @@ class CS2Builder : public Builder {
             if (Maker->goal < addr + 0x20) {
 
                 addr = initial_addr;
-                throw exception_unexpected_operand();
+                throw ssd::exceptions::unexpected_operand();
             }
             int first = ReadIntegerFromByteArray(addr, content);
 
@@ -337,7 +337,7 @@ class CS2Builder : public Builder {
                 if (Maker->goal < addr + (0x10) * max_nb_monsters + max_nb_monsters * 2) {
 
                     addr = initial_addr;
-                    throw exception_unexpected_operand();
+                    throw ssd::exceptions::unexpected_operand();
                 }
 
                 do {
@@ -376,7 +376,7 @@ class CS2Builder : public Builder {
                 first = ReadIntegerFromByteArray(addr, content);
                 if (first != 1) {
                     addr = initial_addr;
-                    throw exception_unexpected_operand();
+                    throw ssd::exceptions::unexpected_operand();
                 }
                 return;
             }
@@ -7801,7 +7801,7 @@ class CS2Builder : public Builder {
                     std::stringstream stream;
                     stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
                     error = true;
-                    throw exception_incorrect_OP_code();
+                    throw ssd::exceptions::bad_opcode();
             }
         } else {
             std::shared_ptr<Instruction> res;
@@ -7856,8 +7856,8 @@ class CS2Builder : public Builder {
 
                 res = std::make_shared<ConditionTable>(addr, dat_content, this);
             }
-            if ((uint8_t) dat_content[addr] != 1) throw exception_past_the_end_addr();
-            if (this->goal < addr) throw exception_past_the_end_addr();
+            if ((uint8_t)dat_content[addr] != 1) throw ssd::exceptions::past_the_end_addr();
+            if (this->goal < addr) throw ssd::exceptions::past_the_end_addr();
             return res;
         }
 
