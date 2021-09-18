@@ -37,11 +37,16 @@ jobs:
       - name: Prepare MSVC
         uses: bus1/cabuild/action/msdevshell@v1
         if: runner.os == 'Windows'
-      - name: Prefer upstream Clang over MacOS Clang
+      #- name: Prefer upstream Clang over MacOS Clang
+      #  run: |
+      #    echo "/usr/local/opt/llvm/bin" >> $GITHUB_PATH
+      #    echo "CXX=/usr/local/opt/llvm//bin/clang++" >> $GITHUB_ENV
+      #    echo "CC=/usr/local/opt/llvm/bin/clang" >> $GITHUB_ENV
+      #  if: runner.os == 'macOS'
+      - name: Use GCC 11 on MacOS
         run: |
-          echo "/usr/local/opt/llvm/bin" >> $GITHUB_PATH
-          echo "CXX=/usr/local/opt/llvm//bin/clang++" >> $GITHUB_ENV
-          echo "CC=/usr/local/opt/llvm/bin/clang" >> $GITHUB_ENV
+          echo "CXX=g++-11" >> $GITHUB_ENV
+          echo "CC=gcc-11" >> $GITHUB_ENV
         if: runner.os == 'macOS'
       - name: Use GCC 10 on Ubuntu 20.04
         run: |
