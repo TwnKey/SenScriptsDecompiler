@@ -51,13 +51,7 @@ int main(int argc, char* argv[]) {
     InputDatFileEncoding = settings.value("InputDatFileEncoding", "UTF-8").toString().toStdString();
     OutputDatFileEncoding = settings.value("OutputDatFileEncoding", "UTF-8").toString().toStdString();
     QString output_folder = QCoreApplication::applicationDirPath() + "/recompiled_files";
-    /*Decompiler Dc;
-    Dc.setup_game("CS4");
-    QDir directory("C:/Users/Antoine/Desktop/CS4Debug");
-    QStringList dat = directory.entryList(QStringList() << "*.dat",QDir::Files);
-    Dc.check_all_files("C:/Users/Antoine/Desktop/log.txt", dat, "C:/Users/Antoine/Desktop/CS4Debug",
-    "C:/Users/Antoine/Documents/build-SenScriptsDecompiler-Desktop_Qt_5_9_9_MSVC2015_32bit-Release");
-    */
+
     if (argc < 2) {
         for (const auto& i : get_header()) {
             display_text(QString::fromStdString(i));
