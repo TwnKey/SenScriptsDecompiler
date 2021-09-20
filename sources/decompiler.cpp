@@ -23,17 +23,19 @@ Decompiler::Decompiler() = default;
 
 bool Decompiler::setup_game(const std::string& game) {
     this->_game = game;
-    if (game == "CS3") {
+    std::transform(begin(game), end(game), begin(_game), ::tolower);
+
+    if (_game == "cs3") {
         ib = std::make_unique<CS3Builder>();
-    } else if (game == "CS1") {
+    } else if (_game == "cs1") {
         ib = std::make_unique<CS1Builder>();
-    } else if (game == "CS2") {
+    } else if (_game == "cs2") {
         ib = std::make_unique<CS2Builder>();
-    } else if (game == "CS4") {
+    } else if (_game == "cs4") {
         ib = std::make_unique<CS4Builder>();
-    } else if (game == "Reverie") {
+    } else if (game == "reverie") {
         ib = std::make_unique<ReverieBuilder>();
-    } else if (game == "TX") {
+    } else if (game == "tx") {
         ib = std::make_unique<TXBuilder>();
     } else {
         display_text("FAILURE: Unrecognized game specified.");

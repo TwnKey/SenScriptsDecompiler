@@ -48,7 +48,7 @@ std::vector<std::string> get_header() {
 int main(int argc, char* argv[]) {
     QCoreApplication a(argc, argv);
     QSettings settings(QCoreApplication::applicationDirPath() + "/config.ini", QSettings::IniFormat);
-    auto Game = settings.value("Game", "CS4").toString().toStdString();
+    auto Game = settings.value("Game", "cs4").toString().toStdString();
     InputDatFileEncoding = settings.value("InputDatFileEncoding", "UTF-8").toString().toStdString();
     OutputDatFileEncoding = settings.value("OutputDatFileEncoding", "UTF-8").toString().toStdString();
     fs::path output_dir = fs::path(QCoreApplication::applicationDirPath().toStdString()) / "recompiled_files";
