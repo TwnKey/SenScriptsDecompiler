@@ -5696,7 +5696,7 @@ public:
                 break;
 
             default:
-                if (((char)control_byte[0] - 2U & 0xfd) == 0) {
+                if ((((char)control_byte[0] - 2U) & 0xfd) == 0) {
                     fun_1403c90e0(addr, content, this, 0);
                 }
                 if (((char)control_byte[0] & 0xFD) == 0){
