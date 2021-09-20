@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 
     if (argc < 2) {
         for (const auto& i : get_header()) {
-            display_text(QString::fromStdString(i));
+            display_text(i);
         }
         display_text("----------------------------------------------------------------------------------------------------------");
         display_text("This tool was first meant for translation projects of the Trails of Cold Steel games, starting with ToCS3.");

@@ -244,7 +244,7 @@ int Builder::attempts_at_reading_function(function& fun, QByteArray& dat_content
                     latest_op_code = instr->get_OP();
                 }
 
-                display_text("Incorrect instruction read at " + QString::number(current_position) + ". Skipped.");
+                display_text("Incorrect instruction read at " + std::to_string(current_position) + ". Skipped.");
                 current_position++;
             }
         }

@@ -1,8 +1,8 @@
 #include "headers/utilities.h"
 
-void display_text(const QString& text) {
+void display_text(const std::string& text) {
     QTextStream out(stdout);
-    out << text << Qt::endl;
+    out << QString::fromStdString(text) << Qt::endl;
 }
 
 std::string ReadStringFromByteArray(int start_pos, const QByteArray& content) {

@@ -15,7 +15,7 @@
 
 #include "headers/exceptions.h"
 
-void display_text(const QString& text);
+void display_text(const std::string& text);
 
 std::string ReadStringFromByteArray(int start_pos, const QByteArray& content);
 int ReadIntegerFromByteArray(int start_pos, const QByteArray& content);

@@ -132,7 +132,7 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
     file.open(QIODevice::WriteOnly);
     file.write(file_content);
     file.close();
-    display_text("File " + QString::fromStdString(output_path.string()) + " created.");
+    display_text("File " + output_path.string() + " created.");
     return true;
 }
 bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
@@ -217,7 +217,7 @@ bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
 
     fs::path xlsx_output_file = output_dir / filename;
 
-    display_text("File " + QString::fromStdString(xlsx_output_file.string()) + " created.");
+    display_text("File " + xlsx_output_file.string() + " created.");
 
     if (!fs::exists(output_dir)) fs::create_directories(output_dir);
 
