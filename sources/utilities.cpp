@@ -1,4 +1,54 @@
 #include "headers/utilities.h"
+#include <fstream>
+
+namespace ssd::utils {
+
+namespace fs = std::filesystem;
+std::vector<std::filesystem::directory_entry> find_files(const std::filesystem::path& root,
+                                                         bool recursive,
+                                                         const std::set<std::string>& extensions) {
+    auto&& result = std::vector<fs::directory_entry>{};
+
+    auto filter = [extensions](const auto& entry) {
+        if (!fs::is_regular_file(entry)) return false;
+        if (!extensions.empty()) {
+            return extensions.count(entry.path().extension().string()) > 0;
+        }
+        return true;
+    };
+
+    if (recursive) {
+        auto it = fs::recursive_directory_iterator{ root };
+        std::copy_if(begin(it), end(it), back_inserter(result), filter);
+    } else {
+        auto it = fs::directory_iterator{ root };
+        std::copy_if(begin(it), end(it), back_inserter(result), filter);
+    }
+
+    return std::move(result);
+}
+
+QByteArray read_file(const std::filesystem::path& filename) {
+    std::ifstream file(filename, std::ios::in | std::ios::binary);
+    file.exceptions(std::ifstream::badbit);
+
+    std::vector<char> temp_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+    file.close();
+
+    return QByteArray(reinterpret_cast<const char*>(temp_content.data()), (int)temp_content.size());
+}
+
+void write_file(const std::filesystem::path& filename, const QByteArray& contents) {
+
+    std::ofstream file(filename, std::ios::out | std::ios::binary);
+    file.exceptions(std::ofstream::badbit);
+
+    file.write(reinterpret_cast<const char*>(contents.data()), contents.size());
+    file.close();
+}
+
+} // namespace ssd::utils
 
 void display_text(const QString& text) {
     QTextStream out(stdout);
