@@ -33,9 +33,9 @@ bool Decompiler::setup_game(const std::string& game) {
         ib = std::make_unique<CS2Builder>();
     } else if (_game == "cs4") {
         ib = std::make_unique<CS4Builder>();
-    } else if (game == "reverie") {
+    } else if (_game == "reverie") {
         ib = std::make_unique<ReverieBuilder>();
-    } else if (game == "tx") {
+    } else if (_game == "tx") {
         ib = std::make_unique<TXBuilder>();
     } else {
         display_text("FAILURE: Unrecognized game specified.");
