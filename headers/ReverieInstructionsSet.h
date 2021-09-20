@@ -10024,44 +10024,44 @@ public:
         QByteArray header;
 
         QByteArray scene_name_bytes = QByteArray::fromStdString(SceneName);
-        scene_name_bytes.append('\x0');
-        int size_of_scene_name = scene_name_bytes.length();
+        scene_name_bytes.push_back('\x0');
+        int size_of_scene_name = scene_name_bytes.size();
 
         int nb_byte_to_add_scene_name = (((int)std::ceil((float)(size_of_scene_name) / 4))) * 4 - size_of_scene_name;
         size_of_scene_name += nb_byte_to_add_scene_name;
-        header.append(GetBytesFromInt(0x20));
-        header.append(GetBytesFromInt(0x20));
-        header.append(GetBytesFromInt(0x20 + size_of_scene_name + 4));
-        header.append(GetBytesFromInt(FunctionsParsed.size() * 4));
-        header.append(GetBytesFromInt(0x20 + size_of_scene_name + 4 + FunctionsParsed.size() * 4));
-        header.append(GetBytesFromInt(FunctionsParsed.size()));
+        header.push_back(GetBytesFromInt(0x20));
+        header.push_back(GetBytesFromInt(0x20));
+        header.push_back(GetBytesFromInt(0x20 + size_of_scene_name + 4));
+        header.push_back(GetBytesFromInt(FunctionsParsed.size() * 4));
+        header.push_back(GetBytesFromInt(0x20 + size_of_scene_name + 4 + FunctionsParsed.size() * 4));
+        header.push_back(GetBytesFromInt(FunctionsParsed.size()));
         size_t length_of_names_section = 0;
         for (auto& fun : FunctionsParsed) {
             length_of_names_section = length_of_names_section + fun.name.size() + 1;
         }
-        header.append(
-                    GetBytesFromInt(0x20 + size_of_scene_name + 4 + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + length_of_names_section));
-        header.append(GetBytesFromInt(0xABCDEF00));
-        header.append(scene_name_bytes);
+        header.push_back(GetBytesFromInt(0x20 + size_of_scene_name + 4 + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 +
+                                         length_of_names_section));
+        header.push_back(GetBytesFromInt(0xABCDEF00));
+        header.push_back(scene_name_bytes);
         for (int i = 0; i < nb_byte_to_add_scene_name; i++) {
-            header.append('\x0');
+            header.push_back('\x0');
         }
-        header.append(GetBytesFromInt(0xFF000000)); //specific to haji, never read
+        header.push_back(GetBytesFromInt(0xFF000000)); // specific to haji, never read
         if (!FunctionsParsed.empty()) {
             QByteArray position_names;
             QByteArray actual_names;
             int offset_names = 0;
             for (auto& fun : FunctionsParsed) {
-                header.append(GetBytesFromInt(fun.actual_addr));
+                header.push_back(GetBytesFromInt(fun.actual_addr));
                 QByteArray name = QByteArray::fromStdString(fun.name);
-                name.append('\x0');
-                position_names.append(
-                            GetBytesFromShort(0x20 + size_of_scene_name + 4 + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + offset_names));
-                actual_names.append(name);
+                name.push_back('\x0');
+                position_names.push_back(GetBytesFromShort(0x20 + size_of_scene_name + 4 + FunctionsParsed.size() * 4 +
+                                                           FunctionsParsed.size() * 2 + offset_names));
+                actual_names.push_back(name);
                 offset_names = offset_names + name.size();
             }
-            header.append(position_names);
-            header.append(actual_names);
+            header.push_back(position_names);
+            header.push_back(actual_names);
             int multiple = 4;
             if (FunctionsParsed[0].name.starts_with("_")) multiple = 0x10;
             int nb_byte_to_add = (((int)std::ceil((float)header.size() / (float)multiple))) * multiple - header.size();
@@ -10069,7 +10069,7 @@ public:
             for (int i = 0; i < nb_byte_to_add; i++) {
                 remaining.push_back('\x0');
             }
-            header.append(remaining);
+            header.push_back(remaining);
         }
         return header;
     }

@@ -123,8 +123,8 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
         functions.push_back(current_fun);
     }
 
-    file_content.append(header);
-    file_content.append(functions);
+    file_content.push_back(header);
+    file_content.push_back(functions);
 
     if (!fs::exists(output_dir)) fs::create_directories(output_dir);
 

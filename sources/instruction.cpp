@@ -131,7 +131,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
         } else if (type == "pointer") {
             QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
 
-            QString RowPointedStr = Operande.right(Operande.length() - 2);
+            QString RowPointedStr = Operande.right(Operande.size() - 2);
 
             int actual_row = RowPointedStr.toInt();
 
