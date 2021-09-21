@@ -13,7 +13,6 @@
 #include "qxlsx/headers/xlsxrichstring.h"
 #include "qxlsx/headers/xlsxworkbook.h"
 #include <QColor>
-#include <QCoreApplication>
 #include <QDebug>
 
 using namespace QXlsx; // NOLINT(google-build-using-namespace)
