@@ -91,9 +91,7 @@ class Builder {
     bool UpdatePointersDAT();
     bool Reset();
     int goal = 0;
-    bool flag_monsters = false;
     bool error = false;
     int idx_current_fun = 0;
-    std::string previous_fun_name;
 };
 #endif // INSTRUCTIONBUILDER_H

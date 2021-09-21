@@ -99,7 +99,6 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
                     ReadIndividualFunction(it, dat_content);
                     FunctionsParsed.push_back(it);
                 }
-                previous_fun_name = it.name;
             }
         }
 
