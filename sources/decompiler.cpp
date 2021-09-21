@@ -250,7 +250,6 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
 
         qDebug() << "Checking " << QString::fromStdString(reference_dat_path.string());
         stream << QString::fromStdString(reference_dat_path.string()) << "\n";
-        this->setup_game("Reverie");
         qDebug() << "reading dat1 file" << QString::fromStdString(reference_dat_path.string());
         this->read_file(reference_dat_path);
         qDebug() << "reading dat done." << QString::fromStdString(reference_dat_path.string());
