@@ -69,8 +69,9 @@ bool Decompiler::update_current_tf() {
 
     return true;
 }
-bool Decompiler::read_dat(QFile& file) {
+bool Decompiler::read_dat(const std::filesystem::path& filepath) {
 
+    QFile file(QString::fromStdString(filepath.string()));
     if (!file.open(QIODevice::ReadOnly)) {
         return false;
     }
@@ -377,8 +378,7 @@ bool Decompiler::read_file(const fs::path& filepath) {
     if (filepath.extension() == ".xlsx") {
         read_xlsx(filepath);
     } else if (filepath.extension() == ".dat") {
-        QFile file(QString::fromStdString(filepath.string()));
-        read_dat(file);
+        read_dat(filepath);
     } else {
         display_text("FAILURE: Unrecognized extension.");
         return false;
