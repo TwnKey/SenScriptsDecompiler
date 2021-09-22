@@ -52,8 +52,8 @@ float QByteArrayToFloat(const QByteArray& content) // thanks to jabk https://sta
 }
 
 int16_t ReadShortFromByteArray(int start_pos, const QByteArray& content) {
-    int16_t size = static_cast<int16_t>(((static_cast<int16_t>(content[start_pos + 0]) & 0xFF) << 0) +
-                                        ((static_cast<int16_t>(content[start_pos + 1]) & 0xFF) << 8));
+    auto size = static_cast<int16_t>(((static_cast<int16_t>(content[start_pos + 0]) & 0xFF) << 0) +
+                                     ((static_cast<int16_t>(content[start_pos + 1]) & 0xFF) << 8));
 
     return size;
 }
