@@ -924,7 +924,6 @@ class CS2Builder : public Builder {
                 case 0x00: {
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
@@ -933,7 +932,6 @@ class CS2Builder : public Builder {
                 case 0x01: {
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -951,19 +949,13 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -977,21 +969,14 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1009,17 +994,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1041,7 +1021,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0xf: {
@@ -1049,19 +1028,13 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1076,17 +1049,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1098,13 +1066,9 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1121,19 +1085,13 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1148,7 +1106,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -1161,13 +1118,9 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1177,19 +1130,13 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1198,22 +1145,15 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1222,21 +1162,14 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1245,17 +1178,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1264,21 +1192,14 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1288,19 +1209,13 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1317,19 +1232,13 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1344,17 +1253,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1365,21 +1269,14 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1389,21 +1286,14 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1412,18 +1302,13 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1433,17 +1318,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1453,17 +1333,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1482,7 +1357,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x27: {
@@ -1490,17 +1364,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1510,21 +1379,14 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1544,18 +1406,13 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1565,20 +1422,14 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1592,13 +1443,9 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1608,21 +1455,14 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1632,19 +1472,13 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1654,21 +1488,14 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1679,17 +1506,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1716,7 +1538,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x35: {
@@ -1725,31 +1546,23 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x36: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x37: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x3B:
@@ -1771,7 +1584,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x41:
@@ -1783,7 +1595,6 @@ class CS2Builder : public Builder {
                 case 0x3E: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x3F: {
@@ -1803,10 +1614,8 @@ class CS2Builder : public Builder {
                 case 0x43: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x65: {
@@ -2202,7 +2011,6 @@ class CS2Builder : public Builder {
               operande(addr, "int", ReadSubByteArray(content, addr, 4))); // i think this one is the id of the battle function it triggers
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -2223,9 +2031,7 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -2243,7 +2049,6 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x16
@@ -2275,7 +2080,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x17, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x18
@@ -2317,14 +2121,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x01: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x02: {
@@ -2533,9 +2335,7 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -2679,7 +2479,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x25, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
@@ -2709,7 +2508,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x26, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -2732,7 +2530,6 @@ class CS2Builder : public Builder {
                 case 0x0A: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
@@ -2740,7 +2537,6 @@ class CS2Builder : public Builder {
                 case 0x0B: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x0C: {
@@ -2761,21 +2557,18 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
 
                 case 0x0F: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x17:
                 case 0x12: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
@@ -2783,7 +2576,6 @@ class CS2Builder : public Builder {
                 case 0x14: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -2792,7 +2584,6 @@ class CS2Builder : public Builder {
                 }
                 case 0x15: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
@@ -2801,7 +2592,6 @@ class CS2Builder : public Builder {
                 case 0xE: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -2856,7 +2646,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -2871,14 +2660,12 @@ class CS2Builder : public Builder {
                 case 0x06:
                 case 0x04: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
                 case '\a':
                 case 0x05: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
@@ -2933,7 +2720,6 @@ class CS2Builder : public Builder {
 
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -2970,9 +2756,7 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case '5': {
@@ -3001,7 +2785,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case '<': {
@@ -3035,14 +2818,12 @@ class CS2Builder : public Builder {
                 case '[': {
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case '\\': {
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -3050,7 +2831,6 @@ class CS2Builder : public Builder {
 
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -3079,7 +2859,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -3089,7 +2868,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -3453,7 +3231,6 @@ class CS2Builder : public Builder {
             addr++;
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -3527,7 +3304,6 @@ class CS2Builder : public Builder {
                 case 0x02: {
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3537,7 +3313,6 @@ class CS2Builder : public Builder {
                 case 0x14:
                 case 0x03: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
@@ -3549,18 +3324,15 @@ class CS2Builder : public Builder {
                 }
                 case 0x04: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x05: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
@@ -3571,7 +3343,6 @@ class CS2Builder : public Builder {
                 }
                 case 0x08: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
@@ -3583,7 +3354,6 @@ class CS2Builder : public Builder {
                 }
                 case 0x0B: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
@@ -3591,7 +3361,6 @@ class CS2Builder : public Builder {
                 case 0x0D:
                 case 0x0C: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3600,7 +3369,6 @@ class CS2Builder : public Builder {
                 }
                 case 0x0E: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3617,13 +3385,11 @@ class CS2Builder : public Builder {
                 }
                 case 0x11: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x12: {
@@ -3634,28 +3400,23 @@ class CS2Builder : public Builder {
                 case 0x13: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
                 case 0x15: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x16: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
@@ -3735,9 +3496,7 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -3783,19 +3542,16 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 1: {
 
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 2: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 default: {
@@ -3805,7 +3561,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 4: {
@@ -3814,7 +3569,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 5: {
@@ -4095,13 +3849,9 @@ class CS2Builder : public Builder {
                 }
                 case 0x02: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x03: {
@@ -4139,7 +3889,6 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x35
@@ -4158,7 +3907,6 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x36
@@ -4200,7 +3948,6 @@ class CS2Builder : public Builder {
             }
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             if (second_arg == -0x1fc) {
                 this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
@@ -4223,7 +3970,6 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x39
@@ -4284,7 +4030,6 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
@@ -4362,7 +4107,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x3E, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
@@ -4380,7 +4124,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x3F, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4418,9 +4161,7 @@ class CS2Builder : public Builder {
                 case 0x08: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
@@ -4456,7 +4197,6 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x42
@@ -4479,7 +4219,6 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
 
@@ -4497,7 +4236,6 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
 
@@ -4547,7 +4285,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x03: {
@@ -4557,7 +4294,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x04:
@@ -4617,7 +4353,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x48, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
@@ -4634,7 +4369,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x49, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x4A
@@ -4700,20 +4434,17 @@ class CS2Builder : public Builder {
                 }
                 case 0xE: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
                 case 0x17: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x18: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x19: {
@@ -4745,7 +4476,6 @@ class CS2Builder : public Builder {
                 }
                 case '&': {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
@@ -4754,7 +4484,6 @@ class CS2Builder : public Builder {
                 }
                 case ')': {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
@@ -4852,7 +4581,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x4B, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4868,7 +4596,6 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -4885,11 +4612,8 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x4C, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -4960,7 +4684,6 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
@@ -4978,7 +4701,6 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             sub05(addr, content, this);
         }
     };
@@ -4996,7 +4718,6 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -5042,7 +4763,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x54, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -5062,7 +4782,6 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -5119,7 +4838,6 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x59
@@ -5147,7 +4865,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x5B, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
@@ -5244,7 +4961,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case '\b': {
@@ -5253,7 +4969,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case '\v': {
@@ -5317,14 +5032,12 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x0E: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    ;
                     break;
                 }
                 case 0x0D:
@@ -5366,7 +5079,6 @@ class CS2Builder : public Builder {
                 case 0x03: {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
@@ -5414,7 +5126,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x61, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -5467,7 +5178,6 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x65
@@ -5483,7 +5193,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x65, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
@@ -5508,7 +5217,6 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -5517,9 +5225,7 @@ class CS2Builder : public Builder {
                 case 0x0C: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -5529,7 +5235,6 @@ class CS2Builder : public Builder {
                 case 0x01: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x02: {
@@ -5614,7 +5319,6 @@ class CS2Builder : public Builder {
                 case 0x03:
                 case 0x04: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -5742,16 +5446,13 @@ class CS2Builder : public Builder {
                     case 0x02: {
 
                         this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        ;
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        ;
                         break;
                     }
                     case 0x04: {
                         this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        ;
 
                         break;
                     }
@@ -5788,7 +5489,6 @@ class CS2Builder : public Builder {
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x6D
@@ -5820,7 +5520,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x6E, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -5899,11 +5598,8 @@ class CS2Builder : public Builder {
                 this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                ;
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                ;
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                ;
             }
         }
     };
@@ -6084,7 +5780,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x7A, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -6105,9 +5800,7 @@ class CS2Builder : public Builder {
             addr++;
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
 
@@ -6387,7 +6080,6 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x88, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
@@ -6471,7 +6163,6 @@ class CS2Builder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x8D
@@ -6618,9 +6309,7 @@ class CS2Builder : public Builder {
           : Instruction(addr, "???", 0x93, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
 

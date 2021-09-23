@@ -930,7 +930,6 @@ class TXBuilder : public Builder {
                 case 0x00: {
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
@@ -939,7 +938,6 @@ class TXBuilder : public Builder {
                 case 0x01: {
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -957,19 +955,13 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -983,21 +975,14 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1015,17 +1000,12 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1047,7 +1027,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0xf: {
@@ -1055,19 +1034,13 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1082,17 +1055,12 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1104,13 +1072,9 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1127,19 +1091,13 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1154,7 +1112,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -1167,13 +1124,9 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1183,19 +1136,13 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1204,22 +1151,15 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1228,21 +1168,14 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1251,17 +1184,12 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1270,21 +1198,14 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1294,19 +1215,13 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1323,19 +1238,13 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1350,17 +1259,12 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1371,21 +1275,14 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1395,21 +1292,14 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1418,18 +1308,13 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1439,17 +1324,12 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1459,17 +1339,12 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
@@ -1488,7 +1363,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x27: {
@@ -1496,17 +1370,12 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1516,21 +1385,14 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1550,18 +1412,13 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1571,20 +1428,14 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1598,13 +1449,9 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1614,21 +1461,14 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1638,19 +1478,13 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1660,21 +1494,14 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1685,17 +1512,12 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -1722,7 +1544,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x35: {
@@ -1731,31 +1552,23 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x36: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x37: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x3B:
@@ -1777,7 +1590,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x41:
@@ -1789,7 +1601,6 @@ class TXBuilder : public Builder {
                 case 0x3E: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x3F: {
@@ -1809,10 +1620,8 @@ class TXBuilder : public Builder {
                 case 0x43: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x65: {
@@ -2223,9 +2032,7 @@ class TXBuilder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -2243,7 +2050,6 @@ class TXBuilder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x16
@@ -2275,7 +2081,6 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x17, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x18
@@ -2316,14 +2121,12 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x01: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x02: {
@@ -2535,9 +2338,7 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -2724,7 +2525,6 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x26, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -2747,7 +2547,6 @@ class TXBuilder : public Builder {
                 case 0x0A: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
@@ -2755,7 +2554,6 @@ class TXBuilder : public Builder {
                 case 0x0B: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x0C: {
@@ -2777,9 +2575,7 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
@@ -2788,7 +2584,6 @@ class TXBuilder : public Builder {
                 case 0x17: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
@@ -2796,7 +2591,6 @@ class TXBuilder : public Builder {
                 case 0x12: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
@@ -2805,11 +2599,8 @@ class TXBuilder : public Builder {
                     qFatal("not entirely sure");
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x13: {
@@ -2832,7 +2623,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -3487,7 +3277,6 @@ class TXBuilder : public Builder {
             addr++;
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -3573,7 +3362,6 @@ class TXBuilder : public Builder {
                 case 0x02: {
 
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3595,18 +3383,15 @@ class TXBuilder : public Builder {
                 }
                 case 0x04: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x05: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
@@ -3617,7 +3402,6 @@ class TXBuilder : public Builder {
                 }
                 case 0x08: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
@@ -3629,7 +3413,6 @@ class TXBuilder : public Builder {
                 }
                 case 0x0B: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
@@ -3637,7 +3420,6 @@ class TXBuilder : public Builder {
                 case 0x0D:
                 case 0x0C: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3646,7 +3428,6 @@ class TXBuilder : public Builder {
                 }
                 case 0x0E: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3663,13 +3444,11 @@ class TXBuilder : public Builder {
                 }
                 case 0x11: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x12: {
@@ -3680,28 +3459,23 @@ class TXBuilder : public Builder {
                 case 0x13: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
                 case 0x15: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x16: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
@@ -3815,14 +3589,11 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "byte", control_byte));
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x03: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
             }
@@ -3870,19 +3641,16 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 1: {
 
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 2: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 default: {
@@ -3892,7 +3660,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 4: {
@@ -3901,7 +3668,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 5: {
@@ -4194,13 +3960,9 @@ class TXBuilder : public Builder {
                 }
                 case 0x02: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x03: {
@@ -4238,7 +4000,6 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x34
@@ -4257,7 +4018,6 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x35
@@ -4299,7 +4059,6 @@ class TXBuilder : public Builder {
             }
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             if (second_arg == -0x1fc) {
                 this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
@@ -4322,7 +4081,6 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x38
@@ -4399,7 +4157,6 @@ class TXBuilder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -4468,7 +4225,6 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x3D, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
@@ -4486,7 +4242,6 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x3E, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4524,9 +4279,7 @@ class TXBuilder : public Builder {
                 case 0x08: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
@@ -4569,7 +4322,6 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x41
@@ -4592,7 +4344,6 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
 
@@ -4610,7 +4361,6 @@ class TXBuilder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
 
@@ -4660,7 +4410,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x03: {
@@ -4670,7 +4419,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x04:
@@ -4680,7 +4428,6 @@ class TXBuilder : public Builder {
                 }
                 case 0x06: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -4783,7 +4530,6 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x47, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
@@ -4800,7 +4546,6 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x48, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x49
@@ -5237,7 +4982,6 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x4A, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5253,7 +4997,6 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -5270,11 +5013,8 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x4B, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -5341,7 +5081,6 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
@@ -5359,7 +5098,6 @@ class TXBuilder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             sub05(addr, content, this);
         }
     };
@@ -5377,7 +5115,6 @@ class TXBuilder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -5444,7 +5181,6 @@ class TXBuilder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
@@ -5502,7 +5238,6 @@ class TXBuilder : public Builder {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x59
@@ -5632,7 +5367,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case '\b': {
@@ -5641,7 +5375,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case '\v': {
@@ -5767,7 +5500,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    ;
                     break;
                 }
 
@@ -5879,7 +5611,6 @@ class TXBuilder : public Builder {
                 case 0x03: {
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
@@ -5984,7 +5715,6 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x64
@@ -6043,7 +5773,6 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -6052,9 +5781,7 @@ class TXBuilder : public Builder {
                 case 0x0C: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
@@ -6064,7 +5791,6 @@ class TXBuilder : public Builder {
                 case 0x01: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
                 case 0x02: {
@@ -6132,16 +5858,13 @@ class TXBuilder : public Builder {
                 case 0x01: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
 
                     break;
                 }
                 case 0x03:
                 case 0x04: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    ;
                     break;
                 }
             }
@@ -6267,16 +5990,13 @@ class TXBuilder : public Builder {
                     case 0x02: {
 
                         this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        ;
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        ;
                         break;
                     }
                     case 0x04: {
                         this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        ;
 
                         break;
                     }
@@ -6314,11 +6034,8 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x6C
@@ -6457,11 +6174,8 @@ class TXBuilder : public Builder {
                 this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                ;
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                ;
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                ;
             }
         }
     };
@@ -6671,7 +6385,6 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x7A, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -7102,7 +6815,6 @@ class TXBuilder : public Builder {
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
     // 0x8D
@@ -7237,9 +6949,7 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x92, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            ;
         }
     };
 
