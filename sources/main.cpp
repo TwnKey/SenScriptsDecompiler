@@ -84,10 +84,14 @@ int main(int argc, char* argv[]) {
         std::vector<fs::path> files{ full_path };
         if (!files.empty()) {
             for (const auto& file : files) {
-                Decompiler Dc;
-                Dc.setup_game(Game);
-                Dc.read_file(fs::absolute(file));
-                Dc.write_file(fs::absolute(file), output_dir);
+                try {
+                    Decompiler Dc;
+                    Dc.setup_game(Game);
+                    Dc.read_file(fs::absolute(file));
+                    Dc.write_file(fs::absolute(file), output_dir);
+                } catch (const std::exception& e) {
+                    display_text(e.what());
+                }
             }
         } else {
             display_text("No file was found.");
