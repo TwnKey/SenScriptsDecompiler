@@ -2627,8 +2627,7 @@ class CS2Builder : public Builder {
         }
     };
     // 0x28
-    class OPCode28 : public Instruction { // This one I copy pasted from CS1 hoping that it works; also checked few of
-                                          // them and they all fit
+    class OPCode28 : public Instruction {
       public:
         OPCode28()
           : Instruction(-1, 0x28, nullptr) {}
@@ -5438,7 +5437,6 @@ class CS2Builder : public Builder {
                     }
 
                     case 0x01: {
-                        // reading_dialog(addr, content, this);
                         this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         break;
@@ -7996,10 +7994,6 @@ class CS2Builder : public Builder {
                 stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName;
                 error = true;
                 addr++;
-                /*std::string result( stream.str() );
-
-                qFatal(result.c_str());*/
-
                 return std::shared_ptr<Instruction>();
         }
     }

@@ -5982,7 +5982,6 @@ class TXBuilder : public Builder {
                     }
 
                     case 0x01: {
-                        // reading_dialog(addr, content, this);
                         this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         break;

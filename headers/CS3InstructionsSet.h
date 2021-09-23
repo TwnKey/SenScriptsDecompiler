@@ -1261,40 +1261,8 @@ class CS3Builder : public Builder {
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 0x22
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
-
-            this->AddOperande(
-              operande(addr, "int", ReadSubByteArray(content, addr, 4))); // i think this one is the id of the battle function it triggers
-            /*if (ID_fun != -1){
-                std::vector<function>::iterator itt = find_function_by_ID(Maker->FunctionsParsed, ID_fun); //we'll read
-            it right away
-
-                if (itt == Maker->FunctionsParsed.end()){ //if we never read it, we'll do that.
-
-                    int addr_initial = addr;
-                    std::vector<function>::iterator it_fun_to_read = find_function_by_ID(Maker->FunctionsToParse,
-            ID_fun);
-
-                    it_fun_to_read->called = true;
-                    Maker->ReadIndividualFunction(*it_fun_to_read,content);
-                    Maker->FunctionsParsed.push_back(*it_fun_to_read);
-                    addr = addr_initial;
-                }
-            }
-            else if (fun_name!=""){
-                std::vector<function>::iterator itt = find_function_by_name(Maker->FunctionsParsed, fun_name); //we'll
-            read it right away if (itt == Maker->FunctionsParsed.end()){ //if we never read it, we'll do that.
-
-                    int addr_initial = addr;
-                    std::vector<function>::iterator it_fun_to_read = find_function_by_name(Maker->FunctionsToParse,
-            fun_name); if (it_fun_to_read != Maker->FunctionsToParse.end()){ qDebug() << hex <<
-            it_fun_to_read->actual_addr; it_fun_to_read->called = true;
-                    Maker->ReadIndividualFunction(*it_fun_to_read,content);
-                    Maker->FunctionsParsed.push_back(*it_fun_to_read);
-                    addr = addr_initial;
-                    }
-                }
-
-            }*/
+            // i think this one is the id of the battle function it triggers
+            this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
