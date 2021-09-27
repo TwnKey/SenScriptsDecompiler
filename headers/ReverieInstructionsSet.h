@@ -9502,7 +9502,7 @@ public:
         }
 
         if (this->goal < addr) throw ssd::exceptions::past_the_end_addr();
-        return std::shared_ptr<Instruction>();
+        return {};
     }
     bool CreateHeaderFromDAT(QByteArray& dat_content) override {
 

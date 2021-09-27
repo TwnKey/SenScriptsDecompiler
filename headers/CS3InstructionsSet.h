@@ -6880,7 +6880,7 @@ class CS3Builder : public Builder {
             return res;
         }
 
-        return std::shared_ptr<Instruction>();
+        return {};
     }
     bool CreateHeaderFromDAT(QByteArray& dat_content) override {
 
@@ -7337,7 +7337,7 @@ class CS3Builder : public Builder {
 
                 error = true;
 
-                return std::shared_ptr<Instruction>();
+                return {};
         }
     }
 

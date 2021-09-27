@@ -7906,7 +7906,7 @@ class CS4Builder : public Builder {
             if (this->goal < addr) throw ssd::exceptions::past_the_end_addr();
             return res;
         }
-        return std::shared_ptr<Instruction>();
+        return {};
     }
     bool CreateHeaderFromDAT(QByteArray& dat_content) override {
 
@@ -8381,7 +8381,7 @@ class CS4Builder : public Builder {
 
                 error = true;
 
-                return std::shared_ptr<Instruction>();
+                return {};
         }
     }
 

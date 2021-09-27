@@ -13,7 +13,7 @@ QByteArray read_file(const std::filesystem::path& filepath) {
 
     file.close();
 
-    return QByteArray(reinterpret_cast<const char*>(temp_content.data()), (int)temp_content.size());
+    return { reinterpret_cast<const char*>(temp_content.data()), (int)temp_content.size() };
 }
 
 void write_file(const std::filesystem::path& filepath, const QByteArray& content) {

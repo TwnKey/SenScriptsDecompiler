@@ -9245,7 +9245,7 @@ class TXBuilder : public Builder {
             return res;
         }
 
-        return std::shared_ptr<Instruction>();
+        return {};
     }
     bool CreateHeaderFromDAT(QByteArray& dat_content) override {
         display_text("Reading header...");
@@ -9701,7 +9701,7 @@ class TXBuilder : public Builder {
                 error = true;
                 addr++;
 
-                return std::shared_ptr<Instruction>();
+                return {};
         }
     }
 
