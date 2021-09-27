@@ -4,10 +4,9 @@
 
 class Destination {
   public:
-    Destination(int FID, int IID) {
-        FunctionID = FID;
-        InstructionID = IID;
-    }
+    Destination(int FID, int IID)
+      : FunctionID(FID)
+      , InstructionID(IID) {}
     int FunctionID;
     int InstructionID;
 };
@@ -15,21 +14,21 @@ class operande {
 
   public:
     operande() = default;
-    operande(Destination pointer, int position, std::string type, QByteArray value) {
-        Dest = pointer;
-        Position = position;
-        Type = std::move(type);
-        Value = std::move(value);
-    }
-    operande(int position, std::string type, QByteArray value) {
-        Position = position;
-        Type = std::move(type);
-        Value = std::move(value);
-    }
+    operande(Destination pointer, int position, std::string type, QByteArray value)
+      : Dest(pointer)
+      , Position(position)
+      , Type(std::move(type))
+      , Value(std::move(value)) {}
 
-    operande(int position, std::string type, std::vector<uint8_t> value) {
-        Position = position;
-        Type = std::move(type);
+    operande(int position, std::string type, QByteArray value)
+      : Position(position)
+      , Type(std::move(type))
+      , Value(std::move(value)) {}
+
+    operande(int position, std::string type, std::vector<uint8_t> value)
+      : Position(position)
+      , Type(std::move(type)) {
+
         Value = QByteArray(reinterpret_cast<const char*>(value.data()), static_cast<int>(value.size()));
     }
 

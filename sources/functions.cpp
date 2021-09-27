@@ -2,12 +2,12 @@
 #include "headers/functions.h"
 #include <string>
 
-function::function(int ID, std::string n, int declr_pos, int addr, int end) {
-    this->ID = ID;
-    name = std::move(n);
-    declr_position = declr_pos;
-    actual_addr = addr;
-    this->end_addr = end;
+function::function(int ID, std::string n, int declr_pos, int addr, int end)
+  : name(std::move(n))
+  , declr_position(declr_pos)
+  , actual_addr(addr)
+  , end_addr(end)
+  , ID(ID) {
     int multiple = 4;
     if (isMultiple0x10(this->name)) multiple = 0x10;
     int nb_byte_to_add = (((int)std::ceil((float)addr / (float)multiple))) * multiple - addr;

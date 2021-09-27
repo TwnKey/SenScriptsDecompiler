@@ -5,25 +5,26 @@
 #include <stack>
 #include <string>
 
-Instruction::Instruction(int addr, uint OP, Builder* Maker) {
-    OPCode = OP;
-    this->Maker = Maker;
-    this->addr_instr = addr;
-}
-Instruction::Instruction(int addr, std::string name, uint OP, Builder* Maker) {
-    this->addr_instr = addr;
-    OPCode = OP;
-    this->name = std::move(name);
-    this->Maker = Maker;
-}
+Instruction::Instruction(int addr, uint OP, Builder* Maker)
+  : Maker(Maker)
+  , addr_instr(addr)
+  , OPCode(OP) {}
+
+Instruction::Instruction(int addr, std::string name, uint OP, Builder* Maker)
+  : Maker(Maker)
+  , addr_instr(addr)
+  , OPCode(OP)
+  , name(std::move(name)) {}
+
 Instruction::~Instruction() = default;
-Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker) {
-    this->name = std::move(name);
-    this->OPCode = OP;
-    this->Maker = Maker;
+Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker)
+  : Maker(Maker)
+  , addr_instr(addr)
+  , OPCode(OP)
+  , name(std::move(name)) {
+
     std::stack<std::pair<size_t, uint8_t>> stack_of_headers;
 
-    addr_instr = addr;
     if (OPCode <= 0xFF) addr++;
 
     int idx_column = 3;
