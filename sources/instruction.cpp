@@ -298,7 +298,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
                 ID = funs[idx_fun].ID;
             }
             nb_row = nb_row + 1; // row with function name
-            nb_row = nb_row + 2 * (operande.getDestination().InstructionID + 1);
+            nb_row = nb_row + static_cast<uint64_t>(2 * (operande.getDestination().InstructionID + 1));
             QString ptrExcel = "=A" + QString::number((nb_row));
 
             QXlsx::Format format;
