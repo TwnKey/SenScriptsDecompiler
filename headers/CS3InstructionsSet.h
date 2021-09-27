@@ -343,8 +343,8 @@ class CS3Builder : public Builder {
                     QByteArray monsters_name = ReadStringSubByteArray(content, addr);
                     this->AddOperande(operande(addr, "string", monsters_name));
 
-                    QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - monsters_name.size());
-                    operande fill = operande(addr, "fill", remaining);
+                    remaining = ReadSubByteArray(content, addr, 0x10 - monsters_name.size());
+                    fill = operande(addr, "fill", remaining);
                     fill.setBytesToFill(0x10);
                     this->AddOperande(fill);
 
@@ -358,13 +358,13 @@ class CS3Builder : public Builder {
                     QByteArray monsters_name = ReadStringSubByteArray(content, addr);
                     this->AddOperande(operande(addr, "string", monsters_name));
 
-                    QByteArray remaining = ReadSubByteArray(content, addr, 12 - monsters_name.size());
-                    operande fill = operande(addr, "bytearray", remaining);
+                    remaining = ReadSubByteArray(content, addr, 12 - monsters_name.size());
+                    fill = operande(addr, "bytearray", remaining);
                     fill.setBytesToFill(12);
                     this->AddOperande(fill);
                 }
 
-                QByteArray array = ReadSubByteArray(content, addr, 4);
+                array = ReadSubByteArray(content, addr, 4);
                 this->AddOperande(operande(addr, "int", array));
                 first = ReadIntegerFromByteArray(0, array);
                 cnt++;

@@ -69,7 +69,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             addr = addr + op.getLength();
 
         } else if ((type == "byte") || (type == "OP Code")) {
-            int OP = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
+            OP = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
 
             if (OP <= 0xFF) { // actually the opposite never happens.
                 auto Operande = static_cast<char>(((OP)&0x000000FF));
@@ -110,7 +110,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
             Value = Operande.toUtf8();
             QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(OutputDatFileEncoding).toUtf8());
-            QByteArray Value = codec->fromUnicode(Operande);
+            Value = codec->fromUnicode(Operande);
             if (type == "string") Value.push_back('\0');
             Value.replace('\n', 1);
 

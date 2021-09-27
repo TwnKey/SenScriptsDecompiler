@@ -22,7 +22,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
 
         for (int idx_row = first_row + 1; idx_row < last_row; idx_row++) {
 
-            QString content_first_cell = xls_content.read(idx_row, 1).toString();
+            content_first_cell = xls_content.read(idx_row, 1).toString();
             if (content_first_cell == "FUNCTION") { // We start a new function
 
                 std::string next_fun_name = xls_content.read(idx_row, 2).toString().toStdString();
@@ -309,13 +309,13 @@ bool Builder::UpdatePointersXLSX() {
                     if (FunctionsParsed.size() > 1) {
 
                         function next_fun = FunctionsParsed[1];
-                        for (uint idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++) {
+                        for (uint idx_fun_next = 1; idx_fun_next < FunctionsParsed.size(); idx_fun_next++) {
                             if (idx_row_ptr < next_fun.XLSX_row_index) {
                                 break;
                             }
 
-                            current_fun = FunctionsParsed[idx_fun];
-                            if ((idx_fun + 1) < FunctionsParsed.size()) next_fun = FunctionsParsed[idx_fun + 1];
+                            current_fun = FunctionsParsed[idx_fun_next];
+                            if ((idx_fun_next + 1) < FunctionsParsed.size()) next_fun = FunctionsParsed[idx_fun_next + 1];
                         }
                     }
                     int nb_instruction_inside_function = (idx_row_ptr - (current_fun.XLSX_row_index + 1)) / 2;

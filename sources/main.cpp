@@ -73,10 +73,10 @@ int main(int argc, char* argv[]) {
     } else if (argc >= 2) {
         fs::path full_path = QCoreApplication::arguments().at(1).toStdString();
         if (argc == 3) {
-            auto Game = QCoreApplication::arguments().at(1).toStdString();
+            Game = QCoreApplication::arguments().at(1).toStdString();
             full_path = QCoreApplication::arguments().at(2).toStdString();
         } else if (argc == 4) {
-            auto Game = QCoreApplication::arguments().at(1).toStdString();
+            Game = QCoreApplication::arguments().at(1).toStdString();
             full_path = QCoreApplication::arguments().at(2).toStdString();
             output_dir = fs::path(QCoreApplication::arguments().at(3).toStdString());
         }

@@ -321,7 +321,7 @@ class TXBuilder : public Builder {
 
                 if (first == -2) {
 
-                    QByteArray array = ReadSubByteArray(content, addr, 4);
+                    array = ReadSubByteArray(content, addr, 4);
                     this->AddOperande(operande(addr, "int", array));
                     max_nb_monsters = 4;
                 } else if (first == -1) {
