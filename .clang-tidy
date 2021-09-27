@@ -16,6 +16,7 @@ HeaderFilterRegex: "^../(sources|headers)/.*"
 # for which checks we want to reenable.
 Checks: >
   *,
+  -altera-*,
   -llvmlibc-*,
   -hicpp-*,
   -bugprone-narrowing-conversions,
@@ -27,6 +28,7 @@ Checks: >
   -cppcoreguidelines-avoid-magic-numbers,
   -llvm-else-after-return,
   -misc-non-private-member-variables-in-classes,
+  -misc-no-recursion,
   -cppcoreguidelines-non-private-member-variables-in-classes,
   -cppcoreguidelines-pro-type-vararg,
   -readability-container-size-empty,
