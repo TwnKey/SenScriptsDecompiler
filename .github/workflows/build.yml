@@ -53,10 +53,6 @@ jobs:
           echo "CXX=g++-10" >> $GITHUB_ENV
           echo "CC=gcc-10" >> $GITHUB_ENV
         if: runner.os == 'Linux'
-      - name: Prepare MSVC
-        uses: bus1/cabuild/action/msdevshell@v1
-        if: runner.os == 'Windows'
-
       - name: Setup build directory
         run: meson setup builddir/
       - name: Build
