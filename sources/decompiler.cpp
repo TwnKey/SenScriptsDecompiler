@@ -5,13 +5,13 @@
 #include "headers/CS4InstructionsSet.h"
 #include "headers/ReverieInstructionsSet.h"
 #include "headers/TXInstructionsSet.h"
-#include "qxlsx/headers/xlsxcellrange.h"
-#include "qxlsx/headers/xlsxchart.h"
-#include "qxlsx/headers/xlsxchartsheet.h"
-#include "qxlsx/headers/xlsxdocument.h"
-#include "qxlsx/headers/xlsxformat.h"
-#include "qxlsx/headers/xlsxrichstring.h"
-#include "qxlsx/headers/xlsxworkbook.h"
+#include "xlsxcellrange.h"
+#include "xlsxchart.h"
+#include "xlsxchartsheet.h"
+#include "xlsxdocument.h"
+#include "xlsxformat.h"
+#include "xlsxrichstring.h"
+#include "xlsxworkbook.h"
 #include <QColor>
 #include <QDebug>
 

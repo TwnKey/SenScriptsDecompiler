@@ -1,6 +1,8 @@
 # General ignores
 # compile_commands.json is used by clangd and clang-tidy
 builddir/
+subprojects/*/
+!subprojects/packagefiles/
 compile_commands.json
 meson.build.user
 
