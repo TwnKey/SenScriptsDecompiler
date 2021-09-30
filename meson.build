@@ -71,7 +71,6 @@ if clangtidy.found()
 endif
 
 headers = files(
-    'headers/application.h',
     'headers/Builder.h',
     'headers/CS1InstructionsSet.h',
     'headers/CS2InstructionsSet.h',
