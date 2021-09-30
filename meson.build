@@ -70,6 +70,25 @@ if clangtidy.found()
     )
 endif
 
+headers = files(
+    'headers/application.h',
+    'headers/Builder.h',
+    'headers/CS1InstructionsSet.h',
+    'headers/CS2InstructionsSet.h',
+    'headers/CS3InstructionsSet.h',
+    'headers/CS4InstructionsSet.h',
+    'headers/ReverieInstructionsSet.h',
+    'headers/TXInstructionsSet.h',
+    'headers/decompiler.h',
+    'headers/exceptions.h',
+    'headers/functions.h',
+    'headers/global_vars.h',
+    'headers/instruction.h',
+    'headers/operande.h',
+    'headers/translationfile.h',
+    'headers/utilities.h',
+)
+
 executable('SenScriptsDecompiler',
     'sources/Builder.cpp',
     'sources/decompiler.cpp',
@@ -83,6 +102,7 @@ executable('SenScriptsDecompiler',
         qxlsx_project.get_variable('inc'),
         'subprojects', # needed for current qxlsx import path
     ],
+    extra_files: [headers],
     dependencies: [qt_dep, qxlsx_dep],
     install : true
 )
