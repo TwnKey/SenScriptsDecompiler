@@ -5922,9 +5922,7 @@ class CS1Builder : public Builder {
                 case 0x9F:
                     return std::make_shared<OPCode9F>(addr, dat_content, this);
                 default:
-                    std::stringstream stream;
-                    stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
-                    throw ssd::exceptions::bad_opcode();
+                    throw ssd::exceptions::bad_opcode(OP, addr);
             }
         } else {
             std::shared_ptr<Instruction> res;

@@ -9447,11 +9447,7 @@ public:
             case 0xE6:
                 return std::make_shared<OPCodeE6>(addr, dat_content, this);
             default:
-                std::stringstream stream;
-                stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
-                std::string result( stream.str() );
-                qDebug() << Qt::hex << "OP: " << OP << " at addr " << addr << " type: " << function_type;
-                throw ssd::exceptions::bad_opcode();
+                throw ssd::exceptions::bad_opcode(OP, addr);
             }
         } else {
             std::shared_ptr<Instruction> res;
@@ -10005,11 +10001,8 @@ public:
         case 274:
             return std::make_shared<StyleName>(addr, row, xls_content, this);
         default:
-            std::stringstream stream;
-            stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName;
-
             error = true;
-            throw ssd::exceptions::bad_opcode();
+            throw ssd::exceptions::bad_opcode(OP, addr);
         }
     }
 

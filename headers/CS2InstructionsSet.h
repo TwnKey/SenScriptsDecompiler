@@ -7479,10 +7479,8 @@ class CS2Builder : public Builder {
                 case 0xB5:
                     return std::make_shared<OPCodeB5>(addr, dat_content, this);
                 default:
-                    std::stringstream stream;
-                    stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << addr;
                     error = true;
-                    throw ssd::exceptions::bad_opcode();
+                    throw ssd::exceptions::bad_opcode(OP, addr);
             }
         } else {
             std::shared_ptr<Instruction> res;

@@ -2,6 +2,9 @@
 #define EXCEPTIONS_H
 #include <stdexcept>
 
+#include "fmt/compile.h"
+#include "fmt/format.h"
+
 namespace ssd::exceptions {
 class recoverable : public std::runtime_error {
   public:
@@ -23,8 +26,9 @@ class past_the_end_addr : public recoverable {
 
 class bad_opcode : public recoverable {
   public:
-    explicit bad_opcode(const std::string& msg = "")
-      : recoverable("ERROR: OP code is not defined:" + msg) {}
+    // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
+    explicit bad_opcode(int opcode, int address)
+      : recoverable(fmt::format(FMT_COMPILE("ERROR: Opcode {:#04X} is not defined for address {:#04X}"), opcode, address)) {}
 };
 
 class unexpected_operand : public recoverable {
