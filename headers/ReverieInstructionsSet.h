@@ -9524,7 +9524,7 @@ public:
     }
     std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) override {
 
-        uint OP = xls_content.read(row + 1, 2).toInt();
+        int OP = xls_content.read(row + 1, 2).toInt();
 
         switch (OP) {
         case 0x00:
