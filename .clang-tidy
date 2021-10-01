@@ -19,6 +19,7 @@ Checks: >
   -altera-*,
   -llvmlibc-*,
   -hicpp-*,
+  -google-objc-*,
   -bugprone-narrowing-conversions,
   -fuchsia-default-arguments-calls,
   -fuchsia-default-arguments-declarations,
