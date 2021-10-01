@@ -62,6 +62,16 @@ fmt_dep = dependency('fmt',
                      default_options: ['warning_level=0', 'default_library=static']
 )
 
+spdlog_dep = dependency('spdlog',
+                        fallback: ['spdlog', 'spdlog_dep'],
+                        default_options: [
+                                          'external_fmt=true',
+                                          'compile_library=true',
+                                          'warning_level=0',
+                                          'default_library=static',
+                                         ]
+)
+
 clangtidy = find_program('run-clang-tidy.py', required: false)
 if clangtidy.found()
     # Work around meson's bad clang-tidy target (https://github.com/mesonbuild/meson/issues/7200)
@@ -107,6 +117,6 @@ executable('SenScriptsDecompiler',
         include_directories('headers'),
     ],
     extra_files: [headers],
-    dependencies: [fmt_dep, qt_dep, qxlsx_dep],
+    dependencies: [fmt_dep, qt_dep, qxlsx_dep, spdlog_dep],
     install : true
 )
