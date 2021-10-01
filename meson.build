@@ -5,7 +5,7 @@ project('SenScriptsDecompiler',
     meson_version: '>=0.59.0',
     # Set cpp_std to none, because we can't use cpp_std for c++20 in a compiler
     # independent way atm https://github.com/mesonbuild/meson/issues/8246
-    default_options: ['warning_level=3', 'cpp_std=none']
+    default_options: ['warning_level=3', 'cpp_std=none', 'wrap_mode=forcefallback']
 )
 
 cpp_compiler = meson.get_compiler('cpp')
@@ -57,6 +57,11 @@ qxlsx_dep = dependency('qxlsx',
                        default_options: ['warning_level=0', 'default_library=static'],
 )
 
+fmt_dep = dependency('fmt',
+                     fallback: ['fmt', 'fmt_dep'],
+                     default_options: ['warning_level=0', 'default_library=static']
+)
+
 clangtidy = find_program('run-clang-tidy.py', required: false)
 if clangtidy.found()
     # Work around meson's bad clang-tidy target (https://github.com/mesonbuild/meson/issues/7200)
@@ -102,6 +107,6 @@ executable('SenScriptsDecompiler',
         include_directories('headers'),
     ],
     extra_files: [headers],
-    dependencies: [qt_dep, qxlsx_dep],
+    dependencies: [fmt_dep, qt_dep, qxlsx_dep],
     install : true
 )
