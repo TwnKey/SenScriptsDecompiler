@@ -48,11 +48,17 @@ std::vector<std::string> get_header() {
 int main(int argc, char* argv[]) {
     QCoreApplication a(argc, argv);
     QSettings settings(QCoreApplication::applicationDirPath() + "/config.ini", QSettings::IniFormat);
+
+    auto log_file = fs::path(settings.value("log_file", "log.txt").toString().toStdString());
+    auto log_level = spdlog::level::from_str(settings.value("log_level", "off").toString().toStdString());
+
     auto Game = settings.value("Game", "cs4").toString().toStdString();
     InputDatFileEncoding = settings.value("InputDatFileEncoding", "UTF-8").toString().toStdString();
     OutputDatFileEncoding = settings.value("OutputDatFileEncoding", "UTF-8").toString().toStdString();
     fs::path output_dir = fs::path(QCoreApplication::applicationDirPath().toStdString()) / "recompiled_files";
 
+    auto log_path = log_file.is_relative() ? fs::path(QCoreApplication::applicationDirPath().toStdString()) / log_file : log_file;
+    ssd::spdlog::init(log_level, log_path);
     if (argc < 2) {
         for (const auto& i : get_header()) {
             display_text(i);
@@ -97,6 +103,9 @@ int main(int argc, char* argv[]) {
             display_text("No file was found.");
         }
     }
+
+    // Asynchronous loggers must be shutdown manually for Windows
+    spdlog::shutdown();
 
     return 0;
 }

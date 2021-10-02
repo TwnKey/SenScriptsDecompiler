@@ -101,6 +101,7 @@ headers = files(
     'headers/global_vars.h',
     'headers/instruction.h',
     'headers/operande.h',
+    'headers/spdlog.h',
     'headers/translationfile.h',
     'headers/utilities.h',
 )
@@ -111,6 +112,7 @@ executable('SenScriptsDecompiler',
     'sources/functions.cpp',
     'sources/instruction.cpp',
     'sources/main.cpp',
+    'sources/spdlog.cpp',
     'sources/translationfile.cpp',
     'sources/utilities.cpp',
     include_directories :  [

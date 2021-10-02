@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "headers/exceptions.h"
+#include "headers/spdlog.h"
 
 namespace ssd::utils {
 QByteArray read_file(const std::filesystem::path& filepath);
