@@ -2,7 +2,6 @@
 #define INSTRUCTION_H
 #include "headers/Builder.h"
 #include "headers/operande.h"
-#include <QDebug>
 #include <cmath>
 
 #include "xlsxcellrange.h"

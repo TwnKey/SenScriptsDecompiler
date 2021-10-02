@@ -90,7 +90,7 @@ void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
     if (!FunctionsToParse.empty()) {
         for (auto& it : FunctionsToParse) {
             if (std::count(FunctionsParsed.begin(), FunctionsParsed.end(), it) == 0) {
-                qDebug() << "Reading function " << QString::fromStdString(it.name);
+                ssd::spdlog::trace("Reading function {}", it.name);
 
                 auto itt = find_function_by_ID(FunctionsParsed, it.ID);
                 if (itt == FunctionsParsed.end()) { // if we never read it, we'll do that
@@ -285,7 +285,8 @@ bool Builder::UpdatePointersDAT() {
             }
         }
     }
-    qDebug() << "Done";
+    ssd::spdlog::trace("Done");
+
     return true;
 }
 bool Builder::Reset() {
@@ -361,8 +362,8 @@ int Builder::find_instruction(int addr, function fun) {
     }
 
     if (!success) {
-        qDebug() << Qt::hex << addr;
-        display_text("Couldn't find an instruction!");
+        ssd::spdlog::warn("Couldn't find instruction {:#04x}", addr);
+        display_text(fmt::format("Couldn't find instruction {:#04x}", addr));
     }
 
     return result;

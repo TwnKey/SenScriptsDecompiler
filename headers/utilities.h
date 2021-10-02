@@ -1,6 +1,5 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
-#include <QDebug>
 #include <QTextCodec>
 #include <QTextStream>
 #include <cmath>

@@ -1,3 +1,4 @@
+
 #include "headers/decompiler.h"
 #include "headers/CS1InstructionsSet.h"
 #include "headers/CS2InstructionsSet.h"
@@ -13,7 +14,6 @@
 #include "xlsxrichstring.h"
 #include "xlsxworkbook.h"
 #include <QColor>
-#include <QDebug>
 
 using namespace QXlsx; // NOLINT(google-build-using-namespace)
 namespace fs = std::filesystem;
@@ -220,16 +220,9 @@ bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
     return true;
 }
 
-bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
-                                 const std::vector<std::filesystem::path>& files,
+bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files,
                                  const std::filesystem::path& reference_dir,
                                  const std::filesystem::path& output_dir) {
-    QFile file(QString::fromStdString(log_filename.string()));
-
-    QTextStream stream(&file);
-    file.remove();
-    file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
-
     for (const auto& file_ : files) {
 
         bool success = true;
@@ -241,24 +234,22 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
         const fs::path local_dat_path = output_dir / filename;
         const fs::path xlsx_path = output_dir / (file_stem + ".xlsx");
 
-        qDebug() << "Checking " << QString::fromStdString(reference_dat_path.string());
-        stream << QString::fromStdString(reference_dat_path.string()) << "\n";
-        qDebug() << "reading dat1 file" << QString::fromStdString(reference_dat_path.string());
+        ssd::spdlog::info("checking {}", reference_dat_path.string());
+
+        ssd::spdlog::info("start reading reference dat file: {}", reference_dat_path.string());
         this->read_file(reference_dat_path);
-        qDebug() << "reading dat done." << QString::fromStdString(reference_dat_path.string());
+        ssd::spdlog::info("finish reading reference dat file: {}", reference_dat_path.string());
+        ssd::spdlog::info("writing xlsx file: {}", xlsx_path.string());
         this->write_xlsx(output_dir);
-        qDebug() << "reading xlsx file" << QString::fromStdString((xlsx_path).string());
+        ssd::spdlog::info("reading xlsx file: {}", xlsx_path.string());
         this->read_file(xlsx_path);
-        qDebug() << "writing dat file";
+        ssd::spdlog::info("reading xlsx file: {}", xlsx_path.string());
+        ssd::spdlog::info("writing dat file: {}", local_dat_path.string());
         this->write_dat(output_dir);
-        qDebug() << "full done";
-        qDebug() << "reading dat file" << QString::fromStdString(fs::path(local_dat_path).string());
-        qDebug() << "reading dat file" << QString::fromStdString(reference_dat_path.string());
+        ssd::spdlog::info("reading {} and {} for comparison", local_dat_path.string(), reference_dat_path.string());
 
         const QByteArray content1 = ssd::utils::read_file(local_dat_path);
         const QByteArray content2 = ssd::utils::read_file(reference_dat_path);
-
-        std::string msg = "Problème de taille avec " + file_stem;
 
         int length_header2 = ReadIntegerFromByteArray(0x18, content2);
         int idx_addresses_loc1 = ReadIntegerFromByteArray(8, content1);
@@ -267,16 +258,14 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
 
         for (int i = 0; i < idx_addresses_loc2; i++) {
             if (content1[i] != content2[i]) {
-                stream << "First part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-                qDebug() << "First part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                ssd::spdlog::err("First part of header, mismatch at {} {:#04x} should be {:#04x}", i, content1[i], content2[i]);
                 success = false;
             }
         }
 
         for (int i = idx_addresses_loc2 + size_pointer_section; i < length_header2; i++) {
             if (content1[i] != content2[i]) {
-                stream << "Second part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-                qDebug() << "Second part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                ssd::spdlog::err("Second part of header, mismatch at {} {:#04x} should be {:#04x}", i, content1[i], content2[i]);
                 success = false;
             }
         }
@@ -299,8 +288,7 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
 
                 if (OPCode <= 0xFF) {
                     if (OPCode != byte_in_file) {
-                        stream << "OP Code Mismatch at " << Qt::hex << index_byte << " " << OPCode << " should be " << byte_in_file << "\n";
-                        qDebug() << "OP Code Mismatch at " << Qt::hex << index_byte << " " << OPCode << " should be " << byte_in_file << "\n";
+                        ssd::spdlog::err("Opcode mismatch at {:#04x} {:#04x} should be {:#04x}", index_byte, OPCode, byte_in_file);
                         success = false;
                     }
                     index_byte++;
@@ -313,8 +301,7 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
                         int diff1 = op_k.getIntegerValue() - ReadIntegerFromByteArray(index_byte, content2);
                         int diff2 = current_tf.FunctionsInFile[i].actual_addr - idx_fun_2[i];
                         if (diff1 != diff2) {
-                            stream << "Mismatching pointers at " << Qt::hex << index_byte << " " << diff1 << " should be " << diff2 << "\n";
-                            qDebug() << "Mismatching pointers at " << Qt::hex << index_byte << " " << diff1 << " should be " << diff2 << "\n";
+                            ssd::spdlog::err("Mismatching pointers at {:#04x} {} should be {}", index_byte, diff1, diff2);
                             success = false;
                         }
                         index_byte+=4;
@@ -324,8 +311,7 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
                         float float2 = QByteArrayToFloat(float_bytes);
                         float float1 = QByteArrayToFloat(bytes);
                         if (float2 != float1) {
-                            stream << "Mismatching floats at " << Qt::hex << index_byte << " " << float1 << " should be " << float2 << "\n";
-                            qDebug() << "Mismatching floats at " << Qt::hex << index_byte << " " << float1 << " should be " << float2 << "\n";
+                            ssd::spdlog::err("Mismatching floats at {:#04x} {} should be {}", index_byte, float1, float2);
                             success = false;
                         }
                     } else {
@@ -334,8 +320,7 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
                             uint8_t byte2 = byte;
 
                             if (byte1 != byte2) {
-                                stream << "Mismatch at " << Qt::hex << index_byte << " " << (int)byte1 << " should be " << (int)byte2 << "\n";
-                                qDebug() << "Mismatch at " << Qt::hex << index_byte << " " << (int)byte1 << " should be " << (int)byte2 << "\n";
+                                ssd::spdlog::err("Mismatch at {:#04x} {:#04x} should be {:#04x}", index_byte, byte1, byte2);
                                 success = false;
                             }
                             index_byte++;
@@ -344,12 +329,10 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
                 }
             }
         }
-        if (!success) {
-            qFatal("Mismatch");
-            stream << "Mismatch"
-                   << "\n";
-        }
-        stream << " Size 1: " << Qt::hex << content1.size() << " vs Size 2: " << Qt::hex << content2.size() << " " << (int)success;
+        if (!success) ssd::spdlog::err("Mismatch");
+
+        std::string match_msg = success ? "matches" : "does not match";
+        ssd::spdlog::info("Size 1: {:#04x} vs Size 2: {:#04x} {}", content1.size(), content2.size(), match_msg);
     }
     return true;
 }
