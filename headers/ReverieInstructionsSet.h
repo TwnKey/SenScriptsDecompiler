@@ -3000,8 +3000,7 @@ public:
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 default:
-                    qFatal("not analyzed");
-                    break;
+                    throw ssd::exceptions::not_analyzed_yet(control_byte2.at(0));
                 }
 
                 break;
@@ -3014,7 +3013,7 @@ public:
 
                 break;
             default:
-                qFatal("Byte not analyzed yet");
+                throw ssd::exceptions::not_analyzed_yet(control_byte.at(0));
             }
         }
     };

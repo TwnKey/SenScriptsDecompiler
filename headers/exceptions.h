@@ -6,6 +6,19 @@
 #include "fmt/format.h"
 
 namespace ssd::exceptions {
+
+class parse_error : public std::runtime_error {
+  public:
+    explicit parse_error(const std::string& msg = "")
+      : std::runtime_error(msg) {}
+};
+
+class not_analyzed_yet : public parse_error {
+  public:
+    explicit not_analyzed_yet(std::integral auto byte)
+      : parse_error(fmt::format(FMT_COMPILE("ERROR: byte {:#04x} is not analzyed yet"), byte)) {}
+};
+
 class recoverable : public std::runtime_error {
   public:
     explicit recoverable(const std::string& msg = "")
@@ -28,7 +41,7 @@ class bad_opcode : public recoverable {
   public:
     // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
     explicit bad_opcode(int opcode, int address)
-      : recoverable(fmt::format(FMT_COMPILE("ERROR: Opcode {:#04X} is not defined for address {:#04X}"), opcode, address)) {}
+      : recoverable(fmt::format(FMT_COMPILE("ERROR: Opcode {:#04x} is not defined for address {:#04x}"), opcode, address)) {}
 };
 
 class unexpected_operand : public recoverable {

@@ -2128,8 +2128,7 @@ class CS4Builder : public Builder {
                         case 1:
                             break;
                         default:
-                            qFatal("not analyzed");
-                            break;
+                            throw ssd::exceptions::not_analyzed_yet(control_byte2.at(0));
                     }
 
                     break;
@@ -2741,7 +2740,7 @@ class CS4Builder : public Builder {
                     break;
                 }
                 default:
-                    qFatal("Byte not analyzed yet");
+                    throw ssd::exceptions::not_analyzed_yet(control_byte.at(0));
             }
         }
     };
@@ -4108,11 +4107,12 @@ class CS4Builder : public Builder {
                     control_byte2 = ReadSubByteArray(content, addr, 1);
                     this->AddOperande(operande(addr, "byte", control_byte2));
                     if ((int)control_byte2[0] == 0) {
-                        qFatal("NOOOOT SURE.");
+                        throw ssd::exceptions::parse_error("NOOOOT SURE.");
                         this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                         this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        // NOLINTNEXTLINE(readability-else-after-return)
                     } else if ((int)control_byte2[0] == 1) {
-                        qFatal("NOOOOT SURE TOO.");
+                        throw ssd::exceptions::parse_error("NOOOOT SURE TOO.");
                     }
                     break;
                 case 0x2C:

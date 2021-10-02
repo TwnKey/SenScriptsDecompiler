@@ -2194,8 +2194,7 @@ class CS3Builder : public Builder {
                             break;
                         }
                         default:
-                         qFatal("Byte not analyzed yet");
-
+                        throw ssd::exceptions::not_analyzed_yet(byte.at(0));
                     }*/
 
                     break;
@@ -2447,7 +2446,7 @@ class CS3Builder : public Builder {
                     break;
                 }
                 default:
-                    qFatal("Byte not analyzed yet");
+                    throw ssd::exceptions::not_analyzed_yet(control_byte.at(0));
             }
         }
     };

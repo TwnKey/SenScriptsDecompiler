@@ -1723,9 +1723,8 @@ class TXBuilder : public Builder {
 
                     break;
                 }
-                default: {
-                    qFatal("not analyzed yet");
-                }
+                default:
+                    throw ssd::exceptions::not_analyzed_yet(control_byte.at(0));
             }
         }
     };
@@ -2590,7 +2589,7 @@ class TXBuilder : public Builder {
                 }
 
                 case 0x14: {
-                    qFatal("not entirely sure");
+                    throw ssd::exceptions::parse_error("not entirely sure");
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -2647,7 +2646,7 @@ class TXBuilder : public Builder {
                     break;
                 }
                 case 0x18: {
-                    qFatal("not sureeeeee");
+                    throw ssd::exceptions::parse_error("not sureeeeee");
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -3247,10 +3246,8 @@ class TXBuilder : public Builder {
                 this->AddOperande(operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 break;
             }
-            default:{
-                qFatal("not analyzed yet");
-            }
-
+            default:
+                throw ssd::exceptions::not_analyzed_yet(control_byte.at(0));
         }
 
 
@@ -4856,15 +4853,14 @@ class TXBuilder : public Builder {
                 }
                 case 0x29: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    qFatal("not sure here");
+                    throw ssd::exceptions::parse_error("not sure here");
                     break;
                 }
                 case 0x2B: {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    qFatal("not sure here");
-                    break;
+                    throw ssd::exceptions::parse_error("not sure here");
                 }
                 case 0x34:
                 case 0x30: {
@@ -4915,9 +4911,7 @@ class TXBuilder : public Builder {
                     break;
                 }
                 case 0x3C: {
-
-                    qFatal("not sure here");
-
+                    throw ssd::exceptions::parse_error("not sure here");
                     break;
                 }
                 case 0x3E: {
@@ -8429,9 +8423,8 @@ class TXBuilder : public Builder {
                     this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
-                default: {
-                    qFatal("not analyzed yet");
-                }
+                default:
+                    throw ssd::exceptions::not_analyzed_yet(control);
             }
         }
     };

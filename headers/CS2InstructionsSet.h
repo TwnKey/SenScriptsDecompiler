@@ -1717,9 +1717,8 @@ class CS2Builder : public Builder {
 
                     break;
                 }
-                default: {
-                    qFatal("not analyzed yet");
-                }
+                default:
+                    throw ssd::exceptions::not_analyzed_yet(control_byte.at(0));
             }
         }
     };
@@ -3204,9 +3203,8 @@ class CS2Builder : public Builder {
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
-                default: {
-                    qFatal("not analyzed yet");
-                }
+                default:
+                    throw ssd::exceptions::not_analyzed_yet(control_byte.at(0));
             }
         }
     };
