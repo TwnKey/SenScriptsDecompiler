@@ -143,12 +143,7 @@ std::vector<int> Builder::guess_type_by_name(function& fun) {
     } else if (fun.name.starts_with("FC_auto")) {
         result.push_back(13);
     } else if (fun.name.starts_with("BookData")) { // Book: the first short read is crucial I think. 0 = text incoming; not zero =
-        QRegExp rx("BookData(\\d+[A-Z]?)_(\\d+)");
-
-        rx.indexIn(QString::fromStdString(fun.name), 0);
-        int Nb_Data = rx.cap(2).toInt();
-
-        if (Nb_Data == 99) {
+        if (fun.name.ends_with("99")) {
             result.push_back(14);
         } else {
             result.push_back(15);
