@@ -1,5 +1,6 @@
 #include "headers/utilities.h"
 #include <fstream>
+#include <iostream>
 
 namespace ssd::utils {
 namespace fs = std::filesystem;
@@ -29,10 +30,7 @@ void write_file(const std::filesystem::path& filepath, const QByteArray& content
 }
 } // namespace ssd::utils
 
-void display_text(const std::string& text) {
-    QTextStream out(stdout);
-    out << QString::fromStdString(text) << Qt::endl;
-}
+void display_text(const std::string& text) { std::cout << text << std::endl; }
 
 std::string ReadStringFromByteArray(int start_pos, const QByteArray& content) {
 
