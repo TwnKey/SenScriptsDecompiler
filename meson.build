@@ -87,6 +87,11 @@ if clangtidy.found()
     )
 endif
 
+exe_sources = []
+if host_machine.system() == 'windows'
+  subdir('win')
+endif
+
 headers = files(
     'headers/Builder.h',
     'headers/CS1InstructionsSet.h',
@@ -115,6 +120,7 @@ executable('SenScriptsDecompiler',
     'sources/spdlog.cpp',
     'sources/translationfile.cpp',
     'sources/utilities.cpp',
+    exe_sources,
     include_directories :  [
         include_directories('headers'),
     ],

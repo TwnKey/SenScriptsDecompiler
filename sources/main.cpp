@@ -1,3 +1,6 @@
+#ifdef WIN32
+#include "windows.h"
+#endif
 #include "headers/decompiler.h"
 #include "headers/global_vars.h"
 #include <QCoreApplication>
@@ -46,6 +49,10 @@ std::vector<std::string> get_header() {
 }
 
 int main(int argc, char* argv[]) {
+#ifdef WIN32
+    SetConsoleCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
+#endif
     QCoreApplication a(argc, argv);
     QSettings settings(QCoreApplication::applicationDirPath() + "/config.ini", QSettings::IniFormat);
 
