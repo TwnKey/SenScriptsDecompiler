@@ -90,11 +90,11 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
     addr = addr + static_cast<int>(std::ssize(header));
     for (int idx_fun = 0; idx_fun < current_tf.getNbFunctions() - 1; idx_fun++) {
 
-        function fun = current_tf.FunctionsInFile[idx_fun];
+        Function fun = current_tf.FunctionsInFile[idx_fun];
 
         current_fun.clear();
 
-        for (auto& instr : fun.InstructionsInFunction) {
+        for (auto& instr : fun.instructions) {
             current_fun.push_back(instr->getBytes());
         }
         addr = addr + static_cast<int>(std::ssize(current_fun));
@@ -109,9 +109,9 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
     }
 
     if (current_tf.getNbFunctions() - 1 >= 0) {
-        function fun = current_tf.FunctionsInFile[current_tf.FunctionsInFile.size() - 1];
+        Function fun = current_tf.FunctionsInFile[current_tf.FunctionsInFile.size() - 1];
         current_fun.clear();
-        for (auto& instr : fun.InstructionsInFunction) {
+        for (auto& instr : fun.instructions) {
             current_fun.push_back(instr->getBytes());
         }
         functions.push_back(current_fun);
@@ -200,7 +200,7 @@ bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
         excel_scenario_sheet.write(excel_row, 2, QString::fromStdString(fun.name));
 
         excel_row++;
-        for (const auto& instr : fun.InstructionsInFunction) {
+        for (const auto& instr : fun.instructions) {
             excel_scenario_sheet.write(excel_row, 1, "Location");
             excel_scenario_sheet.write(excel_row + 1, 1, instr->get_addr_instr());
             int col = 0;
@@ -282,8 +282,8 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
         for (size_t i = 0; i < (uint)current_tf.getNbFunctions(); ++i) {
             int index_byte = idx_fun_2[i];
 
-            for (size_t j = 0; j < (uint)current_tf.FunctionsInFile[i].InstructionsInFunction.size(); ++j) {
-                uint OPCode = current_tf.FunctionsInFile[i].InstructionsInFunction[j]->get_OP();
+            for (size_t j = 0; j < (uint)current_tf.FunctionsInFile[i].instructions.size(); ++j) {
+                uint OPCode = current_tf.FunctionsInFile[i].instructions[j]->get_OP();
                 uint byte_in_file = (content2[index_byte]) & 0xFF;
 
                 if (OPCode <= 0xFF) {
@@ -293,8 +293,8 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
                     }
                     index_byte++;
                 }
-                for (size_t k = 0; k < (uint)current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes.size(); ++k) {
-                    operande op_k = current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes[k];
+                for (size_t k = 0; k < (uint)current_tf.FunctionsInFile[i].instructions[j]->operandes.size(); ++k) {
+                    operande op_k = current_tf.FunctionsInFile[i].instructions[j]->operandes[k];
                     ssd::Buffer bytes = op_k.getValue();
 
                     if (op_k.getType() == "pointer") {

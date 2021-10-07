@@ -161,7 +161,7 @@ operande Instruction::get_operande(int i) const { return operandes[i]; }
 
 int Instruction::get_addr_instr() const { return this->addr_instr; }
 void Instruction::WriteDat() {}
-int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<function> funs, int row, int& col) {
+int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<Function> funs, int row, int& col) {
     QXlsx::Format FormatInstr;
     QXlsx::Format FormatType;
     QXlsx::Format FormatOP;
@@ -288,15 +288,15 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
             col_cnt++;
         } else if (type == "pointer") {
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            int ID = funs[0].ID;
+            int ID = funs[0].id;
             size_t nb_row = 3;
             int idx_fun = 0;
             while (ID != operande.getDestination().FunctionID) {
 
                 nb_row = nb_row + 1; // row with function name
-                nb_row = nb_row + 2 * funs[idx_fun].InstructionsInFunction.size();
+                nb_row = nb_row + 2 * funs[idx_fun].instructions.size();
                 idx_fun++;
-                ID = funs[idx_fun].ID;
+                ID = funs[idx_fun].id;
             }
             nb_row = nb_row + 1; // row with function name
             nb_row = nb_row + static_cast<uint64_t>(2 * (operande.getDestination().InstructionID + 1));

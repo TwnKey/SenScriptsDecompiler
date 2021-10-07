@@ -3,7 +3,7 @@
 #include "headers/operande.h"
 #include "xlsxdocument.h"
 
-class function;
+class Function;
 class Instruction;
 
 /*A Builder is an "interface" (I doubt it's the correct word though when not all of the methods are abstract)
@@ -79,14 +79,14 @@ class Builder {
     virtual void ReadFunctionsXLSX(QXlsx::Document& xls_content);
 
     int find_function(int addr);
-    int find_instruction(int addr, function fun);
+    int find_instruction(int addr, Function fun);
 
-    std::vector<function> FunctionsToParse;
-    std::vector<function> FunctionsParsed;
+    std::vector<Function> FunctionsToParse;
+    std::vector<Function> FunctionsParsed;
     std::string SceneName;
-    std::vector<int> guess_type_by_name(function& fun);
-    int attempts_at_reading_function(function& fun, ssd::Buffer& dat_content, const std::vector<int>& fallback_types);
-    int ReadIndividualFunction(function& fun, ssd::Buffer& dat_content);
+    std::vector<int> guess_type_by_name(Function& fun);
+    int attempts_at_reading_function(Function& fun, ssd::Buffer& dat_content, const std::vector<int>& fallback_types);
+    int ReadIndividualFunction(Function& fun, ssd::Buffer& dat_content);
     bool UpdatePointersXLSX();
     bool UpdatePointersDAT();
     bool Reset();

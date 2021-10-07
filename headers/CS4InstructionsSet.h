@@ -709,9 +709,9 @@ class CS4Builder : public Builder {
           : Instruction(addr, "AnimeClipTable", 265, Maker) {
 
             int first_integer = ReadIntegerFromByteArray(addr, content);
-            auto itt_current_fun = find_function_by_ID(Maker->FunctionsToParse, Maker->idx_current_fun);
+            auto itt_current_fun = find_function_by_id(Maker->FunctionsToParse, Maker->idx_current_fun);
             while (first_integer != 0) {
-                itt_current_fun->AddInstruction(std::make_shared<AnimeClipData>(addr, content, Maker));
+                itt_current_fun->add_instruction(std::make_shared<AnimeClipData>(addr, content, Maker));
                 first_integer = ReadIntegerFromByteArray(addr, content);
             }
             ssd::Buffer first_integer_bytes = ReadSubByteArray(content, addr, 4);

@@ -17,7 +17,7 @@ class Instruction {
     Instruction(int addr, std::string name, uint OP, Builder* Maker);
     Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker);
     virtual ~Instruction();
-    virtual int WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<function> funs, int row, int& col);
+    virtual int WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<Function> funs, int row, int& col);
     virtual void WriteDat();
     void AddOperande(operande op);
     int get_length_in_bytes();

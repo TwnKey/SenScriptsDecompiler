@@ -10,8 +10,8 @@ class TranslationFile {
     void setName(std::string name);
     [[nodiscard]] int getNbFunctions() const;
     std::string getName();
-    void addFunction(const function& fun);
-    std::vector<function> FunctionsInFile;
+    void addFunction(const Function& fun);
+    std::vector<Function> FunctionsInFile;
 
   protected:
     std::string SceneName;
