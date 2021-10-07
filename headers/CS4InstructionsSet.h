@@ -7,7 +7,7 @@
 class CS4Builder : public Builder {
   public:
     CS4Builder() = default;
-    int add_operandes(int& addr, QByteArray& content, Instruction* instr, int size) {
+    int add_operandes(int& addr, ssd::Buffer& content, Instruction* instr, int size) {
         int plVar15 = addr;
         int lVar5 = 0;
         int lVar7 = -1;
@@ -19,7 +19,7 @@ class CS4Builder : public Builder {
         return lVar7;
     }
 
-    static void reading_dialog(int& addr, QByteArray& content, Instruction* instr) {
+    static void reading_dialog(int& addr, ssd::Buffer& content, Instruction* instr) {
 
         std::vector<uint8_t> current_op_value;
         int addr_ = addr;
@@ -178,10 +178,10 @@ class CS4Builder : public Builder {
         } while (cnt < 9999);
     }
 
-    static void fun_1403c90e0(int& addr, QByteArray& content, Instruction* instr, int param) {
-        QByteArray control_byte3_arr = ReadSubByteArray(content, addr, 1);
+    static void fun_1403c90e0(int& addr, ssd::Buffer& content, Instruction* instr, int param) {
+        ssd::Buffer control_byte3_arr = ReadSubByteArray(content, addr, 1);
         instr->AddOperande(operande(addr, "byte", control_byte3_arr));
-        unsigned char control_byte3 = (unsigned char)control_byte3_arr[0];
+        auto control_byte3 = (unsigned char)control_byte3_arr[0];
         if (control_byte3 == '\x55') {
             instr->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             instr->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -226,12 +226,12 @@ class CS4Builder : public Builder {
             instr->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     }
-    static void sub05(int& addr, QByteArray& content, Instruction* instr) {
-        QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+    static void sub05(int& addr, ssd::Buffer& content, Instruction* instr) {
+        ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
         instr->AddOperande(operande(addr, "byte", control_byte));
 
         while ((int)control_byte[0] != 1) {
-            if (addr > content.size()) throw ssd::exceptions::unspecified_recoverable(); // QByteArray
+            if (addr > std::ssize(content)) throw ssd::exceptions::unspecified_recoverable(); // ssd::Buffer
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
                 case 0x24:
@@ -280,17 +280,17 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "CreateMonsters", 256, Maker) {}
         CreateMonsters(int addr, Builder* Maker)
           : Instruction(addr, "CreateMonsters", 256, Maker) {}
-        CreateMonsters(int& addr, QByteArray& content, Builder* Maker)
+        CreateMonsters(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "CreateMonsters", 256, Maker) {
             int initial_addr = addr;
             if (Maker->goal < addr + 0x4C) {
                 addr = initial_addr;
                 throw ssd::exceptions::unexpected_operand();
             }
-            QByteArray map = ReadStringSubByteArray(content, addr);
+            ssd::Buffer map = ReadStringSubByteArray(content, addr);
             this->AddOperande(operande(addr, "string", map));
 
-            QByteArray remaining1 = ReadSubByteArray(content, addr, 0x10 - map.size());
+            ssd::Buffer remaining1 = ReadSubByteArray(content, addr, 0x10 - map.size());
             operande fill1 = operande(addr, "fill", remaining1);
             fill1.setBytesToFill(0x10);
             this->AddOperande(fill1);
@@ -314,17 +314,17 @@ class CS4Builder : public Builder {
 
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4))); // 0x38
 
-            QByteArray btl_name = ReadStringSubByteArray(content, addr);
+            ssd::Buffer btl_name = ReadStringSubByteArray(content, addr);
             this->AddOperande(operande(addr, "string", btl_name));
 
-            QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - btl_name.size());
+            ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x10 - btl_name.size());
             operande fill = operande(addr, "fill", remaining);
             fill.setBytesToFill(0x10);
             this->AddOperande(fill);
             // 0x4C The first part is done
             // from here, it's just a guess. There is a maximum of 8 enemies hardcoded in the function.
 
-            QByteArray array = ReadSubByteArray(content, addr, 4);
+            ssd::Buffer array = ReadSubByteArray(content, addr, 4);
             this->AddOperande(operande(addr, "int", array));
             int first = ReadIntegerFromByteArray(0, array);
             int cnt = 0;
@@ -336,7 +336,7 @@ class CS4Builder : public Builder {
                 }
                 do {
                     counter++;
-                    QByteArray monsters_name = ReadStringSubByteArray(content, addr);
+                    ssd::Buffer monsters_name = ReadStringSubByteArray(content, addr);
                     this->AddOperande(operande(addr, "string", monsters_name));
 
                     remaining = ReadSubByteArray(content, addr, 0x10 - monsters_name.size());
@@ -351,7 +351,7 @@ class CS4Builder : public Builder {
                 if ((unsigned char)content[addr] == 0) {
                     this->AddOperande(operande(addr, "bytearray", ReadSubByteArray(content, addr, 8))); //??
                 } else {
-                    QByteArray monsters_name = ReadStringSubByteArray(content, addr);
+                    ssd::Buffer monsters_name = ReadStringSubByteArray(content, addr);
                     this->AddOperande(operande(addr, "string", monsters_name));
 
                     remaining = ReadSubByteArray(content, addr, 12 - monsters_name.size() - 1);
@@ -378,7 +378,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "EffectsInstr", 257, Maker) {}
         EffectsInstr(int addr, Builder* Maker)
           : Instruction(addr, "EffectsInstr", 257, Maker) {}
-        EffectsInstr(int& addr, QByteArray& content, Builder* Maker)
+        EffectsInstr(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "EffectsInstr", 257, Maker) {
 
             unsigned char current_byte = content[addr];
@@ -388,10 +388,10 @@ class CS4Builder : public Builder {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                 this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
-                QByteArray str = ReadStringSubByteArray(content, addr);
+                ssd::Buffer str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
 
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
+                ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
 
                 operande fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x20);
@@ -409,7 +409,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "AddCollision", 271, Maker) {}
         AddCollision(int addr, Builder* Maker)
           : Instruction(addr, "AddCollision", 271, Maker) {}
-        AddCollision(int& addr, QByteArray& content, Builder* Maker)
+        AddCollision(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "AddCollision", 271, Maker) {
 
             unsigned char current_byte = content[addr];
@@ -435,7 +435,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "ActionTable", 258, Maker) {}
         ActionTable(int addr, Builder* Maker)
           : Instruction(addr, "ActionTable", 258, Maker) {}
-        ActionTable(int& addr, QByteArray& content, Builder* Maker)
+        ActionTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "ActionTable", 258, Maker) {
             int cnt = 0;
             int16_t shrt = 0;
@@ -443,7 +443,7 @@ class CS4Builder : public Builder {
 
                 shrt = ReadShortFromByteArray(addr, content);
                 if (shrt == -1) break;
-                QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
+                ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
                 this->AddOperande(operande(addr, "short", short_bytes));
 
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -482,9 +482,9 @@ class CS4Builder : public Builder {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-                QByteArray str = ReadStringSubByteArray(content, addr);
+                ssd::Buffer str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - str.size());
+                ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x10 - str.size());
                 operande fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x10);
                 this->AddOperande(fill);
@@ -509,9 +509,9 @@ class CS4Builder : public Builder {
             } while (cnt < 0x40);
             // also here, can't explain what is the purpose of those bytes
             while (shrt == -1) {
-                QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
+                ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
                 this->AddOperande(operande(addr, "short", short_bytes));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0xC1);
+                ssd::Buffer remaining = ReadSubByteArray(content, addr, 0xC1);
                 this->AddOperande(operande(addr, "bytearray", remaining));
 
                 shrt = ReadShortFromByteArray(addr, content);
@@ -526,12 +526,12 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "AlgoTable", 259, Maker) {}
         AlgoTable(int addr, Builder* Maker)
           : Instruction(addr, "AlgoTable", 259, Maker) {}
-        AlgoTable(int& addr, QByteArray& content, Builder* Maker)
+        AlgoTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "AlgoTable", 259, Maker) {
             int cnt = 0;
 
             do {
-                QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
+                ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
                 int16_t shrt = ReadShortFromByteArray(0, short_bytes);
                 this->AddOperande(operande(addr, "short", short_bytes));
 
@@ -552,7 +552,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "WeaponAttTable", 260, Maker) {}
         WeaponAttTable(int addr, Builder* Maker)
           : Instruction(addr, "WeaponAttTable", 260, Maker) {}
-        WeaponAttTable(int& addr, QByteArray& content, Builder* Maker)
+        WeaponAttTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "WeaponAttTable", 260, Maker) {
 
             this->AddOperande(operande(addr, "bytearray", ReadSubByteArray(content, addr, 4)));
@@ -566,15 +566,15 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "BreakTable", 261, Maker) {}
         BreakTable(int addr, Builder* Maker)
           : Instruction(addr, "BreakTable", 261, Maker) {}
-        BreakTable(int& addr, QByteArray& content, Builder* Maker)
+        BreakTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "BreakTable", 261, Maker) {
             int cnt = 0;
             do {
-                QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
+                ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
                 int16_t shrt = ReadShortFromByteArray(0, short_bytes);
                 this->AddOperande(operande(addr, "short", short_bytes));
                 if (shrt == 0) break;
-                QByteArray short_bytes2 = ReadSubByteArray(content, addr, 2);
+                ssd::Buffer short_bytes2 = ReadSubByteArray(content, addr, 2);
 
                 this->AddOperande(operande(addr, "short", short_bytes2)); // not sure if two single bytes
                 // or one short, guessing its one short
@@ -594,19 +594,19 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "SummonTable", 262, Maker) {}
         SummonTable(int addr, Builder* Maker)
           : Instruction(addr, "SummonTable", 262, Maker) {}
-        SummonTable(int& addr, QByteArray& content, Builder* Maker)
+        SummonTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "SummonTable", 262, Maker) {
             int cnt = 0;
             do {
-                QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
+                ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
                 uint16_t shrt = ReadShortFromByteArray(0, short_bytes);
                 this->AddOperande(operande(addr, "short", short_bytes));
                 if (shrt == 0xFFFF) break;
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                 this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                QByteArray str = ReadStringSubByteArray(content, addr);
+                ssd::Buffer str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
+                ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 operande fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x20);
                 this->AddOperande(fill);
@@ -625,11 +625,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "ReactionTable", 263, Maker) {}
         ReactionTable(int addr, Builder* Maker)
           : Instruction(addr, "ReactionTable", 263, Maker) {}
-        ReactionTable(int& addr, QByteArray& content, Builder* Maker)
+        ReactionTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "ReactionTable", 263, Maker) {
             int cnt = 0;
             do {
-                QByteArray short_bytes = ReadSubByteArray(content, addr, 2);
+                ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
                 uint16_t shrt = ReadShortFromByteArray(0, short_bytes);
                 this->AddOperande(operande(addr, "short", short_bytes));
                 if (shrt == 0x0) break;
@@ -666,18 +666,18 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "PartTable", 264, Maker) {}
         PartTable(int addr, Builder* Maker)
           : Instruction(addr, "PartTable", 264, Maker) {}
-        PartTable(int& addr, QByteArray& content, Builder* Maker)
+        PartTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "PartTable", 264, Maker) {
             int cnt = 0;
             do {
-                QByteArray int_bytes = ReadSubByteArray(content, addr, 4);
+                ssd::Buffer int_bytes = ReadSubByteArray(content, addr, 4);
                 uint integer = ReadIntegerFromByteArray(0, int_bytes);
                 this->AddOperande(operande(addr, "int", int_bytes));
                 if (integer == 0xFF) break;
 
-                QByteArray str = ReadStringSubByteArray(content, addr);
+                ssd::Buffer str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
+                ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 operande fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x20);
                 this->AddOperande(fill);
@@ -705,7 +705,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "AnimeClipTable", 265, Maker) {}
         AnimeClipTable(int addr, Builder* Maker)
           : Instruction(addr, "AnimeClipTable", 265, Maker) {}
-        AnimeClipTable(int& addr, QByteArray& content, Builder* Maker)
+        AnimeClipTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "AnimeClipTable", 265, Maker) {
 
             int first_integer = ReadIntegerFromByteArray(addr, content);
@@ -714,7 +714,7 @@ class CS4Builder : public Builder {
                 itt_current_fun->AddInstruction(std::make_shared<AnimeClipData>(addr, content, Maker));
                 first_integer = ReadIntegerFromByteArray(addr, content);
             }
-            QByteArray first_integer_bytes = ReadSubByteArray(content, addr, 4);
+            ssd::Buffer first_integer_bytes = ReadSubByteArray(content, addr, 4);
             this->AddOperande(operande(addr, "int", first_integer_bytes));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             // I think this is some sort of a table with ID at the beginning and then two names
@@ -728,14 +728,14 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "AnimeClipData", 273, Maker) {}
         AnimeClipData(int addr, Builder* Maker)
           : Instruction(addr, "AnimeClipData", 273, Maker) {}
-        AnimeClipData(int& addr, QByteArray& content, Builder* Maker)
+        AnimeClipData(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "AnimeClipData", 273, Maker) {
 
-            QByteArray first_integer_bytes = ReadSubByteArray(content, addr, 4);
+            ssd::Buffer first_integer_bytes = ReadSubByteArray(content, addr, 4);
             this->AddOperande(operande(addr, "int", first_integer_bytes));
-            QByteArray str = ReadStringSubByteArray(content, addr);
+            ssd::Buffer str = ReadStringSubByteArray(content, addr);
             this->AddOperande(operande(addr, "string", str));
-            QByteArray remaining = ReadSubByteArray(content, addr, (0x20) - str.size());
+            ssd::Buffer remaining = ReadSubByteArray(content, addr, (0x20) - str.size());
             operande fill = operande(addr, "fill", remaining);
             fill.setBytesToFill((0x20));
             this->AddOperande(fill);
@@ -758,7 +758,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "FieldMonsterData", 266, Maker) {}
         FieldMonsterData(int addr, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 266, Maker) {}
-        FieldMonsterData(int& addr, QByteArray& content, Builder* Maker)
+        FieldMonsterData(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 266, Maker) {
 
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -782,7 +782,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "FieldMonsterData", 267, Maker) {}
         FieldFollowData(int addr, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 267, Maker) {}
-        FieldFollowData(int& addr, QByteArray& content, Builder* Maker)
+        FieldFollowData(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 267, Maker) {
 
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -802,10 +802,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "FC_autoX", 268, Maker) {}
         FC_autoX(int addr, Builder* Maker)
           : Instruction(addr, "FC_autoX", 268, Maker) {}
-        FC_autoX(int& addr, QByteArray& content, Builder* Maker)
+        FC_autoX(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "FC_autoX", 268, Maker) {
 
-            QByteArray things = ReadStringSubByteArray(content, addr);
+            ssd::Buffer things = ReadStringSubByteArray(content, addr);
             this->AddOperande(operande(addr, "string", things));
         }
     };
@@ -819,7 +819,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "BookData99", 269, Maker) {}
         BookData99(int addr, Builder* Maker)
           : Instruction(addr, "BookData99", 269, Maker) {}
-        BookData99(int& addr, QByteArray& content, Builder* Maker)
+        BookData99(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "BookData99", 269, Maker) {
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -835,16 +835,16 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "BookDataX", 270, Maker) {}
         BookDataX(int addr, Builder* Maker)
           : Instruction(addr, "BookDataX", 270, Maker) {}
-        BookDataX(int& addr, QByteArray& content, Builder* Maker)
+        BookDataX(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "BookDataX", 270, Maker) {
-            QByteArray control_short = ReadSubByteArray(content, addr, 2);
+            ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             int16_t control = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short)); // 3
             if (control > 0) {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                QByteArray title = ReadStringSubByteArray(content, addr);
+                ssd::Buffer title = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", title));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x10 - title.size());
+                ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x10 - title.size());
                 operande fill = operande(addr, "bytearray", remaining);
                 fill.setBytesToFill(0x10);
                 this->AddOperande(fill);
@@ -874,15 +874,15 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "StyleName", 274, Maker) {}
         StyleName(int addr, Builder* Maker)
           : Instruction(addr, "StyleName", 274, Maker) {}
-        StyleName(int& addr, QByteArray& content, Builder* Maker)
+        StyleName(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "StyleName", 274, Maker) {
 
             unsigned char current_byte = content[addr];
             while (current_byte != 0x01) {
 
-                QByteArray str = ReadStringSubByteArray(content, addr);
+                ssd::Buffer str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(operande(addr, "string", str));
-                QByteArray remaining = ReadSubByteArray(content, addr, 0x40 - str.size());
+                ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x40 - str.size());
                 operande fill = operande(addr, "fill", remaining);
                 fill.setBytesToFill(0x40);
                 this->AddOperande(fill);
@@ -899,7 +899,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "Instruction 0", 0, Maker) {}
         OPCode0(int addr, Builder* Maker)
           : Instruction(addr, "Instruction 0", 0, Maker) {}
-        OPCode0(int& addr, [[maybe_unused]] QByteArray& content, Builder* Maker)
+        OPCode0(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "Instruction 0", 0, Maker) {
             addr++;
         }
@@ -912,7 +912,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "Return", 1, Maker) {}
         OPCode1(int addr, Builder* Maker)
           : Instruction(addr, "Return", 1, Maker) {}
-        OPCode1(int& addr, [[maybe_unused]] QByteArray& content, Builder* Maker)
+        OPCode1(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "Return", 1, Maker) {
             addr++;
         }
@@ -925,18 +925,18 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "Call", 2, Maker) {}
         OPCode2(int addr, Builder* Maker)
           : Instruction(addr, "Call", 2, Maker) {}
-        OPCode2(int& addr, QByteArray& content, Builder* Maker)
+        OPCode2(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "Call", 2, Maker) {
             addr++;
 
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
-            QByteArray function_name = ReadStringSubByteArray(content, addr);
+            ssd::Buffer function_name = ReadStringSubByteArray(content, addr);
             this->AddOperande(operande(addr, "string", function_name));
-            QByteArray control_byte2_arr = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte2_arr = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte2_arr));
 
-            int control_byte2 = (int)control_byte2_arr[0];
+            int control_byte2 = (uint8_t)control_byte2_arr[0];
 
             if (control_byte2 != 0) {
                 for (int i = 0; i < control_byte2; i++) {
@@ -953,7 +953,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 3, Maker) {}
         OPCode3(int addr, Builder* Maker)
           : Instruction(addr, "???", 3, Maker) {}
-        OPCode3(int& addr, QByteArray& content, Builder* Maker)
+        OPCode3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 3, Maker) {
             addr++;
             this->AddOperande(operande(addr, "pointer", ReadSubByteArray(content, addr, 4)));
@@ -967,7 +967,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 4, Maker) {}
         OPCode4(int addr, Builder* Maker)
           : Instruction(addr, "???", 4, Maker) {}
-        OPCode4(int& addr, QByteArray& content, Builder* Maker)
+        OPCode4(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 4, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -982,7 +982,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 5, Maker) {}
         OPCode5(int addr, Builder* Maker)
           : Instruction(addr, "???", 5, Maker) {}
-        OPCode5(int& addr, QByteArray& content, Builder* Maker)
+        OPCode5(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 5, Maker) {
             addr++;
             sub05(addr, content, this);
@@ -997,17 +997,17 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 6, Maker) {}
         OPCode6(int addr, Builder* Maker)
           : Instruction(addr, "???", 6, Maker) {}
-        OPCode6(int& addr, QByteArray& content, Builder* Maker)
+        OPCode6(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 6, Maker) {
             addr++;
             sub05(addr, content, this);
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
 
-            QByteArray ptr;
+            ssd::Buffer ptr;
             this->AddOperande(operande(addr, "byte", control_byte));
 
             for (int i = 0; i < (unsigned char)control_byte[0]; i++) {
-                QByteArray iVar3_arr = ReadSubByteArray(content, addr, 4);
+                ssd::Buffer iVar3_arr = ReadSubByteArray(content, addr, 4);
                 this->AddOperande(operande(addr, "int", iVar3_arr));
 
                 ptr = ReadSubByteArray(content, addr, 4);
@@ -1025,10 +1025,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 7, Maker) {}
         OPCode7(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x7, Maker) {}
-        OPCode7(int& addr, QByteArray& content, Builder* Maker)
+        OPCode7(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -1056,7 +1056,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 8, Maker) {}
         OPCode8(int addr, Builder* Maker)
           : Instruction(addr, "???", 8, Maker) {}
-        OPCode8(int& addr, QByteArray& content, Builder* Maker)
+        OPCode8(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 8, Maker) {
             addr++;
             sub05(addr, content, this);
@@ -1070,10 +1070,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0xA, Maker) {}
         OPCodeA(int addr, Builder* Maker)
           : Instruction(addr, "???", 0xA, Maker) {}
-        OPCodeA(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xA, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             sub05(addr, content, this);
@@ -1087,13 +1087,13 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0xB, Maker) {}
         OPCodeB(int addr, Builder* Maker)
           : Instruction(addr, "???", 0xB, Maker) {}
-        OPCodeB(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeB(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xB, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
-            QByteArray control_byte2;
+            ssd::Buffer control_byte2;
             do {
                 control_byte2 = ReadSubByteArray(content, addr, 1);
                 this->AddOperande(operande(addr, "byte", control_byte2));
@@ -1122,7 +1122,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0xC, Maker) {}
         OPCodeC(int addr, Builder* Maker)
           : Instruction(addr, "???", 0xC, Maker) {}
-        OPCodeC(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xC, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -1137,10 +1137,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x0D, Maker) {}
         OPCode0D(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x0D, Maker) {}
-        OPCode0D(int& addr, QByteArray& content, Builder* Maker)
+        OPCode0D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x0D, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
@@ -1159,7 +1159,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0xE, Maker) {}
         OPCodeE(int addr, Builder* Maker)
           : Instruction(addr, "???", 0xE, Maker) {}
-        OPCodeE(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeE(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xE, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -1175,7 +1175,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x10, Maker) {}
         OPCode10(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x10, Maker) {}
-        OPCode10(int& addr, QByteArray& content, Builder* Maker)
+        OPCode10(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x10, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1189,7 +1189,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x11, Maker) {}
         OPCode11(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x11, Maker) {}
-        OPCode11(int& addr, QByteArray& content, Builder* Maker)
+        OPCode11(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x11, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1203,7 +1203,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x12, Maker) {}
         OPCode12(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x12, Maker) {}
-        OPCode12(int& addr, QByteArray& content, Builder* Maker)
+        OPCode12(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x12, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1217,7 +1217,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x13, Maker) {}
         OPCode13(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x13, Maker) {}
-        OPCode13(int& addr, QByteArray& content, Builder* Maker)
+        OPCode13(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x13, Maker) {
             addr++;
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -1231,7 +1231,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x14, Maker) {}
         OPCode14(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x14, Maker) {}
-        OPCode14(int& addr, QByteArray& content, Builder* Maker)
+        OPCode14(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x14, Maker) {
             addr++;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -1245,7 +1245,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x15, Maker) {}
         OPCode15(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x15, Maker) {}
-        OPCode15(int& addr, QByteArray& content, Builder* Maker)
+        OPCode15(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x15, Maker) {
             addr++;
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -1259,7 +1259,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x16, Maker) {}
         OPCode16(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x16, Maker) {}
-        OPCode16(int& addr, QByteArray& content, Builder* Maker)
+        OPCode16(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x16, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1273,7 +1273,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x17, Maker) {}
         OPCode17(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x17, Maker) {}
-        OPCode17(int& addr, QByteArray& content, Builder* Maker)
+        OPCode17(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x17, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1288,10 +1288,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x18, Maker) {}
         OPCode18(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x18, Maker) {}
-        OPCode18(int& addr, QByteArray& content, Builder* Maker)
+        OPCode18(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x18, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             sub05(addr, content, this);
         }
@@ -1304,10 +1304,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x19, Maker) {}
         OPCode19(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x19, Maker) {}
-        OPCode19(int& addr, QByteArray& content, Builder* Maker)
+        OPCode19(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x19, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
@@ -1320,7 +1320,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x1A, Maker) {}
         OPCode1A(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x1A, Maker) {}
-        OPCode1A(int& addr, QByteArray& content, Builder* Maker)
+        OPCode1A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1A, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -1335,7 +1335,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x1D, Maker) {}
         OPCode1D(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x1D, Maker) {}
-        OPCode1D(int& addr, QByteArray& content, Builder* Maker)
+        OPCode1D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1D, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1371,11 +1371,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x1E, Maker) {}
         OPCode1E(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x1E, Maker) {}
-        OPCode1E(int& addr, QByteArray& content, Builder* Maker)
+        OPCode1E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1E, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
@@ -1389,11 +1389,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x1F, Maker) {}
         OPCode1F(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x1F, Maker) {}
-        OPCode1F(int& addr, QByteArray& content, Builder* Maker)
+        OPCode1F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1F, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
         }
     };
@@ -1405,10 +1405,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x20, Maker) {}
         OPCode20(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x20, Maker) {}
-        OPCode20(int& addr, QByteArray& content, Builder* Maker)
+        OPCode20(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x20, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             fun_1403c90e0(addr, content, this, 0);
             fun_1403c90e0(addr, content, this, 0);
@@ -1424,7 +1424,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x21, Maker) {}
         OPCode21(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x21, Maker) {}
-        OPCode21(int& addr, QByteArray& content, Builder* Maker)
+        OPCode21(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x21, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -1438,7 +1438,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x22, Maker) {}
         OPCode22(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x22, Maker) {}
-        OPCode22(int& addr, QByteArray& content, Builder* Maker)
+        OPCode22(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x22, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1453,10 +1453,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x23, Maker) {}
         OPCode23(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x23, Maker) {}
-        OPCode23(int& addr, QByteArray& content, Builder* Maker)
+        OPCode23(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x23, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -1489,7 +1489,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x24, Maker) {}
         OPCode24(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x24, Maker) {}
-        OPCode24(int& addr, QByteArray& content, Builder* Maker)
+        OPCode24(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x24, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1505,7 +1505,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x25, Maker) {}
         OPCode25(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x25, Maker) {}
-        OPCode25(int& addr, QByteArray& content, Builder* Maker)
+        OPCode25(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x25, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -1519,7 +1519,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x26, Maker) {}
         OPCode26(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x26, Maker) {}
-        OPCode26(int& addr, [[maybe_unused]] QByteArray& content, Builder* Maker)
+        OPCode26(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x26, Maker) {
             addr++;
         }
@@ -1532,7 +1532,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x27, Maker) {}
         OPCode27(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x27, Maker) {}
-        OPCode27(int& addr, QByteArray& content, Builder* Maker)
+        OPCode27(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x27, Maker) {
             addr++;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
@@ -1547,7 +1547,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x28, Maker) {}
         OPCode28(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x28, Maker) {}
-        OPCode28(int& addr, QByteArray& content, Builder* Maker)
+        OPCode28(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x28, Maker) {
             addr++;
             fun_1403c90e0(addr, content, this, 0);
@@ -1563,11 +1563,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x29, Maker) {}
         OPCode29(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x29, Maker) {}
-        OPCode29(int& addr, QByteArray& content, Builder* Maker)
+        OPCode29(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x29, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
-            QByteArray control_byte2 = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "byte", control_byte2));
             if ((unsigned char)control_byte2[0] < 4) {
@@ -1643,10 +1643,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x2A, Maker) {}
         OPCode2A(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x2A, Maker) {}
-        OPCode2A(int& addr, QByteArray& content, Builder* Maker)
+        OPCode2A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2A, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
@@ -1671,10 +1671,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x2B, Maker) {}
         OPCode2B(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x2B, Maker) {}
-        OPCode2B(int& addr, QByteArray& content, Builder* Maker)
+        OPCode2B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2B, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -1706,7 +1706,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x2C, Maker) {}
         OPCode2C(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x2C, Maker) {}
-        OPCode2C(int& addr, QByteArray& content, Builder* Maker)
+        OPCode2C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2C, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1733,7 +1733,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x2D, Maker) {}
         OPCode2D(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x2D, Maker) {}
-        OPCode2D(int& addr, QByteArray& content, Builder* Maker)
+        OPCode2D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2D, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -1749,13 +1749,13 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x2E, Maker) {}
         OPCode2E(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x2E, Maker) {}
-        OPCode2E(int& addr, QByteArray& content, Builder* Maker)
+        OPCode2E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2E, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            QByteArray control_byte2 = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte2));
 
             switch ((unsigned char)control_byte[0]) {
@@ -1780,10 +1780,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x2F, Maker) {}
         OPCode2F(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x2F, Maker) {}
-        OPCode2F(int& addr, QByteArray& content, Builder* Maker)
+        OPCode2F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2F, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
@@ -1852,10 +1852,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x30, Maker) {}
         OPCode30(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x30, Maker) {}
-        OPCode30(int& addr, QByteArray& content, Builder* Maker)
+        OPCode30(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x30, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
@@ -1879,11 +1879,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x31, Maker) {}
         OPCode31(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x31, Maker) {}
-        OPCode31(int& addr, QByteArray& content, Builder* Maker)
+        OPCode31(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x31, Maker) {
             addr++;
 
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -1903,10 +1903,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x32, Maker) {}
         OPCode32(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x32, Maker) {}
-        OPCode32(int& addr, QByteArray& content, Builder* Maker)
+        OPCode32(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x32, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -2045,10 +2045,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x33, Maker) {}
         OPCode33(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x33, Maker) {}
-        OPCode33(int& addr, QByteArray& content, Builder* Maker)
+        OPCode33(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x33, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00:
@@ -2117,7 +2117,7 @@ class CS4Builder : public Builder {
                     this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 case 0x12: {
-                    QByteArray control_byte2 = ReadSubByteArray(content, addr, 1);
+                    ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
                     this->AddOperande(operande(addr, "byte", control_byte2));
                     switch ((uint)control_byte2[0]) {
                         case 0:
@@ -2369,7 +2369,7 @@ class CS4Builder : public Builder {
 
                 case 0x62: {
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    QByteArray byte = ReadSubByteArray(content, addr, 1);
+                    ssd::Buffer byte = ReadSubByteArray(content, addr, 1);
                     this->AddOperande(operande(addr, "byte", byte));
 
                     break;
@@ -2397,7 +2397,7 @@ class CS4Builder : public Builder {
                     break;
                 }
                 case 0x5C: {
-                    QByteArray byte2 = ReadSubByteArray(content, addr, 1);
+                    ssd::Buffer byte2 = ReadSubByteArray(content, addr, 1);
                     this->AddOperande(operande(addr, "byte", byte2));
 
                     break;
@@ -2617,7 +2617,7 @@ class CS4Builder : public Builder {
                     break;
                 }
                 case 0xB7: {
-                    QByteArray byte2 = ReadSubByteArray(content, addr, 1);
+                    ssd::Buffer byte2 = ReadSubByteArray(content, addr, 1);
                     this->AddOperande(operande(addr, "byte", byte2));
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -2752,10 +2752,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x34, Maker) {}
         OPCode34(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x34, Maker) {}
-        OPCode34(int& addr, QByteArray& content, Builder* Maker)
+        OPCode34(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x34, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -2772,10 +2772,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x35, Maker) {}
         OPCode35(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x35, Maker) {}
-        OPCode35(int& addr, QByteArray& content, Builder* Maker)
+        OPCode35(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x35, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -2789,10 +2789,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x36, Maker) {}
         OPCode36(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x36, Maker) {}
-        OPCode36(int& addr, QByteArray& content, Builder* Maker)
+        OPCode36(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x36, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -3002,7 +3002,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x37, Maker) {}
         OPCode37(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x37, Maker) {}
-        OPCode37(int& addr, QByteArray& content, Builder* Maker)
+        OPCode37(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x37, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3020,7 +3020,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x38, Maker) {}
         OPCode38(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x38, Maker) {}
-        OPCode38(int& addr, QByteArray& content, Builder* Maker)
+        OPCode38(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x38, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3038,7 +3038,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x39, Maker) {}
         OPCode39(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x39, Maker) {}
-        OPCode39(int& addr, QByteArray& content, Builder* Maker)
+        OPCode39(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x39, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3058,10 +3058,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x3A, Maker) {}
         OPCode3A(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x3A, Maker) {}
-        OPCode3A(int& addr, QByteArray& content, Builder* Maker)
+        OPCode3A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3A, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
@@ -3113,10 +3113,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x3B, Maker) {}
         OPCode3B(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x3B, Maker) {}
-        OPCode3B(int& addr, QByteArray& content, Builder* Maker)
+        OPCode3B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3B, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -3376,10 +3376,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x3C, Maker) {}
         OPCode3C(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x3C, Maker) {}
-        OPCode3C(int& addr, QByteArray& content, Builder* Maker)
+        OPCode3C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3C, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
@@ -3413,7 +3413,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x3D, Maker) {}
         OPCode3D(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x3D, Maker) {}
-        OPCode3D(int& addr, QByteArray& content, Builder* Maker)
+        OPCode3D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3D, Maker) {
             addr++;
 
@@ -3431,7 +3431,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x3E, Maker) {}
         OPCode3E(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x3E, Maker) {}
-        OPCode3E(int& addr, QByteArray& content, Builder* Maker)
+        OPCode3E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3E, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3448,7 +3448,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x3F, Maker) {}
         OPCode3F(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x3F, Maker) {}
-        OPCode3F(int& addr, QByteArray& content, Builder* Maker)
+        OPCode3F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3F, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3462,12 +3462,12 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x40, Maker) {}
         OPCode40(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x40, Maker) {}
-        OPCode40(int& addr, QByteArray& content, Builder* Maker)
+        OPCode40(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x40, Maker) {
             addr++;
 
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 1
-            QByteArray control_short = ReadSubByteArray(content, addr, 2);
+            ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             int16_t control = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));                      // 3
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4))); // 5
@@ -3499,11 +3499,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x41", 0x41, Maker) {}
         OPCode41(int addr, Builder* Maker)
           : Instruction(addr, "0x41", 0x41, Maker) {}
-        OPCode41(int& addr, QByteArray& content, Builder* Maker)
+        OPCode41(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x41", 0x41, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte)); // 1
             if ((unsigned char)control_byte[0] == 0x04) {
                 this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -3522,10 +3522,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x42, Maker) {}
         OPCode42(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x42, Maker) {}
-        OPCode42(int& addr, QByteArray& content, Builder* Maker)
+        OPCode42(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x42, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte)); // 1
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3545,10 +3545,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x43, Maker) {}
         OPCode43(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x43, Maker) {}
-        OPCode43(int& addr, QByteArray& content, Builder* Maker)
+        OPCode43(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x43, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
@@ -3583,7 +3583,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x44", 0x44, Maker) {}
         OPCode44(int addr, Builder* Maker)
           : Instruction(addr, "0x44", 0x44, Maker) {}
-        OPCode44(int& addr, QByteArray& content, Builder* Maker)
+        OPCode44(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x44", 0x44, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3601,7 +3601,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x45", 0x45, Maker) {}
         OPCode45(int addr, Builder* Maker)
           : Instruction(addr, "0x45", 0x45, Maker) {}
-        OPCode45(int& addr, QByteArray& content, Builder* Maker)
+        OPCode45(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x45", 0x45, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3620,11 +3620,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x46", 0x46, Maker) {}
         OPCode46(int addr, Builder* Maker)
           : Instruction(addr, "0x46", 0x46, Maker) {}
-        OPCode46(int& addr, QByteArray& content, Builder* Maker)
+        OPCode46(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x46", 0x46, Maker) {
 
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3651,7 +3651,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x47, Maker) {}
         OPCode47(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x47, Maker) {}
-        OPCode47(int& addr, QByteArray& content, Builder* Maker)
+        OPCode47(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x47, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -3667,10 +3667,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x48, Maker) {}
         OPCode48(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x48, Maker) {}
-        OPCode48(int& addr, QByteArray& content, Builder* Maker)
+        OPCode48(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x48, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3692,11 +3692,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x49", 0x49, Maker) {}
         OPCode49(int addr, Builder* Maker)
           : Instruction(addr, "0x49", 0x49, Maker) {}
-        OPCode49(int& addr, QByteArray& content, Builder* Maker)
+        OPCode49(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x49", 0x49, Maker) {
 
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -3790,7 +3790,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x4A", 0x4A, Maker) {}
         OPCode4A(int addr, Builder* Maker)
           : Instruction(addr, "0x4A", 0x4A, Maker) {}
-        OPCode4A(int& addr, QByteArray& content, Builder* Maker)
+        OPCode4A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4A", 0x4A, Maker) {
 
             addr++;
@@ -3810,11 +3810,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x4B", 0x4B, Maker) {}
         OPCode4B(int addr, Builder* Maker)
           : Instruction(addr, "0x4B", 0x4B, Maker) {}
-        OPCode4B(int& addr, QByteArray& content, Builder* Maker)
+        OPCode4B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4B", 0x4B, Maker) {
 
             addr++;
-            QByteArray control_short = ReadSubByteArray(content, addr, 2);
+            ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr, "short", control_short));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3841,7 +3841,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x4C", 0x4C, Maker) {}
         OPCode4C(int addr, Builder* Maker)
           : Instruction(addr, "0x4C", 0x4C, Maker) {}
-        OPCode4C(int& addr, QByteArray& content, Builder* Maker)
+        OPCode4C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4C", 0x4C, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3860,7 +3860,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x4D", 0x4D, Maker) {}
         OPCode4D(int addr, Builder* Maker)
           : Instruction(addr, "0x4D", 0x4D, Maker) {}
-        OPCode4D(int& addr, QByteArray& content, Builder* Maker)
+        OPCode4D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4D", 0x4D, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -3875,7 +3875,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x4E", 0x4E, Maker) {}
         OPCode4E(int addr, Builder* Maker)
           : Instruction(addr, "0x4E", 0x4E, Maker) {}
-        OPCode4E(int& addr, QByteArray& content, Builder* Maker)
+        OPCode4E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4E", 0x4E, Maker) {
             addr++;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3891,11 +3891,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x4F", 0x4F, Maker) {}
         OPCode4F(int addr, Builder* Maker)
           : Instruction(addr, "0x4F", 0x4F, Maker) {}
-        OPCode4F(int& addr, QByteArray& content, Builder* Maker)
+        OPCode4F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4F", 0x4F, Maker) {
 
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
@@ -3941,7 +3941,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x50", 0x50, Maker) {}
         OPCode50(int addr, Builder* Maker)
           : Instruction(addr, "0x50", 0x50, Maker) {}
-        OPCode50(int& addr, QByteArray& content, Builder* Maker)
+        OPCode50(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x50", 0x50, Maker) {
             addr++;
             fun_1403c90e0(addr, content, this, 1);
@@ -3957,7 +3957,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x51", 0x51, Maker) {}
         OPCode51(int addr, Builder* Maker)
           : Instruction(addr, "0x51", 0x51, Maker) {}
-        OPCode51(int& addr, QByteArray& content, Builder* Maker)
+        OPCode51(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x51", 0x51, Maker) {
             addr++;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -3980,7 +3980,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x52", 0x52, Maker) {}
         OPCode52(int addr, Builder* Maker)
           : Instruction(addr, "0x52", 0x52, Maker) {}
-        OPCode52(int& addr, QByteArray& content, Builder* Maker)
+        OPCode52(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x52", 0x52, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -3995,10 +3995,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x53", 0x53, Maker) {}
         OPCode53(int addr, Builder* Maker)
           : Instruction(addr, "0x53", 0x53, Maker) {}
-        OPCode53(int& addr, QByteArray& content, Builder* Maker)
+        OPCode53(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x53", 0x53, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
@@ -4011,11 +4011,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x54, Maker) {}
         OPCode54(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x54, Maker) {}
-        OPCode54(int& addr, QByteArray& content, Builder* Maker)
+        OPCode54(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x54, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
-            QByteArray control_byte2;
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte2;
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
@@ -4326,10 +4326,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x55", 0x55, Maker) {}
         OPCode55(int addr, Builder* Maker)
           : Instruction(addr, "0x55", 0x55, Maker) {}
-        OPCode55(int& addr, QByteArray& content, Builder* Maker)
+        OPCode55(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x55", 0x55, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4359,10 +4359,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x56", 0x56, Maker) {}
         OPCode56(int addr, Builder* Maker)
           : Instruction(addr, "0x56", 0x56, Maker) {}
-        OPCode56(int& addr, QByteArray& content, Builder* Maker)
+        OPCode56(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x56", 0x56, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -4381,10 +4381,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x57", 0x57, Maker) {}
         OPCode57(int addr, Builder* Maker)
           : Instruction(addr, "0x57", 0x57, Maker) {}
-        OPCode57(int& addr, QByteArray& content, Builder* Maker)
+        OPCode57(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x57", 0x57, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
@@ -4397,10 +4397,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x58", 0x58, Maker) {}
         OPCode58(int addr, Builder* Maker)
           : Instruction(addr, "0x58", 0x58, Maker) {}
-        OPCode58(int& addr, QByteArray& content, Builder* Maker)
+        OPCode58(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x58", 0x58, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
         }
     };
@@ -4412,10 +4412,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x5A", 0x5A, Maker) {}
         OPCode5A(int addr, Builder* Maker)
           : Instruction(addr, "0x5A", 0x5A, Maker) {}
-        OPCode5A(int& addr, QByteArray& content, Builder* Maker)
+        OPCode5A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x5A", 0x5A, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             if ((unsigned char)control_byte[0] == 0) {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4433,7 +4433,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x5B", 0x5B, Maker) {}
         OPCode5B(int addr, Builder* Maker)
           : Instruction(addr, "0x5B", 0x5B, Maker) {}
-        OPCode5B(int& addr, QByteArray& content, Builder* Maker)
+        OPCode5B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x5B", 0x5B, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4449,7 +4449,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x5C, Maker) {}
         OPCode5C(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x5C, Maker) {}
-        OPCode5C(int& addr, QByteArray& content, Builder* Maker)
+        OPCode5C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x5C, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4465,7 +4465,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x5D, Maker) {}
         OPCode5D(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x5D, Maker) {}
-        OPCode5D(int& addr, QByteArray& content, Builder* Maker)
+        OPCode5D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x5D, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4492,10 +4492,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x5E, Maker) {}
         OPCode5E(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x5E, Maker) {}
-        OPCode5E(int& addr, QByteArray& content, Builder* Maker)
+        OPCode5E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x5E, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -4526,7 +4526,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x60, Maker) {}
         OPCode60(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x60, Maker) {}
-        OPCode60(int& addr, QByteArray& content, Builder* Maker)
+        OPCode60(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x60, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4542,11 +4542,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x61, Maker) {}
         OPCode61(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x61, Maker) {}
-        OPCode61(int& addr, QByteArray& content, Builder* Maker)
+        OPCode61(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x61, Maker) {
             addr++;
 
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -4576,7 +4576,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x62, Maker) {}
         OPCode62(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x62, Maker) {}
-        OPCode62(int& addr, QByteArray& content, Builder* Maker)
+        OPCode62(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x62, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4591,12 +4591,12 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x63, Maker) {}
         OPCode63(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x63, Maker) {}
-        OPCode63(int& addr, QByteArray& content, Builder* Maker)
+        OPCode63(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x63, Maker) {
             addr++;
-            QByteArray control_short = ReadSubByteArray(content, addr, 2);
+            ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr, "short", control_short));
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
         }
     };
@@ -4608,10 +4608,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x64, Maker) {}
         OPCode64(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x64, Maker) {}
-        OPCode64(int& addr, QByteArray& content, Builder* Maker)
+        OPCode64(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x64, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -4629,10 +4629,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x65, Maker) {}
         OPCode65(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x65, Maker) {}
-        OPCode65(int& addr, QByteArray& content, Builder* Maker)
+        OPCode65(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x65, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             switch ((unsigned char)control_byte[0]) {
@@ -4655,10 +4655,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x66, Maker) {}
         OPCode66(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x66, Maker) {}
-        OPCode66(int& addr, QByteArray& content, Builder* Maker)
+        OPCode66(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x66, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
@@ -4694,10 +4694,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x67, Maker) {}
         OPCode67(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x67, Maker) {}
-        OPCode67(int& addr, QByteArray& content, Builder* Maker)
+        OPCode67(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x67, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
@@ -4716,10 +4716,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x68, Maker) {}
         OPCode68(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x68, Maker) {}
-        OPCode68(int& addr, QByteArray& content, Builder* Maker)
+        OPCode68(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x68, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             switch ((unsigned char)control_byte[0]) {
@@ -4764,10 +4764,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x69, Maker) {}
         OPCode69(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x69, Maker) {}
-        OPCode69(int& addr, QByteArray& content, Builder* Maker)
+        OPCode69(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x69, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -4835,11 +4835,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x6A, Maker) {}
         OPCode6A(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x6A, Maker) {}
-        OPCode6A(int& addr, QByteArray& content, Builder* Maker)
+        OPCode6A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x6A, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -4889,10 +4889,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x6B", 0x6B, Maker) {}
         OPCode6B(int addr, Builder* Maker)
           : Instruction(addr, "0x6B", 0x6B, Maker) {}
-        OPCode6B(int& addr, QByteArray& content, Builder* Maker)
+        OPCode6B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x6B", 0x6B, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4909,7 +4909,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x6C, Maker) {}
         OPCode6C(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x6C, Maker) {}
-        OPCode6C(int& addr, QByteArray& content, Builder* Maker)
+        OPCode6C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x6C, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4924,7 +4924,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x6E, Maker) {}
         OPCode6E(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x6E, Maker) {}
-        OPCode6E(int& addr, QByteArray& content, Builder* Maker)
+        OPCode6E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x6E, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -4943,10 +4943,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x6F", 0x6F, Maker) {}
         OPCode6F(int addr, Builder* Maker)
           : Instruction(addr, "0x6F", 0x6F, Maker) {}
-        OPCode6F(int& addr, QByteArray& content, Builder* Maker)
+        OPCode6F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x6F", 0x6F, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -4960,10 +4960,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x70, Maker) {}
         OPCode70(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x70, Maker) {}
-        OPCode70(int& addr, QByteArray& content, Builder* Maker)
+        OPCode70(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x70, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -5036,7 +5036,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x71, Maker) {}
         OPCode71(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x71, Maker) {}
-        OPCode71(int& addr, QByteArray& content, Builder* Maker)
+        OPCode71(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x71, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -5054,13 +5054,13 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x72, Maker) {}
         OPCode72(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x72, Maker) {}
-        OPCode72(int& addr, QByteArray& content, Builder* Maker)
+        OPCode72(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x72, Maker) {
             addr++;
-            QByteArray control_short = ReadSubByteArray(content, addr, 2);
+            ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr, "short", control_short));
             uint16_t control_shrt = ReadShortFromByteArray(0, control_short);
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             if ((unsigned char)(control_byte[0] - 1U) < 2) {
                 this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5091,11 +5091,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x73, Maker) {}
         OPCode73(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x73, Maker) {}
-        OPCode73(int& addr, QByteArray& content, Builder* Maker)
+        OPCode73(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x73, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -5121,11 +5121,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x74, Maker) {}
         OPCode74(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x74, Maker) {}
-        OPCode74(int& addr, QByteArray& content, Builder* Maker)
+        OPCode74(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x74, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -5161,11 +5161,11 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x75, Maker) {}
         OPCode75(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x75, Maker) {}
-        OPCode75(int& addr, QByteArray& content, Builder* Maker)
+        OPCode75(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x75, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
-            QByteArray control_byte2 = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "byte", control_byte2));
             if ((unsigned char)control_byte2[0] < 4) {
@@ -5212,7 +5212,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x76, Maker) {}
         OPCode76(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x76, Maker) {}
-        OPCode76(int& addr, QByteArray& content, Builder* Maker)
+        OPCode76(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x76, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5234,7 +5234,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x77, Maker) {}
         OPCode77(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x77, Maker) {}
-        OPCode77(int& addr, QByteArray& content, Builder* Maker)
+        OPCode77(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x77, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5248,10 +5248,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x78, Maker) {}
         OPCode78(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x78, Maker) {}
-        OPCode78(int& addr, QByteArray& content, Builder* Maker)
+        OPCode78(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x78, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
             switch ((unsigned char)control_byte[0]) {
@@ -5270,10 +5270,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x79, Maker) {}
         OPCode79(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x79, Maker) {}
-        OPCode79(int& addr, QByteArray& content, Builder* Maker)
+        OPCode79(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x79, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
@@ -5292,10 +5292,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x7A, Maker) {}
         OPCode7A(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x7A, Maker) {}
-        OPCode7A(int& addr, QByteArray& content, Builder* Maker)
+        OPCode7A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7A, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -5319,10 +5319,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x7B, Maker) {}
         OPCode7B(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x7B, Maker) {}
-        OPCode7B(int& addr, QByteArray& content, Builder* Maker)
+        OPCode7B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7B, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -5344,10 +5344,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x7C, Maker) {}
         OPCode7C(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x7C, Maker) {}
-        OPCode7C(int& addr, QByteArray& content, Builder* Maker)
+        OPCode7C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7C, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -5374,7 +5374,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x7D, Maker) {}
         OPCode7D(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x7D, Maker) {}
-        OPCode7D(int& addr, QByteArray& content, Builder* Maker)
+        OPCode7D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7D, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5389,10 +5389,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x7E, Maker) {}
         OPCode7E(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x7E, Maker) {}
-        OPCode7E(int& addr, QByteArray& content, Builder* Maker)
+        OPCode7E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7E, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -5427,7 +5427,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x80, Maker) {}
         OPCode80(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x80, Maker) {}
-        OPCode80(int& addr, QByteArray& content, Builder* Maker)
+        OPCode80(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x80, Maker) {
             addr++;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -5441,7 +5441,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x82, Maker) {}
         OPCode82(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x82, Maker) {}
-        OPCode82(int& addr, QByteArray& content, Builder* Maker)
+        OPCode82(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x82, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5463,7 +5463,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x83, Maker) {}
         OPCode83(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x83, Maker) {}
-        OPCode83(int& addr, QByteArray& content, Builder* Maker)
+        OPCode83(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x83, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5480,10 +5480,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "???", 0x84, Maker) {}
         OPCode84(int addr, Builder* Maker)
           : Instruction(addr, "???", 0x84, Maker) {}
-        OPCode84(int& addr, QByteArray& content, Builder* Maker)
+        OPCode84(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x84, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
@@ -5491,7 +5491,7 @@ class CS4Builder : public Builder {
                 case 3: { // not sure
                     this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    QByteArray control_byte2 = ReadSubByteArray(content, addr, 1);
+                    ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
                     this->AddOperande(operande(addr, "byte", control_byte2));
                     break;
                 }
@@ -5512,10 +5512,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x86", 0x86, Maker) {}
         OPCode86(int addr, Builder* Maker)
           : Instruction(addr, "0x86", 0x86, Maker) {}
-        OPCode86(int& addr, QByteArray& content, Builder* Maker)
+        OPCode86(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x86", 0x86, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 2
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 4
@@ -5537,10 +5537,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x87", 0x87, Maker) {}
         OPCode87(int addr, Builder* Maker)
           : Instruction(addr, "0x87", 0x87, Maker) {}
-        OPCode87(int& addr, QByteArray& content, Builder* Maker)
+        OPCode87(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x87", 0x87, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
@@ -5553,7 +5553,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x88", 0x88, Maker) {}
         OPCode88(int addr, Builder* Maker)
           : Instruction(addr, "0x88", 0x88, Maker) {}
-        OPCode88(int& addr, QByteArray& content, Builder* Maker)
+        OPCode88(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x88", 0x88, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5567,7 +5567,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x89", 0x89, Maker) {}
         OPCode89(int addr, Builder* Maker)
           : Instruction(addr, "0x89", 0x89, Maker) {}
-        OPCode89(int& addr, QByteArray& content, Builder* Maker)
+        OPCode89(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x89", 0x89, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5581,10 +5581,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x8A", 0x8A, Maker) {}
         OPCode8A(int addr, Builder* Maker)
           : Instruction(addr, "0x8A", 0x8A, Maker) {}
-        OPCode8A(int& addr, QByteArray& content, Builder* Maker)
+        OPCode8A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8A", 0x8A, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -5657,7 +5657,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x8B", 0x8B, Maker) {}
         OPCode8B(int addr, Builder* Maker)
           : Instruction(addr, "0x8B", 0x8B, Maker) {}
-        OPCode8B(int& addr, QByteArray& content, Builder* Maker)
+        OPCode8B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8B", 0x8B, Maker) {
             addr++;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -5676,10 +5676,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x8C", 0x8C, Maker) {}
         OPCode8C(int addr, Builder* Maker)
           : Instruction(addr, "0x8C", 0x8C, Maker) {}
-        OPCode8C(int& addr, QByteArray& content, Builder* Maker)
+        OPCode8C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8C", 0x8C, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -5704,7 +5704,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x8D", 0x8D, Maker) {}
         OPCode8D(int addr, Builder* Maker)
           : Instruction(addr, "0x8D", 0x8D, Maker) {}
-        OPCode8D(int& addr, QByteArray& content, Builder* Maker)
+        OPCode8D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8D", 0x8D, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5722,7 +5722,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x8E", 0x8E, Maker) {}
         OPCode8E(int addr, Builder* Maker)
           : Instruction(addr, "0x8E", 0x8E, Maker) {}
-        OPCode8E(int& addr, QByteArray& content, Builder* Maker)
+        OPCode8E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8E", 0x8E, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5743,7 +5743,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x8F", 0x8F, Maker) {}
         OPCode8F(int addr, Builder* Maker)
           : Instruction(addr, "0x8F", 0x8F, Maker) {}
-        OPCode8F(int& addr, [[maybe_unused]] QByteArray& content, Builder* Maker)
+        OPCode8F(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8F", 0x8F, Maker) {
             addr++;
         }
@@ -5756,10 +5756,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x98", 0x98, Maker) {}
         OPCode98(int addr, Builder* Maker)
           : Instruction(addr, "0x98", 0x98, Maker) {}
-        OPCode98(int& addr, QByteArray& content, Builder* Maker)
+        OPCode98(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x98", 0x98, Maker) {
             addr++;
-            QByteArray control_short = ReadSubByteArray(content, addr, 2);
+            ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             this->AddOperande(operande(addr, "short", control_short));
             int16_t control_shrt = ReadShortFromByteArray(0, control_short);
             switch (control_shrt) {
@@ -5834,7 +5834,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x90", 0x90, Maker) {}
         OPCode90(int addr, Builder* Maker)
           : Instruction(addr, "0x90", 0x90, Maker) {}
-        OPCode90(int& addr, QByteArray& content, Builder* Maker)
+        OPCode90(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x90", 0x90, Maker) {
             addr++;
             this->AddOperande(operande(addr, "string", ReadStringSubByteArray(content, addr)));
@@ -5849,10 +5849,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x91", 0x91, Maker) {}
         OPCode91(int addr, Builder* Maker)
           : Instruction(addr, "0x91", 0x91, Maker) {}
-        OPCode91(int& addr, QByteArray& content, Builder* Maker)
+        OPCode91(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x91", 0x91, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -5878,10 +5878,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x92", 0x92, Maker) {}
         OPCode92(int addr, Builder* Maker)
           : Instruction(addr, "0x92", 0x92, Maker) {}
-        OPCode92(int& addr, QByteArray& content, Builder* Maker)
+        OPCode92(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x92", 0x92, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
@@ -5894,10 +5894,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x93", 0x93, Maker) {}
         OPCode93(int addr, Builder* Maker)
           : Instruction(addr, "0x93", 0x93, Maker) {}
-        OPCode93(int& addr, QByteArray& content, Builder* Maker)
+        OPCode93(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x93", 0x93, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((char)control_byte[0]) {
                 case 0:
@@ -5917,10 +5917,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x94", 0x94, Maker) {}
         OPCode94(int addr, Builder* Maker)
           : Instruction(addr, "0x94", 0x94, Maker) {}
-        OPCode94(int& addr, QByteArray& content, Builder* Maker)
+        OPCode94(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x94", 0x94, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -5937,10 +5937,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x95", 0x95, Maker) {}
         OPCode95(int addr, Builder* Maker)
           : Instruction(addr, "0x95", 0x95, Maker) {}
-        OPCode95(int& addr, QByteArray& content, Builder* Maker)
+        OPCode95(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x95", 0x95, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -5960,7 +5960,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x97", 0x97, Maker) {}
         OPCode97(int addr, Builder* Maker)
           : Instruction(addr, "0x97", 0x97, Maker) {}
-        OPCode97(int& addr, QByteArray& content, Builder* Maker)
+        OPCode97(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x97", 0x97, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -5976,7 +5976,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x99", 0x99, Maker) {}
         OPCode99(int addr, Builder* Maker)
           : Instruction(addr, "0x99", 0x99, Maker) {}
-        OPCode99(int& addr, QByteArray& content, Builder* Maker)
+        OPCode99(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x99", 0x99, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -5990,7 +5990,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x9A", 0x9A, Maker) {}
         OPCode9A(int addr, Builder* Maker)
           : Instruction(addr, "0x9A", 0x9A, Maker) {}
-        OPCode9A(int& addr, QByteArray& content, Builder* Maker)
+        OPCode9A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9A", 0x9A, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -6008,10 +6008,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x9B", 0x9B, Maker) {}
         OPCode9B(int addr, Builder* Maker)
           : Instruction(addr, "0x9B", 0x9B, Maker) {}
-        OPCode9B(int& addr, QByteArray& content, Builder* Maker)
+        OPCode9B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9B", 0x9B, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00:
@@ -6028,10 +6028,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x9C", 0x9C, Maker) {}
         OPCode9C(int addr, Builder* Maker)
           : Instruction(addr, "0x9C", 0x9C, Maker) {}
-        OPCode9C(int& addr, QByteArray& content, Builder* Maker)
+        OPCode9C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9C", 0x9C, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
@@ -6056,7 +6056,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x9D", 0x9D, Maker) {}
         OPCode9D(int addr, Builder* Maker)
           : Instruction(addr, "0x9D", 0x9D, Maker) {}
-        OPCode9D(int& addr, QByteArray& content, Builder* Maker)
+        OPCode9D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9D", 0x9D, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -6071,10 +6071,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0x9E", 0x9E, Maker) {}
         OPCode9E(int addr, Builder* Maker)
           : Instruction(addr, "0x9E", 0x9E, Maker) {}
-        OPCode9E(int& addr, QByteArray& content, Builder* Maker)
+        OPCode9E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9E", 0x9E, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
@@ -6100,7 +6100,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xA0", 0xA0, Maker) {}
         OPCodeA0(int addr, Builder* Maker)
           : Instruction(addr, "0xA0", 0xA0, Maker) {}
-        OPCodeA0(int& addr, [[maybe_unused]] QByteArray& content, Builder* Maker)
+        OPCodeA0(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA0", 0xA0, Maker) {
             addr++;
         }
@@ -6113,7 +6113,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xA1", 0xA1, Maker) {}
         OPCodeA1(int addr, Builder* Maker)
           : Instruction(addr, "0xA1", 0xA1, Maker) {}
-        OPCodeA1(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeA1(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA1", 0xA1, Maker) {
             addr++;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -6131,7 +6131,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xA3", 0xA3, Maker) {}
         OPCodeA3(int addr, Builder* Maker)
           : Instruction(addr, "0xA3", 0xA3, Maker) {}
-        OPCodeA3(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeA3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA3", 0xA3, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -6146,7 +6146,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xA4", 0xA4, Maker) {}
         OPCodeA4(int addr, Builder* Maker)
           : Instruction(addr, "0xA4", 0xA4, Maker) {}
-        OPCodeA4(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeA4(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA4", 0xA4, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -6181,7 +6181,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xA6", 0xA6, Maker) {}
         OPCodeA6(int addr, Builder* Maker)
           : Instruction(addr, "0xA6", 0xA6, Maker) {}
-        OPCodeA6(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeA6(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA6", 0xA6, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -6198,7 +6198,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xA8", 0xA8, Maker) {}
         OPCodeA8(int addr, Builder* Maker)
           : Instruction(addr, "0xA8", 0xA8, Maker) {}
-        OPCodeA8(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeA8(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA8", 0xA8, Maker) {
             addr++;
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -6212,7 +6212,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xA9", 0xA9, Maker) {}
         OPCodeA9(int addr, Builder* Maker)
           : Instruction(addr, "0xA9", 0xA9, Maker) {}
-        OPCodeA9(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeA9(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA9", 0xA9, Maker) {
             addr++;
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
@@ -6226,10 +6226,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xAA", 0xAA, Maker) {}
         OPCodeAA(int addr, Builder* Maker)
           : Instruction(addr, "0xAA", 0xAA, Maker) {}
-        OPCodeAA(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeAA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAA", 0xAA, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
@@ -6242,10 +6242,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xAB", 0xAB, Maker) {}
         OPCodeAB(int addr, Builder* Maker)
           : Instruction(addr, "0xAB", 0xAB, Maker) {}
-        OPCodeAB(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeAB(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAB", 0xAB, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
@@ -6277,10 +6277,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xAC", 0xAC, Maker) {}
         OPCodeAC(int addr, Builder* Maker)
           : Instruction(addr, "0xAC", 0xAC, Maker) {}
-        OPCodeAC(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeAC(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAC", 0xAC, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
@@ -6321,10 +6321,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xAD", 0xAD, Maker) {}
         OPCodeAD(int addr, Builder* Maker)
           : Instruction(addr, "0xAD", 0xAD, Maker) {}
-        OPCodeAD(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeAD(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAD", 0xAD, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00:
@@ -6346,7 +6346,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xAE", 0xAE, Maker) {}
         OPCodeAE(int addr, Builder* Maker)
           : Instruction(addr, "0xAE", 0xAE, Maker) {}
-        OPCodeAE(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeAE(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAE", 0xAE, Maker) {
             addr++;
 
@@ -6362,10 +6362,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xAF", 0xAF, Maker) {}
         OPCodeAF(int addr, Builder* Maker)
           : Instruction(addr, "0xAF", 0xAF, Maker) {}
-        OPCodeAF(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeAF(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAF", 0xAF, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
         }
     };
@@ -6377,10 +6377,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xB1", 0xB1, Maker) {}
         OPCodeB1(int addr, Builder* Maker)
           : Instruction(addr, "0xB1", 0xB1, Maker) {}
-        OPCodeB1(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeB1(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB1", 0xB1, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -6394,10 +6394,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xB2", 0xB2, Maker) {}
         OPCodeB2(int addr, Builder* Maker)
           : Instruction(addr, "0xB2", 0xB2, Maker) {}
-        OPCodeB2(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeB2(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB2", 0xB2, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
@@ -6410,7 +6410,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xB3", 0xB3, Maker) {}
         OPCodeB3(int addr, Builder* Maker)
           : Instruction(addr, "0xB3", 0xB3, Maker) {}
-        OPCodeB3(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeB3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB3", 0xB3, Maker) {
             addr++;
             this->AddOperande(operande(addr, "float", ReadSubByteArray(content, addr, 4)));
@@ -6429,7 +6429,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xB4", 0xB4, Maker) {}
         OPCodeB4(int addr, Builder* Maker)
           : Instruction(addr, "0xB4", 0xB4, Maker) {}
-        OPCodeB4(int& addr, [[maybe_unused]] QByteArray& content, Builder* Maker)
+        OPCodeB4(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB4", 0xB4, Maker) {
             addr++;
         }
@@ -6442,7 +6442,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xB5", 0xB5, Maker) {}
         OPCodeB5(int addr, Builder* Maker)
           : Instruction(addr, "0xB5", 0xB5, Maker) {}
-        OPCodeB5(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeB5(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB5", 0xB5, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -6462,7 +6462,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xB6", 0xB6, Maker) {}
         OPCodeB6(int addr, Builder* Maker)
           : Instruction(addr, "0xB6", 0xB6, Maker) {}
-        OPCodeB6(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeB6(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB6", 0xB6, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -6477,10 +6477,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xB7", 0xB7, Maker) {}
         OPCodeB7(int addr, Builder* Maker)
           : Instruction(addr, "0xB7", 0xB7, Maker) {}
-        OPCodeB7(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeB7(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB7", 0xB7, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
@@ -6493,10 +6493,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xBA", 0xBA, Maker) {}
         OPCodeBA(int addr, Builder* Maker)
           : Instruction(addr, "0xBA", 0xBA, Maker) {}
-        OPCodeBA(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeBA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xBA", 0xBA, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x14:
@@ -6514,10 +6514,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xB8", 0xB8, Maker) {}
         OPCodeB8(int addr, Builder* Maker)
           : Instruction(addr, "0xB8", 0xB8, Maker) {}
-        OPCodeB8(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeB8(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB8", 0xB8, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             fun_1403c90e0(addr, content, this, 1);
             fun_1403c90e0(addr, content, this, 1);
@@ -6531,10 +6531,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xB9", 0xB9, Maker) {}
         OPCodeB9(int addr, Builder* Maker)
           : Instruction(addr, "0xB9", 0xB9, Maker) {}
-        OPCodeB9(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeB9(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB9", 0xB9, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             switch ((unsigned char)control_byte[0]) {
@@ -6570,7 +6570,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xBB", 0xBB, Maker) {}
         OPCodeBB(int addr, Builder* Maker)
           : Instruction(addr, "0xBB", 0xBB, Maker) {}
-        OPCodeBB(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeBB(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xBB", 0xBB, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -6584,10 +6584,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xBC", 0xBC, Maker) {}
         OPCodeBC(int addr, Builder* Maker)
           : Instruction(addr, "0xBC", 0xBC, Maker) {}
-        OPCodeBC(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeBC(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xBC", 0xBC, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             fun_1403c90e0(addr, content, this, 1);
@@ -6692,10 +6692,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xBD", 0xBD, Maker) {}
         OPCodeBD(int addr, Builder* Maker)
           : Instruction(addr, "0xBD", 0xBD, Maker) {}
-        OPCodeBD(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeBD(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xBD", 0xBD, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x3:
@@ -6720,7 +6720,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xBE", 0xBE, Maker) {}
         OPCodeBE(int addr, Builder* Maker)
           : Instruction(addr, "0xBE", 0xBE, Maker) {}
-        OPCodeBE(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeBE(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xBE", 0xBE, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -6737,10 +6737,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC0", 0xC0, Maker) {}
         OPCodeC0(int addr, Builder* Maker)
           : Instruction(addr, "0xC0", 0xC0, Maker) {}
-        OPCodeC0(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC0(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC0", 0xC0, Maker) {
             addr++;
-            QByteArray control_short = ReadSubByteArray(content, addr, 2);
+            ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             int16_t control_shrt = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));
             switch (control_shrt) {
@@ -6777,7 +6777,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC1", 0xC1, Maker) {}
         OPCodeC1(int addr, Builder* Maker)
           : Instruction(addr, "0xC1", 0xC1, Maker) {}
-        OPCodeC1(int& addr, [[maybe_unused]] QByteArray& content, Builder* Maker)
+        OPCodeC1(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC1", 0xC1, Maker) {
             addr++;
         }
@@ -6790,10 +6790,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC2", 0xC2, Maker) {}
         OPCodeC2(int addr, Builder* Maker)
           : Instruction(addr, "0xC2", 0xC2, Maker) {}
-        OPCodeC2(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC2(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC2", 0xC2, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
         }
     };
@@ -6805,10 +6805,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC3", 0xC3, Maker) {}
         OPCodeC3(int addr, Builder* Maker)
           : Instruction(addr, "0xC3", 0xC3, Maker) {}
-        OPCodeC3(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC3", 0xC3, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
@@ -6830,10 +6830,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC4", 0xC4, Maker) {}
         OPCodeC4(int addr, Builder* Maker)
           : Instruction(addr, "0xC4", 0xC4, Maker) {}
-        OPCodeC4(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC4(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC4", 0xC4, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
@@ -6875,10 +6875,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC5", 0xC5, Maker) {}
         OPCodeC5(int addr, Builder* Maker)
           : Instruction(addr, "0xC5", 0xC5, Maker) {}
-        OPCodeC5(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC5(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC5", 0xC5, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
@@ -6897,10 +6897,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC6", 0xC6, Maker) {}
         OPCodeC6(int addr, Builder* Maker)
           : Instruction(addr, "0xC6", 0xC6, Maker) {}
-        OPCodeC6(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC6(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC6", 0xC6, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
@@ -6939,10 +6939,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC7", 0xC7, Maker) {}
         OPCodeC7(int addr, Builder* Maker)
           : Instruction(addr, "0xC7", 0xC7, Maker) {}
-        OPCodeC7(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC7(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC7", 0xC7, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
@@ -6961,10 +6961,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC8", 0xC8, Maker) {}
         OPCodeC8(int addr, Builder* Maker)
           : Instruction(addr, "0xC8", 0xC8, Maker) {}
-        OPCodeC8(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC8(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC8", 0xC8, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -6978,10 +6978,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xC9", 0xC9, Maker) {}
         OPCodeC9(int addr, Builder* Maker)
           : Instruction(addr, "0xC9", 0xC9, Maker) {}
-        OPCodeC9(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeC9(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC9", 0xC9, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
@@ -7007,10 +7007,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xCA", 0xCA, Maker) {}
         OPCodeCA(int addr, Builder* Maker)
           : Instruction(addr, "0xCA", 0xCA, Maker) {}
-        OPCodeCA(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeCA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCA", 0xCA, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
@@ -7027,10 +7027,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xCB", 0xCB, Maker) {}
         OPCodeCB(int addr, Builder* Maker)
           : Instruction(addr, "0xCB", 0xCB, Maker) {}
-        OPCodeCB(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeCB(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCB", 0xCB, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
         }
     };
@@ -7042,10 +7042,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xCC", 0xCC, Maker) {}
         OPCodeCC(int addr, Builder* Maker)
           : Instruction(addr, "0xCC", 0xCC, Maker) {}
-        OPCodeCC(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeCC(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCC", 0xCC, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
         }
     };
@@ -7057,10 +7057,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xCD", 0xCD, Maker) {}
         OPCodeCD(int addr, Builder* Maker)
           : Instruction(addr, "0xCD", 0xCD, Maker) {}
-        OPCodeCD(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeCD(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCD", 0xCD, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x1:
@@ -7092,10 +7092,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xCE", 0xCE, Maker) {}
         OPCodeCE(int addr, Builder* Maker)
           : Instruction(addr, "0xCE", 0xCE, Maker) {}
-        OPCodeCE(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeCE(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCE", 0xCE, Maker) {
             addr++;
-            QByteArray control_short = ReadSubByteArray(content, addr, 2);
+            ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             int16_t control_shrt = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));
             switch (control_shrt) {
@@ -7194,10 +7194,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xCF", 0xCF, Maker) {}
         OPCodeCF(int addr, Builder* Maker)
           : Instruction(addr, "0xCF", 0xCF, Maker) {}
-        OPCodeCF(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeCF(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCF", 0xCF, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {}
         }
@@ -7210,10 +7210,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xD0", 0xD0, Maker) {}
         OPCodeD0(int addr, Builder* Maker)
           : Instruction(addr, "0xD0", 0xD0, Maker) {}
-        OPCodeD0(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeD0(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xD0", 0xD0, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x1E:
@@ -7249,10 +7249,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xD1", 0xD1, Maker) {}
         OPCodeD1(int addr, Builder* Maker)
           : Instruction(addr, "0xD1", 0xD1, Maker) {}
-        OPCodeD1(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeD1(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xD1", 0xD1, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -7278,10 +7278,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xD2", 0xD2, Maker) {}
         OPCodeD2(int addr, Builder* Maker)
           : Instruction(addr, "0xD2", 0xD2, Maker) {}
-        OPCodeD2(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeD2(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xD2", 0xD2, Maker) {
             addr++;
-            QByteArray control_short = ReadSubByteArray(content, addr, 2);
+            ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             int16_t control_shrt = ReadShortFromByteArray(0, control_short);
             this->AddOperande(operande(addr, "short", control_short));
             switch (control_shrt) {
@@ -7303,10 +7303,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xD3", 0xD3, Maker) {}
         OPCodeD3(int addr, Builder* Maker)
           : Instruction(addr, "0xD3", 0xD3, Maker) {}
-        OPCodeD3(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeD3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xD3", 0xD3, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -7332,12 +7332,12 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xD4", 0xD4, Maker) {}
         OPCodeD4(int addr, Builder* Maker)
           : Instruction(addr, "0xD4", 0xD4, Maker) {}
-        OPCodeD4(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeD4(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xD4", 0xD4, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
-            QByteArray control_byte2 = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte2));
         }
     };
@@ -7349,10 +7349,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xD5", 0xD5, Maker) {}
         OPCodeD5(int addr, Builder* Maker)
           : Instruction(addr, "0xD5", 0xD5, Maker) {}
-        OPCodeD5(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeD5(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xD5", 0xD5, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 1:
@@ -7370,7 +7370,7 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xD6", 0xD6, Maker) {}
         OPCodeD6(int addr, Builder* Maker)
           : Instruction(addr, "0xD6", 0xD6, Maker) {}
-        OPCodeD6(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeD6(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xD6", 0xD6, Maker) {
             addr++;
             this->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -7388,10 +7388,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xD7", 0xD7, Maker) {}
         OPCodeD7(int addr, Builder* Maker)
           : Instruction(addr, "0xD7", 0xD7, Maker) {}
-        OPCodeD7(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeD7(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xD7", 0xD7, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             this->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
@@ -7404,10 +7404,10 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xD8", 0xD8, Maker) {}
         OPCodeD8(int addr, Builder* Maker)
           : Instruction(addr, "0xD8", 0xD8, Maker) {}
-        OPCodeD8(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeD8(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xD8", 0xD8, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
@@ -7427,14 +7427,14 @@ class CS4Builder : public Builder {
           : Instruction(addr, idx_row, doc, "0xFA", 0xFA, Maker) {}
         OPCodeFA(int addr, Builder* Maker)
           : Instruction(addr, "0xFA", 0xFA, Maker) {}
-        OPCodeFA(int& addr, QByteArray& content, Builder* Maker)
+        OPCodeFA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xFA", 0xFA, Maker) {
             addr++;
-            QByteArray control_byte = ReadSubByteArray(content, addr, 1);
+            ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
             this->AddOperande(operande(addr, "byte", control_byte));
         }
     };
-    std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) override {
+    std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, ssd::Buffer& dat_content, int function_type) override {
         int OP = (dat_content[addr] & 0xFF);
 
         if (function_type == 0) { // the function is read with OPCodes
@@ -7901,7 +7901,7 @@ class CS4Builder : public Builder {
         }
         return {};
     }
-    bool CreateHeaderFromDAT(QByteArray& dat_content) override {
+    bool CreateHeaderFromDAT(ssd::Buffer& dat_content) override {
 
         display_text("Reading header...");
         int nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
@@ -7918,7 +7918,7 @@ class CS4Builder : public Builder {
             int16_t name_pos = ReadShortFromByteArray(position, dat_content);
             int name_pos_int = name_pos;
             std::string function_name = ReadStringFromByteArray(name_pos_int, dat_content);
-            int end_addr = 0;
+            size_t end_addr = 0;
             if (idx_fun == nb_functions - 1) { // we are at the last function, so it ends at the end of the file
                 end_addr = dat_content.size();
             } else {
@@ -8378,15 +8378,15 @@ class CS4Builder : public Builder {
         }
     }
 
-    QByteArray CreateHeaderBytes() override {
+    ssd::Buffer CreateHeaderBytes() override {
 
-        QByteArray header;
+        ssd::Buffer header;
 
-        QByteArray scene_name_bytes = QByteArray::fromStdString(SceneName);
+        ssd::Buffer scene_name_bytes = ssd::Buffer::fromStdString(SceneName);
         scene_name_bytes.push_back('\x0');
-        int size_of_scene_name = scene_name_bytes.size();
+        size_t size_of_scene_name = scene_name_bytes.size();
 
-        int nb_byte_to_add_scene_name = (((int)std::ceil((float)(size_of_scene_name) / 4))) * 4 - size_of_scene_name;
+        size_t nb_byte_to_add_scene_name = (((size_t)std::ceil((float)(size_of_scene_name) / 4))) * 4 - size_of_scene_name;
         size_of_scene_name += nb_byte_to_add_scene_name;
         header.push_back(GetBytesFromInt(0x20));
         header.push_back(GetBytesFromInt(0x20));
@@ -8402,17 +8402,17 @@ class CS4Builder : public Builder {
           GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + length_of_names_section));
         header.push_back(GetBytesFromInt(0xABCDEF00));
         header.push_back(scene_name_bytes);
-        for (int i = 0; i < nb_byte_to_add_scene_name; i++) {
+        for (size_t i = 0; i < nb_byte_to_add_scene_name; i++) {
             header.push_back('\x0');
         }
 
         if (!FunctionsParsed.empty()) {
-            QByteArray position_names;
-            QByteArray actual_names;
-            int offset_names = 0;
+            ssd::Buffer position_names;
+            ssd::Buffer actual_names;
+            size_t offset_names = 0;
             for (auto& fun : FunctionsParsed) {
                 header.push_back(GetBytesFromInt(fun.actual_addr));
-                QByteArray name = QByteArray::fromStdString(fun.name);
+                ssd::Buffer name = ssd::Buffer::fromStdString(fun.name);
                 name.push_back('\x0');
                 position_names.push_back(
                   GetBytesFromShort(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + offset_names));
@@ -8423,9 +8423,9 @@ class CS4Builder : public Builder {
             header.push_back(actual_names);
             int multiple = 4;
             if (FunctionsParsed[0].name.starts_with("_")) multiple = 0x10;
-            int nb_byte_to_add = (((int)std::ceil((float)header.size() / (float)multiple))) * multiple - header.size();
-            QByteArray remaining;
-            for (int i = 0; i < nb_byte_to_add; i++) {
+            size_t nb_byte_to_add = (((size_t)std::ceil((float)header.size() / (float)multiple))) * multiple - header.size();
+            ssd::Buffer remaining;
+            for (size_t i = 0; i < nb_byte_to_add; i++) {
                 remaining.push_back('\x0');
             }
             header.push_back(remaining);

@@ -26,7 +26,7 @@ class Instruction {
     [[nodiscard]] uint get_OP() const;
     [[nodiscard]] int get_addr_instr() const;
     void set_addr_instr(int i);
-    QByteArray getBytes();
+    ssd::Buffer getBytes();
     Builder* Maker;
     std::vector<operande> operandes;
     bool error = false;

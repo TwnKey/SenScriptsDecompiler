@@ -70,7 +70,7 @@ bool Decompiler::update_current_tf() {
     return true;
 }
 bool Decompiler::read_dat(const std::filesystem::path& filepath) {
-    QByteArray content = ssd::utils::read_file(filepath);
+    ssd::Buffer content = ssd::utils::read_file(filepath);
 
     ib->CreateHeaderFromDAT(content);
     ib->ReadFunctionsDAT(content);
@@ -80,14 +80,14 @@ bool Decompiler::read_dat(const std::filesystem::path& filepath) {
 }
 bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
 
-    QByteArray functions;
-    QByteArray current_fun;
-    QByteArray file_content;
+    ssd::Buffer functions;
+    ssd::Buffer current_fun;
+    ssd::Buffer file_content;
 
     int addr = 0;
-    QByteArray header = ib->CreateHeaderBytes();
+    ssd::Buffer header = ib->CreateHeaderBytes();
 
-    addr = addr + header.size();
+    addr = addr + static_cast<int>(std::ssize(header));
     for (int idx_fun = 0; idx_fun < current_tf.getNbFunctions() - 1; idx_fun++) {
 
         function fun = current_tf.FunctionsInFile[idx_fun];
@@ -97,7 +97,7 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
         for (auto& instr : fun.InstructionsInFunction) {
             current_fun.push_back(instr->getBytes());
         }
-        addr = addr + current_fun.size();
+        addr = addr + static_cast<int>(std::ssize(current_fun));
 
         int next_addr = current_tf.FunctionsInFile[idx_fun + 1].actual_addr;
         int padding = next_addr - addr;
@@ -248,8 +248,8 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
         this->write_dat(output_dir);
         ssd::spdlog::info("reading {} and {} for comparison", local_dat_path.string(), reference_dat_path.string());
 
-        const QByteArray content1 = ssd::utils::read_file(local_dat_path);
-        const QByteArray content2 = ssd::utils::read_file(reference_dat_path);
+        const ssd::Buffer content1 = ssd::utils::read_file(local_dat_path);
+        const ssd::Buffer content2 = ssd::utils::read_file(reference_dat_path);
 
         int length_header2 = ReadIntegerFromByteArray(0x18, content2);
         int idx_addresses_loc1 = ReadIntegerFromByteArray(8, content1);
@@ -295,7 +295,7 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
                 }
                 for (size_t k = 0; k < (uint)current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes.size(); ++k) {
                     operande op_k = current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes[k];
-                    QByteArray bytes = op_k.getValue();
+                    ssd::Buffer bytes = op_k.getValue();
 
                     if (op_k.getType() == "pointer") {
                         int diff1 = op_k.getIntegerValue() - ReadIntegerFromByteArray(index_byte, content2);
@@ -307,7 +307,7 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
                         index_byte+=4;
 
                     } else if (op_k.getType() == "float") {
-                        QByteArray float_bytes = ReadSubByteArray(content2, index_byte, 4);
+                        ssd::Buffer float_bytes = ReadSubByteArray(content2, index_byte, 4);
                         float float2 = QByteArrayToFloat(float_bytes);
                         float float1 = QByteArrayToFloat(bytes);
                         if (float2 != float1) {

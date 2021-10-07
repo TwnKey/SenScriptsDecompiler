@@ -2,7 +2,7 @@
 #define INSTRUCTIONBUILDER_H
 #include "headers/operande.h"
 #include "xlsxdocument.h"
-#include <QByteArray>
+
 class function;
 class Instruction;
 
@@ -68,14 +68,14 @@ class Builder {
   public:
     Builder();
     virtual ~Builder() = default;
-    virtual std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) = 0;
+    virtual std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, ssd::Buffer& dat_content, int function_type) = 0;
     virtual std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) = 0;
 
-    virtual bool CreateHeaderFromDAT(QByteArray& dat_content) = 0; // Header will probably be game specific
-    virtual QByteArray CreateHeaderBytes() = 0;
+    virtual bool CreateHeaderFromDAT(ssd::Buffer& dat_content) = 0; // Header will probably be game specific
+    virtual ssd::Buffer CreateHeaderBytes() = 0;
 
     virtual void ReadFunctionsDAT(
-      QByteArray& dat_content); // Clearly this one is supposed to be generic (assuming the game format doesn't change)
+      ssd::Buffer& dat_content); // Clearly this one is supposed to be generic (assuming the game format doesn't change)
     virtual void ReadFunctionsXLSX(QXlsx::Document& xls_content);
 
     int find_function(int addr);
@@ -85,8 +85,8 @@ class Builder {
     std::vector<function> FunctionsParsed;
     std::string SceneName;
     std::vector<int> guess_type_by_name(function& fun);
-    int attempts_at_reading_function(function& fun, QByteArray& dat_content, const std::vector<int>& fallback_types);
-    int ReadIndividualFunction(function& fun, QByteArray& dat_content);
+    int attempts_at_reading_function(function& fun, ssd::Buffer& dat_content, const std::vector<int>& fallback_types);
+    int ReadIndividualFunction(function& fun, ssd::Buffer& dat_content);
     bool UpdatePointersXLSX();
     bool UpdatePointersDAT();
     bool Reset();

@@ -47,9 +47,9 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
         int addr_fun = 0;
         FunctionsParsed.push_back(current_fun);
 
-        QByteArray header = CreateHeaderBytes();
+        ssd::Buffer header = CreateHeaderBytes();
 
-        int start_header = header.size();
+        int start_header = static_cast<int>(std::ssize(header));
         addr_fun = start_header;
         for (uint idx_fun = 0; idx_fun < FunctionsParsed.size() - 1; idx_fun++) {
             FunctionsParsed[idx_fun].actual_addr = addr_fun;
@@ -85,7 +85,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
     display_text("XLSX file read.");
 }
 
-void Builder::ReadFunctionsDAT(QByteArray& dat_content) {
+void Builder::ReadFunctionsDAT(ssd::Buffer& dat_content) {
     // From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
     if (!FunctionsToParse.empty()) {
         for (auto& it : FunctionsToParse) {
@@ -166,7 +166,7 @@ std::vector<int> Builder::guess_type_by_name(function& fun) {
     return result;
 }
 
-int Builder::attempts_at_reading_function(function& fun, QByteArray& dat_content, const std::vector<int>& fallback_types) {
+int Builder::attempts_at_reading_function(function& fun, ssd::Buffer& dat_content, const std::vector<int>& fallback_types) {
     int current_position = fun.actual_addr;
     this->goal = fun.end_addr;
     uint latest_op_code = 1;
@@ -245,7 +245,7 @@ int Builder::attempts_at_reading_function(function& fun, QByteArray& dat_content
     }
     return current_position;
 }
-int Builder::ReadIndividualFunction(function& fun, QByteArray& dat_content) {
+int Builder::ReadIndividualFunction(function& fun, ssd::Buffer& dat_content) {
 
     std::vector<int> fallback_types = guess_type_by_name(fun);
     int current_position = attempts_at_reading_function(fun, dat_content, fallback_types);

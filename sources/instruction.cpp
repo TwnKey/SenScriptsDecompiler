@@ -31,7 +31,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
     std::string type = excelScenarioSheet.read(idx_row, idx_column).toString().toStdString();
     while (!type.empty()) {
 
-        QByteArray Value;
+        ssd::Buffer Value;
         operande op;
         if (type == "int") {
             int Operande = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
@@ -85,7 +85,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
                     uint32_t new_header_value =
                       ((addr - static_cast<int>(stack_of_headers.top().second)) << 0x18) +
                       (this->get_operande(static_cast<int>(stack_of_headers.top().first)).getIntegerValue() & 0xFFFFFF);
-                    QByteArray header_bytes = GetBytesFromInt(new_header_value);
+                    ssd::Buffer header_bytes = GetBytesFromInt(new_header_value);
                     this->get_operande(static_cast<int>(stack_of_headers.top().first)).setValue(header_bytes);
                     stack_of_headers.pop();
                 }
@@ -108,9 +108,9 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
 
         else if ((type == "string") || (type == "dialog")) {
             QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
-            Value = Operande.toUtf8();
             QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(OutputDatFileEncoding).toUtf8());
-            Value = codec->fromUnicode(Operande);
+            auto q_byte_array = codec->fromUnicode(Operande);
+            Value = ssd::Buffer(std::begin(q_byte_array), std::end(q_byte_array));
             if (type == "string") Value.push_back('\0');
             Value.replace('\n', 1);
 
@@ -150,7 +150,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
         if (stack_of_headers.top().first != 0) {
             uint32_t new_header_value = ((addr - static_cast<int>(stack_of_headers.top().second)) << 0x18) +
                                         (this->get_operande(static_cast<int>(stack_of_headers.top().first)).getIntegerValue() & 0xFFFFFF);
-            QByteArray header_bytes = GetBytesFromInt(new_header_value);
+            ssd::Buffer header_bytes = GetBytesFromInt(new_header_value);
             this->get_operande(static_cast<int>(stack_of_headers.top().first)).setValue(header_bytes);
             stack_of_headers.pop();
         }
@@ -210,7 +210,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
     for (auto& operande : operandes) {
 
         QString type = QString::fromStdString(operande.getType());
-        QByteArray Value = operande.getValue();
+        ssd::Buffer Value = operande.getValue();
 
         if (type == "int") {
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
@@ -275,13 +275,14 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
         } else if ((type == "string") || (type == "dialog")) {
 
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            QByteArray value_ = Value;
+            ssd::Buffer value_ = Value;
 
-            value_.replace(1, "\n");
+            value_.replace(1, '\n');
 
             QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(InputDatFileEncoding).toUtf8());
 
-            QString string = codec->toUnicode(value_);
+            auto q_byte_array = QByteArray(reinterpret_cast<const char*>(value_.data()), static_cast<int>(std::ssize(value_)));
+            QString string = codec->toUnicode(q_byte_array);
 
             excelScenarioSheet.write(row + 1, col + 3 + col_cnt, string, FormatInstr);
             col_cnt++;
@@ -323,17 +324,17 @@ If there is any illegal xml character, every string in the sheet disappears and 
 this is a problem for some broken files that we would want to restore (example is ply000 from CS3)*/
 void Instruction::AddOperande(operande op) {
 
-    QByteArray value = op.getValue();
+    ssd::Buffer value = op.getValue();
 
     if (op.getType() == "string") {
         QTextCodec::ConverterState state;
 
         QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(InputDatFileEncoding).toUtf8());
-        const QString text = codec->toUnicode(value, value.size(), &state);
+        const QString text = codec->toUnicode(reinterpret_cast<char*>(value.data()), static_cast<int>(std::ssize(value)), &state);
 
         if ((state.invalidChars > 0) || text.contains('\x0B') || text.contains('\x06') || text.contains('\x07') || text.contains('\x08') ||
             text.contains('\x05') || text.contains('\x04') || text.contains('\x03') || text.contains('\x02')) {
-            op.setValue(QByteArray(nullptr));
+            op.setValue(ssd::Buffer(0));
 
             // operandes.push_back(op);
         } else {
@@ -344,15 +345,15 @@ void Instruction::AddOperande(operande op) {
     }
 }
 
-int Instruction::get_length_in_bytes() { return getBytes().size(); }
+int Instruction::get_length_in_bytes() { return static_cast<int>(std::size(getBytes())); }
 
 uint Instruction::get_OP() const { return OPCode; }
-QByteArray Instruction::getBytes() {
-    QByteArray bytes;
+ssd::Buffer Instruction::getBytes() {
+    ssd::Buffer bytes;
     if (OPCode <= 0xFF) bytes.push_back((char)OPCode);
     for (auto& it : operandes) {
 
-        QByteArray op_bytes = it.getValue();
+        ssd::Buffer op_bytes = it.getValue();
         for (auto&& op_byte : op_bytes) {
             bytes.push_back(op_byte);
         }
