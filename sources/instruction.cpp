@@ -32,51 +32,51 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
     while (!type.empty()) {
 
         ssd::Buffer Value;
-        operande op;
+        Operande operande;
         if (type == "int") {
-            int Operande = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
+            int op = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
 
-            Value = GetBytesFromInt(Operande);
-            op = operande(addr, "int", Value);
-            this->AddOperande(op);
-            addr = addr + op.getLength();
+            Value = GetBytesFromInt(op);
+            operande = Operande(addr, "int", Value);
+            this->AddOperande(operande);
+            addr = addr + operande.getLength();
         } else if (type == "Group ID") {
             stack_of_headers.push(std::make_pair(0, addr - 1)); // the count includes OPCode thus -1
 
-            int OperandeGrp = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
+            int operande_grp = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
             idx_column++;
-            uint8_t OperandeLength = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
+            uint8_t operande_length = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
             // If the byte for length is 0xFF we don't calculate it
-            if (OperandeLength != 0xFF) stack_of_headers.top().first = get_Nb_operandes();
-            Value = GetBytesFromInt(OperandeGrp + (OperandeLength << 0x18));
-            op = operande(addr, "header", Value);
-            this->AddOperande(op);
-            addr = addr + op.getLength();
+            if (operande_length != 0xFF) stack_of_headers.top().first = get_Nb_operandes();
+            Value = GetBytesFromInt(operande_grp + (operande_length << 0x18));
+            operande = Operande(addr, "header", Value);
+            this->AddOperande(operande);
+            addr = addr + operande.getLength();
 
         } else if (type == "float") {
 
-            float Operande = excelScenarioSheet.read(idx_row + 1, idx_column).toFloat();
+            float op = excelScenarioSheet.read(idx_row + 1, idx_column).toFloat();
 
-            Value = GetBytesFromFloat(Operande);
-            op = operande(addr, "float", Value);
-            this->AddOperande(op);
-            addr = addr + op.getLength();
+            Value = GetBytesFromFloat(op);
+            operande = Operande(addr, "float", Value);
+            this->AddOperande(operande);
+            addr = addr + operande.getLength();
         } else if (type == "short") {
-            int16_t Operande = static_cast<int16_t>(excelScenarioSheet.read(idx_row + 1, idx_column).toInt());
-            Value = GetBytesFromShort(Operande);
-            op = operande(addr, "short", Value);
-            this->AddOperande(op);
-            addr = addr + op.getLength();
+            int16_t op = static_cast<int16_t>(excelScenarioSheet.read(idx_row + 1, idx_column).toInt());
+            Value = GetBytesFromShort(op);
+            operande = Operande(addr, "short", Value);
+            this->AddOperande(operande);
+            addr = addr + operande.getLength();
 
         } else if ((type == "byte") || (type == "OP Code")) {
             OP = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
 
             if (OP <= 0xFF) { // actually the opposite never happens.
-                auto Operande = static_cast<char>(((OP)&0x000000FF));
-                Value.push_back(Operande);
-                op = operande(addr, "byte", Value);
-                this->AddOperande(op);
-                addr = addr + op.getLength();
+                auto op = static_cast<char>(((OP)&0x000000FF));
+                Value.push_back(op);
+                operande = Operande(addr, "byte", Value);
+                this->AddOperande(operande);
+                addr = addr + operande.getLength();
             }
         } else if (type == "End") {
             if (!stack_of_headers.empty()) {
@@ -92,55 +92,55 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             }
 
         } else if (type == "fill") {
-            QString Operande_prev = excelScenarioSheet.read(idx_row + 1, idx_column - 1).toString();
-            QString Operande = excelScenarioSheet.read(idx_row + 1, idx_column).toString();
-            QString str_max_length = Operande.mid(1, Operande.indexOf('-') - 1);
+            QString operande_prev = excelScenarioSheet.read(idx_row + 1, idx_column - 1).toString();
+            QString op = excelScenarioSheet.read(idx_row + 1, idx_column).toString();
+            QString str_max_length = op.mid(1, op.indexOf('-') - 1);
 
-            for (int id = 0; id < str_max_length.toInt() - Operande_prev.toUtf8().size() - 1; id++) {
+            for (int id = 0; id < str_max_length.toInt() - operande_prev.toUtf8().size() - 1; id++) {
                 Value.push_back('\0');
             }
 
-            op = operande(addr, "fill", Value);
-			this->AddOperande(op);
-            addr = addr + op.getLength();
+            operande = Operande(addr, "fill", Value);
+            this->AddOperande(operande);
+            addr = addr + operande.getLength();
 
         }
 
         else if ((type == "string") || (type == "dialog")) {
-            QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
+            QString op = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
             QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(OutputDatFileEncoding).toUtf8());
-            auto q_byte_array = codec->fromUnicode(Operande);
+            auto q_byte_array = codec->fromUnicode(op);
             Value = ssd::Buffer(std::begin(q_byte_array), std::end(q_byte_array));
             if (type == "string") Value.push_back('\0');
             Value.replace('\n', 1);
 
-            op = operande(addr, type, Value);
-			this->AddOperande(op);
-            addr = addr + op.getLength();
+            operande = Operande(addr, type, Value);
+            this->AddOperande(operande);
+            addr = addr + operande.getLength();
         } else if (type == "bytearray") {
 
             while (type == "bytearray") {
-                auto Operande = static_cast<char>(((excelScenarioSheet.read(idx_row + 1, idx_column).toInt()) & 0x000000FF));
-                Value.push_back(Operande);
+                auto op = static_cast<char>(((excelScenarioSheet.read(idx_row + 1, idx_column).toInt()) & 0x000000FF));
+                Value.push_back(op);
                 idx_column++;
                 type = excelScenarioSheet.read(idx_row, idx_column).toString().toStdString();
             }
-            op = operande(addr, "bytearray", Value);
+            operande = Operande(addr, "bytearray", Value);
             idx_column--;
-			this->AddOperande(op);
-            addr = addr + op.getLength();
+            this->AddOperande(operande);
+            addr = addr + operande.getLength();
         } else if (type == "pointer") {
-            QString Operande = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
+            QString op = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
 
-            QString RowPointedStr = Operande.right(Operande.size() - 2);
+            QString RowPointedStr = op.right(op.size() - 2);
 
             int actual_row = RowPointedStr.toInt();
 
             Value = GetBytesFromInt(actual_row);
 
-            op = operande(addr, "pointer", Value);
-			this->AddOperande(op);
-            addr = addr + op.getLength();
+            auto operande = Operande(addr, "pointer", Value);
+            this->AddOperande(operande);
+            addr = addr + operande.getLength();
         }
 
         idx_column++;
@@ -157,7 +157,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
     }
 }
 int Instruction::get_Nb_operandes() const { return static_cast<int>(operandes.size()); }
-operande Instruction::get_operande(int i) const { return operandes[i]; }
+Operande Instruction::get_operande(int i) const { return operandes[i]; }
 
 int Instruction::get_addr_instr() const { return this->addr_instr; }
 void Instruction::WriteDat() {}
@@ -322,7 +322,7 @@ void Instruction::set_addr_instr(int i) { addr_instr = i; }
 but I didn't finish it yet.
 If there is any illegal xml character, every string in the sheet disappears and the file can't be decompiled,
 this is a problem for some broken files that we would want to restore (example is ply000 from CS3)*/
-void Instruction::AddOperande(operande op) {
+void Instruction::AddOperande(Operande op) {
 
     ssd::Buffer value = op.getValue();
 

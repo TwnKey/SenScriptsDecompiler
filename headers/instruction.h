@@ -19,16 +19,16 @@ class Instruction {
     virtual ~Instruction();
     virtual int WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<Function> funs, int row, int& col);
     virtual void WriteDat();
-    void AddOperande(operande op);
+    void AddOperande(Operande op);
     int get_length_in_bytes();
     [[nodiscard]] int get_Nb_operandes() const;
-    [[nodiscard]] operande get_operande(int i) const;
+    [[nodiscard]] Operande get_operande(int i) const;
     [[nodiscard]] uint get_OP() const;
     [[nodiscard]] int get_addr_instr() const;
     void set_addr_instr(int i);
     ssd::Buffer getBytes();
     Builder* Maker;
-    std::vector<operande> operandes;
+    std::vector<Operande> operandes;
     bool error = false;
 
   protected:

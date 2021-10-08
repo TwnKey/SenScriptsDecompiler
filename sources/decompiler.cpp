@@ -294,7 +294,7 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
                     index_byte++;
                 }
                 for (size_t k = 0; k < (uint)current_tf.FunctionsInFile[i].instructions[j]->operandes.size(); ++k) {
-                    operande op_k = current_tf.FunctionsInFile[i].instructions[j]->operandes[k];
+                    Operande op_k = current_tf.FunctionsInFile[i].instructions[j]->operandes[k];
                     ssd::Buffer bytes = op_k.getValue();
 
                     if (op_k.getType() == "pointer") {

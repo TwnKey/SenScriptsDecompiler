@@ -10,22 +10,22 @@ class Destination {
     int FunctionID;
     int InstructionID;
 };
-class operande {
+class Operande {
 
   public:
-    operande() = default;
-    operande(Destination pointer, int position, std::string type, ssd::Buffer value)
+    Operande() = default;
+    Operande(Destination pointer, int position, std::string type, ssd::Buffer value)
       : Dest(pointer)
       , Position(position)
       , Type(std::move(type))
       , Value(std::move(value)) {}
 
-    operande(int position, std::string type, ssd::Buffer value)
+    Operande(int position, std::string type, ssd::Buffer value)
       : Position(position)
       , Type(std::move(type))
       , Value(std::move(value)) {}
 
-    operande(int position, std::string type, std::vector<uint8_t> value)
+    Operande(int position, std::string type, std::vector<uint8_t> value)
       : Position(position)
       , Type(std::move(type)) {
 
