@@ -13,7 +13,6 @@ class Function {
     int actual_addr = 0;    // covers the pointers before that
     int end_addr = 0;
     int xlsx_row_index = 0;
-    bool called = false; // by default
     int id = 0;
     friend bool operator<(const Function& f1, const Function& f2);
     friend bool operator==(const Function& f1, const Function& f2);
@@ -24,5 +23,4 @@ class Function {
 
 std::vector<Function>::iterator find_function_by_name(std::vector<Function>& v, std::string name);
 std::vector<Function>::iterator find_function_by_id(std::vector<Function>& v, int id);
-std::vector<Function>::iterator find_function_by_xlsx_row_index(std::vector<Function>& v, int row_index);
 #endif // FUNCTIONS_H

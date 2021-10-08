@@ -34,6 +34,3 @@ std::vector<Function>::iterator find_function_by_name(std::vector<Function>& v, 
 std::vector<Function>::iterator find_function_by_id(std::vector<Function>& v, int id) {
     return find_if(v.begin(), v.end(), [&id](const Function& obj) { return obj.id == id; });
 }
-std::vector<Function>::iterator find_function_by_xlsx_row_index(std::vector<Function>& v, int row_index) {
-    return find_if(v.begin(), v.end(), [&row_index](const Function& obj) { return obj.xlsx_row_index == row_index; });
-}
