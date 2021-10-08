@@ -14,7 +14,7 @@ class TranslationFile {
     std::vector<Function> FunctionsInFile;
 
   protected:
-    std::string SceneName;
+    std::string scene_name;
 };
 
 #endif // TRANSLATIONFILE_H

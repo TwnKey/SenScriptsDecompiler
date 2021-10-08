@@ -1,9 +1,11 @@
 #include "headers/Builder.h"
 #include "headers/functions.h"
 #include <string>
+
 Builder::Builder() = default;
-void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
-    SceneName = xls_content.read(2, 1).toString().toStdString();
+
+void Builder::read_functions_xlsx(QXlsx::Document& xls_content) {
+    scene_name = xls_content.read(2, 1).toString().toStdString();
     int first_row = 4;
     int last_row = xls_content.dimension().lastRow();
     int ID_fun = 0;
@@ -28,7 +30,7 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
                 std::string next_fun_name = xls_content.read(idx_row, 2).toString().toStdString();
 
                 addr_instr = 0;
-                FunctionsParsed.push_back(current_fun);
+                functions_parsed.push_back(current_fun);
                 current_fun.name = next_fun_name;
                 current_fun.id = ID_fun;
                 current_fun.declr_position = 0;
@@ -38,83 +40,83 @@ void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
 
             } else {
 
-                std::shared_ptr<Instruction> instr = CreateInstructionFromXLSX(addr_instr, idx_row, xls_content);
+                std::shared_ptr<Instruction> instr = create_instruction_from_xlsx(addr_instr, idx_row, xls_content);
                 current_fun.add_instruction(instr);
 
                 idx_row++;
             }
         }
         int addr_fun = 0;
-        FunctionsParsed.push_back(current_fun);
+        functions_parsed.push_back(current_fun);
 
-        ssd::Buffer header = CreateHeaderBytes();
+        ssd::Buffer header = create_header_bytes();
 
         int start_header = static_cast<int>(std::ssize(header));
         addr_fun = start_header;
-        for (uint idx_fun = 0; idx_fun < FunctionsParsed.size() - 1; idx_fun++) {
-            FunctionsParsed[idx_fun].actual_addr = addr_fun;
+        for (uint idx_fun = 0; idx_fun < functions_parsed.size() - 1; idx_fun++) {
+            functions_parsed[idx_fun].actual_addr = addr_fun;
 
-            int length = FunctionsParsed[idx_fun].get_length_in_bytes();
+            int length = functions_parsed[idx_fun].get_length_in_bytes();
 
-            FunctionsParsed[idx_fun].end_addr = length + FunctionsParsed[idx_fun].actual_addr;
-            addr_fun = length + FunctionsParsed[idx_fun].actual_addr;
+            functions_parsed[idx_fun].end_addr = length + functions_parsed[idx_fun].actual_addr;
+            addr_fun = length + functions_parsed[idx_fun].actual_addr;
             int multiple = 4;
-            if (isMultiple0x10(FunctionsParsed[idx_fun + 1].name)) multiple = 0x10;
+            if (isMultiple0x10(functions_parsed[idx_fun + 1].name)) multiple = 0x10;
 
             int padding = (((int)std::ceil((float)addr_fun / (float)multiple))) * multiple - addr_fun;
 
             addr_fun = addr_fun + padding;
 
-            for (uint idx_instr = 0; idx_instr < FunctionsParsed[idx_fun].instructions.size(); idx_instr++) {
-                FunctionsParsed[idx_fun].instructions[idx_instr]->set_addr_instr(
-                  FunctionsParsed[idx_fun].instructions[idx_instr]->get_addr_instr() + FunctionsParsed[idx_fun].actual_addr);
+            for (uint idx_instr = 0; idx_instr < functions_parsed[idx_fun].instructions.size(); idx_instr++) {
+                functions_parsed[idx_fun].instructions[idx_instr]->set_addr_instr(
+                  functions_parsed[idx_fun].instructions[idx_instr]->get_addr_instr() + functions_parsed[idx_fun].actual_addr);
             }
         }
-        FunctionsParsed[FunctionsParsed.size() - 1].actual_addr = addr_fun;
-        int length = FunctionsParsed[FunctionsParsed.size() - 1].get_length_in_bytes();
-        FunctionsParsed[FunctionsParsed.size() - 1].end_addr = length + FunctionsParsed[FunctionsParsed.size() - 1].actual_addr;
-        for (uint idx_instr = 0; idx_instr < FunctionsParsed[FunctionsParsed.size() - 1].instructions.size(); idx_instr++) {
-            FunctionsParsed[FunctionsParsed.size() - 1].instructions[idx_instr]->set_addr_instr(
-              FunctionsParsed[FunctionsParsed.size() - 1].instructions[idx_instr]->get_addr_instr() +
-              FunctionsParsed[FunctionsParsed.size() - 1].actual_addr);
+        functions_parsed[functions_parsed.size() - 1].actual_addr = addr_fun;
+        int length = functions_parsed[functions_parsed.size() - 1].get_length_in_bytes();
+        functions_parsed[functions_parsed.size() - 1].end_addr = length + functions_parsed[functions_parsed.size() - 1].actual_addr;
+        for (uint idx_instr = 0; idx_instr < functions_parsed[functions_parsed.size() - 1].instructions.size(); idx_instr++) {
+            functions_parsed[functions_parsed.size() - 1].instructions[idx_instr]->set_addr_instr(
+              functions_parsed[functions_parsed.size() - 1].instructions[idx_instr]->get_addr_instr() +
+              functions_parsed[functions_parsed.size() - 1].actual_addr);
         }
 
-        UpdatePointersXLSX();
+        update_pointers_xlsx();
     }
 
     display_text("XLSX file read.");
 }
 
-void Builder::ReadFunctionsDAT(ssd::Buffer& dat_content) {
+void Builder::read_functions_dat(ssd::Buffer& dat_content) {
     // From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
-    if (!FunctionsToParse.empty()) {
-        for (auto& it : FunctionsToParse) {
-            if (std::count(FunctionsParsed.begin(), FunctionsParsed.end(), it) == 0) {
+    if (!functions_to_parse.empty()) {
+        for (auto& it : functions_to_parse) {
+            if (std::count(functions_parsed.begin(), functions_parsed.end(), it) == 0) {
                 ssd::spdlog::trace("Reading function {}", it.name);
 
-                auto itt = find_function_by_id(FunctionsParsed, it.id);
-                if (itt == FunctionsParsed.end()) { // if we never read it, we'll do that
+                auto itt = find_function_by_id(functions_parsed, it.id);
+                if (itt == functions_parsed.end()) { // if we never read it, we'll do that
                     idx_current_fun = it.id;
                     guess_type_by_name(it);
-                    ReadIndividualFunction(it, dat_content);
-                    FunctionsParsed.push_back(it);
+                    read_individual_function(it, dat_content);
+                    functions_parsed.push_back(it);
                 }
             }
         }
 
-        std::sort(FunctionsParsed.begin(), FunctionsParsed.end());
+        std::sort(functions_parsed.begin(), functions_parsed.end());
 
-        UpdatePointersDAT();
-        int current_addr = FunctionsParsed[0].actual_addr; // first function shouldn't have changed
-        for (uint idx_fun = 1; idx_fun < FunctionsParsed.size(); idx_fun++) {
+        update_pointers_dat();
+        int current_addr = functions_parsed[0].actual_addr; // first function shouldn't have changed
+        for (uint idx_fun = 1; idx_fun < functions_parsed.size(); idx_fun++) {
 
-            current_addr = current_addr + FunctionsParsed[idx_fun - 1].get_length_in_bytes();
+            current_addr = current_addr + functions_parsed[idx_fun - 1].get_length_in_bytes();
             int multiple = 4;
-            if (isMultiple0x10(FunctionsParsed[idx_fun].name)) multiple = 0x10;
+            if (isMultiple0x10(functions_parsed[idx_fun].name)) multiple = 0x10;
 
             int padding = (((int)std::ceil((float)current_addr / (float)multiple))) * multiple - current_addr;
             current_addr = current_addr + padding;
-            FunctionsParsed[idx_fun].set_addr(current_addr);
+            functions_parsed[idx_fun].set_addr(current_addr);
         }
     }
 }
@@ -190,17 +192,17 @@ int Builder::attempts_at_reading_function(Function& fun, ssd::Buffer& dat_conten
         try{
             if (function_type == 0) {
                 while (current_position < this->goal) {
-                    std::shared_ptr<Instruction> instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
+                    std::shared_ptr<Instruction> instr = create_instruction_from_dat(current_position, dat_content, function_type);
 
                     fun.add_instruction(instr);
 
-                    latest_op_code = instr->get_OP();
+                    latest_op_code = instr->get_opcode();
                 }
                 if (current_position != this->goal) throw ssd::exceptions::unspecified_recoverable();
             } else {
-                std::shared_ptr<Instruction> instr = CreateInstructionFromDAT(current_position, dat_content, function_type);
+                std::shared_ptr<Instruction> instr = create_instruction_from_dat(current_position, dat_content, function_type);
                 fun.add_instruction(instr);
-                std::shared_ptr<Instruction> return_instr = CreateInstructionFromDAT(current_position, dat_content, 0);
+                std::shared_ptr<Instruction> return_instr = create_instruction_from_dat(current_position, dat_content, 0);
                 fun.add_instruction(return_instr);
                 while (current_position < this->goal) {
                     if ((uint8_t)dat_content[current_position] != 0) throw ssd::exceptions::unspecified_recoverable();
@@ -224,18 +226,18 @@ int Builder::attempts_at_reading_function(Function& fun, ssd::Buffer& dat_conten
         while (current_position < this->goal) {
             std::shared_ptr<Instruction> instr;
             try {
-                instr = CreateInstructionFromDAT(current_position, dat_content, 0);
-                if ((instr->get_OP() == 0) && ((latest_op_code != 1) && (latest_op_code != 0))) {
+                instr = create_instruction_from_dat(current_position, dat_content, 0);
+                if ((instr->get_opcode() == 0) && ((latest_op_code != 1) && (latest_op_code != 0))) {
                     throw ssd::exceptions::unspecified_recoverable();
                 }
                 fun.add_instruction(instr);
 
-                latest_op_code = instr->get_OP();
+                latest_op_code = instr->get_opcode();
             } catch (const ssd::exceptions::recoverable& e) {
                 if (instr != nullptr) {
                     instr->error = true;
                     fun.add_instruction(instr);
-                    latest_op_code = instr->get_OP();
+                    latest_op_code = instr->get_opcode();
                 }
 
                 display_text("Incorrect instruction read at " + std::to_string(current_position) + ". Skipped.");
@@ -245,7 +247,7 @@ int Builder::attempts_at_reading_function(Function& fun, ssd::Buffer& dat_conten
     }
     return current_position;
 }
-int Builder::ReadIndividualFunction(Function& fun, ssd::Buffer& dat_content) {
+int Builder::read_individual_function(Function& fun, ssd::Buffer& dat_content) {
 
     std::vector<int> fallback_types = guess_type_by_name(fun);
     int current_position = attempts_at_reading_function(fun, dat_content, fallback_types);
@@ -253,9 +255,9 @@ int Builder::ReadIndividualFunction(Function& fun, ssd::Buffer& dat_content) {
     return current_position;
 }
 
-bool Builder::UpdatePointersDAT() {
+bool Builder::update_pointers_dat() {
 
-    for (auto& idx_fun : FunctionsParsed) {
+    for (auto& idx_fun : functions_parsed) {
 
         std::vector<std::shared_ptr<Instruction>> instructions = idx_fun.instructions;
         for (auto& idx_instr : idx_fun.instructions) {
@@ -266,7 +268,7 @@ bool Builder::UpdatePointersDAT() {
                     int addr_ptr = operande.get_integer_value();
                     int idx_fun_ = find_function(addr_ptr);
                     if (idx_fun_ != -1) {
-                        Function fun = FunctionsParsed[idx_fun_];
+                        Function fun = functions_parsed[idx_fun_];
                         int id_instr = find_instruction(addr_ptr, fun);
                         if (id_instr != -1) {
                             operande.set_destination(fun.id, id_instr);
@@ -284,15 +286,15 @@ bool Builder::UpdatePointersDAT() {
 
     return true;
 }
-bool Builder::Reset() {
+bool Builder::reset() {
 
-    FunctionsParsed.clear();
-    FunctionsToParse.clear();
+    functions_parsed.clear();
+    functions_to_parse.clear();
     return true;
 }
-bool Builder::UpdatePointersXLSX() {
+bool Builder::update_pointers_xlsx() {
 
-    for (auto& idx_fun : FunctionsParsed) {
+    for (auto& idx_fun : functions_parsed) {
 
         std::vector<std::shared_ptr<Instruction>> instructions = idx_fun.instructions;
         for (auto& idx_instr : idx_fun.instructions) {
@@ -300,18 +302,18 @@ bool Builder::UpdatePointersXLSX() {
             for (uint idx_operand = 0; idx_operand < idx_instr->operandes.size(); idx_operand++) {
                 if (idx_instr->operandes[idx_operand].get_type() == "pointer") {
                     int idx_row_ptr = idx_instr->operandes[idx_operand].get_integer_value();
-                    Function current_fun = FunctionsParsed[0];
+                    Function current_fun = functions_parsed[0];
 
-                    if (FunctionsParsed.size() > 1) {
+                    if (functions_parsed.size() > 1) {
 
-                        Function next_fun = FunctionsParsed[1];
-                        for (uint idx_fun_next = 1; idx_fun_next < FunctionsParsed.size(); idx_fun_next++) {
+                        Function next_fun = functions_parsed[1];
+                        for (uint idx_fun_next = 1; idx_fun_next < functions_parsed.size(); idx_fun_next++) {
                             if (idx_row_ptr < next_fun.xlsx_row_index) {
                                 break;
                             }
 
-                            current_fun = FunctionsParsed[idx_fun_next];
-                            if ((idx_fun_next + 1) < FunctionsParsed.size()) next_fun = FunctionsParsed[idx_fun_next + 1];
+                            current_fun = functions_parsed[idx_fun_next];
+                            if ((idx_fun_next + 1) < functions_parsed.size()) next_fun = functions_parsed[idx_fun_next + 1];
                         }
                     }
                     int nb_instruction_inside_function = (idx_row_ptr - (current_fun.xlsx_row_index + 1)) / 2;
@@ -327,8 +329,8 @@ bool Builder::UpdatePointersXLSX() {
 int Builder::find_function(int addr) {
     int result = -1;
 
-    for (size_t idx_fun = 0; idx_fun < FunctionsParsed.size(); idx_fun++) {
-        int fun_addr = FunctionsParsed[idx_fun].actual_addr;
+    for (size_t idx_fun = 0; idx_fun < functions_parsed.size(); idx_fun++) {
+        int fun_addr = functions_parsed[idx_fun].actual_addr;
 
         if (addr < fun_addr) {
 
@@ -336,8 +338,8 @@ int Builder::find_function(int addr) {
             break;
         }
     }
-    if ((result == -1) && (addr < FunctionsParsed[FunctionsParsed.size() - 1].end_addr)) {
-        result = static_cast<int>(FunctionsParsed.size()) - 1;
+    if ((result == -1) && (addr < functions_parsed[functions_parsed.size() - 1].end_addr)) {
+        result = static_cast<int>(functions_parsed.size()) - 1;
     }
 
     return result;

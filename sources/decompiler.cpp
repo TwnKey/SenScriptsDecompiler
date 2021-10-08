@@ -51,7 +51,7 @@ bool Decompiler::read_xlsx(const std::filesystem::path& filename) {
     setup_game(game_from_file);
     display_text("Reading functions...");
 
-    ib->ReadFunctionsXLSX(doc);
+    ib->read_functions_xlsx(doc);
 
     display_text("Reading of XLSX done.");
 
@@ -60,10 +60,10 @@ bool Decompiler::read_xlsx(const std::filesystem::path& filename) {
 }
 
 bool Decompiler::update_current_tf() {
-    current_tf.setName(ib->SceneName);
+    current_tf.setName(ib->scene_name);
 
     current_tf.FunctionsInFile.clear();
-    for (auto& fun : ib->FunctionsParsed) {
+    for (auto& fun : ib->functions_parsed) {
         current_tf.addFunction(fun);
     }
 
@@ -72,8 +72,8 @@ bool Decompiler::update_current_tf() {
 bool Decompiler::read_dat(const std::filesystem::path& filepath) {
     ssd::Buffer content = ssd::utils::read_file(filepath);
 
-    ib->CreateHeaderFromDAT(content);
-    ib->ReadFunctionsDAT(content);
+    ib->create_header_from_dat(content);
+    ib->read_functions_dat(content);
 
     update_current_tf();
     return true;
@@ -85,7 +85,7 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
     ssd::Buffer file_content;
 
     int addr = 0;
-    ssd::Buffer header = ib->CreateHeaderBytes();
+    ssd::Buffer header = ib->create_header_bytes();
 
     addr = addr + static_cast<int>(std::ssize(header));
     for (int idx_fun = 0; idx_fun < current_tf.getNbFunctions() - 1; idx_fun++) {
@@ -95,7 +95,7 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
         current_fun.clear();
 
         for (auto& instr : fun.instructions) {
-            current_fun.push_back(instr->getBytes());
+            current_fun.push_back(instr->get_bytes());
         }
         addr = addr + static_cast<int>(std::ssize(current_fun));
 
@@ -112,7 +112,7 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
         Function fun = current_tf.FunctionsInFile[current_tf.FunctionsInFile.size() - 1];
         current_fun.clear();
         for (auto& instr : fun.instructions) {
-            current_fun.push_back(instr->getBytes());
+            current_fun.push_back(instr->get_bytes());
         }
         functions.push_back(current_fun);
     }
@@ -204,7 +204,7 @@ bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
             excel_scenario_sheet.write(excel_row, 1, "Location");
             excel_scenario_sheet.write(excel_row + 1, 1, instr->get_addr_instr());
             int col = 0;
-            instr->WriteXLSX(excel_scenario_sheet, current_tf.FunctionsInFile, excel_row, col);
+            instr->write_xlsx(excel_scenario_sheet, current_tf.FunctionsInFile, excel_row, col);
             excel_row += 2;
         }
     }
@@ -283,7 +283,7 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
             int index_byte = idx_fun_2[i];
 
             for (size_t j = 0; j < (uint)current_tf.FunctionsInFile[i].instructions.size(); ++j) {
-                uint OPCode = current_tf.FunctionsInFile[i].instructions[j]->get_OP();
+                uint OPCode = current_tf.FunctionsInFile[i].instructions[j]->get_opcode();
                 uint byte_in_file = (content2[index_byte]) & 0xFF;
 
                 if (OPCode <= 0xFF) {
@@ -337,7 +337,7 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
     return true;
 }
 bool Decompiler::read_file(const fs::path& filepath) {
-    ib->Reset();
+    ib->reset();
     current_tf = TranslationFile();
 
     if (filepath.extension() == ".xlsx") {

@@ -23,7 +23,7 @@ class TXBuilder : public Builder {
                 case 0x00:
                     current_op_value.clear();
                     current_op_value.push_back(0);
-                    instr->AddOperande(Operande(addr, "byte", current_op_value));
+                    instr->add_operande(Operande(addr, "byte", current_op_value));
                     addr++;
                     return;
                 case 0x01:
@@ -34,7 +34,7 @@ class TXBuilder : public Builder {
 
                         current_op_value.clear();
                         current_op_value.push_back(current_byte);
-                        instr->AddOperande(Operande(addr, "byte", current_op_value));
+                        instr->add_operande(Operande(addr, "byte", current_op_value));
                         current_op_value.clear();
                     }
                     addr++;
@@ -42,49 +42,49 @@ class TXBuilder : public Builder {
                 case 0x02:
                     start_text = false;
                     if (!current_op_value.empty()) {
-                        instr->AddOperande(Operande(addr_, "dialog", current_op_value));
+                        instr->add_operande(Operande(addr_, "dialog", current_op_value));
                     }
                     current_op_value.clear();
                     current_op_value.push_back(current_byte);
-                    instr->AddOperande(Operande(addr, "byte", current_op_value));
+                    instr->add_operande(Operande(addr, "byte", current_op_value));
                     current_op_value.clear();
                     addr++;
                     break;
                 case 0x10:
                     if (!current_op_value.empty()) {
-                        instr->AddOperande(Operande(addr_, "dialog", current_op_value));
+                        instr->add_operande(Operande(addr_, "dialog", current_op_value));
                     }
                     current_op_value.clear();
                     current_op_value.push_back(current_byte);
-                    instr->AddOperande(Operande(addr, "byte", current_op_value));
+                    instr->add_operande(Operande(addr, "byte", current_op_value));
                     current_op_value.clear();
                     addr++;
-                    instr->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    instr->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 case 0x17:
                 case 0x19:
                     start_text = false;
                     if (!current_op_value.empty()) {
-                        instr->AddOperande(Operande(addr_, "dialog", current_op_value));
+                        instr->add_operande(Operande(addr_, "dialog", current_op_value));
                     }
                     current_op_value.clear();
                     current_op_value.push_back(current_byte);
-                    instr->AddOperande(Operande(addr, "byte", current_op_value));
+                    instr->add_operande(Operande(addr, "byte", current_op_value));
                     current_op_value.clear();
                     addr++;
-                    instr->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    instr->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 case 0x11:
                 case 0x12:
                     if (!current_op_value.empty()) {
-                        instr->AddOperande(Operande(addr_, "dialog", current_op_value));
+                        instr->add_operande(Operande(addr_, "dialog", current_op_value));
                     }
                     current_op_value.clear();
                     current_op_value.push_back(current_byte);
-                    instr->AddOperande(Operande(addr, "byte", current_op_value));
+                    instr->add_operande(Operande(addr, "byte", current_op_value));
                     current_op_value.clear();
                     addr++;
-                    instr->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    instr->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 case 0x23:
                     current_op_value.push_back(0x23);
@@ -129,12 +129,12 @@ class TXBuilder : public Builder {
                 default:
                     if (current_byte < 0x20) {
                         if (!current_op_value.empty()) {
-                            instr->AddOperande(Operande(addr_, "dialog", current_op_value));
+                            instr->add_operande(Operande(addr_, "dialog", current_op_value));
                         }
                         start_text = false;
                         current_op_value.clear();
                         current_op_value.push_back(current_byte);
-                        instr->AddOperande(Operande(addr, "byte", current_op_value));
+                        instr->add_operande(Operande(addr, "byte", current_op_value));
                         addr++;
                         current_op_value.clear();
                     } else {
@@ -171,92 +171,92 @@ class TXBuilder : public Builder {
     }
     static void fun_1403c90e0(int& addr, ssd::Buffer& content, Instruction* instr, int param) {
         ssd::Buffer control_byte3_arr = ReadSubByteArray(content, addr, 1);
-        instr->AddOperande(Operande(addr, "byte", control_byte3_arr));
+        instr->add_operande(Operande(addr, "byte", control_byte3_arr));
         auto control_byte3 = (unsigned char)control_byte3_arr[0];
 
         if (control_byte3 == '\x11') {
-            instr->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            instr->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            instr->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            instr->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
         } else if (control_byte3 != '3') {
 
             if (control_byte3 == '\"') {
-                instr->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                instr->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                instr->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                instr->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
             } else if (control_byte3 != 0x44) {
 
                 if (control_byte3 == 0xDD) {
 
-                    if (param != 0) instr->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    instr->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    if (param != 0) instr->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    instr->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                 } else if (control_byte3 == 0xFF) {
-                    instr->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    instr->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    instr->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    instr->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                 } else {
                     if (control_byte3 != 0xEE) {
 
                     } else {
-                        instr->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                        instr->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        instr->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                        instr->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     }
                 }
 
             } else {
-                instr->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                instr->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                if (param != 0) instr->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                instr->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                instr->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                if (param != 0) instr->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
             }
 
         } else {
-            instr->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            instr->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            instr->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            instr->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     }
     static void sub05(int& addr, ssd::Buffer& content, Instruction* instr) {
         ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-        instr->AddOperande(Operande(addr, "byte", control_byte));
+        instr->add_operande(Operande(addr, "byte", control_byte));
 
         while ((int)control_byte[0] != 1) {
             if (addr > std::ssize(content)) throw ssd::exceptions::unspecified_recoverable();
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
                 case 0x24:
-                    instr->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    instr->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
 
                 case 0x1c: {
                     // the next byte is the OP code for a new instruction
 
-                    std::shared_ptr<Instruction> instr2 = instr->Maker->CreateInstructionFromDAT(addr, content, 0);
+                    std::shared_ptr<Instruction> instr2 = instr->maker->create_instruction_from_dat(addr, content, 0);
 
-                    auto op = Operande(addr, "instruction", instr2->getBytes());
-                    instr->AddOperande(op);
+                    auto op = Operande(addr, "instruction", instr2->get_bytes());
+                    instr->add_operande(op);
 
                     break;
                 }
                 case 0x1e:
-                    instr->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    instr->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 case 0x1f:
                 case 0x20:
                 case 0x23:
 
-                    instr->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    instr->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 case 0x21:
-                    instr->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    instr->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    instr->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    instr->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 case 0x25:
-                    instr->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    instr->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 default:;
             }
 
             control_byte = ReadSubByteArray(content, addr, 1);
 
-            instr->AddOperande(Operande(addr, "byte", control_byte));
+            instr->add_operande(Operande(addr, "byte", control_byte));
         }
     }
     class CreateMonsters : public Instruction {
@@ -280,28 +280,28 @@ class TXBuilder : public Builder {
 
             if ((first == -1) && (addr + 0x20 == Maker->goal)) {
 
-                this->AddOperande(
+                this->add_operande(
                   Operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C))); //?? we don't forget to take the int as well
                 throw ssd::exceptions::unexpected_operand();
             }
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             int check1 = ReadIntegerFromByteArray(addr, content);
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
             int check2 = ReadIntegerFromByteArray(addr, content);
             if (check1 != 0 && check2 != 0) { // bad
                 addr = initial_addr;
                 throw ssd::exceptions::unexpected_operand();
             }
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x10
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x1A
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // 0x1C
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x10
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // 0x1A
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // 0x1C
             // 0x20
 
             int cnt = 0;
@@ -309,17 +309,17 @@ class TXBuilder : public Builder {
 
                 ssd::Buffer array = ReadSubByteArray(content, addr, 4);
                 first = ReadIntegerFromByteArray(0, array);
-                this->AddOperande(Operande(addr, "int", array));
+                this->add_operande(Operande(addr, "int", array));
 
                 int counter = 0;
 
                 if (first == -2) {
 
                     array = ReadSubByteArray(content, addr, 4);
-                    this->AddOperande(Operande(addr, "int", array));
+                    this->add_operande(Operande(addr, "int", array));
                     max_nb_monsters = 4;
                 } else if (first == -1) {
-                    this->AddOperande(Operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x18))); //?? it's empty
+                    this->add_operande(Operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x18))); //?? it's empty
                     return;
                 } else {
                     max_nb_monsters = 8;
@@ -334,29 +334,29 @@ class TXBuilder : public Builder {
                 do {
                     counter++;
                     ssd::Buffer monsters_name = ReadStringSubByteArray(content, addr);
-                    this->AddOperande(Operande(addr, "string", monsters_name));
+                    this->add_operande(Operande(addr, "string", monsters_name));
 
                     ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x10 - monsters_name.size());
                     auto fill = Operande(addr, "fill", remaining);
                     fill.set_bytes_to_fill(0x10);
-                    this->AddOperande(fill);
+                    this->add_operande(fill);
 
                 } while (counter < max_nb_monsters);
 
                 for (int idx_byte = 0; idx_byte < max_nb_monsters; idx_byte++) {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                 }
 
                 if ((unsigned char)content[addr] == 0) {
-                    this->AddOperande(Operande(addr, "bytearray", ReadSubByteArray(content, addr, max_nb_monsters))); //??
+                    this->add_operande(Operande(addr, "bytearray", ReadSubByteArray(content, addr, max_nb_monsters))); //??
                 } else {
                     ssd::Buffer monsters_name = ReadStringSubByteArray(content, addr);
-                    this->AddOperande(Operande(addr, "string", monsters_name));
+                    this->add_operande(Operande(addr, "string", monsters_name));
 
                     ssd::Buffer remaining = ReadSubByteArray(content, addr, 12 - monsters_name.size());
                     auto fill = Operande(addr, "bytearray", remaining);
                     fill.set_bytes_to_fill(12);
-                    this->AddOperande(fill);
+                    this->add_operande(fill);
                 }
 
                 first = ReadIntegerFromByteArray(addr, content);
@@ -372,7 +372,7 @@ class TXBuilder : public Builder {
                 }
                 return;
             }
-            this->AddOperande(
+            this->add_operande(
               Operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1C))); //?? we don't forget to take the int as well
         }
     };
@@ -390,17 +390,17 @@ class TXBuilder : public Builder {
 
             while (bytes_blocks_remain) {
 
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                 ssd::Buffer str = ReadStringSubByteArray(content, addr);
-                this->AddOperande(Operande(addr, "string", str));
+                this->add_operande(Operande(addr, "string", str));
 
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
 
                 auto fill = Operande(addr, "fill", remaining);
                 fill.set_bytes_to_fill(0x20);
-                this->AddOperande(fill);
+                this->add_operande(fill);
 
                 bytes_blocks_remain = Maker->goal >= addr + 0x28;
             }
@@ -418,49 +418,49 @@ class TXBuilder : public Builder {
           : Instruction(addr, "ActionTable", 258, Maker) {
 
             unsigned char current_byte = content[addr];
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             int cnt = 0;
             while (cnt < current_byte) {
 
                 ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
-                this->AddOperande(Operande(addr, "short", short_bytes));                       // 2
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-46
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-45
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-44
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-43
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-42
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-41
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-40
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-3F
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-3E
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-3D
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-3C
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-38
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-34
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-30
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-2C
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-28
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-24
+                this->add_operande(Operande(addr, "short", short_bytes));                       // 2
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-46
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-45
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-44
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-43
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-42
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-41
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-40
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-3F
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-3E
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // ebp-3D
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-3C
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-38
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-34
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-30
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-2C
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-28
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));  // ebp-24
                 ssd::Buffer str = ReadStringSubByteArray(content, addr);
-                this->AddOperande(Operande(addr, "string", str));
+                this->add_operande(Operande(addr, "string", str));
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x10 - str.size());
                 auto fill = Operande(addr, "fill", remaining);
                 fill.set_bytes_to_fill(0x10);
-                this->AddOperande(fill);
+                this->add_operande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
-                this->AddOperande(Operande(addr, "string", str));
+                this->add_operande(Operande(addr, "string", str));
                 remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 fill = Operande(addr, "fill", remaining);
                 fill.set_bytes_to_fill(0x20);
-                this->AddOperande(fill);
+                this->add_operande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
-                this->AddOperande(Operande(addr, "string", str));
+                this->add_operande(Operande(addr, "string", str));
                 remaining = ReadSubByteArray(content, addr, 0x30 - str.size());
                 fill = Operande(addr, "fill", remaining);
                 fill.set_bytes_to_fill(0x30);
-                this->AddOperande(fill);
+                this->add_operande(fill);
 
                 cnt++;
             }
@@ -478,15 +478,15 @@ class TXBuilder : public Builder {
           : Instruction(addr, "AddCollision", 271, Maker) {
 
             unsigned char current_byte = content[addr];
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             int cnt = 0;
             while (cnt < current_byte) {
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                 cnt++;
             }
@@ -504,29 +504,29 @@ class TXBuilder : public Builder {
           : Instruction(addr, "ConditionTable", 272, Maker) {
 
             unsigned char current_byte = content[addr];
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             int cnt = 0;
             while (cnt < current_byte) {
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // EBP-52
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-50
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-4C
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-48
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-44
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-40
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-3C
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-38
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-34
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-30
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-2C
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-28
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-24
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-20
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-1C
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-18
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-14
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // EBP-52
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-50
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-4C
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-48
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-44
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-40
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-3C
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-38
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-34
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-30
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-2C
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-28
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-24
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-20
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-1C
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-18
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));   // EBP-14
                 cnt++;
             }
         }
@@ -545,18 +545,18 @@ class TXBuilder : public Builder {
           : Instruction(addr, "AlgoTable", 259, Maker) {
             int cnt = 0;
             unsigned char current_byte = content[addr];
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // 3
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // 3
             while (cnt < current_byte) {
                 ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
 
-                this->AddOperande(Operande(addr, "short", short_bytes));
+                this->add_operande(Operande(addr, "short", short_bytes));
 
-                this->AddOperande(Operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1E)));
+                this->add_operande(Operande(addr, "bytearray", ReadSubByteArray(content, addr, 0x1E)));
                 if (addr + 0x20 > Maker->goal) return;
                 cnt++;
             }
 
-            // this->AddOperande(Operande(addr,"bytearray", ReadSubByteArray(content, addr,0x1E)));
+            // this->add_operande(Operande(addr,"bytearray", ReadSubByteArray(content, addr,0x1E)));
         }
     };
     class WeaponAttTable : public Instruction {
@@ -570,7 +570,7 @@ class TXBuilder : public Builder {
         WeaponAttTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "WeaponAttTable", 260, Maker) {
 
-            this->AddOperande(Operande(addr, "bytearray", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "bytearray", ReadSubByteArray(content, addr, 4)));
         }
     };
     class BreakTable : public Instruction {
@@ -585,10 +585,10 @@ class TXBuilder : public Builder {
           : Instruction(addr, "BreakTable", 261, Maker) {
             int cnt = 0;
             unsigned char current_byte = content[addr];
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // 3
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1))); // 3
             while (cnt < current_byte) {
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                 cnt++;
             }
         }
@@ -607,21 +607,21 @@ class TXBuilder : public Builder {
           : Instruction(addr, "SummonTable", 262, Maker) {
 
             unsigned char current_byte = content[addr];
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             int cnt = 0;
             while (cnt < current_byte) {
                 ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
                 uint16_t shrt = ReadShortFromByteArray(0, short_bytes);
-                this->AddOperande(Operande(addr, "short", short_bytes));
+                this->add_operande(Operande(addr, "short", short_bytes));
                 if (shrt == 0xFFFF) break;
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                 ssd::Buffer str = ReadStringSubByteArray(content, addr);
-                this->AddOperande(Operande(addr, "string", str));
+                this->add_operande(Operande(addr, "string", str));
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 auto fill = Operande(addr, "fill", remaining);
                 fill.set_bytes_to_fill(0x20);
-                this->AddOperande(fill);
+                this->add_operande(fill);
                 cnt++;
             }
         }
@@ -640,28 +640,28 @@ class TXBuilder : public Builder {
           : Instruction(addr, "ReactionTable", 263, Maker) {
             int cnt = 0;
             uint16_t current_shrt = ReadShortFromByteArray(addr, content);
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
             while (cnt < current_shrt) {
                 ssd::Buffer short_bytes = ReadSubByteArray(content, addr, 2);
 
-                this->AddOperande(Operande(addr, "short", short_bytes));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "short", short_bytes));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                 cnt++;
             }
@@ -680,26 +680,26 @@ class TXBuilder : public Builder {
         PartTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "PartTable", 264, Maker) {
             unsigned char current_byte = content[addr];
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             int cnt = 0;
             while (cnt < current_byte) {
 
                 ssd::Buffer int_bytes = ReadSubByteArray(content, addr, 4);
-                this->AddOperande(Operande(addr, "int", int_bytes));
+                this->add_operande(Operande(addr, "int", int_bytes));
 
                 ssd::Buffer str = ReadStringSubByteArray(content, addr);
-                this->AddOperande(Operande(addr, "string", str));
+                this->add_operande(Operande(addr, "string", str));
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 auto fill = Operande(addr, "fill", remaining);
                 fill.set_bytes_to_fill(0x20);
-                this->AddOperande(fill);
+                this->add_operande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
-                this->AddOperande(Operande(addr, "string", str));
+                this->add_operande(Operande(addr, "string", str));
                 remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 fill = Operande(addr, "fill", remaining);
                 fill.set_bytes_to_fill(0x20);
-                this->AddOperande(fill);
+                this->add_operande(fill);
 
                 cnt++;
             }
@@ -720,14 +720,14 @@ class TXBuilder : public Builder {
           : Instruction(addr, "AnimeClipTable", 265, Maker) {
 
             int first_integer = ReadIntegerFromByteArray(addr, content);
-            auto itt_current_fun = find_function_by_id(Maker->FunctionsToParse, Maker->idx_current_fun);
+            auto itt_current_fun = find_function_by_id(Maker->functions_to_parse, Maker->idx_current_fun);
             while (first_integer != 0) {
                 itt_current_fun->add_instruction(std::make_shared<AnimeClipData>(addr, content, Maker));
                 first_integer = ReadIntegerFromByteArray(addr, content);
             }
             ssd::Buffer first_integer_bytes = ReadSubByteArray(content, addr, 4);
-            this->AddOperande(Operande(addr, "int", first_integer_bytes));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", first_integer_bytes));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     class AnimeClipData : public Instruction {
@@ -742,19 +742,19 @@ class TXBuilder : public Builder {
           : Instruction(addr, "AnimeClipData", 273, Maker) {
 
             ssd::Buffer first_integer_bytes = ReadSubByteArray(content, addr, 4);
-            this->AddOperande(Operande(addr, "int", first_integer_bytes));
+            this->add_operande(Operande(addr, "int", first_integer_bytes));
             ssd::Buffer str = ReadStringSubByteArray(content, addr);
-            this->AddOperande(Operande(addr, "string", str));
+            this->add_operande(Operande(addr, "string", str));
             ssd::Buffer remaining = ReadSubByteArray(content, addr, (0x20) - str.size());
             auto fill = Operande(addr, "fill", remaining);
             fill.set_bytes_to_fill((0x20));
-            this->AddOperande(fill);
+            this->add_operande(fill);
             str = ReadStringSubByteArray(content, addr);
-            this->AddOperande(Operande(addr, "string", str));
+            this->add_operande(Operande(addr, "string", str));
             remaining = ReadSubByteArray(content, addr, (0x20) - str.size());
             fill = Operande(addr, "fill", remaining);
             fill.set_bytes_to_fill((0x20));
-            this->AddOperande(fill);
+            this->add_operande(fill);
         }
     };
     class FieldMonsterData
@@ -770,18 +770,18 @@ class TXBuilder : public Builder {
         FieldMonsterData(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 266, Maker) {
 
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     class FieldFollowData
@@ -797,11 +797,11 @@ class TXBuilder : public Builder {
         FieldFollowData(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 267, Maker) {
 
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     class FC_autoX
@@ -818,7 +818,7 @@ class TXBuilder : public Builder {
           : Instruction(addr, "FC_autoX", 268, Maker) {
 
             ssd::Buffer things = ReadStringSubByteArray(content, addr);
-            this->AddOperande(Operande(addr, "string", things));
+            this->add_operande(Operande(addr, "string", things));
         }
     };
     class BookData99
@@ -833,8 +833,8 @@ class TXBuilder : public Builder {
           : Instruction(addr, "BookData99", 269, Maker) {}
         BookData99(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "BookData99", 269, Maker) {
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     class BookDataX : public Instruction {
@@ -849,29 +849,29 @@ class TXBuilder : public Builder {
           : Instruction(addr, "BookDataX", 270, Maker) {
             ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             int16_t control = ReadShortFromByteArray(0, control_short);
-            this->AddOperande(Operande(addr, "short", control_short)); // 3
+            this->add_operande(Operande(addr, "short", control_short)); // 3
             if (control > 0) {
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                 ssd::Buffer title = ReadStringSubByteArray(content, addr);
-                this->AddOperande(Operande(addr, "string", title));
+                this->add_operande(Operande(addr, "string", title));
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x10 - title.size());
                 auto fill = Operande(addr, "bytearray", remaining);
                 fill.set_bytes_to_fill(0x10);
-                this->AddOperande(fill);
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x12
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x14
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x16
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x18
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x1A
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x1C
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x1E
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x20
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x22
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x24
-                this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(fill);
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x12
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x14
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x16
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x18
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x1A
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x1C
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x1E
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x20
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x22
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x24
+                this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
             } else {
                 if ((unsigned char)content[addr] != 1) {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                 }
             }
         }
@@ -918,808 +918,808 @@ class TXBuilder : public Builder {
 
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
 
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
                 case 0x00: {
 
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x01: {
 
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 10: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0xb: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0xc: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
 
                 case 0x26:
                 case 0xd: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0xe: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0xf: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x10: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x11: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x12: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x13: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x14: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x15: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x16: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x17: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x18: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x19: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x1B:
                 case 0x1A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x1C: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x1D: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x20:
                 case 0x1F:
                 case 0x1E: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x21: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x22: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
 
                 case 0x23: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x24: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x25: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x27: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x28: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x29: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x2A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x2B: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x2C: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x2D: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x2E: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x30:
                 case 0x2F: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x33: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x34: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x35: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x36: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x37: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x3B:
                 case 0x38: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x3A:
                 case 0x39: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x3C: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x41:
                 case 0x3D: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x3E: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x3F: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x40: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x44:
                 case 0x43: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x65: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x68: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x76:
                 case 0x69:
                 case 0x75: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x6B: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x6A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x6C: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x70: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x71: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x72: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x73: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
 
                 case 0x32: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x31: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -1743,7 +1743,7 @@ class TXBuilder : public Builder {
             addr++;
             sub05(addr, content, this);
 
-            this->AddOperande(Operande(addr, "pointer", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "pointer", ReadSubByteArray(content, addr, 4)));
         }
     };
 
@@ -1759,8 +1759,8 @@ class TXBuilder : public Builder {
         OPCode02(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x02, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0x03
@@ -1775,7 +1775,7 @@ class TXBuilder : public Builder {
         OPCode03(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x03, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "pointer", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "pointer", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x04
@@ -1790,8 +1790,8 @@ class TXBuilder : public Builder {
         OPCode04(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x04, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0x06
@@ -1808,18 +1808,18 @@ class TXBuilder : public Builder {
             addr++;
             sub05(addr, content, this);
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
 
             if ((unsigned char)control_byte[0] != 0) {
 
                 for (unsigned char i = 0; i < (unsigned char)control_byte[0]; i++) {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-                    this->AddOperande(Operande(addr, "pointer", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "pointer", ReadSubByteArray(content, addr, 4)));
                 }
             }
-            this->AddOperande(Operande(addr, "pointer", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "pointer", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x07
@@ -1834,7 +1834,7 @@ class TXBuilder : public Builder {
         OPCode07(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x07, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x08
@@ -1864,7 +1864,7 @@ class TXBuilder : public Builder {
         OPCode0A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x0A, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             sub05(addr, content, this);
         }
     };
@@ -1880,7 +1880,7 @@ class TXBuilder : public Builder {
         OPCode0C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x0C, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x0D
@@ -1895,7 +1895,7 @@ class TXBuilder : public Builder {
         OPCode0D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x0D, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x0E
@@ -1910,7 +1910,7 @@ class TXBuilder : public Builder {
         OPCode0E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x0E, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x0F
@@ -1925,7 +1925,7 @@ class TXBuilder : public Builder {
         OPCode0F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x0F, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x10
@@ -1940,7 +1940,7 @@ class TXBuilder : public Builder {
         OPCode10(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x10, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x11
@@ -1955,8 +1955,8 @@ class TXBuilder : public Builder {
         OPCode11(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x11, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x12
@@ -1971,7 +1971,7 @@ class TXBuilder : public Builder {
         OPCode12(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x12, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             sub05(addr, content, this);
         }
     };
@@ -1987,27 +1987,27 @@ class TXBuilder : public Builder {
         OPCode13(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x13, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-            this->AddOperande(
+            this->add_operande(
               Operande(addr, "int", ReadSubByteArray(content, addr, 4))); // i think this one is the id of the battle function it triggers
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
 
@@ -2023,10 +2023,10 @@ class TXBuilder : public Builder {
         OPCode14(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x14, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0x15
@@ -2041,8 +2041,8 @@ class TXBuilder : public Builder {
         OPCode15(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x15, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x16
@@ -2057,8 +2057,8 @@ class TXBuilder : public Builder {
         OPCode16(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x16, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x17
@@ -2073,7 +2073,7 @@ class TXBuilder : public Builder {
         OPCode17(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x17, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x18
@@ -2088,7 +2088,7 @@ class TXBuilder : public Builder {
         OPCode18(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x18, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             reading_dialog(addr, content, this);
         }
     };
@@ -2105,26 +2105,26 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x19, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x05:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -2142,7 +2142,7 @@ class TXBuilder : public Builder {
         OPCode1A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1A, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             reading_dialog(addr, content, this);
         }
     };
@@ -2158,7 +2158,7 @@ class TXBuilder : public Builder {
         OPCode1B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1B, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x1C
@@ -2187,8 +2187,8 @@ class TXBuilder : public Builder {
         OPCode1D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1D, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x1E
@@ -2203,9 +2203,9 @@ class TXBuilder : public Builder {
         OPCode1E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1E, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x1F
@@ -2221,65 +2221,65 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x1F, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte2));
+            this->add_operande(Operande(addr, "byte", control_byte2));
             if ((unsigned char)control_byte2[0] < 0x4) {
                 switch ((unsigned char)control_byte[0]) {
 
                     case 0x00: {
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                         break;
                     }
 
                     case 0x01: {
-                        this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         break;
                     }
                     case 0x02: {
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                         break;
                     }
                     case 0x04: {
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                         break;
                     }
                     case 0x05: {
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         break;
                     }
                     case 0x07:
                     case 0x06: {
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                         break;
                     }
                     case 0x08: {
-                        this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                         break;
                     }
                     case 0x09: {
-                        this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                         break;
                     }
                     case 0x0B: {
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         break;
                     }
 
                     case 0x0E:
                     case 0x0D: {
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                         break;
                     }
                 }
@@ -2299,17 +2299,17 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x20, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x02:
                 case 0x01:
                 case 0x04:
                 case 0x03:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
             }
@@ -2328,24 +2328,24 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x21, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
@@ -2364,19 +2364,19 @@ class TXBuilder : public Builder {
         OPCode22(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x22, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x23
@@ -2391,9 +2391,9 @@ class TXBuilder : public Builder {
         OPCode23(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x23, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x24
@@ -2410,8 +2410,8 @@ class TXBuilder : public Builder {
             addr++;
 
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
                 case 0:
                 case 1:
@@ -2420,43 +2420,43 @@ class TXBuilder : public Builder {
                 case 10:
                 case 0xB:
                 case 5: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
                 case 7:
                 case 6: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 9: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0xE: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
                 case 8: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
             }
@@ -2476,30 +2476,30 @@ class TXBuilder : public Builder {
             addr++;
 
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             switch ((unsigned char)control_byte[0]) {
                 /*case 1:{
-                    this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
                     break;
                 }*/
                 case 7:
                 case 8: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -2517,8 +2517,8 @@ class TXBuilder : public Builder {
         OPCode26(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x26, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0x27
@@ -2534,131 +2534,131 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x27, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
                 case 0x0A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x0B: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x0C: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
 
                 case 0x17: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
 
                 case 0x12: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
 
                 case 0x14: {
                     throw ssd::exceptions::parse_error("not entirely sure");
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x13: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x15: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0xD: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0xE: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x0F:
                 case 0x11: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x10: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x16: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x18: {
                     throw ssd::exceptions::parse_error("not sureeeeee");
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x19: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
                 case 0x1A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -2671,17 +2671,17 @@ class TXBuilder : public Builder {
         OPCode28(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x28,Maker){} OPCode28(int addr, Builder *Maker):Instruction(addr,"???",0x28,Maker){} OPCode28(int &addr, ssd::Buffer
     &content, Builder *Maker):Instruction(addr,"???", 0x28,Maker){ addr++; ssd::Buffer control_byte =
-    ReadSubByteArray(content, addr, 1); this->AddOperande(Operande(addr,"byte", control_byte)); switch((unsigned
-    char)control_byte[0]){ case 0x00:{ this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+    ReadSubByteArray(content, addr, 1); this->add_operande(Operande(addr,"byte", control_byte)); switch((unsigned
+    char)control_byte[0]){ case 0x00:{ this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
 
                 break;
             }
             case 0x01:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
                 break;
             }
@@ -2689,14 +2689,14 @@ class TXBuilder : public Builder {
             case 0x06:
             case 0x04:
             {
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
 
                 break;
             }
             case '\a':
             case 0x05:{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
                 break;
             }
@@ -2723,188 +2723,188 @@ class TXBuilder : public Builder {
             case 't':
             case 'u':
             case 'y':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case '\x0f':
             case '\n':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case '\f':
             case '4':
             case 'Z':
             case '\v':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '\x0e':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
 
             case '\x11':
             case 'z':{
 
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
 
                 break;
             }
             case '\x12':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                for (int i = 0; i<8; i++) this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                for (int i = 0; i<8; i++) this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case '\x13':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '\x15':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '2':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
                 break;
             }
             case '5':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
                 break;
             }
             case '6':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case '7':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
                 break;
             }
             case '<':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 'F':{
 
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 'P':{
 
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
                 break;
             }
             case '[':{
 
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '\\':{
 
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
 
                 break;
             }
             case 'a':{
 
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
                 break;
             }
             case 'd':{
 
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
                 break;
             }
             case 'n':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '~':
             case 'q':{
 
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
 
                 break;
             }
             case 'r':{
 
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
 
                 break;
             }
             case '{':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 'i':{
@@ -2919,21 +2919,21 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x51:{
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case 0x91:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case 0x1D:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
 
                 break;
             }
@@ -2943,12 +2943,12 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x26:{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0x28:{
@@ -2964,21 +2964,21 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x1A:{
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0x19:{
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 'b':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 break;
             }
             case 0x97:{
 
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 break;
             }
             case 0x76:{
@@ -2994,7 +2994,7 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x53:{
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 break;
             }
             case 0x68:{
@@ -3002,55 +3002,55 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x92:{
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0x93:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x96:
             case 0x95:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0x9D:{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 break;
             }
             case 0xA0:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0xA1:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0xA2:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0xA3:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0xA4:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0xA5:{
-                 this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                 this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                 this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                 this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                 this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                 this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x87:{
@@ -3070,8 +3070,8 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x02:{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x67:{
@@ -3079,7 +3079,7 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x03:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x6F:{
@@ -3091,8 +3091,8 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x83:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x85:{
@@ -3108,12 +3108,12 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x98:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x9E:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 break;
             }
             case 0x16:{
@@ -3121,8 +3121,8 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x2E:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x7F:{
@@ -3130,7 +3130,7 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x89:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
 
@@ -3138,12 +3138,12 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x52:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 break;
             }
             case 0x1F:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x18:{
@@ -3151,26 +3151,26 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x1E:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 break;
             }
             case 0x2C:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case 0x2D:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case 0x20:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
 
                 break;
             }
@@ -3190,39 +3190,39 @@ class TXBuilder : public Builder {
                 break;
             }
             case '\x17':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0x8F:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case 0x8E:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x99:{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 break;
             }
             case 0x9B:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x9C:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0x7D:{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 break;
             }
             case 0x49:{
-                this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0x88:{
@@ -3230,7 +3230,7 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x80:{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                 break;
             }
             case 0x9F:{
@@ -3238,12 +3238,12 @@ class TXBuilder : public Builder {
                 break;
             }
             case 0x81:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x82:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
                 break;
             }
             default:
@@ -3267,11 +3267,11 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x28, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x29
@@ -3286,7 +3286,7 @@ class TXBuilder : public Builder {
         OPCode29(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x29, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x2A
@@ -3301,8 +3301,8 @@ class TXBuilder : public Builder {
         OPCode2A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2A, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x2B
@@ -3317,8 +3317,8 @@ class TXBuilder : public Builder {
         OPCode2B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2B, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
 
@@ -3328,8 +3328,8 @@ class TXBuilder : public Builder {
         OPCode2C():Instruction(-1,0x2C,nullptr){}
         OPCode2C(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x2C,Maker){} OPCode2C(int addr, Builder *Maker):Instruction(addr,"???",0x2C,Maker){} OPCode2C(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0x2C,Maker){ addr++; this->AddOperande(Operande(addr,"short",
-    ReadSubByteArray(content, addr,2))); this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+    &content, Builder *Maker):Instruction(addr,"???", 0x2C,Maker){ addr++; this->add_operande(Operande(addr,"short",
+    ReadSubByteArray(content, addr,2))); this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
         }
 
@@ -3347,197 +3347,197 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x2C, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
                 case 0x02: {
 
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x14:
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x04: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x05: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x07: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x08: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x09: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x0B: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0D:
                 case 0x0C: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0E: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0F: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x11: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x12: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x13: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x15: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x16: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x17: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x18:
                 case 0x19: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x1A: {
 
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x1B: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x1E: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x22:
                 case 0x1F: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x21:
                 case 0x20: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x24: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x25: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x26: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
@@ -3556,11 +3556,11 @@ class TXBuilder : public Builder {
         OPCode2D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2D, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x2E
@@ -3575,16 +3575,16 @@ class TXBuilder : public Builder {
         OPCode2E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2E, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
 
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
             }
@@ -3602,12 +3602,12 @@ class TXBuilder : public Builder {
         OPCode2F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2F, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x30
@@ -3623,51 +3623,51 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x30, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 1: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 2: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 default: {
                     break;
                 }
                 case 3: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 4: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 5: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 6: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -3686,15 +3686,15 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x31, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
 
             if ((unsigned char)control_byte[0] > 0xFD) {
                 if ((unsigned char)control_byte[0] == 0xFE) {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                 } else if ((unsigned char)control_byte[0] == 0xFF) {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                 }
 
                 return;
@@ -3704,87 +3704,87 @@ class TXBuilder : public Builder {
                 case 0x00:
                 case 0x14:
                 case 0x32: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x33:
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x34:
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x35:
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x39:
                 case 0x37:
                 case 0x3B:
                 case 0x05: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
 
                 case 0x3A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 100: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x65: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x96: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x97: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 4:
@@ -3923,7 +3923,7 @@ class TXBuilder : public Builder {
                 case 0x95:
                     break;
                 default: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                 }
             }
         }
@@ -3941,34 +3941,34 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x32, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x04: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
@@ -3987,10 +3987,10 @@ class TXBuilder : public Builder {
         OPCode33(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x33, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x34
@@ -4005,10 +4005,10 @@ class TXBuilder : public Builder {
         OPCode34(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x34, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x35
@@ -4023,7 +4023,7 @@ class TXBuilder : public Builder {
         OPCode35(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x35, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x36
@@ -4038,21 +4038,21 @@ class TXBuilder : public Builder {
         OPCode36(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x36, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
-            this->AddOperande(Operande(addr, "short", control_short));
+            this->add_operande(Operande(addr, "short", control_short));
             int16_t second_arg = ReadShortFromByteArray(0, control_short);
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             if ((second_arg == -0x1fe) || (second_arg == -0x1fd)) {
-                this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             }
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             if (second_arg == -0x1fc) {
-                this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
             }
         }
     };
@@ -4069,9 +4069,9 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x37, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x38
@@ -4086,15 +4086,15 @@ class TXBuilder : public Builder {
         OPCode38(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x38, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x39
@@ -4110,12 +4110,12 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x39, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             unsigned char code = control_byte[0];
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch (code) {
                 case 0xFF: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0C:
@@ -4127,8 +4127,8 @@ class TXBuilder : public Builder {
                     break;
                 }
                 default: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -4146,11 +4146,11 @@ class TXBuilder : public Builder {
         OPCode3A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3A, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x3B
@@ -4165,12 +4165,12 @@ class TXBuilder : public Builder {
         OPCode3B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3B, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x3C
@@ -4187,19 +4187,19 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x3C, Maker) {
             addr++;
             ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
-            this->AddOperande(Operande(addr, "short", control_short));
+            this->add_operande(Operande(addr, "short", control_short));
             ssd::Buffer control_short2 = ReadSubByteArray(content, addr, 2);
-            this->AddOperande(Operande(addr, "short", control_short2));
+            this->add_operande(Operande(addr, "short", control_short2));
             ssd::Buffer control_short3 = ReadSubByteArray(content, addr, 2);
-            this->AddOperande(Operande(addr, "short", control_short3));
+            this->add_operande(Operande(addr, "short", control_short3));
             uint16_t short1 = ReadShortFromByteArray(0, control_short);
             ssd::Buffer control_short4 = ReadSubByteArray(content, addr, 2);
-            this->AddOperande(Operande(addr, "short", control_short4));
+            this->add_operande(Operande(addr, "short", control_short4));
 
             if (short1 == 1) {
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             }
         }
     };
@@ -4215,9 +4215,9 @@ class TXBuilder : public Builder {
         OPCode3D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3D, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x3E
@@ -4232,10 +4232,10 @@ class TXBuilder : public Builder {
         OPCode3E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3E, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x3F
@@ -4251,7 +4251,7 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x3F, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x09:
                 case 0x0A:
@@ -4264,32 +4264,32 @@ class TXBuilder : public Builder {
                 case 0x13:
                 case 0x00: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x08: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0D: {
                     for (int i = 0; i < 0x18; i++) {
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     }
                     break;
                 }
                 case 0x1A:
                 case 0x0E:
                 case 0x16: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x19: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -4307,12 +4307,12 @@ class TXBuilder : public Builder {
         OPCode40(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x40, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x41
@@ -4328,13 +4328,13 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x41, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
 
@@ -4350,8 +4350,8 @@ class TXBuilder : public Builder {
         OPCode42(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x42, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
 
@@ -4367,7 +4367,7 @@ class TXBuilder : public Builder {
         OPCode43(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x43, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x44
@@ -4383,56 +4383,56 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x44, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
 
                 case 0x00: {
 
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x04:
                 case 0x05: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x06: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x07: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x08: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
             }
@@ -4451,8 +4451,8 @@ class TXBuilder : public Builder {
         OPCode45(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x45, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     class OPCode46 : public Instruction {
@@ -4467,25 +4467,25 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x46, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 3:
                 case 1: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 2: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -4498,12 +4498,12 @@ class TXBuilder : public Builder {
         OPCode47():Instruction(-1,0x47,nullptr){}
         OPCode47(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x47,Maker){} OPCode47(int addr, Builder *Maker):Instruction(addr,"???",0x47,Maker){} OPCode47(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0x47,Maker){ addr++; this->AddOperande(Operande(addr,"float",
-    ReadSubByteArray(content, addr,4))); this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+    &content, Builder *Maker):Instruction(addr,"???", 0x47,Maker){ addr++; this->add_operande(Operande(addr,"float",
+    ReadSubByteArray(content, addr,4))); this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+            this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+            this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+            this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
         }
 
@@ -4520,8 +4520,8 @@ class TXBuilder : public Builder {
         OPCode47(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x47, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x48
@@ -4536,7 +4536,7 @@ class TXBuilder : public Builder {
         OPCode48(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x48, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x49
@@ -4546,7 +4546,7 @@ class TXBuilder : public Builder {
         OPCode49(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x49,Maker){} OPCode49(int addr, Builder *Maker):Instruction(addr,"???",0x49,Maker){} OPCode49(int &addr, ssd::Buffer
     &content, Builder *Maker):Instruction(addr,"???", 0x49,Maker){ addr++; ssd::Buffer control_byte =
-    ReadSubByteArray(content, addr, 1); this->AddOperande(Operande(addr,"byte", control_byte)); switch((unsigned
+    ReadSubByteArray(content, addr, 1); this->add_operande(Operande(addr,"byte", control_byte)); switch((unsigned
     char)control_byte[0]){
 
             case 0x0A:
@@ -4557,76 +4557,76 @@ class TXBuilder : public Builder {
             case 0x02:
             case 0x01:
             case 0x00:{
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '\r':{
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case 0x14:{
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case 0x15:{
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
 
                 break;
             }
             case 0xE:{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
 
                 break;
             }
             case 0x17:{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 0x18:{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
                 break;
             }
             case 0x19:{
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
                 break;
             }
             case 0x1C:{
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case '!':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '(':
@@ -4634,98 +4634,98 @@ class TXBuilder : public Builder {
             case '#':
             case '\v':
             case '3':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case '&':{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
                 break;
             }
             case ')':{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case '+':{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case '4':
             case '0':
             case ',':{
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
                 break;
             }
             case '5':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
                 break;
             }
             case '7':{
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
             case '8':{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
                 break;
             }
             case '9':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                 break;
             }
             case ':':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case ';':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '<':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '=':{
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case '>':{
-                this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
-                this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
-                this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                 break;
             }
             case 'D':
             case 'B':
             case '@':{
-                this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                 break;
             }
 
@@ -4745,23 +4745,23 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x49, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x01: {
 
                     ssd::Buffer str = ReadStringSubByteArray(content, addr);
-                    this->AddOperande(Operande(addr, "string", str));
+                    this->add_operande(Operande(addr, "string", str));
 
                     ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                     auto fill = Operande(addr, "fill", remaining);
                     fill.set_bytes_to_fill(0x20);
-                    this->AddOperande(fill);
+                    this->add_operande(fill);
                     break;
                 }
                 case 0x0A:
@@ -4769,144 +4769,144 @@ class TXBuilder : public Builder {
                 case 0x02:
                 case 0x03: { // Here, not entirely sure, doesn't seem to be used tho. Example I found has 0x20 zeros.
                     ssd::Buffer str = ReadStringSubByteArray(content, addr);
-                    this->AddOperande(Operande(addr, "string", str));
+                    this->add_operande(Operande(addr, "string", str));
 
                     ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                     auto fill = Operande(addr, "fill", remaining);
                     fill.set_bytes_to_fill(0x20);
-                    this->AddOperande(fill);
+                    this->add_operande(fill);
                     break;
                 }
                 case 0x0B: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0D: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x0E: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x14: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x15: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x17: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x18: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x19: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
                 case 0x1A:
                 case 0x1B:
                 case 0x3D: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x1C: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x21: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x28:
                 case 0x24:
                 case 0x23: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x29: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     throw ssd::exceptions::parse_error("not sure here");
                     break;
                 }
                 case 0x2B: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     throw ssd::exceptions::parse_error("not sure here");
                 }
                 case 0x34:
                 case 0x30: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x33: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x35: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
                 case 0x38: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x40:
                 case 0x39: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x3A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x3B: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -4916,40 +4916,40 @@ class TXBuilder : public Builder {
                 }
                 case 0x3E: {
 
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
 
                     break;
                 }
                 case 0x44: {
 
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x45:
                 case 0x46: {
 
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x47: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x48: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
@@ -4969,23 +4969,23 @@ class TXBuilder : public Builder {
         OPCode4A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x4A, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0x4B
@@ -5000,14 +5000,14 @@ class TXBuilder : public Builder {
         OPCode4B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x4B, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x4C
@@ -5022,8 +5022,8 @@ class TXBuilder : public Builder {
         OPCode4C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x4C, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x4D
@@ -5038,7 +5038,7 @@ class TXBuilder : public Builder {
         OPCode4D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x4D, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x4F
@@ -5047,7 +5047,7 @@ class TXBuilder : public Builder {
         OPCode4F():Instruction(-1,0x4F,nullptr){}
         OPCode4F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x4F,Maker){} OPCode4F(int addr, Builder *Maker):Instruction(addr,"???",0x4F,Maker){} OPCode4F(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0x4F,Maker){ addr++; this->AddOperande(Operande(addr,"byte",
+    &content, Builder *Maker):Instruction(addr,"???", 0x4F,Maker){ addr++; this->add_operande(Operande(addr,"byte",
     ReadSubByteArray(content, addr, 1)));
         }
 
@@ -5064,12 +5064,12 @@ class TXBuilder : public Builder {
         OPCode4F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x4F, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x50
@@ -5084,8 +5084,8 @@ class TXBuilder : public Builder {
         OPCode50(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x50, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             sub05(addr, content, this);
         }
     };
@@ -5101,9 +5101,9 @@ class TXBuilder : public Builder {
         OPCode51(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x51, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0x52
@@ -5118,18 +5118,18 @@ class TXBuilder : public Builder {
         OPCode52(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x52, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x53
@@ -5145,13 +5145,13 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x53, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
             if ((unsigned char)control_byte[0] == 0) {
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             }
         }
     };
@@ -5167,9 +5167,9 @@ class TXBuilder : public Builder {
         OPCode55(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x55, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0x56
@@ -5184,18 +5184,18 @@ class TXBuilder : public Builder {
         OPCode56(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x56, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x57
@@ -5224,8 +5224,8 @@ class TXBuilder : public Builder {
         OPCode58(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x58, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x59
@@ -5234,7 +5234,7 @@ class TXBuilder : public Builder {
         OPCode59():Instruction(-1,0x59,nullptr){}
         OPCode59(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x59,Maker){} OPCode59(int addr, Builder *Maker):Instruction(addr,"???",0x59,Maker){} OPCode59(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0x59,Maker){ addr++; this->AddOperande(Operande(addr,"short",
+    &content, Builder *Maker):Instruction(addr,"???", 0x59,Maker){ addr++; this->add_operande(Operande(addr,"short",
     ReadSubByteArray(content, addr,2)));
 
         }
@@ -5253,16 +5253,16 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x5A, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x01:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
             }
@@ -5281,18 +5281,18 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x5B, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x06:
                 case 0x04:
                 case 0x01:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
             }
@@ -5305,12 +5305,12 @@ class TXBuilder : public Builder {
          OPCode5D(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
      0x5D,Maker){} OPCode5D(int addr, Builder *Maker):Instruction(addr,"???",0x5D,Maker){} OPCode5D(int &addr,
      ssd::Buffer &content, Builder *Maker):Instruction(addr,"???", 0x5D,Maker){ addr++; ssd::Buffer control_byte =
-     ReadSubByteArray(content, addr, 1); this->AddOperande(Operande(addr,"byte", control_byte));
-             this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+     ReadSubByteArray(content, addr, 1); this->add_operande(Operande(addr,"byte", control_byte));
+             this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
          switch((unsigned char)control_byte[0]){
              case 0x01:
              case 0x00:{
-                 this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                 this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                  break;
              }
          }
@@ -5330,112 +5330,112 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x5D, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
             switch ((unsigned char)control_byte[0]) {
                 case 0x01:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x04:
                 case 0x03:
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
 
                 case '\a': {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case '\b': {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case '\v': {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x0D:
                 case 0x0C: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x0E: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x0F: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x10: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
                 case 0x11: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x12: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x14: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x15: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x16: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x17: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x18: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -5456,44 +5456,44 @@ class TXBuilder : public Builder {
             addr++;
 
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x03:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
 
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x0C:
                 case 0x0B:
                 case 0x0A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x04: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
 
                 case 0x05:
                 case 0x06: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
@@ -5510,13 +5510,13 @@ class TXBuilder : public Builder {
     &content, Builder *Maker):Instruction(addr,"???", 0x5F,Maker){ addr++;
 
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr,"byte", control_byte));
+            this->add_operande(Operande(addr,"byte", control_byte));
             switch((unsigned char)control_byte[0]){
                 case 0x00:{
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
-                    this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                    this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                     break;
                 }
                 case 0x0B:
@@ -5526,35 +5526,35 @@ class TXBuilder : public Builder {
                 case 0x04:
                 case 0x13:
                 case 0x01:{
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                     break;
                 }
                 case 0x05:
                 case 0x03:
                 case 0x02:{
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     break;
                 }
                 case 0x06:{
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
                     break;
                 }
                 case 0x0A:{
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
                     break;
                 }
                 case 0x0E:{
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr, 4)));;
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr, 4)));;
                     break;
                 }
                 case 0x0D:
@@ -5562,14 +5562,14 @@ class TXBuilder : public Builder {
                 case 0x0F:
                 case 0x12:{
 
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
 
                     break;
                 }
                 case 0x10:
                 case 0x11:{
-                    this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+                    this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
 
                     break;
                 }
@@ -5591,42 +5591,42 @@ class TXBuilder : public Builder {
         OPCode5F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x5F, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00:
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x04: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x05: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -5639,12 +5639,12 @@ class TXBuilder : public Builder {
         OPCode61():Instruction(-1,0x61,nullptr){}
         OPCode61(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x61,Maker){} OPCode61(int addr, Builder *Maker):Instruction(addr,"???",0x61,Maker){} OPCode61(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0x61,Maker){ addr++; this->AddOperande(Operande(addr,"byte",
-    ReadSubByteArray(content, addr, 1)));; this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-        this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-        this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-        this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-        this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+    &content, Builder *Maker):Instruction(addr,"???", 0x61,Maker){ addr++; this->add_operande(Operande(addr,"byte",
+    ReadSubByteArray(content, addr, 1)));; this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+        this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+        this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+        this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+        this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
         }
 
     };*/
@@ -5660,12 +5660,12 @@ class TXBuilder : public Builder {
         OPCode60(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x60, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x61
@@ -5681,8 +5681,8 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x61, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x63
@@ -5697,12 +5697,12 @@ class TXBuilder : public Builder {
         OPCode63(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x63, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x64
@@ -5718,24 +5718,24 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x64, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x11: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x14: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x16: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
             }
@@ -5754,22 +5754,22 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x65, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
 
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x09:
                 case 0x04:
                 case 0x0C: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
@@ -5777,30 +5777,30 @@ class TXBuilder : public Builder {
                 case 0x07:
                 case 0x0B:
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
 
                 case 0x05:
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x06: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
             }
@@ -5819,8 +5819,8 @@ class TXBuilder : public Builder {
         OPCode66(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x66, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x68
@@ -5836,23 +5836,23 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x67, Maker) {
             addr++;
             ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
-            this->AddOperande(Operande(addr, "short", control_short));
+            this->add_operande(Operande(addr, "short", control_short));
 
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             unsigned char code = control_byte[0];
             switch (code) {
                 case 0x02:
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x03:
                 case 0x04: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
             }
@@ -5870,19 +5870,19 @@ class TXBuilder : public Builder {
         OPCode68(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x68, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
@@ -5902,41 +5902,41 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x69, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
 
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x14: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -5956,47 +5956,47 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x6A, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte2));
+            this->add_operande(Operande(addr, "byte", control_byte2));
 
             if ((unsigned char)control_byte2[0] < 4) {
                 switch ((unsigned char)control_byte[0]) {
                     case 0x00: {
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                        this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                         break;
                     }
 
                     case 0x01: {
-                        this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         break;
                     }
                     case 0x02: {
 
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                         break;
                     }
                     case 0x04: {
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                         break;
                     }
                     case 0x05: {
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                         break;
                     }
                     case 0x09:
                     case 0x07:
                     case 0x06: {
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         break;
                     }
                 }
@@ -6015,14 +6015,14 @@ class TXBuilder : public Builder {
         OPCode6B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x6B, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x6C
@@ -6038,7 +6038,7 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x6C, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x6D
@@ -6054,29 +6054,29 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x6D, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
             }
@@ -6095,17 +6095,17 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x6E, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x05: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0C: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
             }
@@ -6124,18 +6124,18 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x6F, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
 
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x02:
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
@@ -6155,14 +6155,14 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x70, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             unsigned char code = control_byte[0];
             if (code == 0x01) {
-                this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             }
         }
     };
@@ -6173,15 +6173,15 @@ class TXBuilder : public Builder {
         OPCode72(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x72,Maker){} OPCode72(int addr, Builder *Maker):Instruction(addr,"???",0x72,Maker){} OPCode72(int &addr, ssd::Buffer
     &content, Builder *Maker):Instruction(addr,"???", 0x72,Maker){ addr++; ssd::Buffer control_byte =
-    ReadSubByteArray(content, addr, 1); this->AddOperande(Operande(addr,"byte", control_byte)); unsigned char code =
-    control_byte[0]; if (code == 0x00){ this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+    ReadSubByteArray(content, addr, 1); this->add_operande(Operande(addr,"byte", control_byte)); unsigned char code =
+    control_byte[0]; if (code == 0x00){ this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
         }
         }
 
@@ -6198,9 +6198,9 @@ class TXBuilder : public Builder {
         OPCode72(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x72, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x73
@@ -6217,40 +6217,40 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x73, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0xFF:
                 case 0x06:
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x04: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x05: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x07: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0xFD:
                 case 0xFE:
                 case 0xFC: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -6261,7 +6261,7 @@ class TXBuilder : public Builder {
                     break;
                 }
                 default: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -6281,10 +6281,10 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x74, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
             }
@@ -6302,7 +6302,7 @@ class TXBuilder : public Builder {
         OPCode75(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x75, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x78
@@ -6318,15 +6318,15 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x78, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x79
@@ -6343,20 +6343,20 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x79, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     return;
                     break;
                 }
             }
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x7A
@@ -6371,11 +6371,11 @@ class TXBuilder : public Builder {
         OPCode7A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7A, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x7B
@@ -6386,8 +6386,8 @@ class TXBuilder : public Builder {
     0x7B,Maker){} OPCode7B(int addr, Builder *Maker):Instruction(addr,"???",0x7B,Maker){} OPCode7B(int &addr, ssd::Buffer
     &content, Builder *Maker):Instruction(addr,"???", 0x7B,Maker){ addr++;
 
-            this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-            this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+            this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+            this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
         }
 
     };*/
@@ -6406,18 +6406,18 @@ class TXBuilder : public Builder {
             addr++;
 
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0x7D
@@ -6433,8 +6433,8 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x7D, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x7E
@@ -6449,7 +6449,7 @@ class TXBuilder : public Builder {
         OPCode7E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7E, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x7F
@@ -6465,55 +6465,55 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x7F, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch (control_byte[0]) {
                 case 0x01:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case -2: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case -1: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 default: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                 }
             }
         }
@@ -6530,13 +6530,13 @@ class TXBuilder : public Builder {
         OPCode80(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x80, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
         }
     };
     // 0x81
@@ -6552,12 +6552,12 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x81, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             unsigned char code = control_byte[0];
             if (code == 0x00) {
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             } else if (code == 0x03) {
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             }
         }
     };
@@ -6567,9 +6567,9 @@ class TXBuilder : public Builder {
         OPCode82():Instruction(-1,0x82,nullptr){}
         OPCode82(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x82,Maker){} OPCode82(int addr, Builder *Maker):Instruction(addr,"???",0x82,Maker){} OPCode82(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0x82,Maker){ addr++; this->AddOperande(Operande(addr,"short",
-    ReadSubByteArray(content, addr,2))); this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+    &content, Builder *Maker):Instruction(addr,"???", 0x82,Maker){ addr++; this->add_operande(Operande(addr,"short",
+    ReadSubByteArray(content, addr,2))); this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
         }
     };*/
     // 0x82
@@ -6584,11 +6584,11 @@ class TXBuilder : public Builder {
         OPCode82(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x82, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x83
@@ -6603,14 +6603,14 @@ class TXBuilder : public Builder {
         OPCode83(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x83, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x84
@@ -6639,8 +6639,8 @@ class TXBuilder : public Builder {
         OPCode85(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x85, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x86
@@ -6656,42 +6656,42 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x86, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x01:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x04: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x0A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0B: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0C: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x63: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x64: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x3: {
@@ -6713,8 +6713,8 @@ class TXBuilder : public Builder {
         OPCode87(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x87, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x88
@@ -6730,10 +6730,10 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x88, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             unsigned char code = control_byte[0];
             if (code == 0x00) {
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             }
         }
     };
@@ -6751,16 +6751,16 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x89, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             unsigned char code = control_byte[0];
             if ((code == 0x00) || (code == 0x14)) {
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
             } else if (code == 0x0A) {
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             }
         }
     };
@@ -6777,13 +6777,13 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x8A, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             unsigned char code = control_byte[0];
             if (code == 0x00) {
-                this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             }
         }
     };
@@ -6799,9 +6799,9 @@ class TXBuilder : public Builder {
         OPCode8C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x8C, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x8D
@@ -6810,7 +6810,7 @@ class TXBuilder : public Builder {
         OPCode8D():Instruction(-1,0x8D,nullptr){}
         OPCode8D(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x8D,Maker){} OPCode8D(int addr, Builder *Maker):Instruction(addr,"???",0x8D,Maker){} OPCode8D(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0x8D,Maker){ addr++; this->AddOperande(Operande(addr,"short",
+    &content, Builder *Maker):Instruction(addr,"???", 0x8D,Maker){ addr++; this->add_operande(Operande(addr,"short",
     ReadSubByteArray(content, addr,2)));
 
         }
@@ -6829,16 +6829,16 @@ class TXBuilder : public Builder {
             addr++;
             ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
             int16_t control = ReadShortFromByteArray(0, control_short);
-            this->AddOperande(Operande(addr, "short", control_short));
+            this->add_operande(Operande(addr, "short", control_short));
             switch (control) {
                 case 0x02:
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
             }
@@ -6856,7 +6856,7 @@ class TXBuilder : public Builder {
         OPCode8E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x8E, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x8F
@@ -6871,10 +6871,10 @@ class TXBuilder : public Builder {
         OPCode8F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x8F, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x90
@@ -6890,10 +6890,10 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x90, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
@@ -6913,10 +6913,10 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x91, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -6935,8 +6935,8 @@ class TXBuilder : public Builder {
         OPCode92(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x92, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
 
@@ -6953,60 +6953,60 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x93, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte2));
+            this->add_operande(Operande(addr, "byte", control_byte2));
             if ((unsigned char)control_byte2[0] == 1) {
                 switch ((unsigned char)control_byte[0]) {
                     case 0x01: {
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                         break;
                     }
                     case 0x03: {
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                         break;
                     }
                     case 0x05: {
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                         break;
                     }
                     case 0x08: {
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                        this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                        this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                         break;
                     }
                     case 0x0D: {
-                        this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                        this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                         break;
                     }
                     case 0x10: {
-                        this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                        this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                        this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                        this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                        this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                        this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                         break;
                     }
                     case 0x14:
                     case 0x12: {
-                        this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                        this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                         break;
                     }
                     case 0x17: {
-                        this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                        this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
 
                         break;
                     }
@@ -7026,10 +7026,10 @@ class TXBuilder : public Builder {
         OPCode94(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x94, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x95
@@ -7058,11 +7058,11 @@ class TXBuilder : public Builder {
         OPCode96(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x96, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x97
@@ -7077,7 +7077,7 @@ class TXBuilder : public Builder {
         OPCode97(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x97, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x98
@@ -7086,8 +7086,8 @@ class TXBuilder : public Builder {
         OPCode98():Instruction(-1,0x98,nullptr){}
         OPCode98(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x98,Maker){} OPCode98(int addr, Builder *Maker):Instruction(addr,"???",0x98,Maker){} OPCode98(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0x98,Maker){ addr++; this->AddOperande(Operande(addr,"short",
-    ReadSubByteArray(content, addr,2))); this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+    &content, Builder *Maker):Instruction(addr,"???", 0x98,Maker){ addr++; this->add_operande(Operande(addr,"short",
+    ReadSubByteArray(content, addr,2))); this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
         }
     };*/
     // 0x99
@@ -7116,24 +7116,24 @@ class TXBuilder : public Builder {
         OPCode9A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x9A, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0x9B
@@ -7143,10 +7143,10 @@ class TXBuilder : public Builder {
         OPCode9B(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x9B,Maker){} OPCode9B(int addr, Builder *Maker):Instruction(addr,"???",0x9B,Maker){} OPCode9B(int &addr, ssd::Buffer
     &content, Builder *Maker):Instruction(addr,"???", 0x9B,Maker){ addr++; ssd::Buffer control_byte =
-    ReadSubByteArray(content, addr, 1); this->AddOperande(Operande(addr,"byte", control_byte)); switch((unsigned
-    char)control_byte[0]){ case 0x01: case 0x02:{ this->AddOperande(Operande(addr,"short", ReadSubByteArray(content,
-    addr,2))); this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+    ReadSubByteArray(content, addr, 1); this->add_operande(Operande(addr,"byte", control_byte)); switch((unsigned
+    char)control_byte[0]){ case 0x01: case 0x02:{ this->add_operande(Operande(addr,"short", ReadSubByteArray(content,
+    addr,2))); this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
 
 
                     break;
@@ -7154,12 +7154,12 @@ class TXBuilder : public Builder {
                 case 0x03:
                 case 0x04:
                 {
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-                    this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                    this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                    this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
-                    this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+                    this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
                     break;
                 }
             }
@@ -7177,10 +7177,10 @@ class TXBuilder : public Builder {
         OPCode9B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x9B, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x9D
@@ -7195,7 +7195,7 @@ class TXBuilder : public Builder {
         OPCode9D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x9D, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0x9E
@@ -7210,7 +7210,7 @@ class TXBuilder : public Builder {
         OPCode9E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x9E, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0x9F
@@ -7219,25 +7219,25 @@ class TXBuilder : public Builder {
         OPCode9F():Instruction(-1,0x9F,nullptr){}
         OPCode9F(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0x9F,Maker){} OPCode9F(int addr, Builder *Maker):Instruction(addr,"???",0x9F,Maker){} OPCode9F(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0x9F,Maker){ addr++; this->AddOperande(Operande(addr,"byte",
-    ReadSubByteArray(content, addr, 1)));; this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
-            this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
-            this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
-            this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+    &content, Builder *Maker):Instruction(addr,"???", 0x9F,Maker){ addr++; this->add_operande(Operande(addr,"byte",
+    ReadSubByteArray(content, addr, 1)));; this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+            this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+            this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+            this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+            this->add_operande(Operande(addr,"int", ReadSubByteArray(content, addr,4)));
+            this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr, 1)));;
+            this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
-            this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content, addr)));
 
         }
     };*/
@@ -7254,26 +7254,26 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0x9F, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0xA0
@@ -7289,54 +7289,54 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xA0, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00:
                 case 0x04: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x02:
                 case 0x05: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x03: {
 
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
             }
@@ -7355,10 +7355,10 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xA1, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
@@ -7366,7 +7366,7 @@ class TXBuilder : public Builder {
                 case 0x04:
                 case 0x02:
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
@@ -7387,9 +7387,9 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xA2, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0xA3
@@ -7398,8 +7398,8 @@ class TXBuilder : public Builder {
         OPCodeA3():Instruction(-1,0xA3,nullptr){}
         OPCodeA3(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0xA3,Maker){} OPCodeA3(int addr, Builder *Maker):Instruction(addr,"???",0xA3,Maker){} OPCodeA3(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0xA3,Maker){ addr++; this->AddOperande(Operande(addr,"byte",
-    ReadSubByteArray(content, addr,1))); this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+    &content, Builder *Maker):Instruction(addr,"???", 0xA3,Maker){ addr++; this->add_operande(Operande(addr,"byte",
+    ReadSubByteArray(content, addr,1))); this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
         }
     };*/
     // 0xA3
@@ -7414,8 +7414,8 @@ class TXBuilder : public Builder {
         OPCodeA3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xA3, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0xA4
@@ -7430,7 +7430,7 @@ class TXBuilder : public Builder {
         OPCodeA4(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xA4, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0xA6
@@ -7440,7 +7440,7 @@ class TXBuilder : public Builder {
         OPCodeA6(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0xA6,Maker){} OPCodeA6(int addr, Builder *Maker):Instruction(addr,"???",0xA6,Maker){} OPCodeA6(int &addr, ssd::Buffer
     &content, Builder *Maker):Instruction(addr,"???", 0xA6,Maker){ addr++; ssd::Buffer control_byte =
-    ReadSubByteArray(content, addr, 1); this->AddOperande(Operande(addr,"byte", control_byte)); switch((unsigned
+    ReadSubByteArray(content, addr, 1); this->add_operande(Operande(addr,"byte", control_byte)); switch((unsigned
     char)control_byte[0]){
 
 
@@ -7449,7 +7449,7 @@ class TXBuilder : public Builder {
                 case 0x04:
                 case 0x0E:
                 {
-                    this->AddOperande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
+                    this->add_operande(Operande(addr,"byte", ReadSubByteArray(content, addr,1)));
                     break;
                 }
 
@@ -7469,9 +7469,9 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xA6, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0xA7
@@ -7487,8 +7487,8 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xA7, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0xA8
@@ -7504,12 +7504,12 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xA8, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0xA9
@@ -7538,11 +7538,11 @@ class TXBuilder : public Builder {
         OPCodeAA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xAA, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0xAB
@@ -7557,8 +7557,8 @@ class TXBuilder : public Builder {
         OPCodeAB(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xAB, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     // 0xAC
@@ -7573,9 +7573,9 @@ class TXBuilder : public Builder {
         OPCodeAC(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xAC, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0xAD
@@ -7590,10 +7590,10 @@ class TXBuilder : public Builder {
         OPCodeAD(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xAD, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
         }
     };
     // 0xAE
@@ -7609,9 +7609,9 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xAE, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0xAF
@@ -7627,33 +7627,33 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xAF, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
                 case 0x65: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x66: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x67: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x69: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -7667,8 +7667,8 @@ class TXBuilder : public Builder {
         OPCodeB0(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0xB0,Maker){} OPCodeB0(int addr, Builder *Maker):Instruction(addr,"???",0xB0,Maker){} OPCodeB0(int &addr, ssd::Buffer
     &content, Builder *Maker):Instruction(addr,"???", 0xB0,Maker){ addr++; ssd::Buffer control_byte =
-    ReadSubByteArray(content, addr, 1); this->AddOperande(Operande(addr,"byte", control_byte)); switch((unsigned
-    char)control_byte[0]){ case 0x02:{ this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
+    ReadSubByteArray(content, addr, 1); this->add_operande(Operande(addr,"byte", control_byte)); switch((unsigned
+    char)control_byte[0]){ case 0x02:{ this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr,2)));
                     break;
                 }
             }
@@ -7689,7 +7689,7 @@ class TXBuilder : public Builder {
         OPCodeB0(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xB0, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     // 0xB1
@@ -7705,74 +7705,74 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xB1, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x04:
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x06: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x0A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x0D:
                 case 0x0C: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x0E: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x0F: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
             }
@@ -7791,78 +7791,78 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xB2, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
 
             switch ((unsigned char)control_byte[0]) {
                 case 0x01: { // this one is REALLY strange. two times I found that they added two missing floats (or
                              // int)
                     // in the files, the executable doesn't parse them right, not sure what to do
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     // these might need to be removed
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x02: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x0A:
                 case 0x0B: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x0C: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x0D: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x0F: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x12: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
@@ -7877,24 +7877,24 @@ class TXBuilder : public Builder {
         OPCodeB3(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0xB3,Maker){} OPCodeB3(int addr, Builder *Maker):Instruction(addr,"???",0xB3,Maker){} OPCodeB3(int &addr, ssd::Buffer
     &content, Builder *Maker):Instruction(addr,"???", 0xB3,Maker){ addr++; ssd::Buffer control_byte =
-    ReadSubByteArray(content, addr, 1); this->AddOperande(Operande(addr,"byte", control_byte)); switch((unsigned
-    char)control_byte[0]){ case 0x00:{ this->AddOperande(Operande(addr,"string", ReadStringSubByteArray(content,
+    ReadSubByteArray(content, addr, 1); this->add_operande(Operande(addr,"byte", control_byte)); switch((unsigned
+    char)control_byte[0]){ case 0x00:{ this->add_operande(Operande(addr,"string", ReadStringSubByteArray(content,
     addr))); break;
                 }
                 case 0x01:{
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x03:
                 {
-                    this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+                    this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
                     break;
                 }
                 case 0x0A:
                 {
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -7915,11 +7915,11 @@ class TXBuilder : public Builder {
         OPCodeB3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xB3, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0xB5
@@ -7928,12 +7928,12 @@ class TXBuilder : public Builder {
         OPCodeB5():Instruction(-1,0xB5,nullptr){}
         OPCodeB5(int &addr, int idx_row, QXlsx::Document &doc,Builder *Maker):Instruction(addr, idx_row, doc,"???",
     0xB5,Maker){} OPCodeB5(int addr, Builder *Maker):Instruction(addr,"???",0xB5,Maker){} OPCodeB5(int &addr, ssd::Buffer
-    &content, Builder *Maker):Instruction(addr,"???", 0xB5,Maker){ addr++; this->AddOperande(Operande(addr,"short",
-    ReadSubByteArray(content, addr, 2))); this->AddOperande(Operande(addr,"short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+    &content, Builder *Maker):Instruction(addr,"???", 0xB5,Maker){ addr++; this->add_operande(Operande(addr,"short",
+    ReadSubByteArray(content, addr, 2))); this->add_operande(Operande(addr,"short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr,"byte", control_byte));
-            this->AddOperande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
+            this->add_operande(Operande(addr,"byte", control_byte));
+            this->add_operande(Operande(addr,"float", ReadSubByteArray(content, addr,4)));
 
 
 
@@ -7953,23 +7953,23 @@ class TXBuilder : public Builder {
             addr++;
             ssd::Buffer control_ba = ReadSubByteArray(content, addr, 2);
             uint16_t control = ReadShortFromByteArray(0, control_ba);
-            this->AddOperande(Operande(addr, "short", control_ba));
+            this->add_operande(Operande(addr, "short", control_ba));
             switch (control) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
                 case 100: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -7990,20 +7990,20 @@ class TXBuilder : public Builder {
             addr++;
             ssd::Buffer control_ba = ReadSubByteArray(content, addr, 2);
             uint16_t control = ReadShortFromByteArray(0, control_ba);
-            this->AddOperande(Operande(addr, "short", control_ba));
+            this->add_operande(Operande(addr, "short", control_ba));
             ssd::Buffer control_ba2 = ReadSubByteArray(content, addr, 2);
-            this->AddOperande(Operande(addr, "short", control_ba2));
+            this->add_operande(Operande(addr, "short", control_ba2));
             switch (control) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x06:
                 case 0x05: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
@@ -8024,15 +8024,15 @@ class TXBuilder : public Builder {
             addr++;
             ssd::Buffer control_ba = ReadSubByteArray(content, addr, 2);
             uint16_t control = ReadShortFromByteArray(0, control_ba);
-            this->AddOperande(Operande(addr, "short", control_ba));
+            this->add_operande(Operande(addr, "short", control_ba));
             switch (control) {
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 default: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
             }
@@ -8052,8 +8052,8 @@ class TXBuilder : public Builder {
             addr++;
 
             ssd::Buffer control_ba = ReadSubByteArray(content, addr, 2);
-            this->AddOperande(Operande(addr, "short", control_ba));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", control_ba));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
         }
     };
     // 0xB9
@@ -8071,96 +8071,96 @@ class TXBuilder : public Builder {
 
             ssd::Buffer control_ba = ReadSubByteArray(content, addr, 2);
             uint16_t control = ReadShortFromByteArray(0, control_ba);
-            this->AddOperande(Operande(addr, "short", control_ba));
+            this->add_operande(Operande(addr, "short", control_ba));
 
             switch (control) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
 
                 case 0x02: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x04: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x05: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x07: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x09: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x2C:
                 case 0x0F: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x14: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x15: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x16: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x18:
 
                 {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -8168,16 +8168,16 @@ class TXBuilder : public Builder {
 
                 {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -8185,10 +8185,10 @@ class TXBuilder : public Builder {
 
                 {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -8196,9 +8196,9 @@ class TXBuilder : public Builder {
 
                 {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
@@ -8206,19 +8206,19 @@ class TXBuilder : public Builder {
 
                 {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
 
                     break;
                 }
                 case 0x0E: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
 
@@ -8227,87 +8227,87 @@ class TXBuilder : public Builder {
                 case 0x1B:
                 case 0x17: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x1D:
                 case 0x1E: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x1F: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x20:
                 case 0x24: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x21: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x22: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x23: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x27: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x29: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x2A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x2B: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x2D: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x30: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x31: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x32: {
@@ -8315,112 +8315,112 @@ class TXBuilder : public Builder {
                     break;
                 }
                 case 0x36: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x34:
                 case 0x38: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
 
                 case 0x39: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x37:
                 case 0x3B: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x3C: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x3D: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x3E: {
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x3F: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x19:
                 case 0x40:
                 case 0x28: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x42: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x41:
                 case 0x43: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x44: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x45: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
                 case 0x46:
                 case 0x4A: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x3A:
                 case 0x48: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x47: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x49: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x54: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 default:
@@ -8443,47 +8443,47 @@ class TXBuilder : public Builder {
 
             ssd::Buffer control_ba = ReadSubByteArray(content, addr, 2);
             uint16_t control = ReadShortFromByteArray(0, control_ba);
-            this->AddOperande(Operande(addr, "short", control_ba));
+            this->add_operande(Operande(addr, "short", control_ba));
 
             switch (control) {
                 case 0x01:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
 
                 case 0x02:
 
                 {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
 
                 case 0x06: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x40:
                 case 0x41: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
 
                 case 0x9: {
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x0A: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
 
                     break;
                 }
@@ -8503,12 +8503,12 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xBB, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     class OPCodeBC : public Instruction {
@@ -8525,7 +8525,7 @@ class TXBuilder : public Builder {
 
             ssd::Buffer control_ba = ReadSubByteArray(content, addr, 2);
             uint16_t control = ReadShortFromByteArray(0, control_ba);
-            this->AddOperande(Operande(addr, "short", control_ba));
+            this->add_operande(Operande(addr, "short", control_ba));
 
             switch (control) {
                 case 0x08:
@@ -8535,35 +8535,35 @@ class TXBuilder : public Builder {
                 case 0x3C:
                 case 0x3F:
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x01: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x02:
                 case 0x3B:
                 case 0x3D: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x18:
                 case 0x15:
                 case 0x14:
                 case 0x03: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x40:
                 case 0x41: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x17:
@@ -8578,12 +8578,12 @@ class TXBuilder : public Builder {
                 case 0x49:
                 case 0x4A:
                 case 0x4D: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
                 case 0x1E: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                     break;
                 }
                 case 0x2D:
@@ -8591,12 +8591,12 @@ class TXBuilder : public Builder {
                 case 0x45:
                 case 0x5B:
                 case 0x5F: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
                 case 0x35: {
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-                    this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 }
             }
@@ -8614,8 +8614,8 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xBE, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     class OPCodeBF : public Instruction {
@@ -8630,8 +8630,8 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xBF, Maker) {
             addr++;
 
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
         }
     };
     class OPCodeC0 : public Instruction {
@@ -8645,7 +8645,7 @@ class TXBuilder : public Builder {
         OPCodeC0(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xC0, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     class OPCodeC1 : public Instruction {
@@ -8659,8 +8659,8 @@ class TXBuilder : public Builder {
         OPCodeC1(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xC1, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
         }
     };
     class OPCodeC2 : public Instruction {
@@ -8674,8 +8674,8 @@ class TXBuilder : public Builder {
         OPCodeC2(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xC2, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     class OPCodeC3 : public Instruction {
@@ -8690,14 +8690,14 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xC3, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
-                    this->AddOperande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "float", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x02:
@@ -8705,7 +8705,7 @@ class TXBuilder : public Builder {
                     break;
                 }
                 default: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                 }
             }
         }
@@ -8721,9 +8721,9 @@ class TXBuilder : public Builder {
         OPCodeC4(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xC4, Maker) {
             addr++;
-            this->AddOperande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-            this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+            this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
         }
     };
     class OPCodeC5 : public Instruction {
@@ -8738,11 +8738,11 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xC5, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
 
                     break;
                 }
@@ -8761,7 +8761,7 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xC7, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
         }
     };
     class OPCodeC8 : public Instruction {
@@ -8776,9 +8776,9 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xC8, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             ssd::Buffer control_ba = ReadSubByteArray(content, addr, 2);
-            this->AddOperande(Operande(addr, "short", control_ba));
+            this->add_operande(Operande(addr, "short", control_ba));
         }
     };
     class OPCodeC9 : public Instruction {
@@ -8793,16 +8793,16 @@ class TXBuilder : public Builder {
           : Instruction(addr, "???", 0xC9, Maker) {
             addr++;
             ssd::Buffer control_byte = ReadSubByteArray(content, addr, 1);
-            this->AddOperande(Operande(addr, "byte", control_byte));
+            this->add_operande(Operande(addr, "byte", control_byte));
             switch ((unsigned char)control_byte[0]) {
                 case 0x00: {
-                    this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    this->add_operande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
                 }
                 case 0x01: {
 
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 }
             }
@@ -8821,10 +8821,10 @@ class TXBuilder : public Builder {
             addr++;
         }
     };
-    std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, ssd::Buffer& dat_content, int function_type) override {
+    std::shared_ptr<Instruction> create_instruction_from_dat(int& addr, ssd::Buffer& dat_content, int function_type) override {
         int OP = (dat_content[addr] & 0xFF);
 
-        if (TXUIFiles.contains(SceneName) && (OP == 0x13)) {
+        if (TXUIFiles.contains(scene_name) && (OP == 0x13)) {
             return std::make_shared<UI_OP13>(addr, dat_content, this); // UI files have a special 0x13 instruction
         }
 
@@ -9232,13 +9232,13 @@ class TXBuilder : public Builder {
 
         return {};
     }
-    bool CreateHeaderFromDAT(ssd::Buffer& dat_content) override {
+    bool create_header_from_dat(ssd::Buffer& dat_content) override {
         display_text("Reading header...");
         int nb_functions = ReadIntegerFromByteArray(0x14, dat_content);
         int position_filename = ReadIntegerFromByteArray(0x4, dat_content);
         int position = position_filename;
         int next_position = 0;
-        SceneName = ReadStringFromByteArray(position, dat_content);
+        scene_name = ReadStringFromByteArray(position, dat_content);
         int start_offset_area = ReadIntegerFromByteArray(0x8, dat_content);
         for (int idx_fun = 0; idx_fun < nb_functions; idx_fun++) {
             position = start_offset_area + 4 * idx_fun;
@@ -9254,16 +9254,16 @@ class TXBuilder : public Builder {
             } else {
                 end_addr = ReadIntegerFromByteArray(next_position, dat_content);
             }
-            FunctionsToParse.emplace_back(idx_fun, function_name, name_pos, addr, end_addr);
+            functions_to_parse.emplace_back(idx_fun, function_name, name_pos, addr, end_addr);
         }
         display_text("Header parsed.");
         return true;
     }
-    std::shared_ptr<Instruction> CreateInstructionFromXLSX(int& addr, int row, QXlsx::Document& xls_content) override {
+    std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int row, QXlsx::Document& xls_content) override {
 
         uint OP = xls_content.read(row + 1, 2).toInt();
 
-        if (TXUIFiles.contains(SceneName) && (OP == 0x13)) {
+        if (TXUIFiles.contains(scene_name) && (OP == 0x13)) {
             return std::make_shared<UI_OP13>(addr, row, xls_content, this);
         }
 
@@ -9682,7 +9682,7 @@ class TXBuilder : public Builder {
                 return std::make_shared<AnimeClipData>(addr, row, xls_content, this);
             default:
                 std::stringstream stream;
-                stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->SceneName;
+                stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->scene_name;
                 error = true;
                 addr++;
 
@@ -9690,44 +9690,44 @@ class TXBuilder : public Builder {
         }
     }
 
-    ssd::Buffer CreateHeaderBytes() override {
+    ssd::Buffer create_header_bytes() override {
 
         ssd::Buffer header;
 
-        ssd::Buffer scene_name_bytes = ssd::Buffer::fromStdString(SceneName);
+        ssd::Buffer scene_name_bytes = ssd::Buffer::fromStdString(scene_name);
         scene_name_bytes.push_back('\x0');
         size_t size_of_scene_name = scene_name_bytes.size();
         header.push_back(GetBytesFromInt(0x20));
         header.push_back(GetBytesFromInt(0x20));
         header.push_back(GetBytesFromInt(0x20 + size_of_scene_name));
-        header.push_back(GetBytesFromInt(FunctionsParsed.size() * 4));
-        header.push_back(GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4));
-        header.push_back(GetBytesFromInt(FunctionsParsed.size()));
+        header.push_back(GetBytesFromInt(functions_parsed.size() * 4));
+        header.push_back(GetBytesFromInt(0x20 + size_of_scene_name + functions_parsed.size() * 4));
+        header.push_back(GetBytesFromInt(functions_parsed.size()));
         size_t length_of_names_section = 0;
-        for (auto& fun : FunctionsParsed) {
+        for (auto& fun : functions_parsed) {
             length_of_names_section = length_of_names_section + fun.name.size() + 1;
         }
         header.push_back(
-          GetBytesFromInt(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + length_of_names_section));
+          GetBytesFromInt(0x20 + size_of_scene_name + functions_parsed.size() * 4 + functions_parsed.size() * 2 + length_of_names_section));
         header.push_back(GetBytesFromInt(0xABCDEF00));
         header.push_back(scene_name_bytes);
-        if (!FunctionsParsed.empty()) {
+        if (!functions_parsed.empty()) {
             ssd::Buffer position_names;
             ssd::Buffer actual_names;
             size_t offset_names = 0;
-            for (auto& fun : FunctionsParsed) {
+            for (auto& fun : functions_parsed) {
                 header.push_back(GetBytesFromInt(fun.actual_addr));
                 ssd::Buffer name = ssd::Buffer::fromStdString(fun.name);
                 name.push_back('\x0');
                 position_names.push_back(
-                  GetBytesFromShort(0x20 + size_of_scene_name + FunctionsParsed.size() * 4 + FunctionsParsed.size() * 2 + offset_names));
+                  GetBytesFromShort(0x20 + size_of_scene_name + functions_parsed.size() * 4 + functions_parsed.size() * 2 + offset_names));
                 actual_names.push_back(name);
                 offset_names = offset_names + name.size();
             }
             header.push_back(position_names);
             header.push_back(actual_names);
             int multiple = 4;
-            if (FunctionsParsed[0].name.starts_with("_")) multiple = 0x10;
+            if (functions_parsed[0].name.starts_with("_")) multiple = 0x10;
             size_t nb_byte_to_add = (((size_t)std::ceil((float)header.size() / (float)multiple))) * multiple - header.size();
             ssd::Buffer remaining;
             for (size_t i = 0; i < nb_byte_to_add; i++) {

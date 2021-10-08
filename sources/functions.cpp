@@ -15,7 +15,7 @@ Function::Function(int id, std::string n, int declr_pos, int addr, int end)
 }
 
 void Function::add_instruction(const std::shared_ptr<Instruction>& instr) {
-    if (instr->get_OP() > 0) instructions.push_back(instr);
+    if (instr->get_opcode() > 0) instructions.push_back(instr);
 }
 
 void Function::set_addr(int addr) { this->actual_addr = addr; }
