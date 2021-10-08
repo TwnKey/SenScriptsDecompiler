@@ -4,12 +4,14 @@
 
 class Destination {
   public:
-    Destination(int FID, int IID)
-      : FunctionID(FID)
-      , InstructionID(IID) {}
-    int FunctionID;
-    int InstructionID;
+    Destination(int fid, int iid)
+      : function_id(fid)
+      , instruction_id(iid) {}
+
+    int function_id;
+    int instruction_id;
 };
+
 class Operande {
 
   public:
@@ -32,7 +34,7 @@ class Operande {
         value = ssd::Buffer(begin(unsigned_value), end(unsigned_value));
     }
 
-    [[nodiscard]] bool is_pointer() const { return !((destination.FunctionID == -1) || (destination.InstructionID == -1)); }
+    [[nodiscard]] bool is_pointer() const { return !((destination.function_id == -1) || (destination.instruction_id == -1)); }
 
     Destination get_destination() { return destination; }
     void set_destination(int function_id, int instruction_id) { destination = Destination(function_id, instruction_id); }
