@@ -39,7 +39,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             Value = GetBytesFromInt(op);
             operande = Operande(addr, "int", Value);
             this->AddOperande(operande);
-            addr = addr + operande.getLength();
+            addr = addr + operande.get_length();
         } else if (type == "Group ID") {
             stack_of_headers.push(std::make_pair(0, addr - 1)); // the count includes OPCode thus -1
 
@@ -51,7 +51,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             Value = GetBytesFromInt(operande_grp + (operande_length << 0x18));
             operande = Operande(addr, "header", Value);
             this->AddOperande(operande);
-            addr = addr + operande.getLength();
+            addr = addr + operande.get_length();
 
         } else if (type == "float") {
 
@@ -60,13 +60,13 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             Value = GetBytesFromFloat(op);
             operande = Operande(addr, "float", Value);
             this->AddOperande(operande);
-            addr = addr + operande.getLength();
+            addr = addr + operande.get_length();
         } else if (type == "short") {
             int16_t op = static_cast<int16_t>(excelScenarioSheet.read(idx_row + 1, idx_column).toInt());
             Value = GetBytesFromShort(op);
             operande = Operande(addr, "short", Value);
             this->AddOperande(operande);
-            addr = addr + operande.getLength();
+            addr = addr + operande.get_length();
 
         } else if ((type == "byte") || (type == "OP Code")) {
             OP = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
@@ -76,7 +76,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
                 Value.push_back(op);
                 operande = Operande(addr, "byte", Value);
                 this->AddOperande(operande);
-                addr = addr + operande.getLength();
+                addr = addr + operande.get_length();
             }
         } else if (type == "End") {
             if (!stack_of_headers.empty()) {
@@ -84,9 +84,9 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
 
                     uint32_t new_header_value =
                       ((addr - static_cast<int>(stack_of_headers.top().second)) << 0x18) +
-                      (this->get_operande(static_cast<int>(stack_of_headers.top().first)).getIntegerValue() & 0xFFFFFF);
+                      (this->get_operande(static_cast<int>(stack_of_headers.top().first)).get_integer_value() & 0xFFFFFF);
                     ssd::Buffer header_bytes = GetBytesFromInt(new_header_value);
-                    this->get_operande(static_cast<int>(stack_of_headers.top().first)).setValue(header_bytes);
+                    this->get_operande(static_cast<int>(stack_of_headers.top().first)).set_value(header_bytes);
                     stack_of_headers.pop();
                 }
             }
@@ -102,7 +102,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
 
             operande = Operande(addr, "fill", Value);
             this->AddOperande(operande);
-            addr = addr + operande.getLength();
+            addr = addr + operande.get_length();
 
         }
 
@@ -116,7 +116,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
 
             operande = Operande(addr, type, Value);
             this->AddOperande(operande);
-            addr = addr + operande.getLength();
+            addr = addr + operande.get_length();
         } else if (type == "bytearray") {
 
             while (type == "bytearray") {
@@ -128,7 +128,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
             operande = Operande(addr, "bytearray", Value);
             idx_column--;
             this->AddOperande(operande);
-            addr = addr + operande.getLength();
+            addr = addr + operande.get_length();
         } else if (type == "pointer") {
             QString op = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
 
@@ -140,7 +140,7 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
 
             auto operande = Operande(addr, "pointer", Value);
             this->AddOperande(operande);
-            addr = addr + operande.getLength();
+            addr = addr + operande.get_length();
         }
 
         idx_column++;
@@ -149,9 +149,9 @@ Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioS
     if (!stack_of_headers.empty()) {
         if (stack_of_headers.top().first != 0) {
             uint32_t new_header_value = ((addr - static_cast<int>(stack_of_headers.top().second)) << 0x18) +
-                                        (this->get_operande(static_cast<int>(stack_of_headers.top().first)).getIntegerValue() & 0xFFFFFF);
+                                        (this->get_operande(static_cast<int>(stack_of_headers.top().first)).get_integer_value() & 0xFFFFFF);
             ssd::Buffer header_bytes = GetBytesFromInt(new_header_value);
-            this->get_operande(static_cast<int>(stack_of_headers.top().first)).setValue(header_bytes);
+            this->get_operande(static_cast<int>(stack_of_headers.top().first)).set_value(header_bytes);
             stack_of_headers.pop();
         }
     }
@@ -209,8 +209,8 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<Func
     int col_cnt = 0;
     for (auto& operande : operandes) {
 
-        QString type = QString::fromStdString(operande.getType());
-        ssd::Buffer Value = operande.getValue();
+        QString type = QString::fromStdString(operande.get_type());
+        ssd::Buffer Value = operande.get_value();
 
         if (type == "int") {
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
@@ -244,7 +244,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<Func
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
             excelScenarioSheet.write(row + 1,
                                      col + 3 + col_cnt,
-                                     "=" + QString::number(operande.getBytesToFill()) + "-LENB(INDIRECT(ADDRESS(" +
+                                     "=" + QString::number(operande.get_bytes_to_fill()) + "-LENB(INDIRECT(ADDRESS(" +
                                        QString::number(row + 1) + "," + QString::number(3 + col_cnt - 1) + ")))",
                                      FormatInstr);
             col_cnt++;
@@ -291,7 +291,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<Func
             int ID = funs[0].id;
             size_t nb_row = 3;
             int idx_fun = 0;
-            while (ID != operande.getDestination().FunctionID) {
+            while (ID != operande.get_destination().FunctionID) {
 
                 nb_row = nb_row + 1; // row with function name
                 nb_row = nb_row + 2 * funs[idx_fun].instructions.size();
@@ -299,7 +299,7 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<Func
                 ID = funs[idx_fun].id;
             }
             nb_row = nb_row + 1; // row with function name
-            nb_row = nb_row + static_cast<uint64_t>(2 * (operande.getDestination().InstructionID + 1));
+            nb_row = nb_row + static_cast<uint64_t>(2 * (operande.get_destination().InstructionID + 1));
             QString ptrExcel = "=A" + QString::number((nb_row));
 
             QXlsx::Format format;
@@ -324,9 +324,9 @@ If there is any illegal xml character, every string in the sheet disappears and 
 this is a problem for some broken files that we would want to restore (example is ply000 from CS3)*/
 void Instruction::AddOperande(Operande op) {
 
-    ssd::Buffer value = op.getValue();
+    ssd::Buffer value = op.get_value();
 
-    if (op.getType() == "string") {
+    if (op.get_type() == "string") {
         QTextCodec::ConverterState state;
 
         QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(InputDatFileEncoding).toUtf8());
@@ -334,7 +334,7 @@ void Instruction::AddOperande(Operande op) {
 
         if ((state.invalidChars > 0) || text.contains('\x0B') || text.contains('\x06') || text.contains('\x07') || text.contains('\x08') ||
             text.contains('\x05') || text.contains('\x04') || text.contains('\x03') || text.contains('\x02')) {
-            op.setValue(ssd::Buffer(0));
+            op.set_value(ssd::Buffer(0));
 
             // operandes.push_back(op);
         } else {
@@ -353,7 +353,7 @@ ssd::Buffer Instruction::getBytes() {
     if (OPCode <= 0xFF) bytes.push_back((char)OPCode);
     for (auto& it : operandes) {
 
-        ssd::Buffer op_bytes = it.getValue();
+        ssd::Buffer op_bytes = it.get_value();
         for (auto&& op_byte : op_bytes) {
             bytes.push_back(op_byte);
         }

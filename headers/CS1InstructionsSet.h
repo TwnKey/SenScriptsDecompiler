@@ -290,7 +290,7 @@ class CS1Builder : public Builder {
 
             ssd::Buffer remaining1 = ReadSubByteArray(content, addr, 0x10 - map.size());
             auto fill1 = Operande(addr, "fill", remaining1);
-            fill1.setBytesToFill(0x10);
+            fill1.set_bytes_to_fill(0x10);
             this->AddOperande(fill1);
 
             this->AddOperande(Operande(addr, "int", ReadSubByteArray(content, addr, 4)));
@@ -321,7 +321,7 @@ class CS1Builder : public Builder {
 
                     ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x10 - monsters_name.size());
                     auto fill = Operande(addr, "fill", remaining);
-                    fill.setBytesToFill(0x10);
+                    fill.set_bytes_to_fill(0x10);
                     this->AddOperande(fill);
 
                 } while (counter < 0x8);
@@ -336,7 +336,7 @@ class CS1Builder : public Builder {
 
                     ssd::Buffer remaining = ReadSubByteArray(content, addr, 12 - monsters_name.size());
                     auto fill = Operande(addr, "bytearray", remaining);
-                    fill.setBytesToFill(12);
+                    fill.set_bytes_to_fill(12);
                     this->AddOperande(fill);
                 }
 
@@ -379,7 +379,7 @@ class CS1Builder : public Builder {
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
 
                 auto fill = Operande(addr, "fill", remaining);
-                fill.setBytesToFill(0x20);
+                fill.set_bytes_to_fill(0x20);
                 this->AddOperande(fill);
 
                 current_byte = content[addr];
@@ -427,21 +427,21 @@ class CS1Builder : public Builder {
                 this->AddOperande(Operande(addr, "string", str));
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x10 - str.size());
                 auto fill = Operande(addr, "fill", remaining);
-                fill.setBytesToFill(0x10);
+                fill.set_bytes_to_fill(0x10);
                 this->AddOperande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(Operande(addr, "string", str));
                 remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 fill = Operande(addr, "fill", remaining);
-                fill.setBytesToFill(0x20);
+                fill.set_bytes_to_fill(0x20);
                 this->AddOperande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(Operande(addr, "string", str));
                 remaining = ReadSubByteArray(content, addr, 0x30 - str.size());
                 fill = Operande(addr, "fill", remaining);
-                fill.setBytesToFill(0x30);
+                fill.set_bytes_to_fill(0x30);
                 this->AddOperande(fill);
 
                 cnt++;
@@ -567,7 +567,7 @@ class CS1Builder : public Builder {
                 this->AddOperande(Operande(addr, "string", str));
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 auto fill = Operande(addr, "fill", remaining);
-                fill.setBytesToFill(0x20);
+                fill.set_bytes_to_fill(0x20);
                 this->AddOperande(fill);
                 cnt++;
             }
@@ -627,14 +627,14 @@ class CS1Builder : public Builder {
                 this->AddOperande(Operande(addr, "string", str));
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 auto fill = Operande(addr, "fill", remaining);
-                fill.setBytesToFill(0x20);
+                fill.set_bytes_to_fill(0x20);
                 this->AddOperande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
                 this->AddOperande(Operande(addr, "string", str));
                 remaining = ReadSubByteArray(content, addr, 0x20 - str.size());
                 fill = Operande(addr, "fill", remaining);
-                fill.setBytesToFill(0x20);
+                fill.set_bytes_to_fill(0x20);
                 this->AddOperande(fill);
 
                 cnt++;
@@ -665,7 +665,7 @@ class CS1Builder : public Builder {
                 this->AddOperande(Operande(addr, "string", str));
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, (0x20) - str.size());
                 auto fill = Operande(addr, "fill", remaining);
-                fill.setBytesToFill((0x20));
+                fill.set_bytes_to_fill((0x20));
                 this->AddOperande(fill);
 
                 str = ReadStringSubByteArray(content, addr);
@@ -673,7 +673,7 @@ class CS1Builder : public Builder {
                 this->AddOperande(Operande(addr, "string", str));
                 remaining = ReadSubByteArray(content, addr, (0x20) - str.size());
                 fill = Operande(addr, "fill", remaining);
-                fill.setBytesToFill((0x20));
+                fill.set_bytes_to_fill((0x20));
                 this->AddOperande(fill);
                 first_integer = ReadIntegerFromByteArray(addr, content);
             }
@@ -781,7 +781,7 @@ class CS1Builder : public Builder {
                 this->AddOperande(Operande(addr, "string", title));
                 ssd::Buffer remaining = ReadSubByteArray(content, addr, 0x10 - title.size());
                 auto fill = Operande(addr, "bytearray", remaining);
-                fill.setBytesToFill(0x10);
+                fill.set_bytes_to_fill(0x10);
                 this->AddOperande(fill);
                 this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x12
                 this->AddOperande(Operande(addr, "short", ReadSubByteArray(content, addr, 2))); // RCX+0x14

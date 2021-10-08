@@ -261,20 +261,20 @@ bool Builder::UpdatePointersDAT() {
         for (auto& idx_instr : idx_fun.instructions) {
 
             for (auto& operande : idx_instr->operandes) {
-                if (operande.getType() == "pointer") {
+                if (operande.get_type() == "pointer") {
 
-                    int addr_ptr = operande.getIntegerValue();
+                    int addr_ptr = operande.get_integer_value();
                     int idx_fun_ = find_function(addr_ptr);
                     if (idx_fun_ != -1) {
                         Function fun = FunctionsParsed[idx_fun_];
                         int id_instr = find_instruction(addr_ptr, fun);
                         if (id_instr != -1) {
-                            operande.setDestination(fun.id, id_instr);
+                            operande.set_destination(fun.id, id_instr);
                         } else {
-                            operande.setDestination(fun.id, 0);
+                            operande.set_destination(fun.id, 0);
                         }
                     } else {
-                        operande.setDestination(0, 0);
+                        operande.set_destination(0, 0);
                     }
                 }
             }
@@ -298,8 +298,8 @@ bool Builder::UpdatePointersXLSX() {
         for (auto& idx_instr : idx_fun.instructions) {
 
             for (uint idx_operand = 0; idx_operand < idx_instr->operandes.size(); idx_operand++) {
-                if (idx_instr->operandes[idx_operand].getType() == "pointer") {
-                    int idx_row_ptr = idx_instr->operandes[idx_operand].getIntegerValue();
+                if (idx_instr->operandes[idx_operand].get_type() == "pointer") {
+                    int idx_row_ptr = idx_instr->operandes[idx_operand].get_integer_value();
                     Function current_fun = FunctionsParsed[0];
 
                     if (FunctionsParsed.size() > 1) {
@@ -316,7 +316,7 @@ bool Builder::UpdatePointersXLSX() {
                     }
                     int nb_instruction_inside_function = (idx_row_ptr - (current_fun.xlsx_row_index + 1)) / 2;
                     int addr_pointed = current_fun.instructions[nb_instruction_inside_function]->get_addr_instr();
-                    idx_instr->operandes[idx_operand].setValue(GetBytesFromInt(addr_pointed));
+                    idx_instr->operandes[idx_operand].set_value(GetBytesFromInt(addr_pointed));
                 }
             }
         }

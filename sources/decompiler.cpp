@@ -295,10 +295,10 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
                 }
                 for (size_t k = 0; k < (uint)current_tf.FunctionsInFile[i].instructions[j]->operandes.size(); ++k) {
                     Operande op_k = current_tf.FunctionsInFile[i].instructions[j]->operandes[k];
-                    ssd::Buffer bytes = op_k.getValue();
+                    ssd::Buffer bytes = op_k.get_value();
 
-                    if (op_k.getType() == "pointer") {
-                        int diff1 = op_k.getIntegerValue() - ReadIntegerFromByteArray(index_byte, content2);
+                    if (op_k.get_type() == "pointer") {
+                        int diff1 = op_k.get_integer_value() - ReadIntegerFromByteArray(index_byte, content2);
                         int diff2 = current_tf.FunctionsInFile[i].actual_addr - idx_fun_2[i];
                         if (diff1 != diff2) {
                             ssd::spdlog::err("Mismatching pointers at {:#04x} {} should be {}", index_byte, diff1, diff2);
@@ -306,7 +306,7 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
                         }
                         index_byte+=4;
 
-                    } else if (op_k.getType() == "float") {
+                    } else if (op_k.get_type() == "float") {
                         ssd::Buffer float_bytes = ReadSubByteArray(content2, index_byte, 4);
                         float float2 = QByteArrayToFloat(float_bytes);
                         float float1 = QByteArrayToFloat(bytes);
