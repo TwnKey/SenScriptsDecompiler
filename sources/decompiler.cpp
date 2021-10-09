@@ -44,10 +44,10 @@ bool Decompiler::setup_game(const std::string& game) {
 
     return true;
 }
-bool Decompiler::read_xlsx(const std::filesystem::path& filename) {
-    if (!fs::exists(filename)) return false;
+bool Decompiler::read_xlsx(const std::filesystem::path& filepath) {
+    if (!fs::exists(filepath)) return false;
 
-    Document doc(QString::fromStdString(filename.string()));
+    Document doc(QString::fromStdString(filepath.string()));
     auto game_from_file = doc.read(1, 1).toString().toStdString();
     setup_game(game_from_file);
     display_text("Reading functions...");
@@ -79,7 +79,7 @@ bool Decompiler::read_dat(const std::filesystem::path& filepath) {
     update_current_tf();
     return true;
 }
-bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
+bool Decompiler::write_dat(const std::filesystem::path& filepath) {
 
     ssd::Buffer functions;
     ssd::Buffer current_fun;
@@ -121,19 +121,15 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
     file_content.push_back(header);
     file_content.push_back(functions);
 
-    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
+    ssd::utils::write_file(filepath, file_content);
 
-    fs::path output_path = output_dir / (current_tf.get_name() += ".dat");
-
-    ssd::utils::write_file(output_path, file_content);
-
-    display_text("File " + output_path.string() + " created.");
+    display_text("File " + filepath.string() + " created.");
     return true;
 }
-bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
+bool Decompiler::write_xlsx(const std::filesystem::path& filepath) {
 
     QFont font = QFont("Arial");
-    fs::path filename = current_tf.get_name() + ".xlsx";
+
     QXlsx::Document excel_scenario_sheet;
     Format format;
     format.setFont(font);
@@ -210,13 +206,9 @@ bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
         }
     }
 
-    fs::path xlsx_output_file = output_dir / filename;
+    display_text("File " + filepath.string() + " created.");
 
-    display_text("File " + xlsx_output_file.string() + " created.");
-
-    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
-
-    excel_scenario_sheet.saveAs(QString::fromStdString(xlsx_output_file.string()));
+    excel_scenario_sheet.saveAs(QString::fromStdString(filepath.string()));
 
     return true;
 }
@@ -224,6 +216,8 @@ bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
 bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files,
                                  const std::filesystem::path& reference_dir,
                                  const std::filesystem::path& output_dir) {
+    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
+
     for (const auto& file_ : files) {
 
         bool success = true;
@@ -241,12 +235,14 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
         this->read_file(reference_dat_path);
         ssd::spdlog::info("finish reading reference dat file: {}", reference_dat_path.string());
         ssd::spdlog::info("writing xlsx file: {}", xlsx_path.string());
-        this->write_xlsx(output_dir);
+
+        this->write_xlsx(xlsx_path);
         ssd::spdlog::info("reading xlsx file: {}", xlsx_path.string());
         this->read_file(xlsx_path);
         ssd::spdlog::info("reading xlsx file: {}", xlsx_path.string());
         ssd::spdlog::info("writing dat file: {}", local_dat_path.string());
-        this->write_dat(output_dir);
+
+        this->write_dat(output_dir / (current_tf.get_name() + ".dat"));
         ssd::spdlog::info("reading {} and {} for comparison", local_dat_path.string(), reference_dat_path.string());
 
         const ssd::Buffer content1 = ssd::utils::read_file(local_dat_path);
@@ -352,11 +348,12 @@ bool Decompiler::read_file(const fs::path& filepath) {
     return true;
 }
 bool Decompiler::write_file(const fs::path& filepath, const fs::path& output_dir) {
+    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
 
     if (filepath.extension() == ".dat") {
-        write_xlsx(output_dir);
+        write_xlsx(output_dir / (current_tf.get_name() + ".xlsx"));
     } else if (filepath.extension() == ".xlsx") {
-        write_dat(output_dir);
+        write_dat(output_dir / (current_tf.get_name() + ".dat"));
     } else {
         display_text("FAILURE: Unrecognized extension.");
         return false;
