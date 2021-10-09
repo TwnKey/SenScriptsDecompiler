@@ -2,8 +2,8 @@
 
 TranslationFile::TranslationFile() = default;
 
-void TranslationFile::setName(std::string name) { scene_name = std::move(name); }
-std::string TranslationFile::getName() { return scene_name; }
-int TranslationFile::getNbFunctions() const { return static_cast<int>(FunctionsInFile.size()); }
+void TranslationFile::set_name(std::string name) { scene_name = std::move(name); }
+std::string TranslationFile::get_name() { return scene_name; }
 
-void TranslationFile::addFunction(const Function& fun) { FunctionsInFile.push_back(fun); }
+int TranslationFile::get_nb_functions() const { return static_cast<int>(functions.size()); }
+void TranslationFile::add_function(const Function& fun) { functions.push_back(fun); }

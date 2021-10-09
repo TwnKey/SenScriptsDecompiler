@@ -60,11 +60,11 @@ bool Decompiler::read_xlsx(const std::filesystem::path& filename) {
 }
 
 bool Decompiler::update_current_tf() {
-    current_tf.setName(ib->scene_name);
+    current_tf.set_name(ib->scene_name);
 
-    current_tf.FunctionsInFile.clear();
+    current_tf.functions.clear();
     for (auto& fun : ib->functions_parsed) {
-        current_tf.addFunction(fun);
+        current_tf.add_function(fun);
     }
 
     return true;
@@ -88,9 +88,9 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
     ssd::Buffer header = ib->create_header_bytes();
 
     addr = addr + static_cast<int>(std::ssize(header));
-    for (int idx_fun = 0; idx_fun < current_tf.getNbFunctions() - 1; idx_fun++) {
+    for (int idx_fun = 0; idx_fun < current_tf.get_nb_functions() - 1; idx_fun++) {
 
-        Function fun = current_tf.FunctionsInFile[idx_fun];
+        Function fun = current_tf.functions[idx_fun];
 
         current_fun.clear();
 
@@ -99,7 +99,7 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
         }
         addr = addr + static_cast<int>(std::ssize(current_fun));
 
-        int next_addr = current_tf.FunctionsInFile[idx_fun + 1].actual_addr;
+        int next_addr = current_tf.functions[idx_fun + 1].actual_addr;
         int padding = next_addr - addr;
         for (int i_z = 0; i_z < padding; i_z++) {
             current_fun.push_back('\0');
@@ -108,8 +108,8 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
         functions.push_back(current_fun);
     }
 
-    if (current_tf.getNbFunctions() - 1 >= 0) {
-        Function fun = current_tf.FunctionsInFile[current_tf.FunctionsInFile.size() - 1];
+    if (current_tf.get_nb_functions() - 1 >= 0) {
+        Function fun = current_tf.functions[current_tf.functions.size() - 1];
         current_fun.clear();
         for (auto& instr : fun.instructions) {
             current_fun.push_back(instr->get_bytes());
@@ -122,7 +122,7 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
 
     if (!fs::exists(output_dir)) fs::create_directories(output_dir);
 
-    fs::path output_path = output_dir / (current_tf.getName() += ".dat");
+    fs::path output_path = output_dir / (current_tf.get_name() += ".dat");
 
     ssd::utils::write_file(output_path, file_content);
 
@@ -132,7 +132,7 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
 bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
 
     QFont font = QFont("Arial");
-    fs::path filename = current_tf.getName() + ".xlsx";
+    fs::path filename = current_tf.get_name() + ".xlsx";
     QXlsx::Document excel_scenario_sheet;
     Format format;
     format.setFont(font);
@@ -151,7 +151,7 @@ bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
     format_location.setFont(font);
     format_location.setFontSize(10);
     format_location.setPatternBackgroundColor(dark_yellow);
-    excel_scenario_sheet.write("A2", QString::fromStdString(current_tf.getName()), format_location);
+    excel_scenario_sheet.write("A2", QString::fromStdString(current_tf.get_name()), format_location);
 
     Format row_format;
     row_format.setFillPattern(Format::PatternSolid);
@@ -194,7 +194,7 @@ bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
 
     row_format_functions.setTopBorderStyle(QXlsx::Format::BorderThin);
     int excel_row = 4;
-    for (const auto& fun : current_tf.FunctionsInFile) {
+    for (const auto& fun : current_tf.functions) {
         excel_scenario_sheet.setRowFormat(excel_row, excel_row, row_format_functions);
         excel_scenario_sheet.write(excel_row, 1, "FUNCTION");
         excel_scenario_sheet.write(excel_row, 2, QString::fromStdString(fun.name));
@@ -204,7 +204,7 @@ bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
             excel_scenario_sheet.write(excel_row, 1, "Location");
             excel_scenario_sheet.write(excel_row + 1, 1, instr->get_addr_instr());
             int col = 0;
-            instr->write_xlsx(excel_scenario_sheet, current_tf.FunctionsInFile, excel_row, col);
+            instr->write_xlsx(excel_scenario_sheet, current_tf.functions, excel_row, col);
             excel_row += 2;
         }
     }
@@ -279,11 +279,11 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
             idx_fun_2.push_back(ReadIntegerFromByteArray(i, content2));
         }
 
-        for (size_t i = 0; i < (uint)current_tf.getNbFunctions(); ++i) {
+        for (size_t i = 0; i < (uint)current_tf.get_nb_functions(); ++i) {
             int index_byte = idx_fun_2[i];
 
-            for (size_t j = 0; j < (uint)current_tf.FunctionsInFile[i].instructions.size(); ++j) {
-                uint OPCode = current_tf.FunctionsInFile[i].instructions[j]->get_opcode();
+            for (size_t j = 0; j < (uint)current_tf.functions[i].instructions.size(); ++j) {
+                uint OPCode = current_tf.functions[i].instructions[j]->get_opcode();
                 uint byte_in_file = (content2[index_byte]) & 0xFF;
 
                 if (OPCode <= 0xFF) {
@@ -293,13 +293,13 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
                     }
                     index_byte++;
                 }
-                for (size_t k = 0; k < (uint)current_tf.FunctionsInFile[i].instructions[j]->operandes.size(); ++k) {
-                    Operande op_k = current_tf.FunctionsInFile[i].instructions[j]->operandes[k];
+                for (size_t k = 0; k < (uint)current_tf.functions[i].instructions[j]->operandes.size(); ++k) {
+                    Operande op_k = current_tf.functions[i].instructions[j]->operandes[k];
                     ssd::Buffer bytes = op_k.get_value();
 
                     if (op_k.get_type() == "pointer") {
                         int diff1 = op_k.get_integer_value() - ReadIntegerFromByteArray(index_byte, content2);
-                        int diff2 = current_tf.FunctionsInFile[i].actual_addr - idx_fun_2[i];
+                        int diff2 = current_tf.functions[i].actual_addr - idx_fun_2[i];
                         if (diff1 != diff2) {
                             ssd::spdlog::err("Mismatching pointers at {:#04x} {} should be {}", index_byte, diff1, diff2);
                             success = false;
