@@ -4,12 +4,7 @@
 #include "headers/operande.h"
 #include <cmath>
 
-#include "xlsxcellrange.h"
-#include "xlsxchart.h"
-#include "xlsxchartsheet.h"
 #include "xlsxdocument.h"
-#include "xlsxrichstring.h"
-#include "xlsxworkbook.h"
 
 class Instruction {
   public:

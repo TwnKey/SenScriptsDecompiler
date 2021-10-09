@@ -7,6 +7,12 @@
 
 #include <QTextCodec>
 
+#include "xlsxcellrange.h"
+#include "xlsxchart.h"
+#include "xlsxchartsheet.h"
+#include "xlsxrichstring.h"
+#include "xlsxworkbook.h"
+
 Instruction::Instruction(int addr, uint OP, Builder* Maker)
   : maker(Maker)
   , addr_instr(addr)
