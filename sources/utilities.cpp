@@ -73,8 +73,8 @@ float QByteArrayToFloat(const QByteArray& content) // thanks to jabk https://sta
 {
     static_assert(std::numeric_limits<float>::is_iec559, "Only supports IEC 559 (IEEE 754) float");
 
-    quint32 temp = ((unsigned char)content[3] << 24) | ((unsigned char)content[2] << 16) | ((unsigned char)content[1] << 8) |
-                   (unsigned char)content[0]; // Big endian
+    uint32_t temp = ((unsigned char)content[3] << 24) | ((unsigned char)content[2] << 16) | ((unsigned char)content[1] << 8) |
+                    (unsigned char)content[0]; // Big endian
     auto* out = reinterpret_cast<float*>(&temp);
 
     return *out;
