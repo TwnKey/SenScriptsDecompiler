@@ -4,6 +4,27 @@
 
 namespace ssd::utils {
 namespace fs = std::filesystem;
+
+std::vector<std::filesystem::path> find_files(const std::filesystem::path& root, bool recursive, const std::set<std::string>& extensions) {
+    auto&& result = std::vector<fs::path>{};
+    auto filter = [extensions](const auto& entry) {
+        if (!fs::is_regular_file(entry)) return false;
+        if (!extensions.empty()) {
+            return extensions.count(entry.path().extension().string()) > 0;
+        }
+        return true;
+    };
+    if (recursive) {
+        auto it = fs::recursive_directory_iterator{ root };
+        std::copy_if(begin(it), end(it), back_inserter(result), filter);
+
+    } else {
+        auto it = fs::directory_iterator{ root };
+        std::copy_if(begin(it), end(it), back_inserter(result), filter);
+    }
+    return std::move(result);
+}
+
 ssd::Buffer read_file(const std::filesystem::path& filepath) {
     if (!fs::exists(filepath)) throw std::runtime_error("ERROR: File \"" + filepath.string() + "\" does not exist");
     std::ifstream file;

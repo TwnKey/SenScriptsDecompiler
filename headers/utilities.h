@@ -58,6 +58,8 @@ class Buffer : private std::vector<int8_t> {
 } // namespace ssd
 
 namespace ssd::utils {
+std::vector<std::filesystem::path> find_files(const std::filesystem::path& root, bool recursive, const std::set<std::string>& extensions);
+
 ssd::Buffer read_file(const std::filesystem::path& filepath);
 void write_file(const std::filesystem::path& filepath, const ssd::Buffer& content);
 } // namespace ssd::utils
