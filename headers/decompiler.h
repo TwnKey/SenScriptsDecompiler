@@ -3,7 +3,6 @@
 
 #include "headers/translationfile.h"
 
-#include <QString>
 #include <filesystem>
 #include <memory>
 

@@ -14,6 +14,7 @@
 #include "xlsxrichstring.h"
 #include "xlsxworkbook.h"
 #include <QColor>
+#include <QString>
 
 using namespace QXlsx; // NOLINT(google-build-using-namespace)
 namespace fs = std::filesystem;

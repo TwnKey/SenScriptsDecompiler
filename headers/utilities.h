@@ -1,6 +1,5 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
-#include <QTextCodec>
 #include <cmath>
 #include <concepts>
 #include <cstdint>

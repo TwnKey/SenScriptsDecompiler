@@ -5,6 +5,8 @@
 #include <stack>
 #include <string>
 
+#include <QTextCodec>
+
 Instruction::Instruction(int addr, uint OP, Builder* Maker)
   : maker(Maker)
   , addr_instr(addr)
