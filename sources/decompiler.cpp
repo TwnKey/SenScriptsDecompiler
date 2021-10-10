@@ -213,21 +213,23 @@ bool Decompiler::write_xlsx(const std::filesystem::path& filepath) {
     return true;
 }
 
-bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files,
-                                 const std::filesystem::path& reference_dir,
-                                 const std::filesystem::path& output_dir) {
+bool Decompiler::check_all_files(const std::filesystem::path& game_path, const std::filesystem::path& output_dir) {
     if (!fs::exists(output_dir)) fs::create_directories(output_dir);
 
-    for (const auto& file_ : files) {
+    const auto dat_files = ssd::utils::find_files(game_path, true, { ".dat" });
 
+    for (const auto& reference_dat_path : dat_files) {
         bool success = true;
 
-        const fs::path full_path = reference_dir / file_;
-        const fs::path filename = full_path.filename();
-        const std::string file_stem = filename.stem().string();
-        const fs::path reference_dat_path = reference_dir / filename;
-        const fs::path local_dat_path = output_dir / filename;
-        const fs::path xlsx_path = output_dir / (file_stem + ".xlsx");
+        const auto relative_dat_path = std::filesystem::relative(reference_dat_path, game_path);
+        const auto relative_dat_dir = relative_dat_path.parent_path();
+        const fs::path local_dat_dir = output_dir / relative_dat_dir;
+        const fs::path local_dat_path = output_dir / relative_dat_path;
+
+        const std::string file_stem = reference_dat_path.filename().stem().string();
+        const fs::path xlsx_path = output_dir / relative_dat_dir / (file_stem + ".xlsx");
+
+        fs::create_directories(output_dir / relative_dat_dir);
 
         ssd::spdlog::info("checking {}", reference_dat_path.string());
 
@@ -242,7 +244,7 @@ bool Decompiler::check_all_files(const std::vector<std::filesystem::path>& files
         ssd::spdlog::info("reading xlsx file: {}", xlsx_path.string());
         ssd::spdlog::info("writing dat file: {}", local_dat_path.string());
 
-        this->write_dat(output_dir / (current_tf.get_name() + ".dat"));
+        this->write_dat(local_dat_dir / (current_tf.get_name() + ".dat"));
         ssd::spdlog::info("reading {} and {} for comparison", local_dat_path.string(), reference_dat_path.string());
 
         const ssd::Buffer content1 = ssd::utils::read_file(local_dat_path);

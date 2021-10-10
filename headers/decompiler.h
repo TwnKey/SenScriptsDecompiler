@@ -29,9 +29,7 @@ class Decompiler {
     bool update_current_tf();
     bool write_xlsx(const std::filesystem::path& filepath);
     bool write_dat(const std::filesystem::path& filepath);
-    bool check_all_files(const std::vector<std::filesystem::path>& files_to_read,
-                         const std::filesystem::path& reference_dir,
-                         const std::filesystem::path& output_dir);
+    bool check_all_files(const std::filesystem::path& game_path, const std::filesystem::path& output_dir);
     TranslationFile get_tf();
     bool write_file(const std::filesystem::path& filepath, const std::filesystem::path& output_dir);
 
