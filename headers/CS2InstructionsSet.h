@@ -1,14 +1,8 @@
 #ifndef CS2INSTRUCTIONSSET_H
 #define CS2INSTRUCTIONSSET_H
 #include "headers/functions.h"
-#include "headers/translationfile.h"
 #include "headers/utilities.h"
 
-class CS2TranslationFile : public TranslationFile {
-  public:
-    CS2TranslationFile()
-      : TranslationFile() {}
-};
 class CS2Builder : public Builder {
   public:
     CS2Builder() = default;

@@ -1,14 +1,8 @@
 #ifndef REVERIEINSTRUCTIONSSET_H
 #define REVERIEINSTRUCTIONSSET_H
 #include "headers/functions.h"
-#include "headers/translationfile.h"
 #include "headers/utilities.h"
 
-class ReverieTranslationFile : public TranslationFile {
-public:
-    ReverieTranslationFile()
-        : TranslationFile() {}
-};
 class ReverieBuilder : public Builder {
 public:
     ReverieBuilder() = default;

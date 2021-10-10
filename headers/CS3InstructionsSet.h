@@ -1,14 +1,8 @@
 #ifndef CS3INSTRUCTIONSSET_H
 #define CS3INSTRUCTIONSSET_H
 #include "headers/functions.h"
-#include "headers/translationfile.h"
 #include "headers/utilities.h"
 
-class CS3TranslationFile : public TranslationFile {
-  public:
-    CS3TranslationFile()
-      : TranslationFile() {}
-};
 class CS3Builder : public Builder {
   public:
     CS3Builder() = default;

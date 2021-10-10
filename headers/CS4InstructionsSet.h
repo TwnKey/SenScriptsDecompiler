@@ -4,11 +4,6 @@
 #include "headers/translationfile.h"
 #include "headers/utilities.h"
 
-class CS4TranslationFile : public TranslationFile {
-  public:
-    CS4TranslationFile()
-      : TranslationFile() {}
-};
 class CS4Builder : public Builder {
   public:
     CS4Builder() = default;
