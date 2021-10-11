@@ -7585,7 +7585,7 @@ class CS2Builder : public Builder {
     }
     std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int row, QXlsx::Document& xls_content) override {
 
-        uint OP = xls_content.read(row + 1, 2).toInt();
+        uint32_t OP = xls_content.read(row + 1, 2).toInt();
 
         if (CS2UIFiles.contains(scene_name) && (OP == 0x13)) {
             return std::make_shared<UI_OP13>(addr, row, xls_content, this);

@@ -282,8 +282,8 @@ bool Decompiler::check_all_files(const std::filesystem::path& game_path, const s
             int index_byte = idx_fun_2[i];
 
             for (size_t j = 0; j < (uint)current_tf.functions[i].instructions.size(); ++j) {
-                uint OPCode = current_tf.functions[i].instructions[j]->get_opcode();
-                uint byte_in_file = (content2[index_byte]) & 0xFF;
+                uint32_t OPCode = current_tf.functions[i].instructions[j]->get_opcode();
+                uint32_t byte_in_file = (content2[index_byte]) & 0xFF;
 
                 if (OPCode <= 0xFF) {
                     if (OPCode != byte_in_file) {

@@ -39,7 +39,7 @@ class Operande {
     Destination get_destination() { return destination; }
     void set_destination(int function_id, int instruction_id) { destination = Destination(function_id, instruction_id); }
 
-    [[nodiscard]] uint get_addr() const { return position; }
+    [[nodiscard]] uint32_t get_addr() const { return position; }
 
     std::string get_type() { return type; }
 

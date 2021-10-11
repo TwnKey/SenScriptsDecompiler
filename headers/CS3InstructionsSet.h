@@ -647,7 +647,7 @@ class CS3Builder : public Builder {
             int cnt = 0;
             do {
                 ssd::Buffer int_bytes = ReadSubByteArray(content, addr, 4);
-                uint integer = ReadIntegerFromByteArray(0, int_bytes);
+                uint32_t integer = ReadIntegerFromByteArray(0, int_bytes);
                 this->add_operande(Operande(addr, "int", int_bytes));
                 if (integer == 0xFF) break;
 
@@ -6918,7 +6918,7 @@ class CS3Builder : public Builder {
     }
     std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int row, QXlsx::Document& xls_content) override {
 
-        uint OP = xls_content.read(row + 1, 2).toInt();
+        uint32_t OP = xls_content.read(row + 1, 2).toInt();
 
         switch (OP) {
             case 0x00:

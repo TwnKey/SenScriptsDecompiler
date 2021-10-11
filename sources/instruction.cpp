@@ -13,12 +13,12 @@
 #include "xlsxrichstring.h"
 #include "xlsxworkbook.h"
 
-Instruction::Instruction(int addr, uint OP, Builder* Maker)
+Instruction::Instruction(int addr, uint32_t OP, Builder* Maker)
   : maker(Maker)
   , addr_instr(addr)
   , opcode(OP) {}
 
-Instruction::Instruction(int addr, std::string name, uint OP, Builder* Maker)
+Instruction::Instruction(int addr, std::string name, uint32_t OP, Builder* Maker)
   : maker(Maker)
   , addr_instr(addr)
   , opcode(OP)
@@ -26,7 +26,7 @@ Instruction::Instruction(int addr, std::string name, uint OP, Builder* Maker)
 
 Instruction::~Instruction() = default;
 
-Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker)
+Instruction::Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint32_t OP, Builder* Maker)
   : maker(Maker)
   , addr_instr(addr)
   , opcode(OP)
@@ -358,7 +358,7 @@ void Instruction::add_operande(Operande op) {
 
 int Instruction::get_length_in_bytes() { return static_cast<int>(std::size(get_bytes())); }
 
-uint Instruction::get_opcode() const { return opcode; }
+uint32_t Instruction::get_opcode() const { return opcode; }
 ssd::Buffer Instruction::get_bytes() {
     ssd::Buffer bytes;
     if (opcode <= 0xFF) bytes.push_back((char)opcode);

@@ -53,7 +53,7 @@ void Builder::read_functions_xlsx(QXlsx::Document& xls_content) {
 
         int start_header = static_cast<int>(std::ssize(header));
         addr_fun = start_header;
-        for (uint idx_fun = 0; idx_fun < functions_parsed.size() - 1; idx_fun++) {
+        for (size_t idx_fun = 0; idx_fun < functions_parsed.size() - 1; idx_fun++) {
             functions_parsed[idx_fun].actual_addr = addr_fun;
 
             int length = functions_parsed[idx_fun].get_length_in_bytes();
@@ -67,7 +67,7 @@ void Builder::read_functions_xlsx(QXlsx::Document& xls_content) {
 
             addr_fun = addr_fun + padding;
 
-            for (uint idx_instr = 0; idx_instr < functions_parsed[idx_fun].instructions.size(); idx_instr++) {
+            for (size_t idx_instr = 0; idx_instr < functions_parsed[idx_fun].instructions.size(); idx_instr++) {
                 functions_parsed[idx_fun].instructions[idx_instr]->set_addr_instr(
                   functions_parsed[idx_fun].instructions[idx_instr]->get_addr_instr() + functions_parsed[idx_fun].actual_addr);
             }
@@ -75,7 +75,7 @@ void Builder::read_functions_xlsx(QXlsx::Document& xls_content) {
         functions_parsed[functions_parsed.size() - 1].actual_addr = addr_fun;
         int length = functions_parsed[functions_parsed.size() - 1].get_length_in_bytes();
         functions_parsed[functions_parsed.size() - 1].end_addr = length + functions_parsed[functions_parsed.size() - 1].actual_addr;
-        for (uint idx_instr = 0; idx_instr < functions_parsed[functions_parsed.size() - 1].instructions.size(); idx_instr++) {
+        for (size_t idx_instr = 0; idx_instr < functions_parsed[functions_parsed.size() - 1].instructions.size(); idx_instr++) {
             functions_parsed[functions_parsed.size() - 1].instructions[idx_instr]->set_addr_instr(
               functions_parsed[functions_parsed.size() - 1].instructions[idx_instr]->get_addr_instr() +
               functions_parsed[functions_parsed.size() - 1].actual_addr);
@@ -108,7 +108,7 @@ void Builder::read_functions_dat(ssd::Buffer& dat_content) {
 
         update_pointers_dat();
         int current_addr = functions_parsed[0].actual_addr; // first function shouldn't have changed
-        for (uint idx_fun = 1; idx_fun < functions_parsed.size(); idx_fun++) {
+        for (size_t idx_fun = 1; idx_fun < functions_parsed.size(); idx_fun++) {
 
             current_addr = current_addr + functions_parsed[idx_fun - 1].get_length_in_bytes();
             int multiple = 4;
@@ -171,7 +171,7 @@ std::vector<int> Builder::guess_type_by_name(Function& fun) {
 int Builder::attempts_at_reading_function(Function& fun, ssd::Buffer& dat_content, const std::vector<int>& fallback_types) {
     int current_position = fun.actual_addr;
     this->goal = fun.end_addr;
-    uint latest_op_code = 1;
+    uint32_t latest_op_code = 1;
     size_t fails = 0;
 
     /*
@@ -299,7 +299,7 @@ bool Builder::update_pointers_xlsx() {
         std::vector<std::shared_ptr<Instruction>> instructions = idx_fun.instructions;
         for (auto& idx_instr : idx_fun.instructions) {
 
-            for (uint idx_operand = 0; idx_operand < idx_instr->operandes.size(); idx_operand++) {
+            for (size_t idx_operand = 0; idx_operand < idx_instr->operandes.size(); idx_operand++) {
                 if (idx_instr->operandes[idx_operand].get_type() == "pointer") {
                     int idx_row_ptr = idx_instr->operandes[idx_operand].get_integer_value();
                     Function current_fun = functions_parsed[0];
@@ -307,7 +307,7 @@ bool Builder::update_pointers_xlsx() {
                     if (functions_parsed.size() > 1) {
 
                         Function next_fun = functions_parsed[1];
-                        for (uint idx_fun_next = 1; idx_fun_next < functions_parsed.size(); idx_fun_next++) {
+                        for (size_t idx_fun_next = 1; idx_fun_next < functions_parsed.size(); idx_fun_next++) {
                             if (idx_row_ptr < next_fun.xlsx_row_index) {
                                 break;
                             }

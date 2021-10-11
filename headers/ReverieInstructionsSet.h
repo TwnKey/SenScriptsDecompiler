@@ -708,7 +708,7 @@ public:
             int cnt = 0;
             do {
                 ssd::Buffer int_bytes = ReadSubByteArray(content, addr, 4);
-                uint integer = ReadIntegerFromByteArray(0, int_bytes);
+                uint32_t integer = ReadIntegerFromByteArray(0, int_bytes);
                 this->add_operande(Operande(addr, "int", int_bytes));
                 if (integer == 0x0000FFFF) break;
 
