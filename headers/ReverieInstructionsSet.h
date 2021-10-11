@@ -6,17 +6,6 @@
 class ReverieBuilder : public Builder {
 public:
     ReverieBuilder() = default;
-    int add_operandes(int& addr, ssd::Buffer& content, Instruction* instr, int size) {
-        int plVar15 = addr;
-        int lVar5 = 0;
-        int lVar7 = -1;
-        do {
-            instr->add_operande(Operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
-            lVar5 = lVar7 + size;
-            lVar7 = lVar7 + 1;
-        } while (content[plVar15 + lVar5] != '\0');
-        return lVar7;
-    }
 
     static void reading_dialog(int& addr, ssd::Buffer& content, Instruction* instr) {
 
