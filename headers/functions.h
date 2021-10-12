@@ -8,6 +8,8 @@ class Function {
     Function(int id, std::string n, int declr_pos, int addr, int end);
 
     void add_instruction(const std::shared_ptr<Instruction>& instr);
+    int find_instruction_idx(int addr);
+
     void set_addr(int addr);
     int get_length_in_bytes();
 

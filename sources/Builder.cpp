@@ -269,10 +269,13 @@ bool Builder::update_pointers_dat() {
                     int idx_fun_ = find_function(addr_ptr);
                     if (idx_fun_ != -1) {
                         Function fun = functions_parsed[idx_fun_];
-                        int id_instr = find_instruction(addr_ptr, fun);
+                        int id_instr = fun.find_instruction_idx(addr_ptr);
                         if (id_instr != -1) {
                             operande.set_destination(fun.id, id_instr);
                         } else {
+                            ssd::spdlog::warn("Couldn't find instruction for address: {:#04x}", addr_ptr);
+                            display_text(fmt::format("Couldn't find instruction {:#04x}", addr_ptr));
+
                             operande.set_destination(fun.id, 0);
                         }
                     } else {
@@ -340,27 +343,6 @@ int Builder::find_function(int addr) {
     }
     if ((result == -1) && (addr < functions_parsed[functions_parsed.size() - 1].end_addr)) {
         result = static_cast<int>(functions_parsed.size()) - 1;
-    }
-
-    return result;
-}
-int Builder::find_instruction(int addr, Function fun) {
-    int result = -1;
-    size_t idx_instr = 0;
-    bool success = false;
-    for (; idx_instr < fun.instructions.size(); idx_instr++) {
-        int instr_addr = fun.instructions[idx_instr]->get_addr_instr();
-        if (addr == instr_addr) {
-            success = true;
-            result = static_cast<int>(idx_instr);
-
-            break;
-        }
-    }
-
-    if (!success) {
-        ssd::spdlog::warn("Couldn't find instruction {:#04x}", addr);
-        display_text(fmt::format("Couldn't find instruction {:#04x}", addr));
     }
 
     return result;

@@ -33,9 +33,6 @@ output dat file by the decompiler object
 find_function: this function is used to find the Sen function that contains the addr passed as input;  this way we know
 with the pointer value which function contains the location pointed
 
-find_instruction: returns the index of the instruction contained in the previously found function, located at the
-integer addr passed as parameter
-
 find_operande: returns the index of the operand inside the previously found instruction contained in the previously
 found function, located at the integer addr passed as parameter; it is not used because a pointer (from what I've seen)
 always points to an instruction (their op code), not operands
@@ -86,8 +83,6 @@ class Builder {
     int read_individual_function(Function& fun, ssd::Buffer& dat_content);
 
     std::vector<int> guess_type_by_name(Function& fun);
-
-    int find_instruction(int addr, Function fun);
 
     bool reset();
 

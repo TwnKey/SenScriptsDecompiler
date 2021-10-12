@@ -18,6 +18,17 @@ void Function::add_instruction(const std::shared_ptr<Instruction>& instr) {
     if (instr->get_opcode() > 0) instructions.push_back(instr);
 }
 
+int Function::find_instruction_idx(int addr) {
+    for (int idx = 0; const auto& instruction : instructions) {
+        auto instr_addr = instruction->get_addr_instr();
+        if (addr == instr_addr) {
+            return idx;
+        }
+        idx++;
+    }
+    return -1;
+}
+
 void Function::set_addr(int addr) { this->actual_addr = addr; }
 
 int Function::get_length_in_bytes() {
