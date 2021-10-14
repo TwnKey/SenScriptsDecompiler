@@ -9259,15 +9259,12 @@ class TXBuilder : public Builder {
         display_text("Header parsed.");
         return true;
     }
-    std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int row, QXlsx::Document& xls_content) override {
-
-        uint32_t OP = xls_content.read(row + 1, 2).toInt();
-
-        if (TXUIFiles.contains(scene_name) && (OP == 0x13)) {
+    std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int opcode, int row, QXlsx::Document& xls_content) override {
+        if (TXUIFiles.contains(scene_name) && (opcode == 0x13)) {
             return std::make_shared<UI_OP13>(addr, row, xls_content, this);
         }
 
-        switch (OP) {
+        switch (opcode) {
             case 0x00:
                 return std::make_shared<OPCode0>(addr, row, xls_content, this);
             case 0x01:
@@ -9682,7 +9679,7 @@ class TXBuilder : public Builder {
                 return std::make_shared<AnimeClipData>(addr, row, xls_content, this);
             default:
                 std::stringstream stream;
-                stream << "L'OP code " << std::hex << OP << " n'est pas défini !! " << this->scene_name;
+                stream << "L'OP code " << std::hex << opcode << " n'est pas défini !! " << this->scene_name;
                 error = true;
                 addr++;
 

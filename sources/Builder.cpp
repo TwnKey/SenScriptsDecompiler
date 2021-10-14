@@ -39,8 +39,8 @@ void Builder::read_functions_xlsx(QXlsx::Document& xls_content) {
                 ID_fun++;
 
             } else {
-
-                std::shared_ptr<Instruction> instr = create_instruction_from_xlsx(addr_instr, idx_row, xls_content);
+                int opcode = xls_content.read(idx_row + 1, 2).toInt();
+                std::shared_ptr<Instruction> instr = create_instruction_from_xlsx(addr_instr, opcode, idx_row, xls_content);
                 current_fun.add_instruction(instr);
 
                 idx_row++;
