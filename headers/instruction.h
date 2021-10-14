@@ -13,7 +13,6 @@ class Instruction {
     Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker);
     virtual ~Instruction();
 
-    virtual int write_xlsx(QXlsx::Document& excelScenarioSheet, std::vector<Function> funs, int row, int& col);
     virtual void write_dat();
 
     [[nodiscard]] uint get_opcode() const;
