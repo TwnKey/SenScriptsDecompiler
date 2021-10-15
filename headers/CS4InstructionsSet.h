@@ -263,8 +263,6 @@ class CS4Builder : public Builder {
     }
     class CreateMonsters : public Instruction {
       public:
-        CreateMonsters()
-          : Instruction(-1, 256, nullptr) {}
         CreateMonsters(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "CreateMonsters", 256, Maker) {}
         CreateMonsters(int addr, Builder* Maker)
@@ -361,8 +359,6 @@ class CS4Builder : public Builder {
     };
     class EffectsInstr : public Instruction {
       public:
-        EffectsInstr()
-          : Instruction(-1, 257, nullptr) {}
         EffectsInstr(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "EffectsInstr", 257, Maker) {}
         EffectsInstr(int addr, Builder* Maker)
@@ -392,8 +388,6 @@ class CS4Builder : public Builder {
     };
     class AddCollision : public Instruction {
       public:
-        AddCollision()
-          : Instruction(-1, 271, nullptr) {}
         AddCollision(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "AddCollision", 271, Maker) {}
         AddCollision(int addr, Builder* Maker)
@@ -418,8 +412,6 @@ class CS4Builder : public Builder {
     };
     class ActionTable : public Instruction {
       public:
-        ActionTable()
-          : Instruction(-1, 258, nullptr) {}
         ActionTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "ActionTable", 258, Maker) {}
         ActionTable(int addr, Builder* Maker)
@@ -509,8 +501,6 @@ class CS4Builder : public Builder {
     };
     class AlgoTable : public Instruction {
       public:
-        AlgoTable()
-          : Instruction(-1, 259, nullptr) {}
         AlgoTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "AlgoTable", 259, Maker) {}
         AlgoTable(int addr, Builder* Maker)
@@ -535,8 +525,6 @@ class CS4Builder : public Builder {
     };
     class WeaponAttTable : public Instruction {
       public:
-        WeaponAttTable()
-          : Instruction(-1, 260, nullptr) {}
         WeaponAttTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "WeaponAttTable", 260, Maker) {}
         WeaponAttTable(int addr, Builder* Maker)
@@ -549,8 +537,6 @@ class CS4Builder : public Builder {
     };
     class BreakTable : public Instruction {
       public:
-        BreakTable()
-          : Instruction(-1, 261, nullptr) {}
         BreakTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "BreakTable", 261, Maker) {}
         BreakTable(int addr, Builder* Maker)
@@ -577,8 +563,6 @@ class CS4Builder : public Builder {
       : public Instruction // 140142002
     {
       public:
-        SummonTable()
-          : Instruction(-1, 262, nullptr) {}
         SummonTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "SummonTable", 262, Maker) {}
         SummonTable(int addr, Builder* Maker)
@@ -608,8 +592,6 @@ class CS4Builder : public Builder {
       : public Instruction // 140142002
     {
       public:
-        ReactionTable()
-          : Instruction(-1, 263, nullptr) {}
         ReactionTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "ReactionTable", 263, Maker) {}
         ReactionTable(int addr, Builder* Maker)
@@ -649,8 +631,6 @@ class CS4Builder : public Builder {
       : public Instruction // 14019797c
     {
       public:
-        PartTable()
-          : Instruction(-1, 264, nullptr) {}
         PartTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "PartTable", 264, Maker) {}
         PartTable(int addr, Builder* Maker)
@@ -688,8 +668,6 @@ class CS4Builder : public Builder {
       : public Instruction // from CS4
     {
       public:
-        AnimeClipTable()
-          : Instruction(-1, 265, nullptr) {}
         AnimeClipTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "AnimeClipTable", 265, Maker) {}
         AnimeClipTable(int addr, Builder* Maker)
@@ -711,8 +689,6 @@ class CS4Builder : public Builder {
     };
     class AnimeClipData : public Instruction {
       public:
-        AnimeClipData()
-          : Instruction(-1, 273, nullptr) {}
         AnimeClipData(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "AnimeClipData", 273, Maker) {}
         AnimeClipData(int addr, Builder* Maker)
@@ -741,8 +717,6 @@ class CS4Builder : public Builder {
       : public Instruction // 00000001402613C2 probably trigger only for monsters on the field
     {
       public:
-        FieldMonsterData()
-          : Instruction(-1, 266, nullptr) {}
         FieldMonsterData(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "FieldMonsterData", 266, Maker) {}
         FieldMonsterData(int addr, Builder* Maker)
@@ -765,8 +739,6 @@ class CS4Builder : public Builder {
       : public Instruction //
     {
       public:
-        FieldFollowData()
-          : Instruction(-1, 267, nullptr) {}
         FieldFollowData(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "FieldMonsterData", 267, Maker) {}
         FieldFollowData(int addr, Builder* Maker)
@@ -785,8 +757,6 @@ class CS4Builder : public Builder {
       : public Instruction //
     {
       public:
-        FC_autoX()
-          : Instruction(-1, 268, nullptr) {}
         FC_autoX(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "FC_autoX", 268, Maker) {}
         FC_autoX(int addr, Builder* Maker)
@@ -802,8 +772,6 @@ class CS4Builder : public Builder {
       : public Instruction //
     {
       public:
-        BookData99()
-          : Instruction(-1, 269, nullptr) {}
         BookData99(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "BookData99", 269, Maker) {}
         BookData99(int addr, Builder* Maker)
@@ -818,8 +786,6 @@ class CS4Builder : public Builder {
       : public Instruction // 0000000140464549
     {
       public:
-        BookDataX()
-          : Instruction(-1, 270, nullptr) {}
         BookDataX(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "BookDataX", 270, Maker) {}
         BookDataX(int addr, Builder* Maker)
@@ -857,8 +823,6 @@ class CS4Builder : public Builder {
     };
     class StyleName : public Instruction {
       public:
-        StyleName()
-          : Instruction(-1, 274, nullptr) {}
         StyleName(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "StyleName", 274, Maker) {}
         StyleName(int addr, Builder* Maker)
@@ -882,8 +846,6 @@ class CS4Builder : public Builder {
 
     class OPCode0 : public Instruction {
       public:
-        OPCode0()
-          : Instruction(-1, 0, nullptr) {}
         OPCode0(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "Instruction 0", 0, Maker) {}
         OPCode0(int addr, Builder* Maker)
@@ -895,8 +857,6 @@ class CS4Builder : public Builder {
     };
     class OPCode1 : public Instruction {
       public:
-        OPCode1()
-          : Instruction(-1, 1, nullptr) {}
         OPCode1(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "Return", 1, Maker) {}
         OPCode1(int addr, Builder* Maker)
@@ -908,8 +868,6 @@ class CS4Builder : public Builder {
     };
     class OPCode2 : public Instruction {
       public:
-        OPCode2()
-          : Instruction(-1, 2, nullptr) {}
         OPCode2(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "Call", 2, Maker) {}
         OPCode2(int addr, Builder* Maker)
@@ -936,8 +894,6 @@ class CS4Builder : public Builder {
     };
     class OPCode3 : public Instruction {
       public:
-        OPCode3()
-          : Instruction(-1, 3, nullptr) {}
         OPCode3(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 3, Maker) {}
         OPCode3(int addr, Builder* Maker)
@@ -950,8 +906,6 @@ class CS4Builder : public Builder {
     };
     class OPCode4 : public Instruction {
       public:
-        OPCode4()
-          : Instruction(-1, 4, nullptr) {}
         OPCode4(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 4, Maker) {}
         OPCode4(int addr, Builder* Maker)
@@ -965,8 +919,6 @@ class CS4Builder : public Builder {
     };
     class OPCode5 : public Instruction {
       public:
-        OPCode5()
-          : Instruction(-1, 5, nullptr) {}
         OPCode5(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 5, Maker) {}
         OPCode5(int addr, Builder* Maker)
@@ -980,8 +932,6 @@ class CS4Builder : public Builder {
     };
     class OPCode6 : public Instruction {
       public:
-        OPCode6()
-          : Instruction(-1, 6, nullptr) {}
         OPCode6(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 6, Maker) {}
         OPCode6(int addr, Builder* Maker)
@@ -1008,8 +958,6 @@ class CS4Builder : public Builder {
     };
     class OPCode7 : public Instruction {
       public:
-        OPCode7()
-          : Instruction(-1, 0x7, nullptr) {}
         OPCode7(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 7, Maker) {}
         OPCode7(int addr, Builder* Maker)
@@ -1039,8 +987,6 @@ class CS4Builder : public Builder {
     };
     class OPCode8 : public Instruction {
       public:
-        OPCode8()
-          : Instruction(-1, 8, nullptr) {}
         OPCode8(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 8, Maker) {}
         OPCode8(int addr, Builder* Maker)
@@ -1053,8 +999,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeA : public Instruction {
       public:
-        OPCodeA()
-          : Instruction(-1, 0xA, nullptr) {}
         OPCodeA(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0xA, Maker) {}
         OPCodeA(int addr, Builder* Maker)
@@ -1070,8 +1014,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB : public Instruction {
       public:
-        OPCodeB()
-          : Instruction(-1, 0xB, nullptr) {}
         OPCodeB(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0xB, Maker) {}
         OPCodeB(int addr, Builder* Maker)
@@ -1105,8 +1047,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC : public Instruction {
       public:
-        OPCodeC()
-          : Instruction(-1, 0xC, nullptr) {}
         OPCodeC(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0xC, Maker) {}
         OPCodeC(int addr, Builder* Maker)
@@ -1120,8 +1060,6 @@ class CS4Builder : public Builder {
     };
     class OPCode0D : public Instruction {
       public:
-        OPCode0D()
-          : Instruction(-1, 0x0D, nullptr) {}
         OPCode0D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x0D, Maker) {}
         OPCode0D(int addr, Builder* Maker)
@@ -1142,8 +1080,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeE : public Instruction {
       public:
-        OPCodeE()
-          : Instruction(-1, 0xE, nullptr) {}
         OPCodeE(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0xE, Maker) {}
         OPCodeE(int addr, Builder* Maker)
@@ -1158,8 +1094,6 @@ class CS4Builder : public Builder {
     };
     class OPCode10 : public Instruction {
       public:
-        OPCode10()
-          : Instruction(-1, 0x10, nullptr) {}
         OPCode10(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x10, Maker) {}
         OPCode10(int addr, Builder* Maker)
@@ -1172,8 +1106,6 @@ class CS4Builder : public Builder {
     };
     class OPCode11 : public Instruction {
       public:
-        OPCode11()
-          : Instruction(-1, 0x11, nullptr) {}
         OPCode11(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x11, Maker) {}
         OPCode11(int addr, Builder* Maker)
@@ -1186,8 +1118,6 @@ class CS4Builder : public Builder {
     };
     class OPCode12 : public Instruction {
       public:
-        OPCode12()
-          : Instruction(-1, 0x12, nullptr) {}
         OPCode12(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x12, Maker) {}
         OPCode12(int addr, Builder* Maker)
@@ -1200,8 +1130,6 @@ class CS4Builder : public Builder {
     };
     class OPCode13 : public Instruction {
       public:
-        OPCode13()
-          : Instruction(-1, 0x13, nullptr) {}
         OPCode13(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x13, Maker) {}
         OPCode13(int addr, Builder* Maker)
@@ -1214,8 +1142,6 @@ class CS4Builder : public Builder {
     };
     class OPCode14 : public Instruction {
       public:
-        OPCode14()
-          : Instruction(-1, 0x14, nullptr) {}
         OPCode14(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x14, Maker) {}
         OPCode14(int addr, Builder* Maker)
@@ -1228,8 +1154,6 @@ class CS4Builder : public Builder {
     };
     class OPCode15 : public Instruction {
       public:
-        OPCode15()
-          : Instruction(-1, 0x15, nullptr) {}
         OPCode15(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x15, Maker) {}
         OPCode15(int addr, Builder* Maker)
@@ -1242,8 +1166,6 @@ class CS4Builder : public Builder {
     };
     class OPCode16 : public Instruction {
       public:
-        OPCode16()
-          : Instruction(-1, 0x16, nullptr) {}
         OPCode16(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x16, Maker) {}
         OPCode16(int addr, Builder* Maker)
@@ -1256,8 +1178,6 @@ class CS4Builder : public Builder {
     };
     class OPCode17 : public Instruction {
       public:
-        OPCode17()
-          : Instruction(-1, 0x17, nullptr) {}
         OPCode17(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x17, Maker) {}
         OPCode17(int addr, Builder* Maker)
@@ -1271,8 +1191,6 @@ class CS4Builder : public Builder {
     };
     class OPCode18 : public Instruction {
       public:
-        OPCode18()
-          : Instruction(-1, 0x18, nullptr) {}
         OPCode18(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x18, Maker) {}
         OPCode18(int addr, Builder* Maker)
@@ -1287,8 +1205,6 @@ class CS4Builder : public Builder {
     };
     class OPCode19 : public Instruction {
       public:
-        OPCode19()
-          : Instruction(-1, 0x19, nullptr) {}
         OPCode19(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x19, Maker) {}
         OPCode19(int addr, Builder* Maker)
@@ -1303,8 +1219,6 @@ class CS4Builder : public Builder {
     };
     class OPCode1A : public Instruction {
       public:
-        OPCode1A()
-          : Instruction(-1, 0x1A, nullptr) {}
         OPCode1A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x1A, Maker) {}
         OPCode1A(int addr, Builder* Maker)
@@ -1318,8 +1232,6 @@ class CS4Builder : public Builder {
     };
     class OPCode1D : public Instruction {
       public:
-        OPCode1D()
-          : Instruction(-1, 0x1D, nullptr) {}
         OPCode1D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x1D, Maker) {}
         OPCode1D(int addr, Builder* Maker)
@@ -1354,8 +1266,6 @@ class CS4Builder : public Builder {
     };
     class OPCode1E : public Instruction {
       public:
-        OPCode1E()
-          : Instruction(-1, 0x1E, nullptr) {}
         OPCode1E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x1E, Maker) {}
         OPCode1E(int addr, Builder* Maker)
@@ -1372,8 +1282,6 @@ class CS4Builder : public Builder {
     };
     class OPCode1F : public Instruction {
       public:
-        OPCode1F()
-          : Instruction(-1, 0x1F, nullptr) {}
         OPCode1F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x1F, Maker) {}
         OPCode1F(int addr, Builder* Maker)
@@ -1388,8 +1296,6 @@ class CS4Builder : public Builder {
     };
     class OPCode20 : public Instruction {
       public:
-        OPCode20()
-          : Instruction(-1, 0x20, nullptr) {}
         OPCode20(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x20, Maker) {}
         OPCode20(int addr, Builder* Maker)
@@ -1407,8 +1313,6 @@ class CS4Builder : public Builder {
     };
     class OPCode21 : public Instruction {
       public:
-        OPCode21()
-          : Instruction(-1, 0x21, nullptr) {}
         OPCode21(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x21, Maker) {}
         OPCode21(int addr, Builder* Maker)
@@ -1421,8 +1325,6 @@ class CS4Builder : public Builder {
     };
     class OPCode22 : public Instruction {
       public:
-        OPCode22()
-          : Instruction(-1, 0x22, nullptr) {}
         OPCode22(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x22, Maker) {}
         OPCode22(int addr, Builder* Maker)
@@ -1436,8 +1338,6 @@ class CS4Builder : public Builder {
     };
     class OPCode23 : public Instruction {
       public:
-        OPCode23()
-          : Instruction(-1, 0x23, nullptr) {}
         OPCode23(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x23, Maker) {}
         OPCode23(int addr, Builder* Maker)
@@ -1472,8 +1372,6 @@ class CS4Builder : public Builder {
     };
     class OPCode24 : public Instruction {
       public:
-        OPCode24()
-          : Instruction(-1, 0x24, nullptr) {}
         OPCode24(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x24, Maker) {}
         OPCode24(int addr, Builder* Maker)
@@ -1488,8 +1386,6 @@ class CS4Builder : public Builder {
     };
     class OPCode25 : public Instruction {
       public:
-        OPCode25()
-          : Instruction(-1, 0x25, nullptr) {}
         OPCode25(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x25, Maker) {}
         OPCode25(int addr, Builder* Maker)
@@ -1502,8 +1398,6 @@ class CS4Builder : public Builder {
     };
     class OPCode26 : public Instruction {
       public:
-        OPCode26()
-          : Instruction(-1, 0x26, nullptr) {}
         OPCode26(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x26, Maker) {}
         OPCode26(int addr, Builder* Maker)
@@ -1515,8 +1409,6 @@ class CS4Builder : public Builder {
     };
     class OPCode27 : public Instruction {
       public:
-        OPCode27()
-          : Instruction(-1, 0x27, nullptr) {}
         OPCode27(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x27, Maker) {}
         OPCode27(int addr, Builder* Maker)
@@ -1530,8 +1422,6 @@ class CS4Builder : public Builder {
     };
     class OPCode28 : public Instruction {
       public:
-        OPCode28()
-          : Instruction(-1, 0x28, nullptr) {}
         OPCode28(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x28, Maker) {}
         OPCode28(int addr, Builder* Maker)
@@ -1546,8 +1436,6 @@ class CS4Builder : public Builder {
     };
     class OPCode29 : public Instruction {
       public:
-        OPCode29()
-          : Instruction(-1, 0x29, nullptr) {}
         OPCode29(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x29, Maker) {}
         OPCode29(int addr, Builder* Maker)
@@ -1626,8 +1514,6 @@ class CS4Builder : public Builder {
     };
     class OPCode2A : public Instruction {
       public:
-        OPCode2A()
-          : Instruction(-1, 0x2A, nullptr) {}
         OPCode2A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2A, Maker) {}
         OPCode2A(int addr, Builder* Maker)
@@ -1654,8 +1540,6 @@ class CS4Builder : public Builder {
 
     class OPCode2B : public Instruction {
       public:
-        OPCode2B()
-          : Instruction(-1, 0x2B, nullptr) {}
         OPCode2B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2B, Maker) {}
         OPCode2B(int addr, Builder* Maker)
@@ -1689,8 +1573,6 @@ class CS4Builder : public Builder {
     };
     class OPCode2C : public Instruction {
       public:
-        OPCode2C()
-          : Instruction(-1, 0x2C, nullptr) {}
         OPCode2C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2C, Maker) {}
         OPCode2C(int addr, Builder* Maker)
@@ -1716,8 +1598,6 @@ class CS4Builder : public Builder {
     };
     class OPCode2D : public Instruction {
       public:
-        OPCode2D()
-          : Instruction(-1, 0x2D, nullptr) {}
         OPCode2D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2D, Maker) {}
         OPCode2D(int addr, Builder* Maker)
@@ -1732,8 +1612,6 @@ class CS4Builder : public Builder {
     };
     class OPCode2E : public Instruction {
       public:
-        OPCode2E()
-          : Instruction(-1, 0x2E, nullptr) {}
         OPCode2E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2E, Maker) {}
         OPCode2E(int addr, Builder* Maker)
@@ -1763,8 +1641,6 @@ class CS4Builder : public Builder {
     };
     class OPCode2F : public Instruction {
       public:
-        OPCode2F()
-          : Instruction(-1, 0x2F, nullptr) {}
         OPCode2F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2F, Maker) {}
         OPCode2F(int addr, Builder* Maker)
@@ -1835,8 +1711,6 @@ class CS4Builder : public Builder {
     };
     class OPCode30 : public Instruction {
       public:
-        OPCode30()
-          : Instruction(-1, 0x30, nullptr) {}
         OPCode30(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x30, Maker) {}
         OPCode30(int addr, Builder* Maker)
@@ -1862,8 +1736,6 @@ class CS4Builder : public Builder {
     };
     class OPCode31 : public Instruction {
       public:
-        OPCode31()
-          : Instruction(-1, 0x31, nullptr) {}
         OPCode31(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x31, Maker) {}
         OPCode31(int addr, Builder* Maker)
@@ -1886,8 +1758,6 @@ class CS4Builder : public Builder {
     };
     class OPCode32 : public Instruction {
       public:
-        OPCode32()
-          : Instruction(-1, 0x32, nullptr) {}
         OPCode32(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x32, Maker) {}
         OPCode32(int addr, Builder* Maker)
@@ -2028,8 +1898,6 @@ class CS4Builder : public Builder {
     };
     class OPCode33 : public Instruction {
       public:
-        OPCode33()
-          : Instruction(-1, 0x33, nullptr) {}
         OPCode33(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x33, Maker) {}
         OPCode33(int addr, Builder* Maker)
@@ -2735,8 +2603,6 @@ class CS4Builder : public Builder {
     };
     class OPCode34 : public Instruction {
       public:
-        OPCode34()
-          : Instruction(-1, 0x34, nullptr) {}
         OPCode34(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x34, Maker) {}
         OPCode34(int addr, Builder* Maker)
@@ -2755,8 +2621,6 @@ class CS4Builder : public Builder {
     };
     class OPCode35 : public Instruction {
       public:
-        OPCode35()
-          : Instruction(-1, 0x35, nullptr) {}
         OPCode35(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x35, Maker) {}
         OPCode35(int addr, Builder* Maker)
@@ -2772,8 +2636,6 @@ class CS4Builder : public Builder {
     };
     class OPCode36 : public Instruction {
       public:
-        OPCode36()
-          : Instruction(-1, 0x36, nullptr) {}
         OPCode36(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x36, Maker) {}
         OPCode36(int addr, Builder* Maker)
@@ -2985,8 +2847,6 @@ class CS4Builder : public Builder {
     };
     class OPCode37 : public Instruction {
       public:
-        OPCode37()
-          : Instruction(-1, 0x37, nullptr) {}
         OPCode37(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x37, Maker) {}
         OPCode37(int addr, Builder* Maker)
@@ -3003,8 +2863,6 @@ class CS4Builder : public Builder {
     };
     class OPCode38 : public Instruction {
       public:
-        OPCode38()
-          : Instruction(-1, 0x38, nullptr) {}
         OPCode38(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x38, Maker) {}
         OPCode38(int addr, Builder* Maker)
@@ -3021,8 +2879,6 @@ class CS4Builder : public Builder {
 
     class OPCode39 : public Instruction {
       public:
-        OPCode39()
-          : Instruction(-1, 0x39, nullptr) {}
         OPCode39(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x39, Maker) {}
         OPCode39(int addr, Builder* Maker)
@@ -3041,8 +2897,6 @@ class CS4Builder : public Builder {
 
     class OPCode3A : public Instruction {
       public:
-        OPCode3A()
-          : Instruction(-1, 0x3A, nullptr) {}
         OPCode3A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3A, Maker) {}
         OPCode3A(int addr, Builder* Maker)
@@ -3096,8 +2950,6 @@ class CS4Builder : public Builder {
     };
     class OPCode3B : public Instruction {
       public:
-        OPCode3B()
-          : Instruction(-1, 0x3B, nullptr) {}
         OPCode3B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3B, Maker) {}
         OPCode3B(int addr, Builder* Maker)
@@ -3359,8 +3211,6 @@ class CS4Builder : public Builder {
     };
     class OPCode3C : public Instruction {
       public:
-        OPCode3C()
-          : Instruction(-1, 0x3C, nullptr) {}
         OPCode3C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3C, Maker) {}
         OPCode3C(int addr, Builder* Maker)
@@ -3396,8 +3246,6 @@ class CS4Builder : public Builder {
     };
     class OPCode3D : public Instruction {
       public:
-        OPCode3D()
-          : Instruction(-1, 0x3D, nullptr) {}
         OPCode3D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3D, Maker) {}
         OPCode3D(int addr, Builder* Maker)
@@ -3414,8 +3262,6 @@ class CS4Builder : public Builder {
     };
     class OPCode3E : public Instruction {
       public:
-        OPCode3E()
-          : Instruction(-1, 0x3E, nullptr) {}
         OPCode3E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3E, Maker) {}
         OPCode3E(int addr, Builder* Maker)
@@ -3431,8 +3277,6 @@ class CS4Builder : public Builder {
     };
     class OPCode3F : public Instruction {
       public:
-        OPCode3F()
-          : Instruction(-1, 0x3F, nullptr) {}
         OPCode3F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3F, Maker) {}
         OPCode3F(int addr, Builder* Maker)
@@ -3445,8 +3289,6 @@ class CS4Builder : public Builder {
     };
     class OPCode40 : public Instruction {
       public:
-        OPCode40()
-          : Instruction(-1, 0x40, nullptr) {}
         OPCode40(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x40, Maker) {}
         OPCode40(int addr, Builder* Maker)
@@ -3482,8 +3324,6 @@ class CS4Builder : public Builder {
     };
     class OPCode41 : public Instruction {
       public:
-        OPCode41()
-          : Instruction(-1, 0x41, nullptr) {}
         OPCode41(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x41", 0x41, Maker) {}
         OPCode41(int addr, Builder* Maker)
@@ -3505,8 +3345,6 @@ class CS4Builder : public Builder {
     };
     class OPCode42 : public Instruction {
       public:
-        OPCode42()
-          : Instruction(-1, 0x42, nullptr) {}
         OPCode42(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x42, Maker) {}
         OPCode42(int addr, Builder* Maker)
@@ -3528,8 +3366,6 @@ class CS4Builder : public Builder {
     };
     class OPCode43 : public Instruction {
       public:
-        OPCode43()
-          : Instruction(-1, 0x43, nullptr) {}
         OPCode43(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x43, Maker) {}
         OPCode43(int addr, Builder* Maker)
@@ -3566,8 +3402,6 @@ class CS4Builder : public Builder {
     };
     class OPCode44 : public Instruction {
       public:
-        OPCode44()
-          : Instruction(-1, 0x44, nullptr) {}
         OPCode44(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x44", 0x44, Maker) {}
         OPCode44(int addr, Builder* Maker)
@@ -3584,8 +3418,6 @@ class CS4Builder : public Builder {
     };
     class OPCode45 : public Instruction {
       public:
-        OPCode45()
-          : Instruction(-1, 0x45, nullptr) {}
         OPCode45(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x45", 0x45, Maker) {}
         OPCode45(int addr, Builder* Maker)
@@ -3603,8 +3435,6 @@ class CS4Builder : public Builder {
     };
     class OPCode46 : public Instruction {
       public:
-        OPCode46()
-          : Instruction(-1, 0x46, nullptr) {}
         OPCode46(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x46", 0x46, Maker) {}
         OPCode46(int addr, Builder* Maker)
@@ -3634,8 +3464,6 @@ class CS4Builder : public Builder {
 
     class OPCode47 : public Instruction {
       public:
-        OPCode47()
-          : Instruction(-1, 0x47, nullptr) {}
         OPCode47(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x47, Maker) {}
         OPCode47(int addr, Builder* Maker)
@@ -3650,8 +3478,6 @@ class CS4Builder : public Builder {
     };
     class OPCode48 : public Instruction {
       public:
-        OPCode48()
-          : Instruction(-1, 0x48, nullptr) {}
         OPCode48(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x48, Maker) {}
         OPCode48(int addr, Builder* Maker)
@@ -3675,8 +3501,6 @@ class CS4Builder : public Builder {
     };
     class OPCode49 : public Instruction {
       public:
-        OPCode49()
-          : Instruction(-1, 0x49, nullptr) {}
         OPCode49(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x49", 0x49, Maker) {}
         OPCode49(int addr, Builder* Maker)
@@ -3773,8 +3597,6 @@ class CS4Builder : public Builder {
     };
     class OPCode4A : public Instruction {
       public:
-        OPCode4A()
-          : Instruction(-1, 0x4A, nullptr) {}
         OPCode4A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4A", 0x4A, Maker) {}
         OPCode4A(int addr, Builder* Maker)
@@ -3793,8 +3615,6 @@ class CS4Builder : public Builder {
     };
     class OPCode4B : public Instruction {
       public:
-        OPCode4B()
-          : Instruction(-1, 0x4B, nullptr) {}
         OPCode4B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4B", 0x4B, Maker) {}
         OPCode4B(int addr, Builder* Maker)
@@ -3824,8 +3644,6 @@ class CS4Builder : public Builder {
     };
     class OPCode4C : public Instruction {
       public:
-        OPCode4C()
-          : Instruction(-1, 0x4C, nullptr) {}
         OPCode4C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4C", 0x4C, Maker) {}
         OPCode4C(int addr, Builder* Maker)
@@ -3843,8 +3661,6 @@ class CS4Builder : public Builder {
     };
     class OPCode4D : public Instruction {
       public:
-        OPCode4D()
-          : Instruction(-1, 0x4D, nullptr) {}
         OPCode4D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4D", 0x4D, Maker) {}
         OPCode4D(int addr, Builder* Maker)
@@ -3858,8 +3674,6 @@ class CS4Builder : public Builder {
     };
     class OPCode4E : public Instruction {
       public:
-        OPCode4E()
-          : Instruction(-1, 0x4E, nullptr) {}
         OPCode4E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4E", 0x4E, Maker) {}
         OPCode4E(int addr, Builder* Maker)
@@ -3874,8 +3688,6 @@ class CS4Builder : public Builder {
     };
     class OPCode4F : public Instruction {
       public:
-        OPCode4F()
-          : Instruction(-1, 0x4F, nullptr) {}
         OPCode4F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4F", 0x4F, Maker) {}
         OPCode4F(int addr, Builder* Maker)
@@ -3924,8 +3736,6 @@ class CS4Builder : public Builder {
     };
     class OPCode50 : public Instruction {
       public:
-        OPCode50()
-          : Instruction(-1, 0x50, nullptr) {}
         OPCode50(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x50", 0x50, Maker) {}
         OPCode50(int addr, Builder* Maker)
@@ -3940,8 +3750,6 @@ class CS4Builder : public Builder {
     };
     class OPCode51 : public Instruction {
       public:
-        OPCode51()
-          : Instruction(-1, 0x51, nullptr) {}
         OPCode51(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x51", 0x51, Maker) {}
         OPCode51(int addr, Builder* Maker)
@@ -3963,8 +3771,6 @@ class CS4Builder : public Builder {
     };
     class OPCode52 : public Instruction {
       public:
-        OPCode52()
-          : Instruction(-1, 0x52, nullptr) {}
         OPCode52(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x52", 0x52, Maker) {}
         OPCode52(int addr, Builder* Maker)
@@ -3978,8 +3784,6 @@ class CS4Builder : public Builder {
     };
     class OPCode53 : public Instruction {
       public:
-        OPCode53()
-          : Instruction(-1, 0x53, nullptr) {}
         OPCode53(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x53", 0x53, Maker) {}
         OPCode53(int addr, Builder* Maker)
@@ -3994,8 +3798,6 @@ class CS4Builder : public Builder {
     };
     class OPCode54 : public Instruction {
       public:
-        OPCode54()
-          : Instruction(-1, 0x54, nullptr) {}
         OPCode54(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x54, Maker) {}
         OPCode54(int addr, Builder* Maker)
@@ -4309,8 +4111,6 @@ class CS4Builder : public Builder {
     };
     class OPCode55 : public Instruction {
       public:
-        OPCode55()
-          : Instruction(-1, 0x55, nullptr) {}
         OPCode55(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x55", 0x55, Maker) {}
         OPCode55(int addr, Builder* Maker)
@@ -4342,8 +4142,6 @@ class CS4Builder : public Builder {
     };
     class OPCode56 : public Instruction {
       public:
-        OPCode56()
-          : Instruction(-1, 0x56, nullptr) {}
         OPCode56(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x56", 0x56, Maker) {}
         OPCode56(int addr, Builder* Maker)
@@ -4364,8 +4162,6 @@ class CS4Builder : public Builder {
     };
     class OPCode57 : public Instruction {
       public:
-        OPCode57()
-          : Instruction(-1, 0x57, nullptr) {}
         OPCode57(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x57", 0x57, Maker) {}
         OPCode57(int addr, Builder* Maker)
@@ -4380,8 +4176,6 @@ class CS4Builder : public Builder {
     };
     class OPCode58 : public Instruction {
       public:
-        OPCode58()
-          : Instruction(-1, 0x58, nullptr) {}
         OPCode58(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x58", 0x58, Maker) {}
         OPCode58(int addr, Builder* Maker)
@@ -4395,8 +4189,6 @@ class CS4Builder : public Builder {
     };
     class OPCode5A : public Instruction {
       public:
-        OPCode5A()
-          : Instruction(-1, 0x5A, nullptr) {}
         OPCode5A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x5A", 0x5A, Maker) {}
         OPCode5A(int addr, Builder* Maker)
@@ -4416,8 +4208,6 @@ class CS4Builder : public Builder {
     };
     class OPCode5B : public Instruction {
       public:
-        OPCode5B()
-          : Instruction(-1, 0x5B, nullptr) {}
         OPCode5B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x5B", 0x5B, Maker) {}
         OPCode5B(int addr, Builder* Maker)
@@ -4432,8 +4222,6 @@ class CS4Builder : public Builder {
     };
     class OPCode5C : public Instruction {
       public:
-        OPCode5C()
-          : Instruction(-1, 0x5C, nullptr) {}
         OPCode5C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x5C, Maker) {}
         OPCode5C(int addr, Builder* Maker)
@@ -4448,8 +4236,6 @@ class CS4Builder : public Builder {
     };
     class OPCode5D : public Instruction {
       public:
-        OPCode5D()
-          : Instruction(-1, 0x5D, nullptr) {}
         OPCode5D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x5D, Maker) {}
         OPCode5D(int addr, Builder* Maker)
@@ -4475,8 +4261,6 @@ class CS4Builder : public Builder {
     };
     class OPCode5E : public Instruction {
       public:
-        OPCode5E()
-          : Instruction(-1, 0x5E, nullptr) {}
         OPCode5E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x5E, Maker) {}
         OPCode5E(int addr, Builder* Maker)
@@ -4509,8 +4293,6 @@ class CS4Builder : public Builder {
     };
     class OPCode60 : public Instruction {
       public:
-        OPCode60()
-          : Instruction(-1, 0x60, nullptr) {}
         OPCode60(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x60, Maker) {}
         OPCode60(int addr, Builder* Maker)
@@ -4525,8 +4307,6 @@ class CS4Builder : public Builder {
     };
     class OPCode61 : public Instruction {
       public:
-        OPCode61()
-          : Instruction(-1, 0x61, nullptr) {}
         OPCode61(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x61, Maker) {}
         OPCode61(int addr, Builder* Maker)
@@ -4559,8 +4339,6 @@ class CS4Builder : public Builder {
     };
     class OPCode62 : public Instruction {
       public:
-        OPCode62()
-          : Instruction(-1, 0x62, nullptr) {}
         OPCode62(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x62, Maker) {}
         OPCode62(int addr, Builder* Maker)
@@ -4574,8 +4352,6 @@ class CS4Builder : public Builder {
     };
     class OPCode63 : public Instruction {
       public:
-        OPCode63()
-          : Instruction(-1, 0x63, nullptr) {}
         OPCode63(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x63, Maker) {}
         OPCode63(int addr, Builder* Maker)
@@ -4591,8 +4367,6 @@ class CS4Builder : public Builder {
     };
     class OPCode64 : public Instruction {
       public:
-        OPCode64()
-          : Instruction(-1, 0x64, nullptr) {}
         OPCode64(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x64, Maker) {}
         OPCode64(int addr, Builder* Maker)
@@ -4612,8 +4386,6 @@ class CS4Builder : public Builder {
     };
     class OPCode65 : public Instruction {
       public:
-        OPCode65()
-          : Instruction(-1, 0x65, nullptr) {}
         OPCode65(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x65, Maker) {}
         OPCode65(int addr, Builder* Maker)
@@ -4638,8 +4410,6 @@ class CS4Builder : public Builder {
     };
     class OPCode66 : public Instruction {
       public:
-        OPCode66()
-          : Instruction(-1, 0x66, nullptr) {}
         OPCode66(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x66, Maker) {}
         OPCode66(int addr, Builder* Maker)
@@ -4677,8 +4447,6 @@ class CS4Builder : public Builder {
     };
     class OPCode67 : public Instruction {
       public:
-        OPCode67()
-          : Instruction(-1, 0x67, nullptr) {}
         OPCode67(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x67, Maker) {}
         OPCode67(int addr, Builder* Maker)
@@ -4699,8 +4467,6 @@ class CS4Builder : public Builder {
     };
     class OPCode68 : public Instruction {
       public:
-        OPCode68()
-          : Instruction(-1, 0x68, nullptr) {}
         OPCode68(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x68, Maker) {}
         OPCode68(int addr, Builder* Maker)
@@ -4747,8 +4513,6 @@ class CS4Builder : public Builder {
     };
     class OPCode69 : public Instruction {
       public:
-        OPCode69()
-          : Instruction(-1, 0x69, nullptr) {}
         OPCode69(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x69, Maker) {}
         OPCode69(int addr, Builder* Maker)
@@ -4818,8 +4582,6 @@ class CS4Builder : public Builder {
     };
     class OPCode6A : public Instruction {
       public:
-        OPCode6A()
-          : Instruction(-1, 0x6A, nullptr) {}
         OPCode6A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x6A, Maker) {}
         OPCode6A(int addr, Builder* Maker)
@@ -4872,8 +4634,6 @@ class CS4Builder : public Builder {
     };
     class OPCode6B : public Instruction {
       public:
-        OPCode6B()
-          : Instruction(-1, 0x6B, nullptr) {}
         OPCode6B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x6B", 0x6B, Maker) {}
         OPCode6B(int addr, Builder* Maker)
@@ -4892,8 +4652,6 @@ class CS4Builder : public Builder {
     };
     class OPCode6C : public Instruction {
       public:
-        OPCode6C()
-          : Instruction(-1, 0x6C, nullptr) {}
         OPCode6C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x6C, Maker) {}
         OPCode6C(int addr, Builder* Maker)
@@ -4907,8 +4665,6 @@ class CS4Builder : public Builder {
     };
     class OPCode6E : public Instruction {
       public:
-        OPCode6E()
-          : Instruction(-1, 0x6E, nullptr) {}
         OPCode6E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x6E, Maker) {}
         OPCode6E(int addr, Builder* Maker)
@@ -4926,8 +4682,6 @@ class CS4Builder : public Builder {
     };
     class OPCode6F : public Instruction {
       public:
-        OPCode6F()
-          : Instruction(-1, 0x6F, nullptr) {}
         OPCode6F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x6F", 0x6F, Maker) {}
         OPCode6F(int addr, Builder* Maker)
@@ -4943,8 +4697,6 @@ class CS4Builder : public Builder {
     };
     class OPCode70 : public Instruction {
       public:
-        OPCode70()
-          : Instruction(-1, 0x70, nullptr) {}
         OPCode70(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x70, Maker) {}
         OPCode70(int addr, Builder* Maker)
@@ -5019,8 +4771,6 @@ class CS4Builder : public Builder {
       : public Instruction // not sure at all
     {
       public:
-        OPCode71()
-          : Instruction(-1, 0x71, nullptr) {}
         OPCode71(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x71, Maker) {}
         OPCode71(int addr, Builder* Maker)
@@ -5037,8 +4787,6 @@ class CS4Builder : public Builder {
       : public Instruction // not sure at all
     {
       public:
-        OPCode72()
-          : Instruction(-1, 0x72, nullptr) {}
         OPCode72(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x72, Maker) {}
         OPCode72(int addr, Builder* Maker)
@@ -5074,8 +4822,6 @@ class CS4Builder : public Builder {
     };
     class OPCode73 : public Instruction {
       public:
-        OPCode73()
-          : Instruction(-1, 0x73, nullptr) {}
         OPCode73(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x73, Maker) {}
         OPCode73(int addr, Builder* Maker)
@@ -5104,8 +4850,6 @@ class CS4Builder : public Builder {
     };
     class OPCode74 : public Instruction {
       public:
-        OPCode74()
-          : Instruction(-1, 0x74, nullptr) {}
         OPCode74(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x74, Maker) {}
         OPCode74(int addr, Builder* Maker)
@@ -5144,8 +4888,6 @@ class CS4Builder : public Builder {
     };
     class OPCode75 : public Instruction {
       public:
-        OPCode75()
-          : Instruction(-1, 0x75, nullptr) {}
         OPCode75(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x75, Maker) {}
         OPCode75(int addr, Builder* Maker)
@@ -5195,8 +4937,6 @@ class CS4Builder : public Builder {
     };
     class OPCode76 : public Instruction {
       public:
-        OPCode76()
-          : Instruction(-1, 0x76, nullptr) {}
         OPCode76(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x76, Maker) {}
         OPCode76(int addr, Builder* Maker)
@@ -5217,8 +4957,6 @@ class CS4Builder : public Builder {
     };
     class OPCode77 : public Instruction {
       public:
-        OPCode77()
-          : Instruction(-1, 0x77, nullptr) {}
         OPCode77(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x77, Maker) {}
         OPCode77(int addr, Builder* Maker)
@@ -5231,8 +4969,6 @@ class CS4Builder : public Builder {
     };
     class OPCode78 : public Instruction {
       public:
-        OPCode78()
-          : Instruction(-1, 0x78, nullptr) {}
         OPCode78(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x78, Maker) {}
         OPCode78(int addr, Builder* Maker)
@@ -5253,8 +4989,6 @@ class CS4Builder : public Builder {
     };
     class OPCode79 : public Instruction {
       public:
-        OPCode79()
-          : Instruction(-1, 0x79, nullptr) {}
         OPCode79(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x79, Maker) {}
         OPCode79(int addr, Builder* Maker)
@@ -5275,8 +5009,6 @@ class CS4Builder : public Builder {
     };
     class OPCode7A : public Instruction {
       public:
-        OPCode7A()
-          : Instruction(-1, 0x7A, nullptr) {}
         OPCode7A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7A, Maker) {}
         OPCode7A(int addr, Builder* Maker)
@@ -5302,8 +5034,6 @@ class CS4Builder : public Builder {
     };
     class OPCode7B : public Instruction {
       public:
-        OPCode7B()
-          : Instruction(-1, 0x7B, nullptr) {}
         OPCode7B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7B, Maker) {}
         OPCode7B(int addr, Builder* Maker)
@@ -5327,8 +5057,6 @@ class CS4Builder : public Builder {
     };
     class OPCode7C : public Instruction {
       public:
-        OPCode7C()
-          : Instruction(-1, 0x7C, nullptr) {}
         OPCode7C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7C, Maker) {}
         OPCode7C(int addr, Builder* Maker)
@@ -5357,8 +5085,6 @@ class CS4Builder : public Builder {
     };
     class OPCode7D : public Instruction {
       public:
-        OPCode7D()
-          : Instruction(-1, 0x7D, nullptr) {}
         OPCode7D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7D, Maker) {}
         OPCode7D(int addr, Builder* Maker)
@@ -5372,8 +5098,6 @@ class CS4Builder : public Builder {
     };
     class OPCode7E : public Instruction {
       public:
-        OPCode7E()
-          : Instruction(-1, 0x7E, nullptr) {}
         OPCode7E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7E, Maker) {}
         OPCode7E(int addr, Builder* Maker)
@@ -5410,8 +5134,6 @@ class CS4Builder : public Builder {
     };
     class OPCode80 : public Instruction {
       public:
-        OPCode80()
-          : Instruction(-1, 0x80, nullptr) {}
         OPCode80(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x80, Maker) {}
         OPCode80(int addr, Builder* Maker)
@@ -5424,8 +5146,6 @@ class CS4Builder : public Builder {
     };
     class OPCode82 : public Instruction {
       public:
-        OPCode82()
-          : Instruction(-1, 0x82, nullptr) {}
         OPCode82(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x82, Maker) {}
         OPCode82(int addr, Builder* Maker)
@@ -5446,8 +5166,6 @@ class CS4Builder : public Builder {
     };
     class OPCode83 : public Instruction {
       public:
-        OPCode83()
-          : Instruction(-1, 0x83, nullptr) {}
         OPCode83(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x83, Maker) {}
         OPCode83(int addr, Builder* Maker)
@@ -5463,8 +5181,6 @@ class CS4Builder : public Builder {
     };
     class OPCode84 : public Instruction {
       public:
-        OPCode84()
-          : Instruction(-1, 0x84, nullptr) {}
         OPCode84(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x84, Maker) {}
         OPCode84(int addr, Builder* Maker)
@@ -5495,8 +5211,6 @@ class CS4Builder : public Builder {
     };
     class OPCode86 : public Instruction {
       public:
-        OPCode86()
-          : Instruction(-1, 0x86, nullptr) {}
         OPCode86(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x86", 0x86, Maker) {}
         OPCode86(int addr, Builder* Maker)
@@ -5520,8 +5234,6 @@ class CS4Builder : public Builder {
     };
     class OPCode87 : public Instruction {
       public:
-        OPCode87()
-          : Instruction(-1, 0x87, nullptr) {}
         OPCode87(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x87", 0x87, Maker) {}
         OPCode87(int addr, Builder* Maker)
@@ -5536,8 +5248,6 @@ class CS4Builder : public Builder {
     };
     class OPCode88 : public Instruction {
       public:
-        OPCode88()
-          : Instruction(-1, 0x88, nullptr) {}
         OPCode88(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x88", 0x88, Maker) {}
         OPCode88(int addr, Builder* Maker)
@@ -5550,8 +5260,6 @@ class CS4Builder : public Builder {
     };
     class OPCode89 : public Instruction {
       public:
-        OPCode89()
-          : Instruction(-1, 0x89, nullptr) {}
         OPCode89(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x89", 0x89, Maker) {}
         OPCode89(int addr, Builder* Maker)
@@ -5564,8 +5272,6 @@ class CS4Builder : public Builder {
     };
     class OPCode8A : public Instruction {
       public:
-        OPCode8A()
-          : Instruction(-1, 0x8A, nullptr) {}
         OPCode8A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8A", 0x8A, Maker) {}
         OPCode8A(int addr, Builder* Maker)
@@ -5640,8 +5346,6 @@ class CS4Builder : public Builder {
     };
     class OPCode8B : public Instruction {
       public:
-        OPCode8B()
-          : Instruction(-1, 0x8B, nullptr) {}
         OPCode8B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8B", 0x8B, Maker) {}
         OPCode8B(int addr, Builder* Maker)
@@ -5659,8 +5363,6 @@ class CS4Builder : public Builder {
     };
     class OPCode8C : public Instruction {
       public:
-        OPCode8C()
-          : Instruction(-1, 0x8C, nullptr) {}
         OPCode8C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8C", 0x8C, Maker) {}
         OPCode8C(int addr, Builder* Maker)
@@ -5687,8 +5389,6 @@ class CS4Builder : public Builder {
     };
     class OPCode8D : public Instruction {
       public:
-        OPCode8D()
-          : Instruction(-1, 0x8D, nullptr) {}
         OPCode8D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8D", 0x8D, Maker) {}
         OPCode8D(int addr, Builder* Maker)
@@ -5705,8 +5405,6 @@ class CS4Builder : public Builder {
     };
     class OPCode8E : public Instruction {
       public:
-        OPCode8E()
-          : Instruction(-1, 0x8E, nullptr) {}
         OPCode8E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8E", 0x8E, Maker) {}
         OPCode8E(int addr, Builder* Maker)
@@ -5726,8 +5424,6 @@ class CS4Builder : public Builder {
     };
     class OPCode8F : public Instruction {
       public:
-        OPCode8F()
-          : Instruction(-1, 0x8F, nullptr) {}
         OPCode8F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8F", 0x8F, Maker) {}
         OPCode8F(int addr, Builder* Maker)
@@ -5739,8 +5435,6 @@ class CS4Builder : public Builder {
     };
     class OPCode98 : public Instruction {
       public:
-        OPCode98()
-          : Instruction(-1, 0x98, nullptr) {}
         OPCode98(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x98", 0x98, Maker) {}
         OPCode98(int addr, Builder* Maker)
@@ -5817,8 +5511,6 @@ class CS4Builder : public Builder {
     };
     class OPCode90 : public Instruction {
       public:
-        OPCode90()
-          : Instruction(-1, 0x90, nullptr) {}
         OPCode90(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x90", 0x90, Maker) {}
         OPCode90(int addr, Builder* Maker)
@@ -5832,8 +5524,6 @@ class CS4Builder : public Builder {
     };
     class OPCode91 : public Instruction {
       public:
-        OPCode91()
-          : Instruction(-1, 0x91, nullptr) {}
         OPCode91(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x91", 0x91, Maker) {}
         OPCode91(int addr, Builder* Maker)
@@ -5861,8 +5551,6 @@ class CS4Builder : public Builder {
     };
     class OPCode92 : public Instruction {
       public:
-        OPCode92()
-          : Instruction(-1, 0x92, nullptr) {}
         OPCode92(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x92", 0x92, Maker) {}
         OPCode92(int addr, Builder* Maker)
@@ -5877,8 +5565,6 @@ class CS4Builder : public Builder {
     };
     class OPCode93 : public Instruction {
       public:
-        OPCode93()
-          : Instruction(-1, 0x93, nullptr) {}
         OPCode93(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x93", 0x93, Maker) {}
         OPCode93(int addr, Builder* Maker)
@@ -5900,8 +5586,6 @@ class CS4Builder : public Builder {
     };
     class OPCode94 : public Instruction {
       public:
-        OPCode94()
-          : Instruction(-1, 0x94, nullptr) {}
         OPCode94(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x94", 0x94, Maker) {}
         OPCode94(int addr, Builder* Maker)
@@ -5920,8 +5604,6 @@ class CS4Builder : public Builder {
     };
     class OPCode95 : public Instruction {
       public:
-        OPCode95()
-          : Instruction(-1, 0x95, nullptr) {}
         OPCode95(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x95", 0x95, Maker) {}
         OPCode95(int addr, Builder* Maker)
@@ -5943,8 +5625,6 @@ class CS4Builder : public Builder {
     };
     class OPCode97 : public Instruction {
       public:
-        OPCode97()
-          : Instruction(-1, 0x97, nullptr) {}
         OPCode97(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x97", 0x97, Maker) {}
         OPCode97(int addr, Builder* Maker)
@@ -5959,8 +5639,6 @@ class CS4Builder : public Builder {
     };
     class OPCode99 : public Instruction {
       public:
-        OPCode99()
-          : Instruction(-1, 0x99, nullptr) {}
         OPCode99(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x99", 0x99, Maker) {}
         OPCode99(int addr, Builder* Maker)
@@ -5973,8 +5651,6 @@ class CS4Builder : public Builder {
     };
     class OPCode9A : public Instruction {
       public:
-        OPCode9A()
-          : Instruction(-1, 0x9A, nullptr) {}
         OPCode9A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9A", 0x9A, Maker) {}
         OPCode9A(int addr, Builder* Maker)
@@ -5991,8 +5667,6 @@ class CS4Builder : public Builder {
     };
     class OPCode9B : public Instruction {
       public:
-        OPCode9B()
-          : Instruction(-1, 0x9B, nullptr) {}
         OPCode9B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9B", 0x9B, Maker) {}
         OPCode9B(int addr, Builder* Maker)
@@ -6011,8 +5685,6 @@ class CS4Builder : public Builder {
     };
     class OPCode9C : public Instruction {
       public:
-        OPCode9C()
-          : Instruction(-1, 0x9C, nullptr) {}
         OPCode9C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9C", 0x9C, Maker) {}
         OPCode9C(int addr, Builder* Maker)
@@ -6039,8 +5711,6 @@ class CS4Builder : public Builder {
     };
     class OPCode9D : public Instruction {
       public:
-        OPCode9D()
-          : Instruction(-1, 0x9D, nullptr) {}
         OPCode9D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9D", 0x9D, Maker) {}
         OPCode9D(int addr, Builder* Maker)
@@ -6054,8 +5724,6 @@ class CS4Builder : public Builder {
     };
     class OPCode9E : public Instruction {
       public:
-        OPCode9E()
-          : Instruction(-1, 0x9E, nullptr) {}
         OPCode9E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9E", 0x9E, Maker) {}
         OPCode9E(int addr, Builder* Maker)
@@ -6083,8 +5751,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeA0 : public Instruction {
       public:
-        OPCodeA0()
-          : Instruction(-1, 0xA0, nullptr) {}
         OPCodeA0(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA0", 0xA0, Maker) {}
         OPCodeA0(int addr, Builder* Maker)
@@ -6096,8 +5762,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeA1 : public Instruction {
       public:
-        OPCodeA1()
-          : Instruction(-1, 0xA1, nullptr) {}
         OPCodeA1(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA1", 0xA1, Maker) {}
         OPCodeA1(int addr, Builder* Maker)
@@ -6114,8 +5778,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeA3 : public Instruction {
       public:
-        OPCodeA3()
-          : Instruction(-1, 0xA3, nullptr) {}
         OPCodeA3(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA3", 0xA3, Maker) {}
         OPCodeA3(int addr, Builder* Maker)
@@ -6129,8 +5791,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeA4 : public Instruction {
       public:
-        OPCodeA4()
-          : Instruction(-1, 0xA4, nullptr) {}
         OPCodeA4(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA4", 0xA4, Maker) {}
         OPCodeA4(int addr, Builder* Maker)
@@ -6164,8 +5824,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeA6 : public Instruction {
       public:
-        OPCodeA6()
-          : Instruction(-1, 0xA6, nullptr) {}
         OPCodeA6(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA6", 0xA6, Maker) {}
         OPCodeA6(int addr, Builder* Maker)
@@ -6181,8 +5839,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeA8 : public Instruction {
       public:
-        OPCodeA8()
-          : Instruction(-1, 0xA8, nullptr) {}
         OPCodeA8(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA8", 0xA8, Maker) {}
         OPCodeA8(int addr, Builder* Maker)
@@ -6195,8 +5851,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeA9 : public Instruction {
       public:
-        OPCodeA9()
-          : Instruction(-1, 0xA9, nullptr) {}
         OPCodeA9(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA9", 0xA9, Maker) {}
         OPCodeA9(int addr, Builder* Maker)
@@ -6209,8 +5863,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeAA : public Instruction {
       public:
-        OPCodeAA()
-          : Instruction(-1, 0xAA, nullptr) {}
         OPCodeAA(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAA", 0xAA, Maker) {}
         OPCodeAA(int addr, Builder* Maker)
@@ -6225,8 +5877,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeAB : public Instruction {
       public:
-        OPCodeAB()
-          : Instruction(-1, 0xAB, nullptr) {}
         OPCodeAB(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAB", 0xAB, Maker) {}
         OPCodeAB(int addr, Builder* Maker)
@@ -6260,8 +5910,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeAC : public Instruction {
       public:
-        OPCodeAC()
-          : Instruction(-1, 0xAC, nullptr) {}
         OPCodeAC(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAC", 0xAC, Maker) {}
         OPCodeAC(int addr, Builder* Maker)
@@ -6304,8 +5952,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeAD : public Instruction {
       public:
-        OPCodeAD()
-          : Instruction(-1, 0xAD, nullptr) {}
         OPCodeAD(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAD", 0xAD, Maker) {}
         OPCodeAD(int addr, Builder* Maker)
@@ -6329,8 +5975,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeAE : public Instruction {
       public:
-        OPCodeAE()
-          : Instruction(-1, 0xAE, nullptr) {}
         OPCodeAE(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAE", 0xAE, Maker) {}
         OPCodeAE(int addr, Builder* Maker)
@@ -6345,8 +5989,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeAF : public Instruction {
       public:
-        OPCodeAF()
-          : Instruction(-1, 0xAF, nullptr) {}
         OPCodeAF(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAF", 0xAF, Maker) {}
         OPCodeAF(int addr, Builder* Maker)
@@ -6360,8 +6002,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB1 : public Instruction {
       public:
-        OPCodeB1()
-          : Instruction(-1, 0xB1, nullptr) {}
         OPCodeB1(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB1", 0xB1, Maker) {}
         OPCodeB1(int addr, Builder* Maker)
@@ -6377,8 +6017,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB2 : public Instruction {
       public:
-        OPCodeB2()
-          : Instruction(-1, 0xB2, nullptr) {}
         OPCodeB2(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB2", 0xB2, Maker) {}
         OPCodeB2(int addr, Builder* Maker)
@@ -6393,8 +6031,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB3 : public Instruction {
       public:
-        OPCodeB3()
-          : Instruction(-1, 0xB3, nullptr) {}
         OPCodeB3(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB3", 0xB3, Maker) {}
         OPCodeB3(int addr, Builder* Maker)
@@ -6412,8 +6048,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB4 : public Instruction {
       public:
-        OPCodeB4()
-          : Instruction(-1, 0xB4, nullptr) {}
         OPCodeB4(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB4", 0xB4, Maker) {}
         OPCodeB4(int addr, Builder* Maker)
@@ -6425,8 +6059,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB5 : public Instruction {
       public:
-        OPCodeB5()
-          : Instruction(-1, 0xB5, nullptr) {}
         OPCodeB5(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB5", 0xB5, Maker) {}
         OPCodeB5(int addr, Builder* Maker)
@@ -6445,8 +6077,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB6 : public Instruction {
       public:
-        OPCodeB6()
-          : Instruction(-1, 0xB6, nullptr) {}
         OPCodeB6(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB6", 0xB6, Maker) {}
         OPCodeB6(int addr, Builder* Maker)
@@ -6460,8 +6090,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB7 : public Instruction {
       public:
-        OPCodeB7()
-          : Instruction(-1, 0xB7, nullptr) {}
         OPCodeB7(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB7", 0xB7, Maker) {}
         OPCodeB7(int addr, Builder* Maker)
@@ -6476,8 +6104,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeBA : public Instruction {
       public:
-        OPCodeBA()
-          : Instruction(-1, 0xBA, nullptr) {}
         OPCodeBA(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xBA", 0xBA, Maker) {}
         OPCodeBA(int addr, Builder* Maker)
@@ -6497,8 +6123,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB8 : public Instruction {
       public:
-        OPCodeB8()
-          : Instruction(-1, 0xB8, nullptr) {}
         OPCodeB8(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB8", 0xB8, Maker) {}
         OPCodeB8(int addr, Builder* Maker)
@@ -6514,8 +6138,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeB9 : public Instruction {
       public:
-        OPCodeB9()
-          : Instruction(-1, 0xB9, nullptr) {}
         OPCodeB9(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB9", 0xB9, Maker) {}
         OPCodeB9(int addr, Builder* Maker)
@@ -6553,8 +6175,6 @@ class CS4Builder : public Builder {
 
     class OPCodeBB : public Instruction {
       public:
-        OPCodeBB()
-          : Instruction(-1, 0xBB, nullptr) {}
         OPCodeBB(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xBB", 0xBB, Maker) {}
         OPCodeBB(int addr, Builder* Maker)
@@ -6567,8 +6187,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeBC : public Instruction {
       public:
-        OPCodeBC()
-          : Instruction(-1, 0xBC, nullptr) {}
         OPCodeBC(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xBC", 0xBC, Maker) {}
         OPCodeBC(int addr, Builder* Maker)
@@ -6675,8 +6293,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeBD : public Instruction {
       public:
-        OPCodeBD()
-          : Instruction(-1, 0xBD, nullptr) {}
         OPCodeBD(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xBD", 0xBD, Maker) {}
         OPCodeBD(int addr, Builder* Maker)
@@ -6703,8 +6319,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeBE : public Instruction {
       public:
-        OPCodeBE()
-          : Instruction(-1, 0xBE, nullptr) {}
         OPCodeBE(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xBE", 0xBE, Maker) {}
         OPCodeBE(int addr, Builder* Maker)
@@ -6720,8 +6334,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC0 : public Instruction {
       public:
-        OPCodeC0()
-          : Instruction(-1, 0xC0, nullptr) {}
         OPCodeC0(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC0", 0xC0, Maker) {}
         OPCodeC0(int addr, Builder* Maker)
@@ -6760,8 +6372,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC1 : public Instruction {
       public:
-        OPCodeC1()
-          : Instruction(-1, 0xC1, nullptr) {}
         OPCodeC1(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC1", 0xC1, Maker) {}
         OPCodeC1(int addr, Builder* Maker)
@@ -6773,8 +6383,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC2 : public Instruction {
       public:
-        OPCodeC2()
-          : Instruction(-1, 0xC2, nullptr) {}
         OPCodeC2(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC2", 0xC2, Maker) {}
         OPCodeC2(int addr, Builder* Maker)
@@ -6788,8 +6396,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC3 : public Instruction {
       public:
-        OPCodeC3()
-          : Instruction(-1, 0xC3, nullptr) {}
         OPCodeC3(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC3", 0xC3, Maker) {}
         OPCodeC3(int addr, Builder* Maker)
@@ -6813,8 +6419,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC4 : public Instruction {
       public:
-        OPCodeC4()
-          : Instruction(-1, 0xC4, nullptr) {}
         OPCodeC4(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC4", 0xC4, Maker) {}
         OPCodeC4(int addr, Builder* Maker)
@@ -6858,8 +6462,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC5 : public Instruction {
       public:
-        OPCodeC5()
-          : Instruction(-1, 0xC5, nullptr) {}
         OPCodeC5(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC5", 0xC5, Maker) {}
         OPCodeC5(int addr, Builder* Maker)
@@ -6880,8 +6482,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC6 : public Instruction {
       public:
-        OPCodeC6()
-          : Instruction(-1, 0xC6, nullptr) {}
         OPCodeC6(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC6", 0xC6, Maker) {}
         OPCodeC6(int addr, Builder* Maker)
@@ -6922,8 +6522,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC7 : public Instruction {
       public:
-        OPCodeC7()
-          : Instruction(-1, 0xC7, nullptr) {}
         OPCodeC7(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC7", 0xC7, Maker) {}
         OPCodeC7(int addr, Builder* Maker)
@@ -6944,8 +6542,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC8 : public Instruction {
       public:
-        OPCodeC8()
-          : Instruction(-1, 0xC8, nullptr) {}
         OPCodeC8(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC8", 0xC8, Maker) {}
         OPCodeC8(int addr, Builder* Maker)
@@ -6961,8 +6557,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeC9 : public Instruction {
       public:
-        OPCodeC9()
-          : Instruction(-1, 0xC9, nullptr) {}
         OPCodeC9(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC9", 0xC9, Maker) {}
         OPCodeC9(int addr, Builder* Maker)
@@ -6990,8 +6584,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeCA : public Instruction {
       public:
-        OPCodeCA()
-          : Instruction(-1, 0xCA, nullptr) {}
         OPCodeCA(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCA", 0xCA, Maker) {}
         OPCodeCA(int addr, Builder* Maker)
@@ -7010,8 +6602,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeCB : public Instruction {
       public:
-        OPCodeCB()
-          : Instruction(-1, 0xCB, nullptr) {}
         OPCodeCB(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCB", 0xCB, Maker) {}
         OPCodeCB(int addr, Builder* Maker)
@@ -7025,8 +6615,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeCC : public Instruction {
       public:
-        OPCodeCC()
-          : Instruction(-1, 0xCC, nullptr) {}
         OPCodeCC(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCC", 0xCC, Maker) {}
         OPCodeCC(int addr, Builder* Maker)
@@ -7040,8 +6628,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeCD : public Instruction {
       public:
-        OPCodeCD()
-          : Instruction(-1, 0xCD, nullptr) {}
         OPCodeCD(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCD", 0xCD, Maker) {}
         OPCodeCD(int addr, Builder* Maker)
@@ -7075,8 +6661,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeCE : public Instruction {
       public:
-        OPCodeCE()
-          : Instruction(-1, 0xCE, nullptr) {}
         OPCodeCE(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCE", 0xCE, Maker) {}
         OPCodeCE(int addr, Builder* Maker)
@@ -7177,8 +6761,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeCF : public Instruction {
       public:
-        OPCodeCF()
-          : Instruction(-1, 0xCF, nullptr) {}
         OPCodeCF(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCF", 0xCF, Maker) {}
         OPCodeCF(int addr, Builder* Maker)
@@ -7193,8 +6775,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeD0 : public Instruction {
       public:
-        OPCodeD0()
-          : Instruction(-1, 0xD0, nullptr) {}
         OPCodeD0(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xD0", 0xD0, Maker) {}
         OPCodeD0(int addr, Builder* Maker)
@@ -7232,8 +6812,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeD1 : public Instruction {
       public:
-        OPCodeD1()
-          : Instruction(-1, 0xD1, nullptr) {}
         OPCodeD1(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xD1", 0xD1, Maker) {}
         OPCodeD1(int addr, Builder* Maker)
@@ -7261,8 +6839,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeD2 : public Instruction {
       public:
-        OPCodeD2()
-          : Instruction(-1, 0xD2, nullptr) {}
         OPCodeD2(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xD2", 0xD2, Maker) {}
         OPCodeD2(int addr, Builder* Maker)
@@ -7286,8 +6862,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeD3 : public Instruction {
       public:
-        OPCodeD3()
-          : Instruction(-1, 0xD3, nullptr) {}
         OPCodeD3(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xD3", 0xD3, Maker) {}
         OPCodeD3(int addr, Builder* Maker)
@@ -7315,8 +6889,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeD4 : public Instruction {
       public:
-        OPCodeD4()
-          : Instruction(-1, 0xD4, nullptr) {}
         OPCodeD4(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xD4", 0xD4, Maker) {}
         OPCodeD4(int addr, Builder* Maker)
@@ -7332,8 +6904,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeD5 : public Instruction {
       public:
-        OPCodeD5()
-          : Instruction(-1, 0xD5, nullptr) {}
         OPCodeD5(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xD5", 0xD5, Maker) {}
         OPCodeD5(int addr, Builder* Maker)
@@ -7353,8 +6923,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeD6 : public Instruction {
       public:
-        OPCodeD6()
-          : Instruction(-1, 0xD6, nullptr) {}
         OPCodeD6(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xD6", 0xD6, Maker) {}
         OPCodeD6(int addr, Builder* Maker)
@@ -7371,8 +6939,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeD7 : public Instruction {
       public:
-        OPCodeD7()
-          : Instruction(-1, 0xD7, nullptr) {}
         OPCodeD7(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xD7", 0xD7, Maker) {}
         OPCodeD7(int addr, Builder* Maker)
@@ -7387,8 +6953,6 @@ class CS4Builder : public Builder {
     };
     class OPCodeD8 : public Instruction {
       public:
-        OPCodeD8()
-          : Instruction(-1, 0xD8, nullptr) {}
         OPCodeD8(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xD8", 0xD8, Maker) {}
         OPCodeD8(int addr, Builder* Maker)
@@ -7410,8 +6974,6 @@ class CS4Builder : public Builder {
       : public Instruction // Should remove this one, Just did that for btl0500
     {
       public:
-        OPCodeFA()
-          : Instruction(-1, 0xFA, nullptr) {}
         OPCodeFA(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xFA", 0xFA, Maker) {}
         OPCodeFA(int addr, Builder* Maker)
