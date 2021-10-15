@@ -165,8 +165,6 @@ Operande Instruction::get_operande(int i) const { return operandes[i]; }
 
 int Instruction::get_addr_instr() const { return this->addr_instr; }
 
-void Instruction::write_dat() {}
-
 void Instruction::set_addr_instr(int i) { addr_instr = i; }
 /*This version of add_operande is supposed to check if a string contain illegal xml characters,
 but I didn't finish it yet.

@@ -13,7 +13,6 @@ class Instruction {
     Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker);
     virtual ~Instruction();
 
-    virtual void write_dat();
 
     [[nodiscard]] uint get_opcode() const;
 
