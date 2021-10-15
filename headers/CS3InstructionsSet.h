@@ -263,8 +263,6 @@ class CS3Builder : public Builder {
       public:
         CreateMonsters(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "CreateMonsters", 256, Maker) {}
-        CreateMonsters(int addr, Builder* Maker)
-          : Instruction(addr, "CreateMonsters", 256, Maker) {}
         CreateMonsters(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "CreateMonsters", 256, Maker) {
             int initial_addr = addr;
@@ -359,8 +357,6 @@ class CS3Builder : public Builder {
       public:
         EffectsInstr(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "EffectsInstr", 257, Maker) {}
-        EffectsInstr(int addr, Builder* Maker)
-          : Instruction(addr, "EffectsInstr", 257, Maker) {}
         EffectsInstr(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "EffectsInstr", 257, Maker) {
             unsigned char current_byte = content[addr];
@@ -386,8 +382,6 @@ class CS3Builder : public Builder {
       public:
         ActionTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "ActionTable", 258, Maker) {}
-        ActionTable(int addr, Builder* Maker)
-          : Instruction(addr, "ActionTable", 258, Maker) {}
         ActionTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "ActionTable", 258, Maker) {
             int cnt = 0;
@@ -478,8 +472,6 @@ class CS3Builder : public Builder {
       public:
         AlgoTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "AlgoTable", 259, Maker) {}
-        AlgoTable(int addr, Builder* Maker)
-          : Instruction(addr, "AlgoTable", 259, Maker) {}
         AlgoTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "AlgoTable", 259, Maker) {
             int cnt = 0;
@@ -505,8 +497,6 @@ class CS3Builder : public Builder {
       public:
         WeaponAttTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "WeaponAttTable", 260, Maker) {}
-        WeaponAttTable(int addr, Builder* Maker)
-          : Instruction(addr, "WeaponAttTable", 260, Maker) {}
         WeaponAttTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "WeaponAttTable", 260, Maker) {
 
@@ -517,8 +507,6 @@ class CS3Builder : public Builder {
       public:
         BreakTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "BreakTable", 261, Maker) {}
-        BreakTable(int addr, Builder* Maker)
-          : Instruction(addr, "BreakTable", 261, Maker) {}
         BreakTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "BreakTable", 261, Maker) {
             int cnt = 0;
@@ -543,8 +531,6 @@ class CS3Builder : public Builder {
       public:
         SummonTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "SummonTable", 262, Maker) {}
-        SummonTable(int addr, Builder* Maker)
-          : Instruction(addr, "SummonTable", 262, Maker) {}
         SummonTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "SummonTable", 262, Maker) {
             int cnt = 0;
@@ -572,8 +558,6 @@ class CS3Builder : public Builder {
       public:
         ReactionTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "ReactionTable", 263, Maker) {}
-        ReactionTable(int addr, Builder* Maker)
-          : Instruction(addr, "ReactionTable", 263, Maker) {}
         ReactionTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "ReactionTable", 263, Maker) {
             int cnt = 0;
@@ -611,8 +595,6 @@ class CS3Builder : public Builder {
       public:
         PartTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "PartTable", 264, Maker) {}
-        PartTable(int addr, Builder* Maker)
-          : Instruction(addr, "PartTable", 264, Maker) {}
         PartTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "PartTable", 264, Maker) {
             int cnt = 0;
@@ -648,8 +630,6 @@ class CS3Builder : public Builder {
       public:
         AnimeClipTable(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "AnimeClipTable", 265, Maker) {}
-        AnimeClipTable(int addr, Builder* Maker)
-          : Instruction(addr, "AnimeClipTable", 265, Maker) {}
         AnimeClipTable(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "AnimeClipTable", 265, Maker) {
 
@@ -669,8 +649,6 @@ class CS3Builder : public Builder {
       public:
         AnimeClipData(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "AnimeClipData", 273, Maker) {}
-        AnimeClipData(int addr, Builder* Maker)
-          : Instruction(addr, "AnimeClipData", 273, Maker) {}
         AnimeClipData(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "AnimeClipData", 273, Maker) {
 
@@ -697,8 +675,6 @@ class CS3Builder : public Builder {
       public:
         FieldMonsterData(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "FieldMonsterData", 266, Maker) {}
-        FieldMonsterData(int addr, Builder* Maker)
-          : Instruction(addr, "FieldMonsterData", 266, Maker) {}
         FieldMonsterData(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 266, Maker) {
 
@@ -719,8 +695,6 @@ class CS3Builder : public Builder {
       public:
         FieldFollowData(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "FieldMonsterData", 267, Maker) {}
-        FieldFollowData(int addr, Builder* Maker)
-          : Instruction(addr, "FieldMonsterData", 267, Maker) {}
         FieldFollowData(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "FieldMonsterData", 267, Maker) {
 
@@ -737,8 +711,6 @@ class CS3Builder : public Builder {
       public:
         FC_autoX(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "FC_autoX", 268, Maker) {}
-        FC_autoX(int addr, Builder* Maker)
-          : Instruction(addr, "FC_autoX", 268, Maker) {}
         FC_autoX(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "FC_autoX", 268, Maker) {
 
@@ -752,8 +724,6 @@ class CS3Builder : public Builder {
       public:
         BookData99(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "BookData99", 269, Maker) {}
-        BookData99(int addr, Builder* Maker)
-          : Instruction(addr, "BookData99", 269, Maker) {}
         BookData99(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "BookData99", 269, Maker) {
             this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -766,8 +736,6 @@ class CS3Builder : public Builder {
       public:
         BookDataX(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "BookDataX", 270, Maker) {}
-        BookDataX(int addr, Builder* Maker)
-          : Instruction(addr, "BookDataX", 270, Maker) {}
         BookDataX(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "BookDataX", 270, Maker) {
             ssd::Buffer control_short = ReadSubByteArray(content, addr, 2);
@@ -804,8 +772,6 @@ class CS3Builder : public Builder {
       public:
         OPCode0(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "Instruction 0", 0, Maker) {}
-        OPCode0(int addr, Builder* Maker)
-          : Instruction(addr, "Instruction 0", 0, Maker) {}
         OPCode0(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "Instruction 0", 0, Maker) {
             addr++;
@@ -815,8 +781,6 @@ class CS3Builder : public Builder {
       public:
         OPCode1(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "Return", 1, Maker) {}
-        OPCode1(int addr, Builder* Maker)
-          : Instruction(addr, "Return", 1, Maker) {}
         OPCode1(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "Return", 1, Maker) {
             addr++;
@@ -826,8 +790,6 @@ class CS3Builder : public Builder {
       public:
         OPCode2(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "Call", 2, Maker) {}
-        OPCode2(int addr, Builder* Maker)
-          : Instruction(addr, "Call", 2, Maker) {}
         OPCode2(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "Call", 2, Maker) {
             addr++;
@@ -856,8 +818,6 @@ class CS3Builder : public Builder {
       public:
         OPCode3(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 3, Maker) {}
-        OPCode3(int addr, Builder* Maker)
-          : Instruction(addr, "???", 3, Maker) {}
         OPCode3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 3, Maker) {
             addr++;
@@ -868,8 +828,6 @@ class CS3Builder : public Builder {
       public:
         OPCode4(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 4, Maker) {}
-        OPCode4(int addr, Builder* Maker)
-          : Instruction(addr, "???", 4, Maker) {}
         OPCode4(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 4, Maker) {
             addr++;
@@ -881,8 +839,6 @@ class CS3Builder : public Builder {
       public:
         OPCode5(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 5, Maker) {}
-        OPCode5(int addr, Builder* Maker)
-          : Instruction(addr, "???", 5, Maker) {}
         OPCode5(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 5, Maker) {
             addr++;
@@ -894,8 +850,6 @@ class CS3Builder : public Builder {
       public:
         OPCode6(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 6, Maker) {}
-        OPCode6(int addr, Builder* Maker)
-          : Instruction(addr, "???", 6, Maker) {}
         OPCode6(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 6, Maker) {
             addr++;
@@ -920,8 +874,6 @@ class CS3Builder : public Builder {
       public:
         OPCode7(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 7, Maker) {}
-        OPCode7(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x7, Maker) {}
         OPCode7(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7, Maker) {
             addr++;
@@ -946,8 +898,6 @@ class CS3Builder : public Builder {
       public:
         OPCode8(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 8, Maker) {}
-        OPCode8(int addr, Builder* Maker)
-          : Instruction(addr, "???", 8, Maker) {}
         OPCode8(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 8, Maker) {
             addr++;
@@ -958,8 +908,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeA(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0xA, Maker) {}
-        OPCodeA(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0xA, Maker) {}
         OPCodeA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xA, Maker) {
             addr++;
@@ -973,8 +921,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0xC, Maker) {}
-        OPCodeC(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0xC, Maker) {}
         OPCodeC(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xC, Maker) {
             addr++;
@@ -985,8 +931,6 @@ class CS3Builder : public Builder {
       public:
         OPCode0D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x0D, Maker) {}
-        OPCode0D(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x0D, Maker) {}
         OPCode0D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x0D, Maker) {
             addr++;
@@ -1005,8 +949,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeE(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0xE, Maker) {}
-        OPCodeE(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0xE, Maker) {}
         OPCodeE(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0xE, Maker) {
             addr++;
@@ -1019,8 +961,6 @@ class CS3Builder : public Builder {
       public:
         OPCode10(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x10, Maker) {}
-        OPCode10(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x10, Maker) {}
         OPCode10(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x10, Maker) {
             addr++;
@@ -1031,8 +971,6 @@ class CS3Builder : public Builder {
       public:
         OPCode11(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x11, Maker) {}
-        OPCode11(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x11, Maker) {}
         OPCode11(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x11, Maker) {
             addr++;
@@ -1043,8 +981,6 @@ class CS3Builder : public Builder {
       public:
         OPCode12(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x12, Maker) {}
-        OPCode12(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x12, Maker) {}
         OPCode12(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x12, Maker) {
             addr++;
@@ -1055,8 +991,6 @@ class CS3Builder : public Builder {
       public:
         OPCode13(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x13, Maker) {}
-        OPCode13(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x13, Maker) {}
         OPCode13(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x13, Maker) {
             addr++;
@@ -1067,8 +1001,6 @@ class CS3Builder : public Builder {
       public:
         OPCode14(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x14, Maker) {}
-        OPCode14(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x14, Maker) {}
         OPCode14(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x14, Maker) {
             addr++;
@@ -1079,8 +1011,6 @@ class CS3Builder : public Builder {
       public:
         OPCode15(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x15, Maker) {}
-        OPCode15(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x15, Maker) {}
         OPCode15(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x15, Maker) {
             addr++;
@@ -1091,8 +1021,6 @@ class CS3Builder : public Builder {
       public:
         OPCode16(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x16, Maker) {}
-        OPCode16(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x16, Maker) {}
         OPCode16(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x16, Maker) {
             addr++;
@@ -1103,8 +1031,6 @@ class CS3Builder : public Builder {
       public:
         OPCode17(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x17, Maker) {}
-        OPCode17(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x17, Maker) {}
         OPCode17(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x17, Maker) {
             addr++;
@@ -1116,8 +1042,6 @@ class CS3Builder : public Builder {
       public:
         OPCode18(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x18, Maker) {}
-        OPCode18(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x18, Maker) {}
         OPCode18(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x18, Maker) {
             addr++;
@@ -1130,8 +1054,6 @@ class CS3Builder : public Builder {
       public:
         OPCode1A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x1A, Maker) {}
-        OPCode1A(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x1A, Maker) {}
         OPCode1A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1A, Maker) {
             addr++;
@@ -1143,8 +1065,6 @@ class CS3Builder : public Builder {
       public:
         OPCode1D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x1D, Maker) {}
-        OPCode1D(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x1D, Maker) {}
         OPCode1D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1D, Maker) {
             addr++;
@@ -1177,8 +1097,6 @@ class CS3Builder : public Builder {
       public:
         OPCode1E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x1E, Maker) {}
-        OPCode1E(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x1E, Maker) {}
         OPCode1E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1E, Maker) {
             addr++;
@@ -1193,8 +1111,6 @@ class CS3Builder : public Builder {
       public:
         OPCode1F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x1F, Maker) {}
-        OPCode1F(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x1F, Maker) {}
         OPCode1F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x1F, Maker) {
             addr++;
@@ -1207,8 +1123,6 @@ class CS3Builder : public Builder {
       public:
         OPCode20(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x20, Maker) {}
-        OPCode20(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x20, Maker) {}
         OPCode20(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x20, Maker) {
             addr++;
@@ -1223,8 +1137,6 @@ class CS3Builder : public Builder {
       public:
         OPCode21(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x21, Maker) {}
-        OPCode21(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x21, Maker) {}
         OPCode21(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x21, Maker) {
             addr++;
@@ -1235,8 +1147,6 @@ class CS3Builder : public Builder {
       public:
         OPCode22(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x22, Maker) {}
-        OPCode22(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x22, Maker) {}
         OPCode22(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x22, Maker) {
             addr++;
@@ -1248,8 +1158,6 @@ class CS3Builder : public Builder {
       public:
         OPCode23(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x23, Maker) {}
-        OPCode23(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x23, Maker) {}
         OPCode23(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x23, Maker) {
             addr++;
@@ -1282,8 +1190,6 @@ class CS3Builder : public Builder {
       public:
         OPCode24(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x24, Maker) {}
-        OPCode24(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x24, Maker) {}
         OPCode24(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x24, Maker) {
             addr++;
@@ -1296,8 +1202,6 @@ class CS3Builder : public Builder {
       public:
         OPCode25(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x25, Maker) {}
-        OPCode25(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x25, Maker) {}
         OPCode25(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x25, Maker) {
             addr++;
@@ -1308,8 +1212,6 @@ class CS3Builder : public Builder {
       public:
         OPCode26(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x26, Maker) {}
-        OPCode26(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x26, Maker) {}
         OPCode26(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x26, Maker) {
             addr++;
@@ -1319,8 +1221,6 @@ class CS3Builder : public Builder {
       public:
         OPCode27(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x27, Maker) {}
-        OPCode27(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x27, Maker) {}
         OPCode27(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x27, Maker) {
             addr++;
@@ -1332,8 +1232,6 @@ class CS3Builder : public Builder {
       public:
         OPCode28(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x28, Maker) {}
-        OPCode28(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x28, Maker) {}
         OPCode28(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x28, Maker) {
             addr++;
@@ -1346,8 +1244,6 @@ class CS3Builder : public Builder {
       public:
         OPCode29(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x29, Maker) {}
-        OPCode29(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x29, Maker) {}
         OPCode29(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x29, Maker) {
             addr++;
@@ -1407,8 +1303,6 @@ class CS3Builder : public Builder {
       public:
         OPCode2A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2A, Maker) {}
-        OPCode2A(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x2A, Maker) {}
         OPCode2A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2A, Maker) {
             addr++;
@@ -1433,8 +1327,6 @@ class CS3Builder : public Builder {
       public:
         OPCode2B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2B, Maker) {}
-        OPCode2B(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x2B, Maker) {}
         OPCode2B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2B, Maker) {
             addr++;
@@ -1462,8 +1354,6 @@ class CS3Builder : public Builder {
       public:
         OPCode2C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2C, Maker) {}
-        OPCode2C(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x2C, Maker) {}
         OPCode2C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2C, Maker) {
             addr++;
@@ -1487,8 +1377,6 @@ class CS3Builder : public Builder {
       public:
         OPCode2D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2D, Maker) {}
-        OPCode2D(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x2D, Maker) {}
         OPCode2D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2D, Maker) {
             addr++;
@@ -1501,8 +1389,6 @@ class CS3Builder : public Builder {
       public:
         OPCode2E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2E, Maker) {}
-        OPCode2E(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x2E, Maker) {}
         OPCode2E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2E, Maker) {
             addr++;
@@ -1530,8 +1416,6 @@ class CS3Builder : public Builder {
       public:
         OPCode2F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x2F, Maker) {}
-        OPCode2F(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x2F, Maker) {}
         OPCode2F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x2F, Maker) {
             addr++;
@@ -1597,8 +1481,6 @@ class CS3Builder : public Builder {
       public:
         OPCode30(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x30, Maker) {}
-        OPCode30(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x30, Maker) {}
         OPCode30(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x30, Maker) {
             addr++;
@@ -1622,8 +1504,6 @@ class CS3Builder : public Builder {
       public:
         OPCode31(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x31, Maker) {}
-        OPCode31(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x31, Maker) {}
         OPCode31(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x31, Maker) {
             addr++;
@@ -1638,8 +1518,6 @@ class CS3Builder : public Builder {
       public:
         OPCode32(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x32, Maker) {}
-        OPCode32(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x32, Maker) {}
         OPCode32(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x32, Maker) {
             addr++;
@@ -1758,8 +1636,6 @@ class CS3Builder : public Builder {
       public:
         OPCode33(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x33, Maker) {}
-        OPCode33(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x33, Maker) {}
         OPCode33(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x33, Maker) {
             addr++;
@@ -2319,8 +2195,6 @@ class CS3Builder : public Builder {
       public:
         OPCode34(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x34, Maker) {}
-        OPCode34(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x34, Maker) {}
         OPCode34(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x34, Maker) {
             addr++;
@@ -2336,8 +2210,6 @@ class CS3Builder : public Builder {
       public:
         OPCode35(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x35, Maker) {}
-        OPCode35(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x35, Maker) {}
         OPCode35(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x35, Maker) {
             addr++;
@@ -2351,8 +2223,6 @@ class CS3Builder : public Builder {
       public:
         OPCode36(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x36, Maker) {}
-        OPCode36(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x36, Maker) {}
         OPCode36(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x36, Maker) {
             addr++;
@@ -2554,8 +2424,6 @@ class CS3Builder : public Builder {
       public:
         OPCode37(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x37, Maker) {}
-        OPCode37(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x37, Maker) {}
         OPCode37(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x37, Maker) {
             addr++;
@@ -2570,8 +2438,6 @@ class CS3Builder : public Builder {
       public:
         OPCode38(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x38, Maker) {}
-        OPCode38(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x38, Maker) {}
         OPCode38(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x38, Maker) {
             addr++;
@@ -2586,8 +2452,6 @@ class CS3Builder : public Builder {
       public:
         OPCode39(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x39, Maker) {}
-        OPCode39(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x39, Maker) {}
         OPCode39(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x39, Maker) {
             addr++;
@@ -2604,8 +2468,6 @@ class CS3Builder : public Builder {
       public:
         OPCode3A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3A, Maker) {}
-        OPCode3A(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x3A, Maker) {}
         OPCode3A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3A, Maker) {
             addr++;
@@ -2657,8 +2519,6 @@ class CS3Builder : public Builder {
       public:
         OPCode3B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3B, Maker) {}
-        OPCode3B(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x3B, Maker) {}
         OPCode3B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3B, Maker) {
             addr++;
@@ -2922,8 +2782,6 @@ class CS3Builder : public Builder {
       public:
         OPCode3C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3C, Maker) {}
-        OPCode3C(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x3C, Maker) {}
         OPCode3C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3C, Maker) {
             addr++;
@@ -2952,8 +2810,6 @@ class CS3Builder : public Builder {
       public:
         OPCode3D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3D, Maker) {}
-        OPCode3D(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x3D, Maker) {}
         OPCode3D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3D, Maker) {
             addr++;
@@ -2968,8 +2824,6 @@ class CS3Builder : public Builder {
       public:
         OPCode3E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3E, Maker) {}
-        OPCode3E(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x3E, Maker) {}
         OPCode3E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3E, Maker) {
             addr++;
@@ -2983,8 +2837,6 @@ class CS3Builder : public Builder {
       public:
         OPCode3F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x3F, Maker) {}
-        OPCode3F(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x3F, Maker) {}
         OPCode3F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x3F, Maker) {
             addr++;
@@ -2995,8 +2847,6 @@ class CS3Builder : public Builder {
       public:
         OPCode40(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x40, Maker) {}
-        OPCode40(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x40, Maker) {}
         OPCode40(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x40, Maker) {
             addr++;
@@ -3031,8 +2881,6 @@ class CS3Builder : public Builder {
       public:
         OPCode41(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x41", 0x41, Maker) {}
-        OPCode41(int addr, Builder* Maker)
-          : Instruction(addr, "0x41", 0x41, Maker) {}
         OPCode41(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x41", 0x41, Maker) {
             addr++;
@@ -3044,8 +2892,6 @@ class CS3Builder : public Builder {
       public:
         OPCode42(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x42, Maker) {}
-        OPCode42(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x42, Maker) {}
         OPCode42(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x42, Maker) {
             addr++;
@@ -3065,8 +2911,6 @@ class CS3Builder : public Builder {
       public:
         OPCode43(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x43, Maker) {}
-        OPCode43(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x43, Maker) {}
         OPCode43(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x43, Maker) {
             addr++;
@@ -3100,8 +2944,6 @@ class CS3Builder : public Builder {
       public:
         OPCode44(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x44", 0x44, Maker) {}
-        OPCode44(int addr, Builder* Maker)
-          : Instruction(addr, "0x44", 0x44, Maker) {}
         OPCode44(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x44", 0x44, Maker) {
             addr++;
@@ -3116,8 +2958,6 @@ class CS3Builder : public Builder {
       public:
         OPCode45(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x45", 0x45, Maker) {}
-        OPCode45(int addr, Builder* Maker)
-          : Instruction(addr, "0x45", 0x45, Maker) {}
         OPCode45(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x45", 0x45, Maker) {
             addr++;
@@ -3133,8 +2973,6 @@ class CS3Builder : public Builder {
       public:
         OPCode46(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x46", 0x46, Maker) {}
-        OPCode46(int addr, Builder* Maker)
-          : Instruction(addr, "0x46", 0x46, Maker) {}
         OPCode46(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x46", 0x46, Maker) {
 
@@ -3161,8 +2999,6 @@ class CS3Builder : public Builder {
       public:
         OPCode47(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x47, Maker) {}
-        OPCode47(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x47, Maker) {}
         OPCode47(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x47, Maker) {
             addr++;
@@ -3175,8 +3011,6 @@ class CS3Builder : public Builder {
       public:
         OPCode48(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x48, Maker) {}
-        OPCode48(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x48, Maker) {}
         OPCode48(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x48, Maker) {
             addr++;
@@ -3190,8 +3024,6 @@ class CS3Builder : public Builder {
       public:
         OPCode49(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x49", 0x49, Maker) {}
-        OPCode49(int addr, Builder* Maker)
-          : Instruction(addr, "0x49", 0x49, Maker) {}
         OPCode49(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x49", 0x49, Maker) {
 
@@ -3238,8 +3070,6 @@ class CS3Builder : public Builder {
       public:
         OPCode4A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4A", 0x4A, Maker) {}
-        OPCode4A(int addr, Builder* Maker)
-          : Instruction(addr, "0x4A", 0x4A, Maker) {}
         OPCode4A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4A", 0x4A, Maker) {
 
@@ -3256,8 +3086,6 @@ class CS3Builder : public Builder {
       public:
         OPCode4B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4B", 0x4B, Maker) {}
-        OPCode4B(int addr, Builder* Maker)
-          : Instruction(addr, "0x4B", 0x4B, Maker) {}
         OPCode4B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4B", 0x4B, Maker) {
 
@@ -3285,8 +3113,6 @@ class CS3Builder : public Builder {
       public:
         OPCode4C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4C", 0x4C, Maker) {}
-        OPCode4C(int addr, Builder* Maker)
-          : Instruction(addr, "0x4C", 0x4C, Maker) {}
         OPCode4C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4C", 0x4C, Maker) {
             addr++;
@@ -3302,8 +3128,6 @@ class CS3Builder : public Builder {
       public:
         OPCode4D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4D", 0x4D, Maker) {}
-        OPCode4D(int addr, Builder* Maker)
-          : Instruction(addr, "0x4D", 0x4D, Maker) {}
         OPCode4D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4D", 0x4D, Maker) {
             addr++;
@@ -3315,8 +3139,6 @@ class CS3Builder : public Builder {
       public:
         OPCode4E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4E", 0x4E, Maker) {}
-        OPCode4E(int addr, Builder* Maker)
-          : Instruction(addr, "0x4E", 0x4E, Maker) {}
         OPCode4E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4E", 0x4E, Maker) {
             addr++;
@@ -3329,8 +3151,6 @@ class CS3Builder : public Builder {
       public:
         OPCode4F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x4F", 0x4F, Maker) {}
-        OPCode4F(int addr, Builder* Maker)
-          : Instruction(addr, "0x4F", 0x4F, Maker) {}
         OPCode4F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x4F", 0x4F, Maker) {
 
@@ -3377,8 +3197,6 @@ class CS3Builder : public Builder {
       public:
         OPCode50(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x50", 0x50, Maker) {}
-        OPCode50(int addr, Builder* Maker)
-          : Instruction(addr, "0x50", 0x50, Maker) {}
         OPCode50(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x50", 0x50, Maker) {
             addr++;
@@ -3389,8 +3207,6 @@ class CS3Builder : public Builder {
       public:
         OPCode51(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x51", 0x51, Maker) {}
-        OPCode51(int addr, Builder* Maker)
-          : Instruction(addr, "0x51", 0x51, Maker) {}
         OPCode51(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x51", 0x51, Maker) {
             addr++;
@@ -3410,8 +3226,6 @@ class CS3Builder : public Builder {
       public:
         OPCode52(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x52", 0x52, Maker) {}
-        OPCode52(int addr, Builder* Maker)
-          : Instruction(addr, "0x52", 0x52, Maker) {}
         OPCode52(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x52", 0x52, Maker) {
             addr++;
@@ -3423,8 +3237,6 @@ class CS3Builder : public Builder {
       public:
         OPCode53(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x53", 0x53, Maker) {}
-        OPCode53(int addr, Builder* Maker)
-          : Instruction(addr, "0x53", 0x53, Maker) {}
         OPCode53(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x53", 0x53, Maker) {
             addr++;
@@ -3437,8 +3249,6 @@ class CS3Builder : public Builder {
       public:
         OPCode54(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x54, Maker) {}
-        OPCode54(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x54, Maker) {}
         OPCode54(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x54, Maker) {
             addr++;
@@ -3713,8 +3523,6 @@ class CS3Builder : public Builder {
       public:
         OPCode55(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x55", 0x55, Maker) {}
-        OPCode55(int addr, Builder* Maker)
-          : Instruction(addr, "0x55", 0x55, Maker) {}
         OPCode55(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x55", 0x55, Maker) {
             addr++;
@@ -3744,8 +3552,6 @@ class CS3Builder : public Builder {
       public:
         OPCode56(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x56", 0x56, Maker) {}
-        OPCode56(int addr, Builder* Maker)
-          : Instruction(addr, "0x56", 0x56, Maker) {}
         OPCode56(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x56", 0x56, Maker) {
             addr++;
@@ -3764,8 +3570,6 @@ class CS3Builder : public Builder {
       public:
         OPCode57(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x57", 0x57, Maker) {}
-        OPCode57(int addr, Builder* Maker)
-          : Instruction(addr, "0x57", 0x57, Maker) {}
         OPCode57(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x57", 0x57, Maker) {
             addr++;
@@ -3778,8 +3582,6 @@ class CS3Builder : public Builder {
       public:
         OPCode58(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x58", 0x58, Maker) {}
-        OPCode58(int addr, Builder* Maker)
-          : Instruction(addr, "0x58", 0x58, Maker) {}
         OPCode58(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x58", 0x58, Maker) {
             addr++;
@@ -3791,8 +3593,6 @@ class CS3Builder : public Builder {
       public:
         OPCode5A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x5A", 0x5A, Maker) {}
-        OPCode5A(int addr, Builder* Maker)
-          : Instruction(addr, "0x5A", 0x5A, Maker) {}
         OPCode5A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x5A", 0x5A, Maker) {
             addr++;
@@ -3807,8 +3607,6 @@ class CS3Builder : public Builder {
       public:
         OPCode5B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x5B", 0x5B, Maker) {}
-        OPCode5B(int addr, Builder* Maker)
-          : Instruction(addr, "0x5B", 0x5B, Maker) {}
         OPCode5B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x5B", 0x5B, Maker) {
             addr++;
@@ -3821,8 +3619,6 @@ class CS3Builder : public Builder {
       public:
         OPCode5C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x5C, Maker) {}
-        OPCode5C(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x5C, Maker) {}
         OPCode5C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x5C, Maker) {
             addr++;
@@ -3835,8 +3631,6 @@ class CS3Builder : public Builder {
       public:
         OPCode5D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x5D, Maker) {}
-        OPCode5D(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x5D, Maker) {}
         OPCode5D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x5D, Maker) {
             addr++;
@@ -3860,8 +3654,6 @@ class CS3Builder : public Builder {
       public:
         OPCode5E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x5E, Maker) {}
-        OPCode5E(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x5E, Maker) {}
         OPCode5E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x5E, Maker) {
             addr++;
@@ -3887,8 +3679,6 @@ class CS3Builder : public Builder {
       public:
         OPCode60(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x60, Maker) {}
-        OPCode60(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x60, Maker) {}
         OPCode60(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x60, Maker) {
             addr++;
@@ -3901,8 +3691,6 @@ class CS3Builder : public Builder {
       public:
         OPCode61(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x61, Maker) {}
-        OPCode61(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x61, Maker) {}
         OPCode61(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x61, Maker) {
             addr++;
@@ -3924,8 +3712,6 @@ class CS3Builder : public Builder {
       public:
         OPCode62(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x62, Maker) {}
-        OPCode62(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x62, Maker) {}
         OPCode62(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x62, Maker) {
             addr++;
@@ -3935,8 +3721,6 @@ class CS3Builder : public Builder {
       public:
         OPCode63(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x63, Maker) {}
-        OPCode63(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x63, Maker) {}
         OPCode63(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x63, Maker) {
             addr++;
@@ -3950,8 +3734,6 @@ class CS3Builder : public Builder {
       public:
         OPCode64(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x64, Maker) {}
-        OPCode64(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x64, Maker) {}
         OPCode64(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x64, Maker) {
             addr++;
@@ -3969,8 +3751,6 @@ class CS3Builder : public Builder {
       public:
         OPCode65(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x65, Maker) {}
-        OPCode65(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x65, Maker) {}
         OPCode65(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x65, Maker) {
             addr++;
@@ -3992,8 +3772,6 @@ class CS3Builder : public Builder {
       public:
         OPCode66(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x66, Maker) {}
-        OPCode66(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x66, Maker) {}
         OPCode66(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x66, Maker) {
             addr++;
@@ -4022,8 +3800,6 @@ class CS3Builder : public Builder {
       public:
         OPCode67(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x67, Maker) {}
-        OPCode67(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x67, Maker) {}
         OPCode67(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x67, Maker) {
             addr++;
@@ -4042,8 +3818,6 @@ class CS3Builder : public Builder {
       public:
         OPCode68(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x68, Maker) {}
-        OPCode68(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x68, Maker) {}
         OPCode68(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x68, Maker) {
             addr++;
@@ -4096,8 +3870,6 @@ class CS3Builder : public Builder {
       public:
         OPCode69(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x69, Maker) {}
-        OPCode69(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x69, Maker) {}
         OPCode69(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x69, Maker) {
             addr++;
@@ -4151,8 +3923,6 @@ class CS3Builder : public Builder {
       public:
         OPCode6A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x6A, Maker) {}
-        OPCode6A(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x6A, Maker) {}
         OPCode6A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x6A, Maker) {
             addr++;
@@ -4199,8 +3969,6 @@ class CS3Builder : public Builder {
       public:
         OPCode6B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x6B", 0x6B, Maker) {}
-        OPCode6B(int addr, Builder* Maker)
-          : Instruction(addr, "0x6B", 0x6B, Maker) {}
         OPCode6B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x6B", 0x6B, Maker) {
             addr++;
@@ -4217,8 +3985,6 @@ class CS3Builder : public Builder {
       public:
         OPCode6C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x6C, Maker) {}
-        OPCode6C(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x6C, Maker) {}
         OPCode6C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x6C, Maker) {
             addr++;
@@ -4230,8 +3996,6 @@ class CS3Builder : public Builder {
       public:
         OPCode6E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x6E, Maker) {}
-        OPCode6E(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x6E, Maker) {}
         OPCode6E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x6E, Maker) {
             addr++;
@@ -4247,8 +4011,6 @@ class CS3Builder : public Builder {
       public:
         OPCode6F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x6F", 0x6F, Maker) {}
-        OPCode6F(int addr, Builder* Maker)
-          : Instruction(addr, "0x6F", 0x6F, Maker) {}
         OPCode6F(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x6F", 0x6F, Maker) {
             addr++;
@@ -4262,8 +4024,6 @@ class CS3Builder : public Builder {
       public:
         OPCode70(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x70, Maker) {}
-        OPCode70(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x70, Maker) {}
         OPCode70(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x70, Maker) {
             addr++;
@@ -4326,8 +4086,6 @@ class CS3Builder : public Builder {
       public:
         OPCode72(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x72, Maker) {}
-        OPCode72(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x72, Maker) {}
         OPCode72(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x72, Maker) {
             addr++;
@@ -4360,8 +4118,6 @@ class CS3Builder : public Builder {
       public:
         OPCode73(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x73, Maker) {}
-        OPCode73(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x73, Maker) {}
         OPCode73(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x73, Maker) {
             addr++;
@@ -4388,8 +4144,6 @@ class CS3Builder : public Builder {
       public:
         OPCode74(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x74, Maker) {}
-        OPCode74(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x74, Maker) {}
         OPCode74(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x74, Maker) {
             addr++;
@@ -4425,8 +4179,6 @@ class CS3Builder : public Builder {
       public:
         OPCode75(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x75, Maker) {}
-        OPCode75(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x75, Maker) {}
         OPCode75(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x75, Maker) {
             addr++;
@@ -4474,8 +4226,6 @@ class CS3Builder : public Builder {
       public:
         OPCode76(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x76, Maker) {}
-        OPCode76(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x76, Maker) {}
         OPCode76(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x76, Maker) {
             addr++;
@@ -4493,8 +4243,6 @@ class CS3Builder : public Builder {
       public:
         OPCode77(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x77, Maker) {}
-        OPCode77(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x77, Maker) {}
         OPCode77(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x77, Maker) {
             addr++;
@@ -4505,8 +4253,6 @@ class CS3Builder : public Builder {
       public:
         OPCode78(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x78, Maker) {}
-        OPCode78(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x78, Maker) {}
         OPCode78(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x78, Maker) {
             addr++;
@@ -4518,8 +4264,6 @@ class CS3Builder : public Builder {
       public:
         OPCode79(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x79, Maker) {}
-        OPCode79(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x79, Maker) {}
         OPCode79(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x79, Maker) {
             addr++;
@@ -4540,8 +4284,6 @@ class CS3Builder : public Builder {
       public:
         OPCode7A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7A, Maker) {}
-        OPCode7A(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x7A, Maker) {}
         OPCode7A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7A, Maker) {
             addr++;
@@ -4565,8 +4307,6 @@ class CS3Builder : public Builder {
       public:
         OPCode7B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7B, Maker) {}
-        OPCode7B(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x7B, Maker) {}
         OPCode7B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7B, Maker) {
             addr++;
@@ -4587,8 +4327,6 @@ class CS3Builder : public Builder {
       public:
         OPCode7C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7C, Maker) {}
-        OPCode7C(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x7C, Maker) {}
         OPCode7C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7C, Maker) {
             addr++;
@@ -4615,8 +4353,6 @@ class CS3Builder : public Builder {
       public:
         OPCode7D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7D, Maker) {}
-        OPCode7D(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x7D, Maker) {}
         OPCode7D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7D, Maker) {
             addr++;
@@ -4628,8 +4364,6 @@ class CS3Builder : public Builder {
       public:
         OPCode7E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x7E, Maker) {}
-        OPCode7E(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x7E, Maker) {}
         OPCode7E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x7E, Maker) {
             addr++;
@@ -4663,8 +4397,6 @@ class CS3Builder : public Builder {
       public:
         OPCode80(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x80, Maker) {}
-        OPCode80(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x80, Maker) {}
         OPCode80(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x80, Maker) {
             addr++;
@@ -4675,8 +4407,6 @@ class CS3Builder : public Builder {
       public:
         OPCode82(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x82, Maker) {}
-        OPCode82(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x82, Maker) {}
         OPCode82(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x82, Maker) {
             addr++;
@@ -4695,8 +4425,6 @@ class CS3Builder : public Builder {
       public:
         OPCode83(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x83, Maker) {}
-        OPCode83(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x83, Maker) {}
         OPCode83(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x83, Maker) {
             addr++;
@@ -4710,8 +4438,6 @@ class CS3Builder : public Builder {
       public:
         OPCode84(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "???", 0x84, Maker) {}
-        OPCode84(int addr, Builder* Maker)
-          : Instruction(addr, "???", 0x84, Maker) {}
         OPCode84(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "???", 0x84, Maker) {
             addr++;
@@ -4740,8 +4466,6 @@ class CS3Builder : public Builder {
       public:
         OPCode86(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x86", 0x86, Maker) {}
-        OPCode86(int addr, Builder* Maker)
-          : Instruction(addr, "0x86", 0x86, Maker) {}
         OPCode86(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x86", 0x86, Maker) {
             addr++;
@@ -4763,8 +4487,6 @@ class CS3Builder : public Builder {
       public:
         OPCode87(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x87", 0x87, Maker) {}
-        OPCode87(int addr, Builder* Maker)
-          : Instruction(addr, "0x87", 0x87, Maker) {}
         OPCode87(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x87", 0x87, Maker) {
             addr++;
@@ -4777,8 +4499,6 @@ class CS3Builder : public Builder {
       public:
         OPCode88(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x88", 0x88, Maker) {}
-        OPCode88(int addr, Builder* Maker)
-          : Instruction(addr, "0x88", 0x88, Maker) {}
         OPCode88(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x88", 0x88, Maker) {
             addr++;
@@ -4789,8 +4509,6 @@ class CS3Builder : public Builder {
       public:
         OPCode89(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x89", 0x89, Maker) {}
-        OPCode89(int addr, Builder* Maker)
-          : Instruction(addr, "0x89", 0x89, Maker) {}
         OPCode89(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x89", 0x89, Maker) {
             addr++;
@@ -4801,8 +4519,6 @@ class CS3Builder : public Builder {
       public:
         OPCode8A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8A", 0x8A, Maker) {}
-        OPCode8A(int addr, Builder* Maker)
-          : Instruction(addr, "0x8A", 0x8A, Maker) {}
         OPCode8A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8A", 0x8A, Maker) {
             addr++;
@@ -4860,8 +4576,6 @@ class CS3Builder : public Builder {
       public:
         OPCode8B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8B", 0x8B, Maker) {}
-        OPCode8B(int addr, Builder* Maker)
-          : Instruction(addr, "0x8B", 0x8B, Maker) {}
         OPCode8B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8B", 0x8B, Maker) {
             addr++;
@@ -4877,8 +4591,6 @@ class CS3Builder : public Builder {
       public:
         OPCode8C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8C", 0x8C, Maker) {}
-        OPCode8C(int addr, Builder* Maker)
-          : Instruction(addr, "0x8C", 0x8C, Maker) {}
         OPCode8C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8C", 0x8C, Maker) {
             addr++;
@@ -4903,8 +4615,6 @@ class CS3Builder : public Builder {
       public:
         OPCode8D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8D", 0x8D, Maker) {}
-        OPCode8D(int addr, Builder* Maker)
-          : Instruction(addr, "0x8D", 0x8D, Maker) {}
         OPCode8D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8D", 0x8D, Maker) {
             addr++;
@@ -4919,8 +4629,6 @@ class CS3Builder : public Builder {
       public:
         OPCode8E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8E", 0x8E, Maker) {}
-        OPCode8E(int addr, Builder* Maker)
-          : Instruction(addr, "0x8E", 0x8E, Maker) {}
         OPCode8E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8E", 0x8E, Maker) {
             addr++;
@@ -4937,8 +4645,6 @@ class CS3Builder : public Builder {
       public:
         OPCode8F(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x8F", 0x8F, Maker) {}
-        OPCode8F(int addr, Builder* Maker)
-          : Instruction(addr, "0x8F", 0x8F, Maker) {}
         OPCode8F(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x8F", 0x8F, Maker) {
             addr++;
@@ -4948,8 +4654,6 @@ class CS3Builder : public Builder {
       public:
         OPCode98(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x98", 0x98, Maker) {}
-        OPCode98(int addr, Builder* Maker)
-          : Instruction(addr, "0x98", 0x98, Maker) {}
         OPCode98(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x98", 0x98, Maker) {
             addr++;
@@ -4977,8 +4681,6 @@ class CS3Builder : public Builder {
       public:
         OPCode90(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x90", 0x90, Maker) {}
-        OPCode90(int addr, Builder* Maker)
-          : Instruction(addr, "0x90", 0x90, Maker) {}
         OPCode90(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x90", 0x90, Maker) {
             addr++;
@@ -4990,8 +4692,6 @@ class CS3Builder : public Builder {
       public:
         OPCode91(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x91", 0x91, Maker) {}
-        OPCode91(int addr, Builder* Maker)
-          : Instruction(addr, "0x91", 0x91, Maker) {}
         OPCode91(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x91", 0x91, Maker) {
             addr++;
@@ -5017,8 +4717,6 @@ class CS3Builder : public Builder {
       public:
         OPCode92(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x92", 0x92, Maker) {}
-        OPCode92(int addr, Builder* Maker)
-          : Instruction(addr, "0x92", 0x92, Maker) {}
         OPCode92(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x92", 0x92, Maker) {
             addr++;
@@ -5031,8 +4729,6 @@ class CS3Builder : public Builder {
       public:
         OPCode93(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x93", 0x93, Maker) {}
-        OPCode93(int addr, Builder* Maker)
-          : Instruction(addr, "0x93", 0x93, Maker) {}
         OPCode93(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x93", 0x93, Maker) {
             addr++;
@@ -5049,8 +4745,6 @@ class CS3Builder : public Builder {
       public:
         OPCode94(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x94", 0x94, Maker) {}
-        OPCode94(int addr, Builder* Maker)
-          : Instruction(addr, "0x94", 0x94, Maker) {}
         OPCode94(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x94", 0x94, Maker) {
             addr++;
@@ -5067,8 +4761,6 @@ class CS3Builder : public Builder {
       public:
         OPCode95(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x95", 0x95, Maker) {}
-        OPCode95(int addr, Builder* Maker)
-          : Instruction(addr, "0x95", 0x95, Maker) {}
         OPCode95(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x95", 0x95, Maker) {
             addr++;
@@ -5088,8 +4780,6 @@ class CS3Builder : public Builder {
       public:
         OPCode97(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x97", 0x97, Maker) {}
-        OPCode97(int addr, Builder* Maker)
-          : Instruction(addr, "0x97", 0x97, Maker) {}
         OPCode97(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x97", 0x97, Maker) {
             addr++;
@@ -5102,8 +4792,6 @@ class CS3Builder : public Builder {
       public:
         OPCode99(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x99", 0x99, Maker) {}
-        OPCode99(int addr, Builder* Maker)
-          : Instruction(addr, "0x99", 0x99, Maker) {}
         OPCode99(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x99", 0x99, Maker) {
             addr++;
@@ -5114,8 +4802,6 @@ class CS3Builder : public Builder {
       public:
         OPCode9A(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9A", 0x9A, Maker) {}
-        OPCode9A(int addr, Builder* Maker)
-          : Instruction(addr, "0x9A", 0x9A, Maker) {}
         OPCode9A(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9A", 0x9A, Maker) {
             addr++;
@@ -5129,8 +4815,6 @@ class CS3Builder : public Builder {
       public:
         OPCode9B(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9B", 0x9B, Maker) {}
-        OPCode9B(int addr, Builder* Maker)
-          : Instruction(addr, "0x9B", 0x9B, Maker) {}
         OPCode9B(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9B", 0x9B, Maker) {
             addr++;
@@ -5147,8 +4831,6 @@ class CS3Builder : public Builder {
       public:
         OPCode9C(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9C", 0x9C, Maker) {}
-        OPCode9C(int addr, Builder* Maker)
-          : Instruction(addr, "0x9C", 0x9C, Maker) {}
         OPCode9C(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9C", 0x9C, Maker) {
             addr++;
@@ -5173,8 +4855,6 @@ class CS3Builder : public Builder {
       public:
         OPCode9D(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9D", 0x9D, Maker) {}
-        OPCode9D(int addr, Builder* Maker)
-          : Instruction(addr, "0x9D", 0x9D, Maker) {}
         OPCode9D(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9D", 0x9D, Maker) {
             addr++;
@@ -5186,8 +4866,6 @@ class CS3Builder : public Builder {
       public:
         OPCode9E(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0x9E", 0x9E, Maker) {}
-        OPCode9E(int addr, Builder* Maker)
-          : Instruction(addr, "0x9E", 0x9E, Maker) {}
         OPCode9E(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0x9E", 0x9E, Maker) {
             addr++;
@@ -5213,8 +4891,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeA0(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA0", 0xA0, Maker) {}
-        OPCodeA0(int addr, Builder* Maker)
-          : Instruction(addr, "0xA0", 0xA0, Maker) {}
         OPCodeA0(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA0", 0xA0, Maker) {
             addr++;
@@ -5224,8 +4900,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeA1(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA1", 0xA1, Maker) {}
-        OPCodeA1(int addr, Builder* Maker)
-          : Instruction(addr, "0xA1", 0xA1, Maker) {}
         OPCodeA1(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA1", 0xA1, Maker) {
             addr++;
@@ -5240,8 +4914,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeA3(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA3", 0xA3, Maker) {}
-        OPCodeA3(int addr, Builder* Maker)
-          : Instruction(addr, "0xA3", 0xA3, Maker) {}
         OPCodeA3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA3", 0xA3, Maker) {
             addr++;
@@ -5253,8 +4925,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeA4(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA4", 0xA4, Maker) {}
-        OPCodeA4(int addr, Builder* Maker)
-          : Instruction(addr, "0xA4", 0xA4, Maker) {}
         OPCodeA4(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA4", 0xA4, Maker) {
             addr++;
@@ -5286,8 +4956,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeA6(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA6", 0xA6, Maker) {}
-        OPCodeA6(int addr, Builder* Maker)
-          : Instruction(addr, "0xA6", 0xA6, Maker) {}
         OPCodeA6(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA6", 0xA6, Maker) {
             addr++;
@@ -5301,8 +4969,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeA8(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA8", 0xA8, Maker) {}
-        OPCodeA8(int addr, Builder* Maker)
-          : Instruction(addr, "0xA8", 0xA8, Maker) {}
         OPCodeA8(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA8", 0xA8, Maker) {
             addr++;
@@ -5313,8 +4979,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeA9(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xA9", 0xA9, Maker) {}
-        OPCodeA9(int addr, Builder* Maker)
-          : Instruction(addr, "0xA9", 0xA9, Maker) {}
         OPCodeA9(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xA9", 0xA9, Maker) {
             addr++;
@@ -5325,8 +4989,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeAA(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAA", 0xAA, Maker) {}
-        OPCodeAA(int addr, Builder* Maker)
-          : Instruction(addr, "0xAA", 0xAA, Maker) {}
         OPCodeAA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAA", 0xAA, Maker) {
             addr++;
@@ -5339,8 +5001,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeAB(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAB", 0xAB, Maker) {}
-        OPCodeAB(int addr, Builder* Maker)
-          : Instruction(addr, "0xAB", 0xAB, Maker) {}
         OPCodeAB(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAB", 0xAB, Maker) {
             addr++;
@@ -5372,8 +5032,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeAC(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAC", 0xAC, Maker) {}
-        OPCodeAC(int addr, Builder* Maker)
-          : Instruction(addr, "0xAC", 0xAC, Maker) {}
         OPCodeAC(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAC", 0xAC, Maker) {
             addr++;
@@ -5406,8 +5064,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeAD(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAD", 0xAD, Maker) {}
-        OPCodeAD(int addr, Builder* Maker)
-          : Instruction(addr, "0xAD", 0xAD, Maker) {}
         OPCodeAD(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAD", 0xAD, Maker) {
             addr++;
@@ -5429,8 +5085,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeAE(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAE", 0xAE, Maker) {}
-        OPCodeAE(int addr, Builder* Maker)
-          : Instruction(addr, "0xAE", 0xAE, Maker) {}
         OPCodeAE(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAE", 0xAE, Maker) {
             addr++;
@@ -5443,8 +5097,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeAF(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xAF", 0xAF, Maker) {}
-        OPCodeAF(int addr, Builder* Maker)
-          : Instruction(addr, "0xAF", 0xAF, Maker) {}
         OPCodeAF(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xAF", 0xAF, Maker) {
             addr++;
@@ -5456,8 +5108,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeB1(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB1", 0xB1, Maker) {}
-        OPCodeB1(int addr, Builder* Maker)
-          : Instruction(addr, "0xB1", 0xB1, Maker) {}
         OPCodeB1(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB1", 0xB1, Maker) {
             addr++;
@@ -5471,8 +5121,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeB2(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB2", 0xB2, Maker) {}
-        OPCodeB2(int addr, Builder* Maker)
-          : Instruction(addr, "0xB2", 0xB2, Maker) {}
         OPCodeB2(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB2", 0xB2, Maker) {
             addr++;
@@ -5485,8 +5133,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeB3(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB3", 0xB3, Maker) {}
-        OPCodeB3(int addr, Builder* Maker)
-          : Instruction(addr, "0xB3", 0xB3, Maker) {}
         OPCodeB3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB3", 0xB3, Maker) {
             addr++;
@@ -5501,8 +5147,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeB4(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB4", 0xB4, Maker) {}
-        OPCodeB4(int addr, Builder* Maker)
-          : Instruction(addr, "0xB4", 0xB4, Maker) {}
         OPCodeB4(int& addr, [[maybe_unused]] ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB4", 0xB4, Maker) {
             addr++;
@@ -5512,8 +5156,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeB5(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB5", 0xB5, Maker) {}
-        OPCodeB5(int addr, Builder* Maker)
-          : Instruction(addr, "0xB5", 0xB5, Maker) {}
         OPCodeB5(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB5", 0xB5, Maker) {
             addr++;
@@ -5528,8 +5170,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeB6(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB6", 0xB6, Maker) {}
-        OPCodeB6(int addr, Builder* Maker)
-          : Instruction(addr, "0xB6", 0xB6, Maker) {}
         OPCodeB6(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB6", 0xB6, Maker) {
             addr++;
@@ -5541,8 +5181,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeB7(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB7", 0xB7, Maker) {}
-        OPCodeB7(int addr, Builder* Maker)
-          : Instruction(addr, "0xB7", 0xB7, Maker) {}
         OPCodeB7(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB7", 0xB7, Maker) {
             addr++;
@@ -5555,8 +5193,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeBA(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xBA", 0xBA, Maker) {}
-        OPCodeBA(int addr, Builder* Maker)
-          : Instruction(addr, "0xBA", 0xBA, Maker) {}
         OPCodeBA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xBA", 0xBA, Maker) {
             addr++;
@@ -5574,8 +5210,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeB8(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB8", 0xB8, Maker) {}
-        OPCodeB8(int addr, Builder* Maker)
-          : Instruction(addr, "0xB8", 0xB8, Maker) {}
         OPCodeB8(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB8", 0xB8, Maker) {
             addr++;
@@ -5589,8 +5223,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeB9(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xB9", 0xB9, Maker) {}
-        OPCodeB9(int addr, Builder* Maker)
-          : Instruction(addr, "0xB9", 0xB9, Maker) {}
         OPCodeB9(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xB9", 0xB9, Maker) {
             addr++;
@@ -5625,8 +5257,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeBB(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xBB", 0xBB, Maker) {}
-        OPCodeBB(int addr, Builder* Maker)
-          : Instruction(addr, "0xBB", 0xBB, Maker) {}
         OPCodeBB(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xBB", 0xBB, Maker) {
             addr++;
@@ -5637,8 +5267,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeBC(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xBC", 0xBC, Maker) {}
-        OPCodeBC(int addr, Builder* Maker)
-          : Instruction(addr, "0xBC", 0xBC, Maker) {}
         OPCodeBC(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xBC", 0xBC, Maker) {
             addr++;
@@ -5735,8 +5363,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeBE(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xBE", 0xBE, Maker) {}
-        OPCodeBE(int addr, Builder* Maker)
-          : Instruction(addr, "0xBE", 0xBE, Maker) {}
         OPCodeBE(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xBE", 0xBE, Maker) {
             addr++;
@@ -5750,8 +5376,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC0(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC0", 0xC0, Maker) {}
-        OPCodeC0(int addr, Builder* Maker)
-          : Instruction(addr, "0xC0", 0xC0, Maker) {}
         OPCodeC0(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC0", 0xC0, Maker) {
             addr++;
@@ -5785,8 +5409,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC2(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC2", 0xC2, Maker) {}
-        OPCodeC2(int addr, Builder* Maker)
-          : Instruction(addr, "0xC2", 0xC2, Maker) {}
         OPCodeC2(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC2", 0xC2, Maker) {
             addr++;
@@ -5798,8 +5420,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC3(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC3", 0xC3, Maker) {}
-        OPCodeC3(int addr, Builder* Maker)
-          : Instruction(addr, "0xC3", 0xC3, Maker) {}
         OPCodeC3(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC3", 0xC3, Maker) {
             addr++;
@@ -5821,8 +5441,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC4(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC4", 0xC4, Maker) {}
-        OPCodeC4(int addr, Builder* Maker)
-          : Instruction(addr, "0xC4", 0xC4, Maker) {}
         OPCodeC4(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC4", 0xC4, Maker) {
             addr++;
@@ -5864,8 +5482,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC5(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC5", 0xC5, Maker) {}
-        OPCodeC5(int addr, Builder* Maker)
-          : Instruction(addr, "0xC5", 0xC5, Maker) {}
         OPCodeC5(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC5", 0xC5, Maker) {
             addr++;
@@ -5883,8 +5499,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC6(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC6", 0xC6, Maker) {}
-        OPCodeC6(int addr, Builder* Maker)
-          : Instruction(addr, "0xC6", 0xC6, Maker) {}
         OPCodeC6(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC6", 0xC6, Maker) {
             addr++;
@@ -5916,8 +5530,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC7(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC7", 0xC7, Maker) {}
-        OPCodeC7(int addr, Builder* Maker)
-          : Instruction(addr, "0xC7", 0xC7, Maker) {}
         OPCodeC7(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC7", 0xC7, Maker) {
             addr++;
@@ -5936,8 +5548,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC8(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC8", 0xC8, Maker) {}
-        OPCodeC8(int addr, Builder* Maker)
-          : Instruction(addr, "0xC8", 0xC8, Maker) {}
         OPCodeC8(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC8", 0xC8, Maker) {
             addr++;
@@ -5951,8 +5561,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeC9(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xC9", 0xC9, Maker) {}
-        OPCodeC9(int addr, Builder* Maker)
-          : Instruction(addr, "0xC9", 0xC9, Maker) {}
         OPCodeC9(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xC9", 0xC9, Maker) {
             addr++;
@@ -5970,8 +5578,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeCA(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCA", 0xCA, Maker) {}
-        OPCodeCA(int addr, Builder* Maker)
-          : Instruction(addr, "0xCA", 0xCA, Maker) {}
         OPCodeCA(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCA", 0xCA, Maker) {
             addr++;
@@ -5988,8 +5594,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeCB(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCB", 0xCB, Maker) {}
-        OPCodeCB(int addr, Builder* Maker)
-          : Instruction(addr, "0xCB", 0xCB, Maker) {}
         OPCodeCB(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCB", 0xCB, Maker) {
             addr++;
@@ -6001,8 +5605,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeCC(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCC", 0xCC, Maker) {}
-        OPCodeCC(int addr, Builder* Maker)
-          : Instruction(addr, "0xCC", 0xCC, Maker) {}
         OPCodeCC(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCC", 0xCC, Maker) {
             addr++;
@@ -6014,8 +5616,6 @@ class CS3Builder : public Builder {
       public:
         OPCodeCD(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
           : Instruction(addr, idx_row, doc, "0xCD", 0xCD, Maker) {}
-        OPCodeCD(int addr, Builder* Maker)
-          : Instruction(addr, "0xCD", 0xCD, Maker) {}
         OPCodeCD(int& addr, ssd::Buffer& content, Builder* Maker)
           : Instruction(addr, "0xCD", 0xCD, Maker) {
             addr++;
