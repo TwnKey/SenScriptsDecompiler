@@ -4,15 +4,12 @@
 #include "headers/operande.h"
 #include <cmath>
 
-#include "xlsxdocument.h"
-
 class Instruction {
   public:
     Instruction(int addr, uint OP, Builder* Maker);
-    Instruction(int addr, std::string name, uint op, Builder* Maker);
-    Instruction(int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, std::string name, uint OP, Builder* Maker);
-    virtual ~Instruction();
+    Instruction(int& addr, std::string name, uint op, Builder* Maker);
 
+    virtual ~Instruction();
 
     [[nodiscard]] uint get_opcode() const;
 
