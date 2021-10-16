@@ -12,87 +12,74 @@ void Builder::read_functions_xlsx(QXlsx::Document& xls_content) {
     scene_name = xls_content.read(2, 1).toString().toStdString();
     int first_row = 4;
     int last_row = xls_content.dimension().lastRow();
-    int ID_fun = 0;
+    int fun_id = 0;
 
-    QString content_first_cell = xls_content.read(first_row, 1).toString();
+    std::string content_first_cell = xls_content.read(first_row, 1).toString().toStdString();
     if (content_first_cell == "FUNCTION") {
 
-        Function current_fun;
-        current_fun.name = xls_content.read(first_row, 2).toString().toStdString();
-        current_fun.id = ID_fun;
-        int addr_instr = 0;
-        current_fun.declr_position = 0;
+        auto fun_name = xls_content.read(first_row, 2).toString().toStdString();
+        Function current_fun(fun_id, fun_name, 0, 0, 0);
         current_fun.xlsx_row_index = first_row;
-        current_fun.instructions.clear();
-        current_fun.actual_addr = 0;
+        int addr_instr = 0;
 
         for (int idx_row = first_row + 1; idx_row < last_row; idx_row++) {
-
-            content_first_cell = xls_content.read(idx_row, 1).toString();
+            content_first_cell = xls_content.read(idx_row, 1).toString().toStdString();
             if (content_first_cell == "FUNCTION") { // We start a new function
-
-                std::string next_fun_name = xls_content.read(idx_row, 2).toString().toStdString();
-
                 addr_instr = 0;
                 functions_parsed.push_back(current_fun);
-                current_fun.name = next_fun_name;
-                current_fun.id = ID_fun;
-                current_fun.declr_position = 0;
-                current_fun.xlsx_row_index = idx_row;
-                current_fun.instructions.clear();
-                ID_fun++;
 
+                std::string next_fun_name = xls_content.read(idx_row, 2).toString().toStdString();
+                current_fun = Function(fun_id, next_fun_name, 0, 0, 0);
+                current_fun.xlsx_row_index = idx_row;
+                fun_id++;
             } else {
                 int opcode = xls_content.read(idx_row + 1, 2).toInt();
-                // std::shared_ptr<Instruction> instr = create_instruction_from_xlsx(addr_instr, opcode, idx_row, xls_content);
                 std::shared_ptr<Instruction> instr = create_instruction_from_xlsx(addr_instr, opcode);
                 if (instr != nullptr) {
                     auto modified_instr = read_instruction_xlsx(addr_instr, idx_row, xls_content, instr);
                     instr.swap(modified_instr);
                 }
                 current_fun.add_instruction(instr);
-
                 idx_row++;
             }
         }
-        int addr_fun = 0;
         functions_parsed.push_back(current_fun);
 
         ssd::Buffer header = create_header_bytes();
 
         int start_header = static_cast<int>(std::ssize(header));
-        addr_fun = start_header;
+        int fun_addr = start_header;
+
         for (size_t idx_fun = 0; idx_fun < functions_parsed.size() - 1; idx_fun++) {
-            functions_parsed[idx_fun].actual_addr = addr_fun;
+            auto& fun = functions_parsed[idx_fun];
+            fun.set_addr(fun_addr);
 
-            int length = functions_parsed[idx_fun].get_length_in_bytes();
+            int length = fun.get_length_in_bytes();
 
-            functions_parsed[idx_fun].end_addr = length + functions_parsed[idx_fun].actual_addr;
-            addr_fun = length + functions_parsed[idx_fun].actual_addr;
+            fun.end_addr = length + fun.actual_addr;
+            fun_addr = length + fun.actual_addr;
             int multiple = 4;
             if (isMultiple0x10(functions_parsed[idx_fun + 1].name)) multiple = 0x10;
 
-            int padding = (((int)std::ceil((float)addr_fun / (float)multiple))) * multiple - addr_fun;
+            int padding = (((int)std::ceil((float)fun_addr / (float)multiple))) * multiple - fun_addr;
 
-            addr_fun = addr_fun + padding;
+            fun_addr += padding;
 
-            for (size_t idx_instr = 0; idx_instr < functions_parsed[idx_fun].instructions.size(); idx_instr++) {
-                functions_parsed[idx_fun].instructions[idx_instr]->set_addr_instr(
-                  functions_parsed[idx_fun].instructions[idx_instr]->get_addr_instr() + functions_parsed[idx_fun].actual_addr);
+            for (auto& instr : fun.instructions) {
+                instr->set_addr_instr(instr->get_addr_instr() + fun.actual_addr);
             }
         }
-        functions_parsed[functions_parsed.size() - 1].actual_addr = addr_fun;
-        int length = functions_parsed[functions_parsed.size() - 1].get_length_in_bytes();
-        functions_parsed[functions_parsed.size() - 1].end_addr = length + functions_parsed[functions_parsed.size() - 1].actual_addr;
-        for (size_t idx_instr = 0; idx_instr < functions_parsed[functions_parsed.size() - 1].instructions.size(); idx_instr++) {
-            functions_parsed[functions_parsed.size() - 1].instructions[idx_instr]->set_addr_instr(
-              functions_parsed[functions_parsed.size() - 1].instructions[idx_instr]->get_addr_instr() +
-              functions_parsed[functions_parsed.size() - 1].actual_addr);
+        auto& last_fun = functions_parsed.back();
+        last_fun.actual_addr = fun_addr;
+        int length = last_fun.get_length_in_bytes();
+        last_fun.end_addr = length + last_fun.actual_addr;
+
+        for (auto& last_fun_instr : last_fun.instructions) {
+            last_fun_instr->set_addr_instr(last_fun_instr->get_addr_instr() + last_fun.actual_addr);
         }
 
         update_pointers_xlsx();
     }
-
     display_text("XLSX file read.");
 }
 
@@ -106,8 +93,8 @@ std::shared_ptr<Instruction> Builder::read_instruction_xlsx(int& addr,
 
     int idx_column = 3;
     std::string type = excelScenarioSheet.read(idx_row, idx_column).toString().toStdString();
-    while (!type.empty()) {
 
+    while (!type.empty()) {
         ssd::Buffer Value;
         Operande operande;
         if (type == "int") {
@@ -124,7 +111,9 @@ std::shared_ptr<Instruction> Builder::read_instruction_xlsx(int& addr,
             idx_column++;
             uint8_t operande_length = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
             // If the byte for length is 0xFF we don't calculate it
-            if (operande_length != 0xFF) stack_of_headers.top().first = instruction->get_nb_operandes();
+            if (operande_length != 0xFF) {
+                stack_of_headers.top().first = instruction->get_nb_operandes();
+            }
             Value = GetBytesFromInt(operande_grp + (operande_length << 0x18));
             operande = Operande(addr, "header", Value);
             instruction->add_operande(operande);
@@ -229,24 +218,24 @@ std::shared_ptr<Instruction> Builder::read_instruction_xlsx(int& addr,
 void Builder::read_functions_dat(ssd::Buffer& dat_content) {
     // From what I've seen, some functions in the file don't use OP Codes and it's not very explicit
     if (!functions_to_parse.empty()) {
-        for (auto& it : functions_to_parse) {
-            if (std::count(functions_parsed.begin(), functions_parsed.end(), it) == 0) {
-                ssd::spdlog::trace("Reading function {}", it.name);
+        for (auto& fun : functions_to_parse) {
+            if (std::count(functions_parsed.begin(), functions_parsed.end(), fun) == 0) {
+                ssd::spdlog::trace("Reading function {}", fun.name);
 
-                auto itt = find_function_by_id(functions_parsed, it.id);
-                if (itt == functions_parsed.end()) { // if we never read it, we'll do that
-                    idx_current_fun = it.id;
-                    guess_type_by_name(it);
-                    read_individual_function(it, dat_content);
-                    functions_parsed.push_back(it);
+                auto found_fun = find_function_by_id(functions_parsed, fun.id);
+                if (found_fun == functions_parsed.end()) { // if we never read it, we'll do that
+                    idx_current_fun = fun.id;
+                    guess_type_by_name(fun);
+                    read_individual_function(fun, dat_content);
+                    functions_parsed.push_back(fun);
                 }
             }
         }
-
         std::sort(functions_parsed.begin(), functions_parsed.end());
 
         update_pointers_dat();
-        int current_addr = functions_parsed[0].actual_addr; // first function shouldn't have changed
+
+        int current_addr = functions_parsed.front().actual_addr; // first function shouldn't have changed
         for (size_t idx_fun = 1; idx_fun < functions_parsed.size(); idx_fun++) {
 
             current_addr = current_addr + functions_parsed[idx_fun - 1].get_length_in_bytes();
@@ -289,7 +278,6 @@ std::vector<int> Builder::guess_type_by_name(Function& fun) {
         } else {
             result.push_back(15);
         }
-
     } else if (fun.name.starts_with("_")) {
         result.push_back(0);
         result.push_back(2);
@@ -326,15 +314,12 @@ int Builder::attempts_at_reading_function(Function& fun, ssd::Buffer& dat_conten
       if even the fallbacks fail, the decompiler concludes the function is an OP Code function with an incorrect instruction somewhere,
       it will generate the file but the function containing the instruction might be wrongly parsed (and will need to be fixed in xlsx)
     */
-
     for (const auto& function_type : fallback_types) {
-        try{
+        try {
             if (function_type == 0) {
                 while (current_position < this->goal) {
                     std::shared_ptr<Instruction> instr = create_instruction_from_dat(current_position, dat_content, function_type);
-
                     fun.add_instruction(instr);
-
                     latest_op_code = instr->get_opcode();
                 }
                 if (current_position != this->goal) throw ssd::exceptions::unspecified_recoverable();
@@ -378,7 +363,6 @@ int Builder::attempts_at_reading_function(Function& fun, ssd::Buffer& dat_conten
                     fun.add_instruction(instr);
                     latest_op_code = instr->get_opcode();
                 }
-
                 display_text("Incorrect instruction read at " + std::to_string(current_position) + ". Skipped.");
                 current_position++;
             }
@@ -395,15 +379,10 @@ int Builder::read_individual_function(Function& fun, ssd::Buffer& dat_content) {
 }
 
 bool Builder::update_pointers_dat() {
-
     for (auto& idx_fun : functions_parsed) {
-
-        std::vector<std::shared_ptr<Instruction>> instructions = idx_fun.instructions;
         for (auto& idx_instr : idx_fun.instructions) {
-
             for (auto& operande : idx_instr->operandes) {
                 if (operande.get_type() == "pointer") {
-
                     int addr_ptr = operande.get_integer_value();
                     int idx_fun_ = find_function(addr_ptr);
                     if (idx_fun_ != -1) {
@@ -435,32 +414,29 @@ bool Builder::reset() {
     return true;
 }
 bool Builder::update_pointers_xlsx() {
+    for (auto& fun : functions_parsed) {
+        for (auto& instr : fun.instructions) {
+            for (auto& operande : instr->operandes) {
+                if (operande.get_type() == "pointer") {
+                    int idx_row_ptr = operande.get_integer_value();
 
-    for (auto& idx_fun : functions_parsed) {
-
-        std::vector<std::shared_ptr<Instruction>> instructions = idx_fun.instructions;
-        for (auto& idx_instr : idx_fun.instructions) {
-
-            for (size_t idx_operand = 0; idx_operand < idx_instr->operandes.size(); idx_operand++) {
-                if (idx_instr->operandes[idx_operand].get_type() == "pointer") {
-                    int idx_row_ptr = idx_instr->operandes[idx_operand].get_integer_value();
                     Function current_fun = functions_parsed[0];
 
                     if (functions_parsed.size() > 1) {
-
                         Function next_fun = functions_parsed[1];
                         for (size_t idx_fun_next = 1; idx_fun_next < functions_parsed.size(); idx_fun_next++) {
                             if (idx_row_ptr < next_fun.xlsx_row_index) {
                                 break;
                             }
-
                             current_fun = functions_parsed[idx_fun_next];
-                            if ((idx_fun_next + 1) < functions_parsed.size()) next_fun = functions_parsed[idx_fun_next + 1];
+                            if ((idx_fun_next + 1) < functions_parsed.size()) {
+                                next_fun = functions_parsed[idx_fun_next + 1];
+                            }
                         }
                     }
                     int nb_instruction_inside_function = (idx_row_ptr - (current_fun.xlsx_row_index + 1)) / 2;
                     int addr_pointed = current_fun.instructions[nb_instruction_inside_function]->get_addr_instr();
-                    idx_instr->operandes[idx_operand].set_value(GetBytesFromInt(addr_pointed));
+                    operande.set_value(GetBytesFromInt(addr_pointed));
                 }
             }
         }
@@ -475,12 +451,11 @@ int Builder::find_function(int addr) {
         int fun_addr = functions_parsed[idx_fun].actual_addr;
 
         if (addr < fun_addr) {
-
             result = static_cast<int>(idx_fun) - 1;
             break;
         }
     }
-    if ((result == -1) && (addr < functions_parsed[functions_parsed.size() - 1].end_addr)) {
+    if ((result == -1) && (addr < functions_parsed.back().end_addr)) {
         result = static_cast<int>(functions_parsed.size()) - 1;
     }
 
