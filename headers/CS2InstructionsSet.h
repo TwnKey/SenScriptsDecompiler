@@ -7,8 +7,9 @@ class CS2Builder : public Builder {
   public:
     CS2Builder() = default;
 
-    std::set<std::string> CS2UIFiles = { "battle_menu", "camp_menu",   "camp_menu_v", "note_menu",   "note_menu_v",
-                                         "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };
+    // NOLINTNEXTLINE(fuchsia-statically-constructed-objects, cert-err58-cpp)
+    static const inline std::set<std::string> CS2UIFiles = { "battle_menu", "camp_menu",   "camp_menu_v", "note_menu",   "note_menu_v",
+                                                             "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };
 
     static void reading_dialog(int& addr, ssd::Buffer& content, Instruction* instr) {
 

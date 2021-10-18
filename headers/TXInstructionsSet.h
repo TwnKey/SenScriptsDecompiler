@@ -7,8 +7,9 @@ class TXBuilder : public Builder {
   public:
     TXBuilder() = default;
 
-    std::set<std::string> TXUIFiles = { "battle_menu", "camp_menu",   "camp_menu_v", "note_menu",   "note_menu_v",
-                                        "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };
+    // NOLINTNEXTLINE(fuchsia-statically-constructed-objects, cert-err58-cpp)
+    const static inline std::set<std::string> TXUIFiles = { "battle_menu", "camp_menu",   "camp_menu_v", "note_menu",   "note_menu_v",
+                                                            "shop_menu",   "shop_menu_v", "title_menu",  "title_menu_v" };
     static void reading_dialog(int& addr, ssd::Buffer& content, Instruction* instr) {
 
         std::vector<uint8_t> current_op_value;
