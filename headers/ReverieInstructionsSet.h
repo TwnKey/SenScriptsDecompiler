@@ -8975,8 +8975,7 @@ class ReverieBuilder : public Builder {
             case 274:
                 return std::make_shared<StyleName>(addr);
             default:
-                error = true;
-                return {};
+                return nullptr;
         }
     }
 

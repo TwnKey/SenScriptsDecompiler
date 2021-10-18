@@ -7185,11 +7185,8 @@ class CS2Builder : public Builder {
             case 273:
                 return std::make_shared<AnimeClipData>(addr);
             default:
-                std::stringstream stream;
-                stream << "L'OP code " << std::hex << opcode << " n'est pas défini !! " << this->scene_name;
-                error = true;
                 addr++;
-                return {};
+                return nullptr;
         }
     }
 

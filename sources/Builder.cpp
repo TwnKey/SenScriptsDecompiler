@@ -38,6 +38,9 @@ void Builder::read_functions_xlsx(QXlsx::Document& xls_content) {
                 if (instr != nullptr) {
                     auto modified_instr = read_instruction_xlsx(addr_instr, idx_row, xls_content, instr);
                     instr.swap(modified_instr);
+                } else {
+                    error = true;
+                    ssd::spdlog::err("Opcode {#04x} is not defined", opcode);
                 }
                 current_fun.add_instruction(instr);
                 idx_row++;

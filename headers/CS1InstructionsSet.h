@@ -5691,12 +5691,8 @@ class CS1Builder : public Builder {
             case 271:
                 return std::make_shared<AddCollision>(addr);
             default:
-                std::stringstream stream;
-                stream << "L'OP code " << std::hex << opcode << " n'est pas défini !! " << this->scene_name;
-                error = true;
                 addr++;
-
-                return {};
+                return nullptr;
         }
     }
 
