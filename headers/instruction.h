@@ -3,10 +3,11 @@
 #include "headers/Builder.h"
 #include "headers/operande.h"
 #include <cmath>
+#include <optional>
 
 class Instruction {
   public:
-    Instruction(int addr, uint OP, Builder* Maker);
+    Instruction(int& addr, std::string name, uint op);
     Instruction(int& addr, std::string name, uint op, Builder* Maker);
 
     virtual ~Instruction();
@@ -23,7 +24,7 @@ class Instruction {
     int get_length_in_bytes();
     ssd::Buffer get_bytes();
 
-    Builder* maker;
+    std::optional<Builder*> maker;
     std::vector<Operande> operandes;
     bool error = false;
 

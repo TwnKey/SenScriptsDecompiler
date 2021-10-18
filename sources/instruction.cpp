@@ -4,6 +4,11 @@
 
 #include <QTextCodec>
 
+Instruction::Instruction(int& addr, std::string name, uint32_t OP)
+  : addr_instr(addr)
+  , opcode(OP)
+  , name(std::move(name)) {}
+
 Instruction::Instruction(int& addr, std::string name, uint32_t OP, Builder* Maker)
   : maker(Maker)
   , addr_instr(addr)
