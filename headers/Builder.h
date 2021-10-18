@@ -73,7 +73,7 @@ class Builder {
     virtual void read_functions_dat(ssd::Buffer& dat_content);
     bool update_pointers_dat();
 
-    virtual std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int opcode) = 0;
+    virtual std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int opcode, const std::string& scene_name) = 0;
     virtual void read_functions_xlsx(QXlsx::Document& xls_content);
     virtual std::shared_ptr<Instruction> read_instruction_xlsx(int& addr,
                                                                int idx_row,

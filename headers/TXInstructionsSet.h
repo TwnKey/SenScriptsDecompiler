@@ -8360,7 +8360,7 @@ class TXBuilder : public Builder {
         display_text("Header parsed.");
         return true;
     }
-    std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int opcode) override {
+    std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int opcode, const std::string& scene_name) override {
         if (TXUIFiles.contains(scene_name) && (opcode == 0x13)) {
             return std::make_shared<UI_OP13>(addr);
         }

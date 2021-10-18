@@ -7042,7 +7042,8 @@ class CS4Builder : public Builder {
         display_text("Header parsed.");
         return true;
     }
-    std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int opcode) override {
+    std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int opcode, const std::string& scene_name) override {
+        (void)scene_name;
         switch (opcode) {
             case 0x00:
                 return std::make_shared<OPCode0>(addr);
