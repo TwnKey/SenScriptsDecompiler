@@ -8976,7 +8976,7 @@ class ReverieBuilder : public Builder {
                 return std::make_shared<StyleName>(addr);
             default:
                 error = true;
-                throw ssd::exceptions::bad_opcode(opcode, addr);
+                return {};
         }
     }
 
