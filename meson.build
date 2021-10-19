@@ -100,6 +100,7 @@ headers = files(
     'headers/CS4InstructionsSet.h',
     'headers/ReverieInstructionsSet.h',
     'headers/TXInstructionsSet.h',
+    'headers/data_converter.h',
     'headers/decompiler.h',
     'headers/exceptions.h',
     'headers/functions.h',
@@ -113,6 +114,7 @@ headers = files(
 
 executable('SenScriptsDecompiler',
     'sources/Builder.cpp',
+    'sources/data_converter.cpp',
     'sources/decompiler.cpp',
     'sources/functions.cpp',
     'sources/instruction.cpp',
