@@ -7,12 +7,12 @@
 
 class Instruction {
   public:
-    Instruction(int& addr, std::string name, uint op);
-    Instruction(int& addr, std::string name, uint op, Builder* Maker);
+    Instruction(int& addr, std::string name, uint32_t op);
+    Instruction(int& addr, std::string name, uint32_t op, Builder* Maker);
 
     virtual ~Instruction();
 
-    [[nodiscard]] uint get_opcode() const;
+    [[nodiscard]] uint32_t get_opcode() const;
 
     [[nodiscard]] Operande get_operande(int i) const;
     void add_operande(Operande operande);
@@ -30,7 +30,7 @@ class Instruction {
 
   protected:
     int addr_instr;
-    uint opcode;
+    uint32_t opcode;
     std::string name;
     int length_in_bytes = 0;
 };

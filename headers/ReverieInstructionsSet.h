@@ -2022,7 +2022,7 @@ class ReverieBuilder : public Builder {
                 case 0x12: {
                     ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
                     this->add_operande(Operande(addr, "byte", control_byte2));
-                    switch ((uint)control_byte2[0]) {
+                    switch ((uint32_t)control_byte2[0]) {
                         case 0:
                             this->add_operande(Operande(addr, "string", ReadStringSubByteArray(content, addr)));
                             this->add_operande(Operande(addr, "short", ReadSubByteArray(content, addr, 2)));
@@ -2685,7 +2685,7 @@ class ReverieBuilder : public Builder {
                 case 0xD4: {
                     ssd::Buffer control_byte2 = ReadSubByteArray(content, addr, 1);
                     this->add_operande(Operande(addr, "byte", control_byte2));
-                    switch ((uint)control_byte2[0]) {
+                    switch ((uint32_t)control_byte2[0]) {
                         case 0:
                         case 1:
                             break;

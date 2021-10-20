@@ -197,10 +197,10 @@ bool Decompiler::check_all_files(const std::filesystem::path& game_path, const s
             idx_fun_2.push_back(ReadIntegerFromByteArray(i, content2));
         }
 
-        for (size_t i = 0; i < (uint)current_tf.get_nb_functions(); ++i) {
+        for (size_t i = 0; i < (uint32_t)current_tf.get_nb_functions(); ++i) {
             int index_byte = idx_fun_2[i];
 
-            for (size_t j = 0; j < (uint)current_tf.functions[i].instructions.size(); ++j) {
+            for (size_t j = 0; j < (uint32_t)current_tf.functions[i].instructions.size(); ++j) {
                 uint32_t OPCode = current_tf.functions[i].instructions[j]->get_opcode();
                 uint32_t byte_in_file = (content2[index_byte]) & 0xFF;
 
@@ -211,7 +211,7 @@ bool Decompiler::check_all_files(const std::filesystem::path& game_path, const s
                     }
                     index_byte++;
                 }
-                for (size_t k = 0; k < (uint)current_tf.functions[i].instructions[j]->operandes.size(); ++k) {
+                for (size_t k = 0; k < (uint32_t)current_tf.functions[i].instructions[j]->operandes.size(); ++k) {
                     Operande op_k = current_tf.functions[i].instructions[j]->operandes[k];
                     ssd::Buffer bytes = op_k.get_value();
 
