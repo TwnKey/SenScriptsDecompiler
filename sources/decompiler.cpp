@@ -6,19 +6,9 @@
 #include "headers/CS4InstructionsSet.h"
 #include "headers/ReverieInstructionsSet.h"
 #include "headers/TXInstructionsSet.h"
+#include "headers/data_converter.h"
 #include "headers/global_vars.h"
-#include "xlsxcellrange.h"
-#include "xlsxchart.h"
-#include "xlsxchartsheet.h"
-#include "xlsxdocument.h"
-#include "xlsxformat.h"
-#include "xlsxrichstring.h"
-#include "xlsxworkbook.h"
-#include <QColor>
-#include <QString>
-#include <QTextCodec>
 
-using namespace QXlsx; // NOLINT(google-build-using-namespace)
 namespace fs = std::filesystem;
 
 Decompiler::Decompiler() = default;
@@ -48,13 +38,17 @@ bool Decompiler::setup_game(const std::string& game) {
 }
 bool Decompiler::read_xlsx(const std::filesystem::path& filepath) {
     if (!fs::exists(filepath)) return false;
-
-    Document doc(QString::fromStdString(filepath.string()));
-    auto game_from_file = doc.read(1, 1).toString().toStdString();
-    setup_game(game_from_file);
     display_text("Reading functions...");
 
-    ib->read_functions_xlsx(doc);
+    auto converter = ssd::ForeignDatDataConverter::get_reader(ssd::ForeignDatFormat::EXCEL, InputDatFileEncoding, ib.get());
+
+    auto result = converter->from_file(filepath);
+
+    setup_game(result.game_code);
+    ib->scene_name = result.scene_name;
+    ib->functions_parsed = result.functions;
+
+    ib->read_functions_xlsx();
 
     display_text("Reading of XLSX done.");
 
@@ -129,245 +123,11 @@ bool Decompiler::write_dat(const std::filesystem::path& filepath) {
     return true;
 }
 
-int Decompiler::write_xlsx_instructions(QXlsx::Document& excelScenarioSheet,
-                                        const std::vector<Function>& funs,
-                                        const std::shared_ptr<Instruction>& instruction,
-                                        int row,
-                                        int& col) {
-    int opcode = static_cast<int>(instruction->get_opcode());
-    QXlsx::Format FormatInstr;
-    QXlsx::Format FormatType;
-    QXlsx::Format FormatOP;
-    QXlsx::Format FormatStartEnd;
-    auto ColorBg = QColor(qRgb(255, 230, 210));
-    FormatType.setHorizontalAlignment(QXlsx::Format::AlignHCenter);
-    FormatType.setVerticalAlignment(QXlsx::Format::AlignVCenter);
-    FormatType.setTextWrap(true);
-    FormatInstr.setHorizontalAlignment(QXlsx::Format::AlignHCenter);
-    FormatInstr.setVerticalAlignment(QXlsx::Format::AlignVCenter);
-
-    FormatType.setBottomBorderStyle(QXlsx::Format::BorderThin);
-    FormatType.setLeftBorderStyle(QXlsx::Format::BorderThin);
-    FormatType.setRightBorderStyle(QXlsx::Format::BorderThin);
-    FormatType.setTopBorderStyle(QXlsx::Format::BorderThin);
-    FormatType.setPatternBackgroundColor(ColorBg);
-
-    FormatInstr.setBottomBorderStyle(QXlsx::Format::BorderThin);
-    FormatInstr.setLeftBorderStyle(QXlsx::Format::BorderThin);
-    FormatInstr.setRightBorderStyle(QXlsx::Format::BorderThin);
-    FormatInstr.setTopBorderStyle(QXlsx::Format::BorderThin);
-
-    FormatOP.setBottomBorderStyle(QXlsx::Format::BorderThin);
-    FormatOP.setLeftBorderStyle(QXlsx::Format::BorderThin);
-    FormatOP.setRightBorderStyle(QXlsx::Format::BorderThin);
-    FormatOP.setTopBorderStyle(QXlsx::Format::BorderThin);
-
-    auto colorRed = QColor(qRgb(255, 0, 0));
-
-    FormatStartEnd.setPatternBackgroundColor(colorRed);
-    FormatStartEnd.setHorizontalAlignment(QXlsx::Format::AlignHCenter);
-    FormatStartEnd.setVerticalAlignment(QXlsx::Format::AlignVCenter);
-    FormatStartEnd.setTextWrap(true);
-    FormatType.setFontBold(true);
-    QColor color;
-
-    color = QColor::fromHsl((int)opcode, 255, 185, 255);
-    FormatOP.setPatternBackgroundColor(color);
-
-    if (instruction->error) {
-        excelScenarioSheet.write(row, col + 1, "ERROR!", FormatType);
-    }
-    excelScenarioSheet.write(row, col + 2, "OP Code", FormatType);
-    excelScenarioSheet.write(row + 1, col + 2, opcode, FormatOP);
-    int col_cnt = 0;
-    for (auto& operande : instruction->operandes) {
-
-        QString type = QString::fromStdString(operande.get_type());
-        ssd::Buffer Value = operande.get_value();
-
-        if (type == "int") {
-            excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, ReadIntegerFromByteArray(0, Value), FormatInstr);
-            col_cnt++;
-        } else if (type == "header") {
-            uint32_t header_value = ReadIntegerFromByteArray(0, Value);
-            uint8_t length_byte = header_value >> 0x18;
-            uint32_t group_id = header_value & 0xFFFFFF;
-            excelScenarioSheet.write(row, col + 3 + col_cnt, "Group ID", FormatType);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, group_id, FormatInstr);
-            col_cnt++;
-            excelScenarioSheet.write(row, col + 3 + col_cnt, "Length", FormatType);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, length_byte, FormatInstr);
-            col_cnt++;
-        } else if (type == "float") {
-            excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, QByteArrayToFloat(Value), FormatInstr);
-            col_cnt++;
-        } else if (type == "short") {
-            excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, (uint16_t)ReadShortFromByteArray(0, Value), FormatInstr);
-            col_cnt++;
-        } else if (type == "byte") {
-            excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, (unsigned char)Value[0], FormatInstr);
-            col_cnt++;
-        } else if (type == "fill") {
-            excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            excelScenarioSheet.write(row + 1,
-                                     col + 3 + col_cnt,
-                                     "=" + QString::number(operande.get_bytes_to_fill()) + "-LENB(INDIRECT(ADDRESS(" +
-                                       QString::number(row + 1) + "," + QString::number(3 + col_cnt - 1) + ")))",
-                                     FormatInstr);
-            col_cnt++;
-        } else if (type == "bytearray") {
-            for (auto&& idx_byte : Value) {
-                excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-                excelScenarioSheet.write(row + 1, col + 3 + col_cnt, (unsigned char)idx_byte, FormatInstr);
-                col_cnt++;
-            }
-        } else if (type == "instruction") {
-            int addr = 0;
-            excelScenarioSheet.write(row, col + 3 + col_cnt, "Start", FormatStartEnd);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, "", FormatStartEnd);
-            col_cnt++;
-
-            // function type is 0 here because sub05 is only called by OP Code instructions.
-            std::shared_ptr<Instruction> instr = ib->create_instruction_from_dat(addr, Value, 0);
-            int column_instr = col + 3 + col_cnt - 2;
-            int cnt = write_xlsx_instructions(excelScenarioSheet, funs, instr, row, column_instr);
-            col = col + cnt + 1;
-
-            excelScenarioSheet.write(row, col + 3 + col_cnt, "End", FormatStartEnd);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, "", FormatStartEnd);
-            col_cnt++;
-        } else if ((type == "string") || (type == "dialog")) {
-
-            excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            ssd::Buffer value_ = Value;
-
-            value_.replace(1, '\n');
-
-            QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(InputDatFileEncoding).toUtf8());
-
-            auto q_byte_array = QByteArray(reinterpret_cast<const char*>(value_.data()), static_cast<int>(std::ssize(value_)));
-            QString string = codec->toUnicode(q_byte_array);
-
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, string, FormatInstr);
-            col_cnt++;
-        } else if (type == "pointer") {
-            excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            int ID = funs[0].id;
-            size_t nb_row = 3;
-            int idx_fun = 0;
-            while (ID != operande.get_destination().function_id) {
-                nb_row = nb_row + 1; // row with function name
-                nb_row = nb_row + 2 * funs[idx_fun].instructions.size();
-                idx_fun++;
-                ID = funs[idx_fun].id;
-            }
-            nb_row = nb_row + 1; // row with function name
-            nb_row = nb_row + static_cast<uint64_t>(2 * (operande.get_destination().instruction_id + 1));
-            QString ptrExcel = "=A" + QString::number((nb_row));
-
-            QXlsx::Format format;
-            format.setBottomBorderStyle(QXlsx::Format::BorderThin);
-            format.setLeftBorderStyle(QXlsx::Format::BorderThin);
-            format.setRightBorderStyle(QXlsx::Format::BorderThin);
-            format.setTopBorderStyle(QXlsx::Format::BorderThin);
-            format.setFontBold(true);
-            auto FontColor = QColor(qRgb(255, 0, 0));
-            format.setFontColor(FontColor);
-            excelScenarioSheet.write(row + 1, col + 3 + col_cnt, ptrExcel, format);
-            col_cnt++;
-        }
-    }
-
-    return col_cnt;
-}
-
 bool Decompiler::write_xlsx(const std::filesystem::path& filepath) {
-
-    QFont font = QFont("Arial");
-
-    QXlsx::Document excel_scenario_sheet;
-    Format format;
-    format.setFont(font);
-    format.setFontBold(true);
-    auto dark_yellow = QColor(qRgb(255, 222, 155));
-    format.setPatternBackgroundColor(dark_yellow);
-    auto font_color = QColor(qRgb(255, 0, 0));
-
-    format.setFontColor(font_color);
-    format.setFontSize(14);
-
-    excel_scenario_sheet.write("A1", QString::fromStdString(_game), format);
-
-    Format format_location;
-
-    format_location.setFont(font);
-    format_location.setFontSize(10);
-    format_location.setPatternBackgroundColor(dark_yellow);
-    excel_scenario_sheet.write("A2", QString::fromStdString(current_tf.get_name()), format_location);
-
-    Format row_format;
-    row_format.setFillPattern(Format::PatternSolid);
-    row_format.setPatternBackgroundColor(qRgb(255, 255, 200));
-    row_format.setFont(font);
-    row_format.setFontSize(10);
-    excel_scenario_sheet.setRowFormat(1, 3, format);
-    excel_scenario_sheet.setRowFormat(2, 3, format);
-    excel_scenario_sheet.setRowFormat(3, 3, format);
-    row_format.setBottomBorderStyle(Format::BorderNone);
-    Format format_title_chars;
-    format_title_chars.setFont(font);
-    format_title_chars.setFontSize(10);
-    format_title_chars.setPatternBackgroundColor(qRgb(255, 255, 200));
-    format_title_chars.setHorizontalAlignment(Format::AlignHCenter);
-    format_title_chars.setVerticalAlignment(Format::AlignVCenter);
-
-    Format Format_title_column_chars;
-    Format_title_column_chars.setHorizontalAlignment(Format::AlignHCenter);
-    Format_title_column_chars.setVerticalAlignment(Format::AlignVCenter);
-    Format_title_column_chars.setFontSize(10);
-    Format_title_column_chars.setPatternBackgroundColor(qRgb(255, 255, 200));
-    Format_title_column_chars.setTopBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setBottomBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setLeftBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setRightBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setFont(font);
-    Format_title_column_chars.setFontSize(10);
-    Format_title_column_chars.setPatternBackgroundColor(qRgb(255, 255, 255));
-
-    Format_title_column_chars.setBottomBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setLeftBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setRightBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setTopBorderStyle(Format::BorderThin);
-    Format row_format_functions;
-    row_format_functions.setPatternBackgroundColor(qRgb(255, 200, 200));
-    row_format_functions.setFont(font);
-    row_format_functions.setFontSize(13);
-    row_format_functions.setBottomBorderStyle(QXlsx::Format::BorderThin);
-
-    row_format_functions.setTopBorderStyle(QXlsx::Format::BorderThin);
-    int excel_row = 4;
-    for (const auto& fun : current_tf.functions) {
-        excel_scenario_sheet.setRowFormat(excel_row, excel_row, row_format_functions);
-        excel_scenario_sheet.write(excel_row, 1, "FUNCTION");
-        excel_scenario_sheet.write(excel_row, 2, QString::fromStdString(fun.name));
-
-        excel_row++;
-        for (const auto& instr : fun.instructions) {
-            excel_scenario_sheet.write(excel_row, 1, "Location");
-            excel_scenario_sheet.write(excel_row + 1, 1, instr->get_addr_instr());
-            int col = 0;
-            write_xlsx_instructions(excel_scenario_sheet, current_tf.functions, instr, excel_row, col);
-            excel_row += 2;
-        }
-    }
+    auto converter = ssd::ForeignDatDataConverter::get_writer(ssd::ForeignDatFormat::EXCEL, _game, OutputDatFileEncoding, ib.get());
+    converter->to_file(current_tf.functions, filepath);
 
     display_text("File " + filepath.string() + " created.");
-
-    excel_scenario_sheet.saveAs(QString::fromStdString(filepath.string()));
 
     return true;
 }

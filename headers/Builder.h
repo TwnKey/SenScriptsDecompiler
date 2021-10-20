@@ -1,7 +1,6 @@
 #ifndef INSTRUCTIONBUILDER_H
 #define INSTRUCTIONBUILDER_H
 #include "headers/operande.h"
-#include "xlsxdocument.h"
 
 class Function;
 class Instruction;
@@ -74,11 +73,7 @@ class Builder {
     bool update_pointers_dat();
 
     virtual std::shared_ptr<Instruction> create_instruction_from_xlsx(int& addr, int opcode, const std::string& scene_name) = 0;
-    virtual void read_functions_xlsx(QXlsx::Document& xls_content);
-    virtual std::shared_ptr<Instruction> read_instruction_xlsx(int& addr,
-                                                               int idx_row,
-                                                               QXlsx::Document& excelScenarioSheet,
-                                                               const std::shared_ptr<Instruction>& instruction);
+    virtual void read_functions_xlsx();
     bool update_pointers_xlsx();
 
     int find_function(int addr);

@@ -1,221 +1,45 @@
 #include "headers/Builder.h"
 #include "headers/functions.h"
-#include "headers/global_vars.h"
-#include <stack>
-#include <string>
-
-#include <QTextCodec>
 
 Builder::Builder() = default;
 
-void Builder::read_functions_xlsx(QXlsx::Document& xls_content) {
-    scene_name = xls_content.read(2, 1).toString().toStdString();
-    int first_row = 4;
-    int last_row = xls_content.dimension().lastRow();
-    int fun_id = 0;
+void Builder::read_functions_xlsx() {
+    ssd::Buffer header = create_header_bytes();
 
-    std::string content_first_cell = xls_content.read(first_row, 1).toString().toStdString();
-    if (content_first_cell == "FUNCTION") {
+    int start_header = static_cast<int>(std::ssize(header));
+    int fun_addr = start_header;
 
-        auto fun_name = xls_content.read(first_row, 2).toString().toStdString();
-        Function current_fun(fun_id, fun_name, 0, 0, 0);
-        current_fun.xlsx_row_index = first_row;
-        int addr_instr = 0;
+    for (size_t idx_fun = 0; idx_fun < functions_parsed.size() - 1; idx_fun++) {
+        auto& fun = functions_parsed[idx_fun];
+        fun.set_addr(fun_addr);
 
-        for (int idx_row = first_row + 1; idx_row < last_row; idx_row++) {
-            content_first_cell = xls_content.read(idx_row, 1).toString().toStdString();
-            if (content_first_cell == "FUNCTION") { // We start a new function
-                addr_instr = 0;
-                functions_parsed.push_back(current_fun);
+        int length = fun.get_length_in_bytes();
 
-                std::string next_fun_name = xls_content.read(idx_row, 2).toString().toStdString();
-                current_fun = Function(fun_id, next_fun_name, 0, 0, 0);
-                current_fun.xlsx_row_index = idx_row;
-                fun_id++;
-            } else {
-                int opcode = xls_content.read(idx_row + 1, 2).toInt();
-                std::shared_ptr<Instruction> instr = create_instruction_from_xlsx(addr_instr, opcode, scene_name);
-                if (instr != nullptr) {
-                    auto modified_instr = read_instruction_xlsx(addr_instr, idx_row, xls_content, instr);
-                    instr.swap(modified_instr);
-                } else {
-                    error = true;
-                    ssd::spdlog::err("Opcode {#04x} is not defined", opcode);
-                }
-                current_fun.add_instruction(instr);
-                idx_row++;
-            }
+        fun.end_addr = length + fun.actual_addr;
+        fun_addr = length + fun.actual_addr;
+        int multiple = 4;
+        if (isMultiple0x10(functions_parsed[idx_fun + 1].name)) multiple = 0x10;
+
+        int padding = (((int)std::ceil((float)fun_addr / (float)multiple))) * multiple - fun_addr;
+
+        fun_addr += padding;
+
+        for (auto& instr : fun.instructions) {
+            instr->set_addr_instr(instr->get_addr_instr() + fun.actual_addr);
         }
-        functions_parsed.push_back(current_fun);
-
-        ssd::Buffer header = create_header_bytes();
-
-        int start_header = static_cast<int>(std::ssize(header));
-        int fun_addr = start_header;
-
-        for (size_t idx_fun = 0; idx_fun < functions_parsed.size() - 1; idx_fun++) {
-            auto& fun = functions_parsed[idx_fun];
-            fun.set_addr(fun_addr);
-
-            int length = fun.get_length_in_bytes();
-
-            fun.end_addr = length + fun.actual_addr;
-            fun_addr = length + fun.actual_addr;
-            int multiple = 4;
-            if (isMultiple0x10(functions_parsed[idx_fun + 1].name)) multiple = 0x10;
-
-            int padding = (((int)std::ceil((float)fun_addr / (float)multiple))) * multiple - fun_addr;
-
-            fun_addr += padding;
-
-            for (auto& instr : fun.instructions) {
-                instr->set_addr_instr(instr->get_addr_instr() + fun.actual_addr);
-            }
-        }
-        auto& last_fun = functions_parsed.back();
-        last_fun.actual_addr = fun_addr;
-        int length = last_fun.get_length_in_bytes();
-        last_fun.end_addr = length + last_fun.actual_addr;
-
-        for (auto& last_fun_instr : last_fun.instructions) {
-            last_fun_instr->set_addr_instr(last_fun_instr->get_addr_instr() + last_fun.actual_addr);
-        }
-
-        update_pointers_xlsx();
     }
+    auto& last_fun = functions_parsed.back();
+    last_fun.actual_addr = fun_addr;
+    int length = last_fun.get_length_in_bytes();
+    last_fun.end_addr = length + last_fun.actual_addr;
+
+    for (auto& last_fun_instr : last_fun.instructions) {
+        last_fun_instr->set_addr_instr(last_fun_instr->get_addr_instr() + last_fun.actual_addr);
+    }
+
+    update_pointers_xlsx();
+
     display_text("XLSX file read.");
-}
-
-std::shared_ptr<Instruction> Builder::read_instruction_xlsx(int& addr,
-                                                            int idx_row,
-                                                            QXlsx::Document& excelScenarioSheet,
-                                                            const std::shared_ptr<Instruction>& instruction) {
-    std::stack<std::pair<size_t, uint8_t>> stack_of_headers;
-
-    if (instruction->get_opcode() <= 0xFF) addr++;
-
-    int idx_column = 3;
-    std::string type = excelScenarioSheet.read(idx_row, idx_column).toString().toStdString();
-
-    while (!type.empty()) {
-        ssd::Buffer Value;
-        Operande operande;
-        if (type == "int") {
-            int op = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
-
-            Value = GetBytesFromInt(op);
-            operande = Operande(addr, "int", Value);
-            instruction->add_operande(operande);
-            addr = addr + operande.get_length();
-        } else if (type == "Group ID") {
-            stack_of_headers.push(std::make_pair(0, addr - 1)); // the count includes OPCode thus -1
-
-            int operande_grp = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
-            idx_column++;
-            uint8_t operande_length = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
-            // If the byte for length is 0xFF we don't calculate it
-            if (operande_length != 0xFF) {
-                stack_of_headers.top().first = instruction->get_nb_operandes();
-            }
-            Value = GetBytesFromInt(operande_grp + (operande_length << 0x18));
-            operande = Operande(addr, "header", Value);
-            instruction->add_operande(operande);
-            addr = addr + operande.get_length();
-
-        } else if (type == "float") {
-            float op = excelScenarioSheet.read(idx_row + 1, idx_column).toFloat();
-
-            Value = GetBytesFromFloat(op);
-            operande = Operande(addr, "float", Value);
-            instruction->add_operande(operande);
-            addr = addr + operande.get_length();
-        } else if (type == "short") {
-            int16_t op = static_cast<int16_t>(excelScenarioSheet.read(idx_row + 1, idx_column).toInt());
-            Value = GetBytesFromShort(op);
-            operande = Operande(addr, "short", Value);
-            instruction->add_operande(operande);
-            addr = addr + operande.get_length();
-        } else if ((type == "byte") || (type == "OP Code")) {
-            int opcode = excelScenarioSheet.read(idx_row + 1, idx_column).toInt();
-
-            if (opcode <= 0xFF) { // actually the opposite never happens.
-                auto op = static_cast<char>(((opcode)&0x000000FF));
-                Value.push_back(op);
-                operande = Operande(addr, "byte", Value);
-                instruction->add_operande(operande);
-                addr = addr + operande.get_length();
-            }
-        } else if (type == "End") {
-            if (!stack_of_headers.empty()) {
-                if (stack_of_headers.top().first != 0) {
-                    uint32_t new_header_value =
-                      ((addr - static_cast<int>(stack_of_headers.top().second)) << 0x18) +
-                      (instruction->get_operande(static_cast<int>(stack_of_headers.top().first)).get_integer_value() & 0xFFFFFF);
-                    ssd::Buffer header_bytes = GetBytesFromInt(new_header_value);
-                    instruction->get_operande(static_cast<int>(stack_of_headers.top().first)).set_value(header_bytes);
-                    stack_of_headers.pop();
-                }
-            }
-        } else if (type == "fill") {
-            QString operande_prev = excelScenarioSheet.read(idx_row + 1, idx_column - 1).toString();
-            QString op = excelScenarioSheet.read(idx_row + 1, idx_column).toString();
-            QString str_max_length = op.mid(1, op.indexOf('-') - 1);
-
-            for (int id = 0; id < str_max_length.toInt() - operande_prev.toUtf8().size() - 1; id++) {
-                Value.push_back('\0');
-            }
-            operande = Operande(addr, "fill", Value);
-            instruction->add_operande(operande);
-            addr = addr + operande.get_length();
-        } else if ((type == "string") || (type == "dialog")) {
-            QString op = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
-            QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(OutputDatFileEncoding).toUtf8());
-            auto q_byte_array = codec->fromUnicode(op);
-            Value = ssd::Buffer(std::begin(q_byte_array), std::end(q_byte_array));
-            if (type == "string") Value.push_back('\0');
-            Value.replace('\n', 1);
-
-            operande = Operande(addr, type, Value);
-            instruction->add_operande(operande);
-            addr = addr + operande.get_length();
-        } else if (type == "bytearray") {
-            while (type == "bytearray") {
-                auto op = static_cast<char>(((excelScenarioSheet.read(idx_row + 1, idx_column).toInt()) & 0x000000FF));
-                Value.push_back(op);
-                idx_column++;
-                type = excelScenarioSheet.read(idx_row, idx_column).toString().toStdString();
-            }
-            operande = Operande(addr, "bytearray", Value);
-            idx_column--;
-            instruction->add_operande(operande);
-            addr = addr + operande.get_length();
-        } else if (type == "pointer") {
-            QString op = (excelScenarioSheet.read(idx_row + 1, idx_column).toString());
-
-            QString RowPointedStr = op.right(op.size() - 2);
-
-            int actual_row = RowPointedStr.toInt();
-
-            Value = GetBytesFromInt(actual_row);
-
-            auto operande = Operande(addr, "pointer", Value);
-            instruction->add_operande(operande);
-            addr = addr + operande.get_length();
-        }
-        idx_column++;
-        type = excelScenarioSheet.read(idx_row, idx_column).toString().toStdString();
-    }
-    if (!stack_of_headers.empty()) {
-        if (stack_of_headers.top().first != 0) {
-            uint32_t new_header_value =
-              ((addr - static_cast<int>(stack_of_headers.top().second)) << 0x18) +
-              (instruction->get_operande(static_cast<int>(stack_of_headers.top().first)).get_integer_value() & 0xFFFFFF);
-            ssd::Buffer header_bytes = GetBytesFromInt(new_header_value);
-            instruction->get_operande(static_cast<int>(stack_of_headers.top().first)).set_value(header_bytes);
-            stack_of_headers.pop();
-        }
-    }
-    return instruction;
 }
 
 void Builder::read_functions_dat(ssd::Buffer& dat_content) {

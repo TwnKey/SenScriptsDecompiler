@@ -28,11 +28,6 @@ class Decompiler {
     bool read_file(const std::filesystem::path& filepath);
     bool update_current_tf();
     bool write_xlsx(const std::filesystem::path& filepath);
-    int write_xlsx_instructions(QXlsx::Document& excelScenarioSheet,
-                                const std::vector<Function>& funs,
-                                const std::shared_ptr<Instruction>& instruction,
-                                int row,
-                                int& col);
     bool write_dat(const std::filesystem::path& filepath);
     bool check_all_files(const std::filesystem::path& game_path, const std::filesystem::path& output_dir);
     TranslationFile get_tf();
