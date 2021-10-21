@@ -92,6 +92,10 @@ if host_machine.system() == 'windows'
   subdir('win')
 endif
 
+if host_machine.system() == 'darwin'
+add_project_arguments(['-stdlib=libc++'], language : 'cpp')
+endif
+
 headers = files(
     'headers/Builder.h',
     'headers/CS1InstructionsSet.h',
