@@ -1,3 +1,4 @@
+#include <fstream>
 #include "headers/decompiler.h"
 #include "headers/CS1InstructionsSet.h"
 #include "headers/CS2InstructionsSet.h"
@@ -367,10 +368,29 @@ bool Decompiler::read_file(const fs::path& filepath) {
     }
     return true;
 }
+bool Decompiler::write_decompiled_file(const std::filesystem::path& output_dir){
+
+
+    fs::path filename = current_tf.getName() + ".txt";
+    fs::path code_output_file = output_dir / filename;
+
+    display_text("File " + code_output_file.string() + " created.");
+
+    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
+    std::ofstream code_file;
+    code_file.open (code_output_file);
+    for (auto fun : current_tf.FunctionsInFile){
+        code_file << fun.to_string();
+    }
+    code_file.close();
+    return true;
+}
+
 bool Decompiler::write_file(const fs::path& filepath, const fs::path& output_dir) {
 
     if (filepath.extension() == ".dat") {
         write_xlsx(output_dir);
+        write_decompiled_file(output_dir);
     } else if (filepath.extension() == ".xlsx") {
         write_dat(output_dir);
     } else {

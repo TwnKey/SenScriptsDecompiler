@@ -37,7 +37,7 @@ class Decompiler {
                          const std::filesystem::path& output_dir);
     TranslationFile get_tf();
     bool write_file(const std::filesystem::path& filepath, const std::filesystem::path& output_dir);
-
+    bool write_decompiled_file(const std::filesystem::path& output_dir);
   private:
     TranslationFile current_tf;
     std::string _game;

@@ -359,3 +359,16 @@ QByteArray Instruction::getBytes() {
     }
     return bytes;
 }
+
+std::string Instruction::to_string(){
+    std::string str = this->name + "(";
+
+    for (auto op : this->operandes)
+        str = str + op.to_string() + ",";
+
+    if (!this->operandes.empty())
+        str.pop_back();
+
+    str = str + ");";
+    return str;
+}

@@ -23,6 +23,7 @@ class function {
     int nb_pad = 0;
     void SetAddr(int addr);
     int get_length_in_bytes();
+    std::string to_string();
 };
 std::vector<function>::iterator find_function_by_name(std::vector<function>& v, std::string name);
 std::vector<function>::iterator find_function_by_ID(std::vector<function>& v, int ID);

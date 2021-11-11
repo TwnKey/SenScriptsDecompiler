@@ -27,6 +27,7 @@ class Instruction {
     [[nodiscard]] uint get_OP() const;
     [[nodiscard]] int get_addr_instr() const;
     void set_addr_instr(int i);
+    std::string to_string();
     QByteArray getBytes();
     Builder* Maker;
     std::vector<operande> operandes;

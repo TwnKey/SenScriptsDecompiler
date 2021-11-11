@@ -37,3 +37,12 @@ std::vector<function>::iterator find_function_by_ID(std::vector<function>& v, in
 std::vector<function>::iterator find_function_by_XLSX_row_index(std::vector<function>& v, int row_index) {
     return find_if(v.begin(), v.end(), [&row_index](const function& obj) { return obj.XLSX_row_index == row_index; });
 }
+
+std::string function::to_string(){
+    std::string function_str = "function \"" + this->name + "\"\n";
+    for (auto instr : InstructionsInFunction){
+        function_str = function_str + instr->to_string() + "\n";
+    }
+    function_str = function_str + "\n";
+    return function_str;
+}
