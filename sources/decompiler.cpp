@@ -1,3 +1,4 @@
+
 #include "headers/decompiler.h"
 #include "headers/CS1InstructionsSet.h"
 #include "headers/CS2InstructionsSet.h"
@@ -5,17 +6,9 @@
 #include "headers/CS4InstructionsSet.h"
 #include "headers/ReverieInstructionsSet.h"
 #include "headers/TXInstructionsSet.h"
-#include "qxlsx/headers/xlsxcellrange.h"
-#include "qxlsx/headers/xlsxchart.h"
-#include "qxlsx/headers/xlsxchartsheet.h"
-#include "qxlsx/headers/xlsxdocument.h"
-#include "qxlsx/headers/xlsxformat.h"
-#include "qxlsx/headers/xlsxrichstring.h"
-#include "qxlsx/headers/xlsxworkbook.h"
-#include <QColor>
-#include <QDebug>
+#include "headers/data_converter.h"
+#include "headers/global_vars.h"
 
-using namespace QXlsx; // NOLINT(google-build-using-namespace)
 namespace fs = std::filesystem;
 
 Decompiler::Decompiler() = default;
@@ -43,15 +36,19 @@ bool Decompiler::setup_game(const std::string& game) {
 
     return true;
 }
-bool Decompiler::read_xlsx(const std::filesystem::path& filename) {
-    if (!fs::exists(filename)) return false;
-
-    Document doc(QString::fromStdString(filename.string()));
-    auto game_from_file = doc.read(1, 1).toString().toStdString();
-    setup_game(game_from_file);
+bool Decompiler::read_xlsx(const std::filesystem::path& filepath) {
+    if (!fs::exists(filepath)) return false;
     display_text("Reading functions...");
 
-    ib->ReadFunctionsXLSX(doc);
+    auto converter = ssd::ForeignDatDataConverter::get_reader(ssd::ForeignDatFormat::EXCEL, InputDatFileEncoding, ib.get());
+
+    auto result = converter->from_file(filepath);
+
+    setup_game(result.game_code);
+    ib->scene_name = result.scene_name;
+    ib->functions_parsed = result.functions;
+
+    ib->read_functions_xlsx();
 
     display_text("Reading of XLSX done.");
 
@@ -60,46 +57,46 @@ bool Decompiler::read_xlsx(const std::filesystem::path& filename) {
 }
 
 bool Decompiler::update_current_tf() {
-    current_tf.setName(ib->SceneName);
+    current_tf.set_name(ib->scene_name);
 
-    current_tf.FunctionsInFile.clear();
-    for (auto& fun : ib->FunctionsParsed) {
-        current_tf.addFunction(fun);
+    current_tf.functions.clear();
+    for (auto& fun : ib->functions_parsed) {
+        current_tf.add_function(fun);
     }
 
     return true;
 }
 bool Decompiler::read_dat(const std::filesystem::path& filepath) {
-    QByteArray content = ssd::utils::read_file(filepath);
+    ssd::Buffer content = ssd::utils::read_file(filepath);
 
-    ib->CreateHeaderFromDAT(content);
-    ib->ReadFunctionsDAT(content);
+    ib->create_header_from_dat(content);
+    ib->read_functions_dat(content);
 
     update_current_tf();
     return true;
 }
-bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
+bool Decompiler::write_dat(const std::filesystem::path& filepath) {
 
-    QByteArray functions;
-    QByteArray current_fun;
-    QByteArray file_content;
+    ssd::Buffer functions;
+    ssd::Buffer current_fun;
+    ssd::Buffer file_content;
 
     int addr = 0;
-    QByteArray header = ib->CreateHeaderBytes();
+    ssd::Buffer header = ib->create_header_bytes();
 
-    addr = addr + header.size();
-    for (int idx_fun = 0; idx_fun < current_tf.getNbFunctions() - 1; idx_fun++) {
+    addr = addr + static_cast<int>(std::ssize(header));
+    for (int idx_fun = 0; idx_fun < current_tf.get_nb_functions() - 1; idx_fun++) {
 
-        function fun = current_tf.FunctionsInFile[idx_fun];
+        Function fun = current_tf.functions[idx_fun];
 
         current_fun.clear();
 
-        for (auto& instr : fun.InstructionsInFunction) {
-            current_fun.push_back(instr->getBytes());
+        for (auto& instr : fun.instructions) {
+            current_fun.push_back(instr->get_bytes());
         }
-        addr = addr + current_fun.size();
+        addr = addr + static_cast<int>(std::ssize(current_fun));
 
-        int next_addr = current_tf.FunctionsInFile[idx_fun + 1].actual_addr;
+        int next_addr = current_tf.functions[idx_fun + 1].actual_addr;
         int padding = next_addr - addr;
         for (int i_z = 0; i_z < padding; i_z++) {
             current_fun.push_back('\0');
@@ -108,11 +105,11 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
         functions.push_back(current_fun);
     }
 
-    if (current_tf.getNbFunctions() - 1 >= 0) {
-        function fun = current_tf.FunctionsInFile[current_tf.FunctionsInFile.size() - 1];
+    if (current_tf.get_nb_functions() - 1 >= 0) {
+        Function fun = current_tf.functions[current_tf.functions.size() - 1];
         current_fun.clear();
-        for (auto& instr : fun.InstructionsInFunction) {
-            current_fun.push_back(instr->getBytes());
+        for (auto& instr : fun.instructions) {
+            current_fun.push_back(instr->get_bytes());
         }
         functions.push_back(current_fun);
     }
@@ -120,145 +117,57 @@ bool Decompiler::write_dat(const std::filesystem::path& output_dir) {
     file_content.push_back(header);
     file_content.push_back(functions);
 
-    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
+    ssd::utils::write_file(filepath, file_content);
 
-    fs::path output_path = output_dir / (current_tf.getName() += ".dat");
-
-    ssd::utils::write_file(output_path, file_content);
-
-    display_text("File " + output_path.string() + " created.");
+    display_text("File " + filepath.string() + " created.");
     return true;
 }
-bool Decompiler::write_xlsx(const std::filesystem::path& output_dir) {
 
-    QFont font = QFont("Arial");
-    fs::path filename = current_tf.getName() + ".xlsx";
-    QXlsx::Document excel_scenario_sheet;
-    Format format;
-    format.setFont(font);
-    format.setFontBold(true);
-    auto dark_yellow = QColor(qRgb(255, 222, 155));
-    format.setPatternBackgroundColor(dark_yellow);
-    auto font_color = QColor(qRgb(255, 0, 0));
+bool Decompiler::write_xlsx(const std::filesystem::path& filepath) {
+    auto converter = ssd::ForeignDatDataConverter::get_writer(ssd::ForeignDatFormat::EXCEL, _game, OutputDatFileEncoding, ib.get());
+    converter->to_file(current_tf.functions, filepath);
 
-    format.setFontColor(font_color);
-    format.setFontSize(14);
-
-    excel_scenario_sheet.write("A1", QString::fromStdString(_game), format);
-
-    Format format_location;
-
-    format_location.setFont(font);
-    format_location.setFontSize(10);
-    format_location.setPatternBackgroundColor(dark_yellow);
-    excel_scenario_sheet.write("A2", QString::fromStdString(current_tf.getName()), format_location);
-
-    Format row_format;
-    row_format.setFillPattern(Format::PatternSolid);
-    row_format.setPatternBackgroundColor(qRgb(255, 255, 200));
-    row_format.setFont(font);
-    row_format.setFontSize(10);
-    excel_scenario_sheet.setRowFormat(1, 3, format);
-    excel_scenario_sheet.setRowFormat(2, 3, format);
-    excel_scenario_sheet.setRowFormat(3, 3, format);
-    row_format.setBottomBorderStyle(Format::BorderNone);
-    Format format_title_chars;
-    format_title_chars.setFont(font);
-    format_title_chars.setFontSize(10);
-    format_title_chars.setPatternBackgroundColor(qRgb(255, 255, 200));
-    format_title_chars.setHorizontalAlignment(Format::AlignHCenter);
-    format_title_chars.setVerticalAlignment(Format::AlignVCenter);
-
-    Format Format_title_column_chars;
-    Format_title_column_chars.setHorizontalAlignment(Format::AlignHCenter);
-    Format_title_column_chars.setVerticalAlignment(Format::AlignVCenter);
-    Format_title_column_chars.setFontSize(10);
-    Format_title_column_chars.setPatternBackgroundColor(qRgb(255, 255, 200));
-    Format_title_column_chars.setTopBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setBottomBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setLeftBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setRightBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setFont(font);
-    Format_title_column_chars.setFontSize(10);
-    Format_title_column_chars.setPatternBackgroundColor(qRgb(255, 255, 255));
-
-    Format_title_column_chars.setBottomBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setLeftBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setRightBorderStyle(Format::BorderThin);
-    Format_title_column_chars.setTopBorderStyle(Format::BorderThin);
-    Format row_format_functions;
-    row_format_functions.setPatternBackgroundColor(qRgb(255, 200, 200));
-    row_format_functions.setFont(font);
-    row_format_functions.setFontSize(13);
-    row_format_functions.setBottomBorderStyle(QXlsx::Format::BorderThin);
-
-    row_format_functions.setTopBorderStyle(QXlsx::Format::BorderThin);
-    int excel_row = 4;
-    for (const auto& fun : current_tf.FunctionsInFile) {
-        excel_scenario_sheet.setRowFormat(excel_row, excel_row, row_format_functions);
-        excel_scenario_sheet.write(excel_row, 1, "FUNCTION");
-        excel_scenario_sheet.write(excel_row, 2, QString::fromStdString(fun.name));
-
-        excel_row++;
-        for (const auto& instr : fun.InstructionsInFunction) {
-            excel_scenario_sheet.write(excel_row, 1, "Location");
-            excel_scenario_sheet.write(excel_row + 1, 1, instr->get_addr_instr());
-            int col = 0;
-            instr->WriteXLSX(excel_scenario_sheet, current_tf.FunctionsInFile, excel_row, col);
-            excel_row += 2;
-        }
-    }
-
-    fs::path xlsx_output_file = output_dir / filename;
-
-    display_text("File " + xlsx_output_file.string() + " created.");
-
-    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
-
-    excel_scenario_sheet.saveAs(QString::fromStdString(xlsx_output_file.string()));
+    display_text("File " + filepath.string() + " created.");
 
     return true;
 }
 
-bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
-                                 const std::vector<std::filesystem::path>& files,
-                                 const std::filesystem::path& reference_dir,
-                                 const std::filesystem::path& output_dir) {
-    QFile file(QString::fromStdString(log_filename.string()));
+bool Decompiler::check_all_files(const std::filesystem::path& game_path, const std::filesystem::path& output_dir) {
+    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
 
-    QTextStream stream(&file);
-    file.remove();
-    file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
+    const auto dat_files = ssd::utils::find_files(game_path, true, { ".dat" });
 
-    for (const auto& file_ : files) {
-
+    for (const auto& reference_dat_path : dat_files) {
         bool success = true;
 
-        const fs::path full_path = reference_dir / file_;
-        const fs::path filename = full_path.filename();
-        const std::string file_stem = filename.stem().string();
-        const fs::path reference_dat_path = reference_dir / filename;
-        const fs::path local_dat_path = output_dir / filename;
-        const fs::path xlsx_path = output_dir / (file_stem + ".xlsx");
+        const auto relative_dat_path = std::filesystem::relative(reference_dat_path, game_path);
+        const auto relative_dat_dir = relative_dat_path.parent_path();
+        const fs::path local_dat_dir = output_dir / relative_dat_dir;
+        const fs::path local_dat_path = output_dir / relative_dat_path;
 
-        qDebug() << "Checking " << QString::fromStdString(reference_dat_path.string());
-        stream << QString::fromStdString(reference_dat_path.string()) << "\n";
-        qDebug() << "reading dat1 file" << QString::fromStdString(reference_dat_path.string());
+        const std::string file_stem = reference_dat_path.filename().stem().string();
+        const fs::path xlsx_path = output_dir / relative_dat_dir / (file_stem + ".xlsx");
+
+        fs::create_directories(output_dir / relative_dat_dir);
+
+        ssd::spdlog::info("checking {}", reference_dat_path.string());
+
+        ssd::spdlog::info("start reading reference dat file: {}", reference_dat_path.string());
         this->read_file(reference_dat_path);
-        qDebug() << "reading dat done." << QString::fromStdString(reference_dat_path.string());
-        this->write_xlsx(output_dir);
-        qDebug() << "reading xlsx file" << QString::fromStdString((xlsx_path).string());
+        ssd::spdlog::info("finish reading reference dat file: {}", reference_dat_path.string());
+        ssd::spdlog::info("writing xlsx file: {}", xlsx_path.string());
+
+        this->write_xlsx(xlsx_path);
+        ssd::spdlog::info("reading xlsx file: {}", xlsx_path.string());
         this->read_file(xlsx_path);
-        qDebug() << "writing dat file";
-        this->write_dat(output_dir);
-        qDebug() << "full done";
-        qDebug() << "reading dat file" << QString::fromStdString(fs::path(local_dat_path).string());
-        qDebug() << "reading dat file" << QString::fromStdString(reference_dat_path.string());
+        ssd::spdlog::info("reading xlsx file: {}", xlsx_path.string());
+        ssd::spdlog::info("writing dat file: {}", local_dat_path.string());
 
-        const QByteArray content1 = ssd::utils::read_file(local_dat_path);
-        const QByteArray content2 = ssd::utils::read_file(reference_dat_path);
+        this->write_dat(local_dat_dir / (current_tf.get_name() + ".dat"));
+        ssd::spdlog::info("reading {} and {} for comparison", local_dat_path.string(), reference_dat_path.string());
 
-        std::string msg = "Problème de taille avec " + file_stem;
+        const ssd::Buffer content1 = ssd::utils::read_file(local_dat_path);
+        const ssd::Buffer content2 = ssd::utils::read_file(reference_dat_path);
 
         int length_header2 = ReadIntegerFromByteArray(0x18, content2);
         int idx_addresses_loc1 = ReadIntegerFromByteArray(8, content1);
@@ -267,16 +176,14 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
 
         for (int i = 0; i < idx_addresses_loc2; i++) {
             if (content1[i] != content2[i]) {
-                stream << "First part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-                qDebug() << "First part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                ssd::spdlog::err("First part of header, mismatch at {} {:#04x} should be {:#04x}", i, content1[i], content2[i]);
                 success = false;
             }
         }
 
         for (int i = idx_addresses_loc2 + size_pointer_section; i < length_header2; i++) {
             if (content1[i] != content2[i]) {
-                stream << "Second part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
-                qDebug() << "Second part of header, mismatch at " << Qt::hex << i << " " << (int)content1[i] << " should be " << (int)content2[i] << "\n";
+                ssd::spdlog::err("Second part of header, mismatch at {} {:#04x} should be {:#04x}", i, content1[i], content2[i]);
                 success = false;
             }
         }
@@ -290,42 +197,39 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
             idx_fun_2.push_back(ReadIntegerFromByteArray(i, content2));
         }
 
-        for (size_t i = 0; i < (uint)current_tf.getNbFunctions(); ++i) {
+        for (size_t i = 0; i < (uint32_t)current_tf.get_nb_functions(); ++i) {
             int index_byte = idx_fun_2[i];
 
-            for (size_t j = 0; j < (uint)current_tf.FunctionsInFile[i].InstructionsInFunction.size(); ++j) {
-                uint OPCode = current_tf.FunctionsInFile[i].InstructionsInFunction[j]->get_OP();
-                uint byte_in_file = (content2[index_byte]) & 0xFF;
+            for (size_t j = 0; j < (uint32_t)current_tf.functions[i].instructions.size(); ++j) {
+                uint32_t OPCode = current_tf.functions[i].instructions[j]->get_opcode();
+                uint32_t byte_in_file = (content2[index_byte]) & 0xFF;
 
                 if (OPCode <= 0xFF) {
                     if (OPCode != byte_in_file) {
-                        stream << "OP Code Mismatch at " << Qt::hex << index_byte << " " << OPCode << " should be " << byte_in_file << "\n";
-                        qDebug() << "OP Code Mismatch at " << Qt::hex << index_byte << " " << OPCode << " should be " << byte_in_file << "\n";
+                        ssd::spdlog::err("Opcode mismatch at {:#04x} {:#04x} should be {:#04x}", index_byte, OPCode, byte_in_file);
                         success = false;
                     }
                     index_byte++;
                 }
-                for (size_t k = 0; k < (uint)current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes.size(); ++k) {
-                    operande op_k = current_tf.FunctionsInFile[i].InstructionsInFunction[j]->operandes[k];
-                    QByteArray bytes = op_k.getValue();
+                for (size_t k = 0; k < (uint32_t)current_tf.functions[i].instructions[j]->operandes.size(); ++k) {
+                    Operande op_k = current_tf.functions[i].instructions[j]->operandes[k];
+                    ssd::Buffer bytes = op_k.get_value();
 
-                    if (op_k.getType() == "pointer") {
-                        int diff1 = op_k.getIntegerValue() - ReadIntegerFromByteArray(index_byte, content2);
-                        int diff2 = current_tf.FunctionsInFile[i].actual_addr - idx_fun_2[i];
+                    if (op_k.get_type() == "pointer") {
+                        int diff1 = op_k.get_integer_value() - ReadIntegerFromByteArray(index_byte, content2);
+                        int diff2 = current_tf.functions[i].actual_addr - idx_fun_2[i];
                         if (diff1 != diff2) {
-                            stream << "Mismatching pointers at " << Qt::hex << index_byte << " " << diff1 << " should be " << diff2 << "\n";
-                            qDebug() << "Mismatching pointers at " << Qt::hex << index_byte << " " << diff1 << " should be " << diff2 << "\n";
+                            ssd::spdlog::err("Mismatching pointers at {:#04x} {} should be {}", index_byte, diff1, diff2);
                             success = false;
                         }
                         index_byte+=4;
 
-                    } else if (op_k.getType() == "float") {
-                        QByteArray float_bytes = ReadSubByteArray(content2, index_byte, 4);
+                    } else if (op_k.get_type() == "float") {
+                        ssd::Buffer float_bytes = ReadSubByteArray(content2, index_byte, 4);
                         float float2 = QByteArrayToFloat(float_bytes);
                         float float1 = QByteArrayToFloat(bytes);
                         if (float2 != float1) {
-                            stream << "Mismatching floats at " << Qt::hex << index_byte << " " << float1 << " should be " << float2 << "\n";
-                            qDebug() << "Mismatching floats at " << Qt::hex << index_byte << " " << float1 << " should be " << float2 << "\n";
+                            ssd::spdlog::err("Mismatching floats at {:#04x} {} should be {}", index_byte, float1, float2);
                             success = false;
                         }
                     } else {
@@ -334,8 +238,7 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
                             uint8_t byte2 = byte;
 
                             if (byte1 != byte2) {
-                                stream << "Mismatch at " << Qt::hex << index_byte << " " << (int)byte1 << " should be " << (int)byte2 << "\n";
-                                qDebug() << "Mismatch at " << Qt::hex << index_byte << " " << (int)byte1 << " should be " << (int)byte2 << "\n";
+                                ssd::spdlog::err("Mismatch at {:#04x} {:#04x} should be {:#04x}", index_byte, byte1, byte2);
                                 success = false;
                             }
                             index_byte++;
@@ -344,17 +247,15 @@ bool Decompiler::check_all_files(const std::filesystem::path& log_filename,
                 }
             }
         }
-        if (!success) {
-            qFatal("Mismatch");
-            stream << "Mismatch"
-                   << "\n";
-        }
-        stream << " Size 1: " << Qt::hex << content1.size() << " vs Size 2: " << Qt::hex << content2.size() << " " << (int)success;
+        if (!success) ssd::spdlog::err("Mismatch");
+
+        std::string match_msg = success ? "matches" : "does not match";
+        ssd::spdlog::info("Size 1: {:#04x} vs Size 2: {:#04x} {}", content1.size(), content2.size(), match_msg);
     }
     return true;
 }
 bool Decompiler::read_file(const fs::path& filepath) {
-    ib->Reset();
+    ib->reset();
     current_tf = TranslationFile();
 
     if (filepath.extension() == ".xlsx") {
@@ -368,11 +269,12 @@ bool Decompiler::read_file(const fs::path& filepath) {
     return true;
 }
 bool Decompiler::write_file(const fs::path& filepath, const fs::path& output_dir) {
+    if (!fs::exists(output_dir)) fs::create_directories(output_dir);
 
     if (filepath.extension() == ".dat") {
-        write_xlsx(output_dir);
+        write_xlsx(output_dir / (current_tf.get_name() + ".xlsx"));
     } else if (filepath.extension() == ".xlsx") {
-        write_dat(output_dir);
+        write_dat(output_dir / (current_tf.get_name() + ".dat"));
     } else {
         display_text("FAILURE: Unrecognized extension.");
         return false;

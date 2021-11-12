@@ -1,30 +1,31 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 #include "headers/instruction.h"
-/*
-The class function
-*/
-class function {
+
+class Function {
   public:
-    function() = default;
-    function(int ID, std::string n, int declr_pos, int addr, int end);
-    void AddInstruction(const std::shared_ptr<Instruction>& instr);
-    void UsingOPCodes(bool is);
-    std::vector<std::shared_ptr<Instruction>> InstructionsInFunction;
+    Function() = default;
+    Function(int id, std::string n, int declr_pos, int addr, int end);
+
+    void add_instruction(const std::shared_ptr<Instruction>& instr);
+    int find_instruction_idx(int addr);
+
+    void set_addr(int addr);
+    int get_length_in_bytes();
+
+    friend bool operator<(const Function& f1, const Function& f2);
+    friend bool operator==(const Function& f1, const Function& f2);
+
+    int id = 0;
     std::string name;
     int declr_position = 0; // covers the list of offsets at the beginning
     int actual_addr = 0;    // covers the pointers before that
     int end_addr = 0;
-    int XLSX_row_index = 0;
-    bool called = false; // by default
-    int ID = 0;
-    friend bool operator<(const function& f1, const function& f2);
-    friend bool operator==(const function& f1, const function& f2);
+    int xlsx_row_index = 0;
     int nb_pad = 0;
-    void SetAddr(int addr);
-    int get_length_in_bytes();
+    std::vector<std::shared_ptr<Instruction>> instructions;
 };
-std::vector<function>::iterator find_function_by_name(std::vector<function>& v, std::string name);
-std::vector<function>::iterator find_function_by_ID(std::vector<function>& v, int ID);
-std::vector<function>::iterator find_function_by_XLSX_row_index(std::vector<function>& v, int row_index);
+
+std::vector<Function>::iterator find_function_by_name(std::vector<Function>& v, std::string name);
+std::vector<Function>::iterator find_function_by_id(std::vector<Function>& v, int id);
 #endif // FUNCTIONS_H

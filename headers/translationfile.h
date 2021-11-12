@@ -7,14 +7,16 @@ class TranslationFile {
   public:
     TranslationFile();
 
-    void setName(std::string name);
-    [[nodiscard]] int getNbFunctions() const;
-    std::string getName();
-    void addFunction(const function& fun);
-    std::vector<function> FunctionsInFile;
+    void set_name(std::string name);
+    std::string get_name();
+
+    [[nodiscard]] int get_nb_functions() const;
+    void add_function(const Function& fun);
+
+    std::vector<Function> functions;
 
   protected:
-    std::string SceneName;
+    std::string scene_name;
 };
 
 #endif // TRANSLATIONFILE_H

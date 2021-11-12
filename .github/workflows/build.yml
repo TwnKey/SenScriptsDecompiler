@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-2019, ubuntu-latest, macos-latest]
+        os: [windows-2019, ubuntu-latest, macos-11]
 
     runs-on: ${{ matrix.os }}
 
@@ -37,21 +37,17 @@ jobs:
       - name: Prepare MSVC
         uses: bus1/cabuild/action/msdevshell@v1
         if: runner.os == 'Windows'
-      #- name: Prefer upstream Clang over MacOS Clang
-      #  run: |
-      #    echo "/usr/local/opt/llvm/bin" >> $GITHUB_PATH
-      #    echo "CXX=/usr/local/opt/llvm//bin/clang++" >> $GITHUB_ENV
-      #    echo "CC=/usr/local/opt/llvm/bin/clang" >> $GITHUB_ENV
-      #  if: runner.os == 'macOS'
-      - name: Use GCC 11 on MacOS
+      - name: Prefer upstream Clang over MacOS Clang
         run: |
+          echo "$(brew --prefix llvm)/bin" >> $GITHUB_PATH
+          echo "CXX=$(brew --prefix llvm)/bin/clang++" >> $GITHUB_ENV
+          echo "CC=$(brew --prefix llvm)/bin/clang" >> $GITHUB_ENV
+        if: runner.os == 'macOS'
+      - name: Use GCC 11 on Ubuntu 20.04
+        run: |
+          sudo apt install gcc-11 g++-11
           echo "CXX=g++-11" >> $GITHUB_ENV
           echo "CC=gcc-11" >> $GITHUB_ENV
-        if: runner.os == 'macOS'
-      - name: Use GCC 10 on Ubuntu 20.04
-        run: |
-          echo "CXX=g++-10" >> $GITHUB_ENV
-          echo "CC=gcc-10" >> $GITHUB_ENV
         if: runner.os == 'Linux'
       - name: Setup build directory
         run: meson setup builddir/

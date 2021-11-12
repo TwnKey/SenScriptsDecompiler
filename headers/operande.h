@@ -4,55 +4,59 @@
 
 class Destination {
   public:
-    Destination(int FID, int IID)
-      : FunctionID(FID)
-      , InstructionID(IID) {}
-    int FunctionID;
-    int InstructionID;
+    Destination(int fid, int iid)
+      : function_id(fid)
+      , instruction_id(iid) {}
+
+    int function_id;
+    int instruction_id;
 };
-class operande {
+
+class Operande {
 
   public:
-    operande() = default;
-    operande(Destination pointer, int position, std::string type, QByteArray value)
-      : Dest(pointer)
-      , Position(position)
-      , Type(std::move(type))
-      , Value(std::move(value)) {}
+    Operande() = default;
+    Operande(Destination pointer, int position, std::string type, ssd::Buffer value)
+      : destination(pointer)
+      , position(position)
+      , type(std::move(type))
+      , value(std::move(value)) {}
 
-    operande(int position, std::string type, QByteArray value)
-      : Position(position)
-      , Type(std::move(type))
-      , Value(std::move(value)) {}
+    Operande(int position, std::string type, ssd::Buffer value)
+      : position(position)
+      , type(std::move(type))
+      , value(std::move(value)) {}
 
-    operande(int position, std::string type, std::vector<uint8_t> value)
-      : Position(position)
-      , Type(std::move(type)) {
+    Operande(int position, std::string type, std::vector<uint8_t> unsigned_value)
+      : position(position)
+      , type(std::move(type)) {
 
-        Value = QByteArray(reinterpret_cast<const char*>(value.data()), static_cast<int>(value.size()));
+        value = ssd::Buffer(begin(unsigned_value), end(unsigned_value));
     }
 
-    [[nodiscard]] bool IsPointer() const { return !((Dest.FunctionID == -1) || (Dest.InstructionID == -1)); }
+    [[nodiscard]] bool is_pointer() const { return !((destination.function_id == -1) || (destination.instruction_id == -1)); }
 
-    QByteArray getValue() { return Value; }
-    void setValue(QByteArray v) { Value = std::move(v); }
-    int getIntegerValue() { return ReadIntegerFromByteArray(0, Value); }
-    void setBytesToFill(int b) { bytes_to_fill = b; }
-    [[nodiscard]] int getBytesToFill() const { return bytes_to_fill; }
-    int getLength() {
-        int size = Value.size();
-        return size;
-    }
-    [[nodiscard]] uint getAddr() const { return Position; }
-    std::string getType() { return Type; }
-    void setDestination(int ID_fun, int ID_instr) { Dest = Destination(ID_fun, ID_instr); }
-    Destination getDestination() { return Dest; }
+    Destination get_destination() { return destination; }
+    void set_destination(int function_id, int instruction_id) { destination = Destination(function_id, instruction_id); }
+
+    [[nodiscard]] uint32_t get_addr() const { return position; }
+
+    std::string get_type() { return type; }
+
+    ssd::Buffer get_value() { return value; }
+    void set_value(ssd::Buffer v) { value = std::move(v); }
+    int get_integer_value() { return ReadIntegerFromByteArray(0, value); }
+
+    [[nodiscard]] int get_bytes_to_fill() const { return bytes_to_fill; }
+    void set_bytes_to_fill(int b) { bytes_to_fill = b; }
+
+    int get_length() { return static_cast<int>(std::ssize(value)); }
 
   private:
-    Destination Dest = Destination(-1, -1);
-    int Position = 0;
-    std::string Type;
-    QByteArray Value;
+    Destination destination = Destination(-1, -1);
+    int position = 0;
+    std::string type;
+    ssd::Buffer value;
     int bytes_to_fill = 0;
 };
 #endif // OPERANDE_H

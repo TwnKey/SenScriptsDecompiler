@@ -1,22 +1,44 @@
 #include "headers/utilities.h"
 #include <fstream>
+#include <iostream>
 
 namespace ssd::utils {
 namespace fs = std::filesystem;
-QByteArray read_file(const std::filesystem::path& filepath) {
+
+std::vector<std::filesystem::path> find_files(const std::filesystem::path& root, bool recursive, const std::set<std::string>& extensions) {
+    auto&& result = std::vector<fs::path>{};
+    auto filter = [extensions](const auto& entry) {
+        if (!fs::is_regular_file(entry)) return false;
+        if (!extensions.empty()) {
+            return extensions.count(entry.path().extension().string()) > 0;
+        }
+        return true;
+    };
+    if (recursive) {
+        auto it = fs::recursive_directory_iterator{ root };
+        std::copy_if(begin(it), end(it), back_inserter(result), filter);
+
+    } else {
+        auto it = fs::directory_iterator{ root };
+        std::copy_if(begin(it), end(it), back_inserter(result), filter);
+    }
+    return std::move(result);
+}
+
+ssd::Buffer read_file(const std::filesystem::path& filepath) {
     if (!fs::exists(filepath)) throw std::runtime_error("ERROR: File \"" + filepath.string() + "\" does not exist");
     std::ifstream file;
     file.exceptions(std::ifstream::badbit);
     file.open(filepath, std::ios::in | std::ios::binary);
 
-    std::vector<char> temp_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    ssd::Buffer temp_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
     file.close();
 
-    return { reinterpret_cast<const char*>(temp_content.data()), (int)temp_content.size() };
+    return temp_content;
 }
 
-void write_file(const std::filesystem::path& filepath, const QByteArray& content) {
+void write_file(const std::filesystem::path& filepath, const ssd::Buffer& content) {
     auto dir = filepath.parent_path();
     if (!fs::exists(dir)) throw std::runtime_error("ERROR: Directory \"" + dir.string() + "\" does not exist");
 
@@ -24,17 +46,14 @@ void write_file(const std::filesystem::path& filepath, const QByteArray& content
     file.exceptions(std::ofstream::badbit);
     file.open(filepath, std::ios::out | std::ios::binary);
 
-    file.write(reinterpret_cast<const char*>(content.data()), content.size());
+    file.write(reinterpret_cast<const char*>(content.data()), std::ssize(content));
     file.close();
 }
 } // namespace ssd::utils
 
-void display_text(const std::string& text) {
-    QTextStream out(stdout);
-    out << QString::fromStdString(text) << Qt::endl;
-}
+void display_text(const std::string& text) { std::cout << text << std::endl; }
 
-std::string ReadStringFromByteArray(int start_pos, const QByteArray& content) {
+std::string ReadStringFromByteArray(int start_pos, const ssd::Buffer& content) {
 
     std::string filename;
     while (content.at(start_pos) != 0) {
@@ -44,8 +63,8 @@ std::string ReadStringFromByteArray(int start_pos, const QByteArray& content) {
 
     return filename;
 }
-QByteArray ReadStringSubByteArray(const QByteArray& content, int& addr) {
-    QByteArray result;
+ssd::Buffer ReadStringSubByteArray(const ssd::Buffer& content, int& addr) {
+    ssd::Buffer result;
     while (content.at(addr) != 0) {
         result.push_back(content.at(addr));
         addr++;
@@ -54,22 +73,24 @@ QByteArray ReadStringSubByteArray(const QByteArray& content, int& addr) {
     addr++;
     return result;
 }
-int ReadIntegerFromByteArray(int start_pos, const QByteArray& content) {
+int ReadIntegerFromByteArray(int start_pos, const ssd::Buffer& content) {
     int size = static_cast<int>(((static_cast<unsigned int>(content[start_pos + 0]) & 0xFF) << 0) +
                                 ((static_cast<unsigned int>(content[start_pos + 1]) & 0xFF) << 8) +
                                 ((static_cast<unsigned int>(content[start_pos + 2]) & 0xFF) << 16) +
                                 ((static_cast<unsigned int>(content[start_pos + 3]) & 0xFF) << 24));
     return size;
 }
-QByteArray GetBytesFromFloat(float f) {
-    QByteArray array(reinterpret_cast<const char*>(&f), sizeof(f));
-    return array;
+ssd::Buffer GetBytesFromFloat(float f) {
+    ssd::Buffer data(sizeof(f));
+    std::memcpy(data.data(), &f, sizeof(f));
+
+    return data;
 }
 bool isMultiple0x10(const std::string& fun_name) {
     return (fun_name == "PTN_TABLE") || (fun_name.starts_with("FC_auto")) || (fun_name.starts_with("_"));
 }
 
-float QByteArrayToFloat(const QByteArray& content) // thanks to jabk https://stackoverflow.com/questions/36859447/qbytearray-to-float
+float QByteArrayToFloat(const ssd::Buffer& content) // thanks to jabk https://stackoverflow.com/questions/36859447/qbytearray-to-float
 {
     static_assert(std::numeric_limits<float>::is_iec559, "Only supports IEC 559 (IEEE 754) float");
 
@@ -80,15 +101,15 @@ float QByteArrayToFloat(const QByteArray& content) // thanks to jabk https://sta
     return *out;
 }
 
-int16_t ReadShortFromByteArray(int start_pos, const QByteArray& content) {
+int16_t ReadShortFromByteArray(int start_pos, const ssd::Buffer& content) {
     auto size = static_cast<int16_t>(((static_cast<int16_t>(content[start_pos + 0]) & 0xFF) << 0) +
                                      ((static_cast<int16_t>(content[start_pos + 1]) & 0xFF) << 8));
 
     return size;
 }
-QByteArray ReadSubByteArray(const QByteArray& content, int& addr, int size) {
+ssd::Buffer ReadSubByteArray(const ssd::Buffer& content, int& addr, size_t size) {
     int start = addr;
-    addr = start + size;
+    addr = start + static_cast<int>(size);
 
-    return content.mid(start, size);
+    return { std::begin(content) + start, std::begin(content) + start + static_cast<int>(size) };
 }
