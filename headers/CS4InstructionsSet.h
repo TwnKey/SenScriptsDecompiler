@@ -227,15 +227,16 @@ class CS4Builder : public Builder {
         }
     }
     static void sub05(int& addr, QByteArray& content, Instruction* instr) {
+        operande op_c = operande(addr, "condition", QByteArray());
         QByteArray control_byte = ReadSubByteArray(content, addr, 1);
-        instr->AddOperande(operande(addr, "byte", control_byte));
+        op_c.AddOperande(operande(addr, "byte", control_byte));
 
         while ((int)control_byte[0] != 1) {
             if (addr > content.size()) throw ssd::exceptions::unspecified_recoverable(); // QByteArray
             switch ((unsigned char)control_byte[0]) {
                 case 0x0:
                 case 0x24:
-                    instr->AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
+                    op_c.AddOperande(operande(addr, "int", ReadSubByteArray(content, addr, 4)));
                     break;
 
                 case 0x1c: {
@@ -244,33 +245,34 @@ class CS4Builder : public Builder {
                     std::shared_ptr<Instruction> instr2 = instr->Maker->CreateInstructionFromDAT(addr, content, 0);
 
                     operande op = operande(addr, "instruction", instr2->getBytes());
-                    instr->AddOperande(op);
+                    op_c.AddOperande(op);
 
                     break;
                 }
                 case 0x1e:
-                    instr->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    op_c.AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 case 0x1f:
                 case 0x20:
                 case 0x23:
 
-                    instr->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    op_c.AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 case 0x21:
-                    instr->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
-                    instr->AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
+                    op_c.AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    op_c.AddOperande(operande(addr, "byte", ReadSubByteArray(content, addr, 1)));
                     break;
                 case 0x25:
-                    instr->AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
+                    op_c.AddOperande(operande(addr, "short", ReadSubByteArray(content, addr, 2)));
                     break;
                 default:;
             }
 
             control_byte = ReadSubByteArray(content, addr, 1);
 
-            instr->AddOperande(operande(addr, "byte", control_byte));
+            op_c.AddOperande(operande(addr, "byte", control_byte));
         }
+        instr->AddOperande(op_c);
     }
     class CreateMonsters : public Instruction {
       public:
