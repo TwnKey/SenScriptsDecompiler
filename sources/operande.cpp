@@ -1,6 +1,7 @@
 #include "headers/operande.h"
 #include "headers/functions.h"
 #include "headers/Builder.h"
+#include <deque>
 operande::operande(std::string type, int& addr, int idx_row, QXlsx::Document& excelScenarioSheet, int &idx_column){
 
     if (Type == "int") {
@@ -214,10 +215,10 @@ bool operande::write_xlsx(QXlsx::Document& excelScenarioSheet, int row, int& col
         excelScenarioSheet.write(row + 1, col + 3 + col_cnt, "", FormatStartEnd);
         col_cnt++;
     }
-
+    return true;
 }
 
-std::string operande::to_string() {
+std::string operande::to_string(Builder * ib) {
     if (Type == "int") {
         return std::to_string(getIntegerValue());
 
@@ -243,10 +244,236 @@ std::string operande::to_string() {
     }
     else if (Type == "instruction"){
         /*
-         * shouldn't happen because the only instruction with another instruction as operand,
-         * OPCode5, will have its own implementation of to_string to help readability
-         * I keep it here for the moment to keep that in mind though
+         * shouldn't happen because it is only used inside a "condition" which is taken care of below
         */
+
+    }
+    else if (Type == "condition"){ //This is "only" for CS4 (afaik, it's valid for each game, but i need to keep that in mind)
+        //if it ends up being different for each game, I'll have to add this part to the builder (and use the ib parameter to build the condition)
+
+        std::deque<std::string> queue;
+        unsigned int idx_operand = 0;
+        while (idx_operand < operandes.size()){
+            //interpreting each "operator"
+
+            switch(operandes[idx_operand].Value[0]){
+                //some operators
+                case 0:
+
+                    queue.push_back(std::to_string(operandes[idx_operand+1].getIntegerValue())); //not sure if it could be float sometimes? I doubt it.
+                    idx_operand+=2;
+                    break;
+                case 1:
+
+                    return queue.front();
+                case 2:
+                    queue.front() = "(" + queue.front() + " == " + queue.back() +")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 3:
+                    queue.front()= "(" + queue.front()+ " != " + queue.back()+ ")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 4:
+                    queue.front()= "(" + queue.front()+ " < " + queue.back()+ ")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 5:
+                    queue.front()= "(" + queue.front()+ " > " + queue.back()+ ")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 6:
+                    queue.front()= "(" + queue.front()+ " <= " + queue.back()+ ")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 7:
+                    queue.front()= "(" + queue.front()+ " >= " + queue.back()+ ")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 8:
+                    queue.front()= "(" + queue.front()+ " == 0" + ")";
+
+                    idx_operand++;
+                    break;
+                case 9:
+                    queue.front()= "(" + queue.front()+ " && " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 10:
+                    queue.front()= "(" + queue.front()+ " & " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 11:
+                    queue.front()= "(" + queue.front()+ " | " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 12:
+                    queue.front()= "(" + queue.front()+ " + " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 13:
+                    queue.front()= "(" + queue.front()+ " - " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 14:
+                    queue.back()= "-" + queue.back() +"";
+                    idx_operand++;
+                    break;
+                case 15:
+                    queue.front()= "(" + queue.front()+ " ^ " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 16:
+                    queue.front()= "(" + queue.front()+ " * " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 17:
+                    queue.front()= "(" + queue.front()+ " / " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 18:
+                    queue.front()= "(" + queue.front()+ " % " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 20:
+                    queue.front()= "(" + queue.front()+ " * " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 21:
+                    queue.front()= "(" + queue.front()+ " / " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 22:
+                    queue.front()= "(" + queue.front()+ " % " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 23:
+                    queue.front()= "(" + queue.front()+ " + " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 24:
+                    queue.front()= "(" + queue.front()+ " - " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 25:
+                    queue.front()= "(" + queue.front()+ " & " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 26:
+                    queue.front()= "(" + queue.front()+ " ^ " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 27:
+                    queue.front()= "(" + queue.front()+ " | " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 28:{
+                    int addr = 0;
+                    std::shared_ptr<Instruction> instr = (ib->CreateInstructionFromDAT(addr,operandes[idx_operand+1].Value, 0));
+                    queue.push_back(instr->to_string());
+                    idx_operand+=2;
+                    break;
+                }
+                case 29:
+                    queue.front()= "(" + queue.front()+ " ~ " + queue.back()+")";
+                    queue.pop_back();
+                    idx_operand++;
+                    break;
+                case 30:
+                    {
+                    uint16_t parameter = ReadShortFromByteArray(0, operandes[idx_operand+1].Value);
+                    uint16_t ptr =  parameter >> 3;
+                    uint8_t i = parameter & 0x7;
+
+                    queue.push_back("some_location30_"+std::to_string(i)+"["+std::to_string(ptr)+"]");
+
+                    idx_operand+=2;
+                    break;
+                }
+                case 31:
+                    {
+                    uint8_t parameter = operandes[idx_operand+1].Value[0];
+                    queue.push_back("some_location31["+std::to_string(parameter)+"]");
+                    idx_operand+=2;
+                    break;
+                }
+                case 32:
+                    {
+                    uint8_t parameter = operandes[idx_operand+1].Value[0];
+                    queue.push_back("some_location32["+std::to_string(parameter)+"]");
+                    idx_operand+=2;
+                    break;
+                }
+                case 33:
+                    {
+                    uint16_t wd = ReadShortFromByteArray(0, operandes[idx_operand+1].Value);
+                    uint8_t parameter = operandes[idx_operand+2].Value[0];
+                    queue.push_back("some_function33("+std::to_string(wd)+", " + std::to_string(parameter)+")");
+                    idx_operand+=3;
+                    break;
+                }
+                case 34:
+                    {
+
+                    queue.push_back("some_function34()");
+                    idx_operand++;
+                    break;
+                }
+                case 35:
+                    {
+                    uint8_t parameter = operandes[idx_operand+1].Value[0];
+                    queue.push_back("some_location35["+std::to_string(parameter)+"]");
+                    idx_operand+=2;
+                    break;
+                }
+                case 36:
+                    {
+                    uint32_t parameter = operandes[idx_operand+1].getIntegerValue();
+                    queue.push_back("CheckSomething("+std::to_string(parameter)+")");
+                    idx_operand+=2;
+                    break;
+                }
+                case 37:
+                    {
+                    uint8_t parameter = operandes[idx_operand+1].Value[0];
+                    queue.push_back("some_location37["+std::to_string(parameter)+"]");
+                    idx_operand+=2;
+                    break;
+                }
+                case 19:
+
+                    idx_operand++;
+                    break;
+                default:
+                std::string msg = "Wrong operator " + std::to_string(operandes[idx_operand].getAddr()) + " " + std::to_string(operandes[idx_operand].Value[0]);
+                qFatal(msg.c_str());
+            }
+
+        }
+
 
     }
     else if (Type == "fill") {
@@ -274,6 +501,7 @@ std::string operande::to_string() {
         str.pop_back();
         return str;
     } else if (Type == "pointer") {
+        return std::to_string(getIntegerValue());
         //those are skipped and taken care of during the decompilation, by
         //setting up labels and goto (as in EDDecompiler/Python)
     }

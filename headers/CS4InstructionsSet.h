@@ -981,14 +981,21 @@ class CS4Builder : public Builder {
         OPCode5()
           : Instruction(-1, 5, nullptr) {}
         OPCode5(int& addr, int idx_row, QXlsx::Document& doc, Builder* Maker)
-          : Instruction(addr, idx_row, doc, "???", 5, Maker) {}
+          : Instruction(addr, idx_row, doc, "OP5", 5, Maker) {}
         OPCode5(int addr, Builder* Maker)
-          : Instruction(addr, "???", 5, Maker) {}
+          : Instruction(addr, "OP5", 5, Maker) {}
         OPCode5(int& addr, QByteArray& content, Builder* Maker)
-          : Instruction(addr, "???", 5, Maker) {
+          : Instruction(addr, "OP5", 5, Maker) {
             addr++;
             sub05(addr, content, this);
             this->AddOperande(operande(addr, "pointer", ReadSubByteArray(content, addr, 4))); // pointer
+        }
+        std::string to_string() override{
+            std::string str = "if";
+            //first the conditions, then the pointer
+            str = str + this->operandes[0].to_string(Maker) + " then goto " + this->operandes[1].to_string(Maker);
+
+            return str;
         }
     };
     class OPCode6 : public Instruction {

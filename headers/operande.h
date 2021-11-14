@@ -56,7 +56,9 @@ class operande {
 
 
     void setValue(QByteArray v) { Value = std::move(v); }
-
+    void set_name(std::string name){
+       this->name = name;
+    }
     void AddOperande(operande op){
         operandes.push_back(op);
     }
@@ -81,12 +83,15 @@ class operande {
                     Builder *b
 
                     );
-    std::string to_string();
+    std::string to_string(Builder * ib); //I don't like the fact that we can't stringify an operand
+    //without a Builder, and this is only because condition operands can have an instruction as operand,
+    //so we need to be able to build the instruction from this operand (to call its to_string())
 
     void setDestination(int ID_fun, int ID_instr) { Dest = Destination(ID_fun, ID_instr); }
     Destination getDestination() { return Dest; }
 
   private:
+    std::string name; //mainly used for instructions
     std::vector<operande> operandes; //only used for "condition" operands
     Destination Dest = Destination(-1, -1);
     int Position = 0;

@@ -161,7 +161,6 @@ but I didn't finish it yet.
 If there is any illegal xml character, every string in the sheet disappears and the file can't be decompiled,
 this is a problem for some broken files that we would want to restore (example is ply000 from CS3)*/
 void Instruction::AddOperande(operande op) {
-
     QByteArray value = op.getValue();
 
     if (op.getType() == "string") {
@@ -203,13 +202,15 @@ std::string Instruction::to_string(){
     std::string str = this->name + "(";
 
     for (auto op : this->operandes)
-        str = str + op.to_string() + ",";
+        str = str + op.to_string(this->Maker) + ",";
 
     if (!this->operandes.empty())
         str.pop_back();
 
-    str = str + ");";
+    str = str + ")";
     return str;
 }
-
+std::string Instruction::get_name(){
+    return this->name;
+}
 

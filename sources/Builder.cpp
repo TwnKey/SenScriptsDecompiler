@@ -1,7 +1,7 @@
 #include "headers/Builder.h"
 #include "headers/functions.h"
 #include <string>
-Builder::Builder() = default;
+
 void Builder::ReadFunctionsXLSX(QXlsx::Document& xls_content) {
     SceneName = xls_content.read(2, 1).toString().toStdString();
     int first_row = 4;
