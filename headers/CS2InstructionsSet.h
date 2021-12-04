@@ -140,29 +140,9 @@ class CS2Builder : public Builder {
                         current_op_value.clear();
                     } else {
                         if (!(start_text)) start_text = true;
+                        current_op_value.push_back(current_byte);
+                        addr++;
 
-                        if ((current_byte < 0xE0) && (current_byte >= 0xC0)) {
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                            current_byte = content[addr];
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                        } else if ((current_byte >= 0xE0) && (current_byte <= 0xF7)) {
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                            current_byte = content[addr];
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                            current_byte = content[addr];
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                        } else if ((current_byte > 0xF7)) {
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                        } else {
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                        }
                     }
                     break;
             }

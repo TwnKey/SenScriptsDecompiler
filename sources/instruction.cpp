@@ -2,6 +2,7 @@
 #include "headers/functions.h"
 #include "headers/global_vars.h"
 #include "headers/utilities.h"
+
 #include <stack>
 #include <string>
 
@@ -275,7 +276,14 @@ int Instruction::WriteXLSX(QXlsx::Document& excelScenarioSheet, std::vector<func
         } else if ((type == "string") || (type == "dialog")) {
 
             excelScenarioSheet.write(row, col + 3 + col_cnt, type, FormatType);
-            QByteArray value_ = Value;
+            QByteArray value_;
+
+            //we remove the null terminator because it seems to mess up the encoding when using shift-jis?
+            //difference between dialog and string is that dialog is not null terminated (in the dat it's ended with 0x02)
+            if (type == "string")
+                value_ = Value.mid(0,Value.size()-1);
+            else
+                value_ = Value.mid(0,Value.size());
 
             value_.replace(1, "\n");
 
@@ -327,13 +335,17 @@ void Instruction::AddOperande(operande op) {
 
     if (op.getType() == "string") {
         QTextCodec::ConverterState state;
-
+        QString text;
         QTextCodec* codec = QTextCodec::codecForName(QString::fromStdString(InputDatFileEncoding).toUtf8());
-        const QString text = codec->toUnicode(value, value.size(), &state);
+
+
+
+
+            text = codec->toUnicode(value, value.size()-1, &state);
 
         if ((state.invalidChars > 0) || text.contains('\x0B') || text.contains('\x06') || text.contains('\x07') || text.contains('\x08') ||
             text.contains('\x05') || text.contains('\x04') || text.contains('\x03') || text.contains('\x02')) {
-            op.setValue(QByteArray(nullptr));
+            op.setValue(QByteArray(0));
 
             // operandes.push_back(op);
         } else {

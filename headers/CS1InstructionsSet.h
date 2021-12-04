@@ -141,29 +141,9 @@ class CS1Builder : public Builder {
                         current_op_value.clear();
                     } else {
                         if (!(start_text)) start_text = true;
+                        current_op_value.push_back(current_byte);
+                        addr++;
 
-                        if ((current_byte < 0xE0) && (current_byte >= 0xC0)) {
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                            current_byte = content[addr];
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                        } else if ((current_byte >= 0xE0) && (current_byte <= 0xF7)) {
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                            current_byte = content[addr];
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                            current_byte = content[addr];
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                        } else if ((current_byte > 0xF7)) {
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                        } else {
-                            current_op_value.push_back(current_byte);
-                            addr++;
-                        }
                     }
                     break;
             }
@@ -5607,7 +5587,7 @@ class CS1Builder : public Builder {
 
     std::shared_ptr<Instruction> CreateInstructionFromDAT(int& addr, QByteArray& dat_content, int function_type) override {
         int OP = (dat_content[addr] & 0xFF);
-
+        //qDebug() << Qt::hex << OP << " addr : " << addr;;
         if (CS1UIFiles.contains(SceneName) && (OP == 0x13)) {
             return std::make_shared<UI_OP13>(addr, dat_content, this); // UI files have a special 0x13 instruction
         }
