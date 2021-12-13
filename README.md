@@ -8,6 +8,8 @@ I was inspired by [EDDecompiler](https://github.com/Ouroboros/EDDecompiler) alth
 The current compatible games are Trails of Cold Steel 1, 2, 3, 4, Tokyo Xanadu and Trails into Reverie. 
 I won't provide decrypted script files for the latter so no need to reach out to me about that.
 
+For CS3 and CS4, you should use this new tool made by Ouroboros (original EDDecompiler creator) which disassembles the scripts properly (not excel sheets but actual scripts): https://github.com/Ouroboros/Falcom/tree/master/Decompiler2
+
 # Instruction codes
 
 Script files from recent Falcom games are made of functions, which are themselves made of instructions. Each instruction has an OP Code (one signature byte) 
