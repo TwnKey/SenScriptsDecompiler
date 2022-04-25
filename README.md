@@ -10,6 +10,8 @@ I won't provide decrypted script files for the latter so no need to reach out to
 
 For CS3 and CS4, you should use this new tool made by Ouroboros (original EDDecompiler creator) which disassembles the scripts properly (not excel sheets but actual scripts): https://github.com/Ouroboros/Falcom/tree/master/Decompiler2
 
+For Kuro no Kiseki (ED9), a tool based on Python similar to EDDecompiler is can be found here: https://github.com/TwnKey/KuroTools
+
 # Instruction codes
 
 Script files from recent Falcom games are made of functions, which are themselves made of instructions. Each instruction has an OP Code (one signature byte) 
