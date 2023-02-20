@@ -52,8 +52,10 @@ configure_file(
 
 qt_dep = dependency('qt5', modules: ['Core', 'Gui'])
 
-qxlsx_project = subproject('qxlsx', default_options: ['warning_level=0'])
-qxlsx_dep = qxlsx_project.get_variable('qxlsx_dep')
+qxlsx_dep = dependency('qxlsx',
+                       fallback: ['qxlsx', 'qxlsx_dep'],
+                       default_options: ['warning_level=0', 'default_library=static'],
+)
 
 clangtidy = find_program('run-clang-tidy.py', required: false)
 if clangtidy.found()
@@ -98,8 +100,6 @@ executable('SenScriptsDecompiler',
     'sources/utilities.cpp',
     include_directories :  [
         include_directories('headers'),
-        qxlsx_project.get_variable('inc'),
-        'subprojects', # needed for current qxlsx import path
     ],
     extra_files: [headers],
     dependencies: [qt_dep, qxlsx_dep],

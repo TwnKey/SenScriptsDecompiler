@@ -1,4 +1,6 @@
-[wrap-file]
-[provide]
-qxlsx=qxlsx_dep
-
+[wrap-git]
+url=https://github.com/QtExcel/QXlsx
+directory = qxlsx
+revision=0461eac843358aec56c648ec929ca20da5822fdc
+depth = 1
+patch_directory = qxlsx
