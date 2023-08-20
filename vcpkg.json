@@ -1,0 +1,7 @@
+{
+  "name": "sen-script-decompiler",
+  "dependencies": [
+    "qt5-base"
+  ],
+  "supports": "windows"
+}
