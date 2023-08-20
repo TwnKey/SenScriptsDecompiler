@@ -62,9 +62,9 @@ int main(int argc, char* argv[]) {
         display_text("Then it has become a tool for modding in general.");
         display_text("---------------------------------------------HOW TO USE---------------------------------------------------");
         display_text("Here's how to use it:");
-        display_text("1- SenScriptsDecompiler.exe <filepath_to_convert>");
-        display_text("2- SenScriptsDecompiler.exe <Game> <filepath_to_convert>");
-        display_text("3- SenScriptsDecompiler.exe <Game> <filepath_to_convert> <output_folder>");
+        display_text("1- SenScriptsDecompiler.exe <dir/filepath_to_convert>");
+        display_text("2- SenScriptsDecompiler.exe <Game> <dir/filepath_to_convert>");
+        display_text("3- SenScriptsDecompiler.exe <Game> <dir/filepath_to_convert> <output_folder>");
         display_text("Encodings can be defined in the config.ini file.");
         display_text("The output format is decided by the extension of the input file: XLSX gives a DAT and DAT gives a XLSX.");
         display_text("If you need more assistance, please join the discord server for modding Trails games: "
@@ -82,6 +82,13 @@ int main(int argc, char* argv[]) {
         }
 
         std::vector<fs::path> files{ full_path };
+        fs::directory_entry const dir{ full_path };
+        if (dir.is_directory()) {
+            files.clear();
+            for (const auto & entry : std::filesystem::directory_iterator(dir)) {
+                files.push_back(entry.path());
+            }
+        }
         if (!files.empty()) {
             for (const auto& file : files) {
                 try {

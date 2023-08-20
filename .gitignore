@@ -11,3 +11,5 @@ SenScriptsDecompiler
 *.autosave
 SenScriptsDecompiler.pro.user
 SenScriptsDecompiler.pro
+cmake-build-debug
+.idea
